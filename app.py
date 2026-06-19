@@ -24,15 +24,22 @@ def render_items(items, empty="Nothing here yet."):
     st.markdown(html, unsafe_allow_html=True)
 
 
+VIEWS = ["Everything", "Insights — text-only", "Insights — charts & visuals",
+         "Research & papers", "News"]
+
+
 def insights_research_news(items, key_prefix):
-    """Render the standard Insights(text/visual) + Research + News layout."""
+    """Render the standard Insights(text/visual) + Research + News layout,
+    with a 'View' dropdown to jump straight to one section."""
     insights = [i for i in items if i["category"] == "insight"]
     research = [i for i in items if i["category"] == "research"]
     news = [i for i in items if i["category"] == "news"]
 
-    # optional source filter
+    # controls: a sort/view dropdown + an optional source filter, side by side
+    c1, c2 = st.columns([1, 2])
+    view = c1.selectbox("View", VIEWS, index=0, key=f"{key_prefix}_view")
     srcs = sorted({i["source"] for i in items})
-    chosen = st.multiselect("Filter sources", srcs, default=[], key=f"{key_prefix}_flt")
+    chosen = c2.multiselect("Filter sources", srcs, default=[], key=f"{key_prefix}_flt")
     if chosen:
         insights = [i for i in insights if i["source"] in chosen]
         research = [i for i in research if i["source"] in chosen]
@@ -41,15 +48,24 @@ def insights_research_news(items, key_prefix):
     text_only = [i for i in insights if i["visual"] == "text"]
     visual = [i for i in insights if i["visual"] == "visual"]
 
-    st.markdown(section(f"Insights — text-only ({len(text_only)})", 0), unsafe_allow_html=True)
-    render_items(text_only, "No text-only insights.")
-    st.markdown(section(f"Insights — charts / tables / visuals ({len(visual)})", 2),
-                unsafe_allow_html=True)
-    render_items(visual, "No visual insights.")
-    st.markdown(section(f"Research & working papers ({len(research)})", 4), unsafe_allow_html=True)
-    render_items(research, "No research items.")
-    # News is intentionally de-emphasized — collapsed by default, off to the side.
-    if news:
+    show_all = view == "Everything"
+    if show_all or view == "Insights — text-only":
+        st.markdown(section(f"Insights — text-only ({len(text_only)})", 0), unsafe_allow_html=True)
+        render_items(text_only, "No text-only insights.")
+    if show_all or view == "Insights — charts & visuals":
+        st.markdown(section(f"Insights — charts / tables / visuals ({len(visual)})", 2),
+                    unsafe_allow_html=True)
+        render_items(visual, "No visual insights.")
+    if show_all or view == "Research & papers":
+        st.markdown(section(f"Research & working papers ({len(research)})", 4),
+                    unsafe_allow_html=True)
+        render_items(research, "No research items.")
+    # News stays de-emphasized: collapsed expander when browsing everything,
+    # but shown in full if the user explicitly selects the News view.
+    if view == "News":
+        st.markdown(section(f"News ({len(news)})", 1), unsafe_allow_html=True)
+        render_items(news, "No news items.")
+    elif show_all and news:
         with st.expander(f"News (minimized) — {len(news)} items", expanded=False):
             render_items(news)
 

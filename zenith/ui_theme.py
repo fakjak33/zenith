@@ -77,20 +77,39 @@ h1, h2, h3, h4 {{ font-family: {THEME.font_display}; color: #fff; }}
 
 
 def _logo_svg(size: int = 84) -> str:
-    """Zenith apex mark: nested ascending chevrons converging to a top point,
-    palette-gradient strokes, with an apex dot. Transparent background."""
-    cols = [THEME.coral, THEME.mustard, THEME.mint, THEME.teal, THEME.navy]
-    rows = []
-    for i, c in enumerate(cols):
-        y = 20 + i * 15           # each chevron lower/wider
-        spread = 12 + i * 17
-        rows.append(f'<polyline points="{50-spread},{y+spread*0.6} 50,{y} {50+spread},{y+spread*0.6}" '
-                    f'fill="none" stroke="{c}" stroke-width="4" stroke-linecap="round" '
-                    f'stroke-linejoin="round"/>')
-    apex = f'<circle cx="50" cy="14" r="4" fill="#ffffff"/>'
-    inner = apex + "".join(rows)
-    return (f'<svg width="{size}" height="{size}" viewBox="0 0 100 100" '
-            f'xmlns="http://www.w3.org/2000/svg" fill="none">{inner}</svg>')
+    """Zenith mark — modernist / bold / abstract / vintage-tech.
+
+    A solid gradient peak (the 'zenith') sliced by retro synthwave sun-slats,
+    crowned by an apex orb at the high point, anchored on a bold horizon bar.
+    Hard geometry, no thin lines. Transparent background.
+    """
+    gid = f"zg{size}"          # keep gradient/clip ids unique per render
+    cid = f"zc{size}"
+    peak = "50,16 88,84 12,84"
+    # retro "sun" slats: bg-colored bars across the peak, thicker toward the base
+    slats = "".join(
+        f'<rect x="0" y="{y}" width="100" height="{h}" fill="{THEME.bg}"/>'
+        for y, h in ((50, 2.6), (57, 3.4), (65, 4.4), (74, 5.6))
+    )
+    return (
+        f'<svg width="{size}" height="{size}" viewBox="0 0 100 100" '
+        f'xmlns="http://www.w3.org/2000/svg">'
+        f'<defs>'
+        f'<linearGradient id="{gid}" x1="0" y1="1" x2="1" y2="0">'
+        f'<stop offset="0" stop-color="{THEME.coral}"/>'
+        f'<stop offset="0.38" stop-color="{THEME.mustard}"/>'
+        f'<stop offset="0.7" stop-color="{THEME.mint}"/>'
+        f'<stop offset="1" stop-color="{THEME.navy}"/>'
+        f'</linearGradient>'
+        f'<clipPath id="{cid}"><polygon points="{peak}"/></clipPath>'
+        f'</defs>'
+        f'<polygon points="{peak}" fill="url(#{gid})"/>'
+        f'<g clip-path="url(#{cid})">{slats}</g>'
+        f'<circle cx="50" cy="13" r="7" fill="{THEME.mustard}" '
+        f'stroke="#ffffff" stroke-width="2.5"/>'
+        f'<rect x="6" y="86" width="88" height="5" fill="{THEME.teal}"/>'
+        f'</svg>'
+    )
 
 
 BANNER = f"""
