@@ -48,9 +48,10 @@ def insights_research_news(items, key_prefix):
     render_items(visual, "No visual insights.")
     st.markdown(section(f"Research & working papers ({len(research)})", 4), unsafe_allow_html=True)
     render_items(research, "No research items.")
+    # News is intentionally de-emphasized — collapsed by default, off to the side.
     if news:
-        st.markdown(section(f"News & tools ({len(news)})", 1), unsafe_allow_html=True)
-        render_items(news)
+        with st.expander(f"News (minimized) — {len(news)} items", expanded=False):
+            render_items(news)
 
 
 tab_today, tab_archive, tab_sources = st.tabs(["TODAY", "ARCHIVE", "SOURCES"])
