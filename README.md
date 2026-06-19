@@ -28,13 +28,22 @@ entry has its best free RSS/Atom feed and an `enabled` flag. The SOURCES tab sho
 per-source status from the last run.
 
 ## Honest constraints
-- **Not every firm has a free, machine-readable feed.** Many hedge funds / market
+- **Not every firm has a free, machine-readable feed.** Hedge funds / market
   makers (Citadel, Jane Street, Bridgewater, …) publish little or nothing
-  syndicated, and some sites are JS-only or paywalled — those are registered but
-  disabled with a note. Real daily volume comes from banks/asset managers with
-  RSS, exchanges, **BIS / NBER / Fed / SSRN / journals (TOC)**, and news feeds.
-  Currently ~17 working sources → a few hundred items/day; the registry is easy
-  to extend.
+  syndicated. **Citadel in particular is Cloudflare-walled** (every path returns
+  403, even with a browser User-Agent) and **Deutsche Bank's "Chart of the Day"**
+  lives behind a DB Research login — neither exposes a free feed, so both are
+  registered but disabled with a note. Apollo's **"Daily Spark"** *is* covered —
+  it rides in the main Apollo Academy feed.
+- **~30 working sources** now → a few hundred fresh items/day. Coverage spans firm
+  commentary (Apollo, Bespoke, Alpha Architect, Verdad, Newfound, Ritholtz,
+  Calculated Risk, FT Alphaville, Damodaran, Carver, Klement, …), central-bank /
+  academic research (NY Fed Liberty Street, St. Louis Fed, NBER, BIS, ECB, Fed
+  FEDS/WP/Speeches, Bank Underground, arXiv q-fin), and journal TOC feeds. The
+  registry is easy to extend — add a `Source(...)` line.
+- **News is minimized** by design. Commercial headline feeds (Yahoo Finance,
+  CNBC, Nasdaq) are disabled; only low-noise official notices (Fed press) remain,
+  and the viewer tucks news into a collapsed expander.
 - **robots.txt**: respected for article-page fetches (used to classify
   text-vs-visual). RSS/Atom **feed endpoints** are treated as syndication
   endpoints (as all feed readers do) and fetched directly.
