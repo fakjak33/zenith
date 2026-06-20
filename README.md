@@ -23,9 +23,38 @@
 ```
 
 ## Sources
-`zenith/sources.py` is a feeds-first registry (insight / research / news). Each
-entry has its best free RSS/Atom feed and an `enabled` flag. The SOURCES tab shows
-per-source status from the last run.
+`zenith/sources.py` is a registry (insight / research / news). Each entry is
+either `kind="rss"` (its best free RSS/Atom feed) or `kind="html"` (an
+insights/research **hub page** scraped for article links via `link_pattern`).
+The SOURCES tab shows per-source status from the last run, including how each was
+fetched (`rss` / `direct` / `apify`).
+
+## Reaching "blocked" sources — hybrid fetcher
+Many firms publish no RSS. For those, `kind="html"` sources are fetched in tiers
+(`zenith/fetch.py::get_html`):
+1. **Direct (free):** a realistic browser User-Agent. This alone unblocks many
+   "403" firms — confirmed working for **Blackstone, Goldman Sachs, AQR, Man
+   Institute, BlackRock**, which have no feed.
+2. **Firecrawl (free tier):** tried next if `FIRECRAWL_API_KEY` is set. Renders
+   JS and bypasses light anti-bot — the cheaper option for SPA insight hubs.
+3. **Apify fallback (paid, budget-gated):** last resort. `zenith/apify.py` runs
+   Apify's `website-content-crawler`, gated on Apify's *own* reported monthly
+   spend so it can never exceed the FREE plan.
+
+### Fallback setup (both optional)
+- **Firecrawl (recommended free tier):** set `FIRECRAWL_API_KEY` (env / Streamlit
+  secret / GitHub repo secret). The Action passes `secrets.FIRECRAWL_API_KEY`.
+  Best first choice for JS/anti-bot hubs; tried before Apify.
+- **Apify:** set `APIFY_TOKEN` (the nightly Action passes `secrets.APIFY_TOKEN`).
+  No tokens at all ⇒ direct-only (free).
+- Env knobs: `APIFY_CRAWLER=cheerio|playwright` (cheerio = cheapest, no browser),
+  `APIFY_MONTHLY_BUDGET_USD` (default 4.0; stops calling Apify above this),
+  `APIFY_RESIDENTIAL=1` (residential proxy for the hardest anti-bot SPAs — costs
+  well above the free tier, off by default).
+- Usage is written to `data/apify_usage.json` and printed each run so you can
+  watch consumption against the $5/mo free credits.
+- **robots.txt is respected before any Apify call** — robots-disallowed sources
+  (e.g. KKR, Two Sigma `/insights`) are never scraped.
 
 ## Honest constraints
 - **Not every firm has a free, machine-readable feed.** Hedge funds / market
@@ -35,12 +64,21 @@ per-source status from the last run.
   lives behind a DB Research login — neither exposes a free feed, so both are
   registered but disabled with a note. Apollo's **"Daily Spark"** *is* covered —
   it rides in the main Apollo Academy feed.
-- **~30 working sources** now → a few hundred fresh items/day. Coverage spans firm
+- **~40 working sources** now → a few hundred fresh items/day. Coverage spans firm
   commentary (Apollo, Bespoke, Alpha Architect, Verdad, Newfound, Ritholtz,
-  Calculated Risk, FT Alphaville, Damodaran, Carver, Klement, …), central-bank /
-  academic research (NY Fed Liberty Street, St. Louis Fed, NBER, BIS, ECB, Fed
-  FEDS/WP/Speeches, Bank Underground, arXiv q-fin), and journal TOC feeds. The
-  registry is easy to extend — add a `Source(...)` line.
+  Calculated Risk, FT Alphaville, Damodaran, Carver, Klement, Meb Faber/Cambria,
+  Simplify, FactSet Insight, plus **feed-less firms via the HTML tier: Blackstone,
+  Goldman Sachs, AQR, Man Institute, BlackRock, J.P. Morgan AM**), central-bank / academic research (NY Fed
+  Liberty Street, St. Louis Fed, NBER, BIS, ECB, Fed FEDS/WP/Speeches, Bank
+  Underground, arXiv q-fin) and journal TOC feeds (incl. J. Empirical Finance).
+  The registry is easy to extend — add a `Source(...)` line.
+- **Some sites resist the free tier.** Citadel (Cloudflare), Research Affiliates
+  and Morningstar (anti-bot SPAs) return nothing via the direct tier. They're
+  **registered and enabled** so they're attempted nightly via the Firecrawl tier
+  — set `FIRECRAWL_API_KEY` to actually fetch them (they report `blocked` until
+  then). **Deutsche Bank Research and SSRN are login-gated** — no scraper can
+  bypass auth, so they stay disabled (DB's Chart of the Day is often mirrored on
+  isabelnet.com; arXiv q-fin covers most open quant preprints in SSRN's place).
 - **News is minimized** by design. Commercial headline feeds (Yahoo Finance,
   CNBC, Nasdaq) are disabled; only low-noise official notices (Fed press) remain,
   and the viewer tucks news into a collapsed expander.

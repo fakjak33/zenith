@@ -1,6 +1,6 @@
 import json
 
-from zenith import store
+from zenith import store, extract, apify, firecrawl, config
 from zenith.sources import SOURCES, enabled_sources
 from zenith.classify import from_entry, _html_has_visual
 
@@ -48,8 +48,71 @@ def test_registry_integrity():
     names = [s.name for s in SOURCES]
     assert len(names) == len(set(names))                  # unique names
     assert all(s.category in {"insight", "research", "news"} for s in SOURCES)
-    assert all(s.kind == "rss" for s in SOURCES)
+    assert all(s.kind in {"rss", "html"} for s in SOURCES)
     assert all(s.url.startswith("http") for s in enabled_sources())  # enabled have real urls
+    # html sources must declare how to find articles (pattern) or be a clean hub
+    assert all(isinstance(s.link_pattern, str) for s in SOURCES)
     # decent breadth across categories
     cats = {s.category for s in SOURCES}
     assert {"insight", "research", "news"}.issubset(cats)
+
+
+def test_extract_links_basic():
+    html = """
+    <html><body><main>
+      <a href="/insights/article/alpha-and-beta-in-2026">Alpha and Beta in 2026 Outlook</a>
+      <a href="/insights/article/the-case-for-trend-following-now">The Case for Trend Following Now</a>
+      <a href="/about">About</a>                         <!-- junk: too short / nav -->
+      <a href="https://twitter.com/x">Follow us on Twitter</a>  <!-- off-domain -->
+      <a href="/insights/logo.png">image</a>             <!-- skipped ext -->
+    </main></body></html>
+    """
+    out = extract.extract_links(html, "https://firm.com/insights", r"/insights/")
+    links = {o["link"] for o in out}
+    assert "https://firm.com/insights/article/alpha-and-beta-in-2026" in links
+    assert len(out) == 2                                   # only the two real articles
+    assert all(o["link"].startswith("https://firm.com/") for o in out)
+
+
+def test_extract_links_respects_pattern_and_dedup():
+    html = ('<a href="/research/x-paper-on-momentum-factors-2026">Momentum Factors Paper 2026</a>'
+            '<a href="/research/x-paper-on-momentum-factors-2026/">Momentum Factors Paper 2026</a>'
+            '<a href="/blog/unrelated-short">nope</a>')
+    out = extract.extract_links(html, "https://firm.com/", r"/research/")
+    assert len(out) == 1                                   # pattern filters + dedup trailing slash
+
+
+def test_apify_disabled_without_token(monkeypatch):
+    monkeypatch.setattr(config, "APIFY_ENABLED", False)
+    monkeypatch.setattr(config, "APIFY_TOKEN", "")
+    html, note = apify.fetch_html("https://example.com")
+    assert html is None and note == "apify:disabled"
+
+
+def test_apify_budget_gate(monkeypatch):
+    # over budget -> never calls the network
+    monkeypatch.setattr(config, "APIFY_ENABLED", True)
+    monkeypatch.setattr(config, "APIFY_TOKEN", "x")
+    monkeypatch.setattr(apify, "monthly_spend_usd", lambda *a, **k: 999.0)
+    assert apify.budget_ok() is False
+    html, note = apify.fetch_html("https://example.com")
+    assert html is None and note == "apify:budget"
+
+
+def test_apify_usage_summary_shape():
+    u = apify.usage_summary()
+    assert {"enabled", "actor", "crawler", "budget_usd", "calls_this_run"} <= set(u)
+
+
+def test_firecrawl_disabled_without_key(monkeypatch):
+    monkeypatch.setattr(config, "FIRECRAWL_API_KEY", "")
+    html, note = firecrawl.fetch_html("https://example.com")
+    assert html is None and note == "firecrawl:disabled"
+    assert firecrawl.enabled() is False
+
+
+def test_get_html_respects_robots(monkeypatch):
+    from zenith import fetch
+    monkeypatch.setattr(fetch, "allowed", lambda url: False)
+    html, via = fetch.get_html("https://example.com/blocked")
+    assert html is None and via == "robots"

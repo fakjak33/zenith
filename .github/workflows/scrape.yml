@@ -22,6 +22,11 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Zenith scrape
+        env:
+          # Optional fallbacks for direct-blocked sources (leave unset to run
+          # free/direct-only). Firecrawl is tried before Apify (cheaper free tier).
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
         run: python -m zenith.scrape
 
       - name: Commit updated data

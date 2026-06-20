@@ -7,7 +7,7 @@ import json
 from datetime import date
 from urllib.parse import urlsplit, urlunsplit
 
-from .config import ARCHIVE_DIR, LATEST_JSON, SEEN_JSON, STATUS_JSON
+from .config import ARCHIVE_DIR, LATEST_JSON, SEEN_JSON, STATUS_JSON, USAGE_JSON
 
 
 def normalize_url(url: str) -> str:
@@ -69,6 +69,14 @@ def save_status(status: list[dict]) -> None:
 
 def load_status() -> list[dict]:
     return _read(STATUS_JSON, [])
+
+
+def save_apify_usage(usage: dict) -> None:
+    USAGE_JSON.write_text(json.dumps(usage, indent=2), encoding="utf-8")
+
+
+def load_apify_usage() -> dict:
+    return _read(USAGE_JSON, {})
 
 
 def today_str() -> str:
