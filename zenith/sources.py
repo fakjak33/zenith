@@ -66,6 +66,7 @@ SOURCES: list[Source] = [
     # --- new verified RSS feeds (probed 2026-06) ---
     Source("Meb Faber / Cambria", "insight", "rss", "https://mebfaber.com/feed/"),
     Source("Simplify Asset Management", "insight", "rss", "https://www.simplify.us/blog/rss.xml"),
+    Source("FactSet Insight", "insight", "rss", "https://insight.factset.com/rss.xml"),
     # --- HTML-hub sources: no RSS, but their insights index scrapes cleanly via
     #     the direct (browser-UA) tier — confirmed returning article links 2026-06 ---
     Source("Blackstone (Insights)", "insight", "html", "https://www.blackstone.com/insights/",
@@ -79,28 +80,39 @@ SOURCES: list[Source] = [
     Source("BlackRock Investment Institute", "insight", "html",
            "https://www.blackrock.com/us/individual/insights",
            link_pattern=r"/insights/"),
-    # --- HTML-hub sources that the direct tier can't reach: fall back to Apify
-    #     ONLY when APIFY_TOKEN is configured & under budget (else report blocked) ---
+    Source("J.P. Morgan Asset Mgmt (Market Insights)", "insight", "html",
+           "https://am.jpmorgan.com/us/en/asset-management/adv/insights/market-insights/market-updates/",
+           link_pattern=r"/insights/|/market-"),
+    # --- anti-bot SPA hubs: empty via the direct tier. ENABLED so they're
+    #     attempted nightly via the Firecrawl tier (set FIRECRAWL_API_KEY) — they
+    #     report 'blocked'/'firecrawl:disabled' in status until a key is added ---
     Source("Morningstar (Insights)", "insight", "html", "https://www.morningstar.com/insights",
-           link_pattern=r"/(articles|insights)/", enabled=False,
-           note="anti-bot SPA; empty via direct + Apify datacenter proxy. Needs "
-                "Apify residential proxy (APIFY_RESIDENTIAL=1) — disabled to protect the $5/mo tier"),
+           link_pattern=r"/(articles|insights)/",
+           note="anti-bot SPA: empty via direct/Apify-datacenter. Needs FIRECRAWL_API_KEY "
+                "(stealth) or APIFY_RESIDENTIAL=1; reports blocked until a key is set"),
     Source("Research Affiliates", "insight", "html", "https://www.researchaffiliates.com/publications",
-           link_pattern=r"/publications/", enabled=False,
-           note="anti-bot SPA; empty via direct + Apify datacenter proxy. Needs "
-                "Apify residential proxy (APIFY_RESIDENTIAL=1) — disabled to protect the $5/mo tier"),
-    # --- registered but genuinely unreachable (kept for completeness) ---
+           link_pattern=r"/publications/",
+           note="anti-bot SPA: needs FIRECRAWL_API_KEY or APIFY_RESIDENTIAL=1; "
+                "reports blocked until a key is set"),
     Source("Citadel", "insight", "html", "https://www.citadel.com/insights/", enabled=False,
-           note="Cloudflare-walled (403 on all paths incl. browser UA); Apify residential proxy only"),
+           note="citadel.com robots.txt DISALLOWS /insights — we respect robots before any "
+                "fetch tier, so no scraper (Firecrawl/Apify) is even attempted. Cannot be scraped"),
+    # --- registered but genuinely unreachable even with paid tools ---
     Source("KKR (Insights)", "insight", "html", "https://www.kkr.com/insights", enabled=False,
            note="robots.txt disallows crawling /insights — respected, not scraped"),
     Source("Two Sigma (Insights)", "insight", "html", "https://www.twosigma.com/insights/",
            enabled=False, note="robots.txt disallows crawling /insights — respected"),
     Source("Jane Street", "insight", "rss", "", enabled=False,
            note="no free machine-readable feed (user: low insight value anyway)"),
-    Source("Deutsche Bank (Chart of the Day)", "insight", "rss",
+    Source("Deutsche Bank (Chart of the Day)", "insight", "html",
            "https://www.dbresearch.com/", enabled=False,
-           note="DB Research requires login; no free public feed"),
+           note="DB Research is LOGIN-gated — no scraper (Firecrawl/Apify) can bypass auth; "
+                "would need DB credentials. Chart of the Day is often mirrored on isabelnet.com"),
+    Source("SSRN (FEN top papers)", "research", "html",
+           "https://papers.ssrn.com/sol3/Jeljour_results.cfm?form_name=journalBrowse&journal_id=203",
+           enabled=False,
+           note="SSRN browse is session/login-gated + bot-protected; RSS restricted. "
+                "arXiv q-fin (enabled) covers most open quant-finance preprints instead"),
     Source("Hedgeye", "insight", "rss", "https://app.hedgeye.com/feed_items.rss",
            enabled=False, note="403 blocked; subscriber-gated"),
 

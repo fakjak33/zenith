@@ -50,6 +50,10 @@ APIFY_TIMEOUT = int(os.environ.get("APIFY_TIMEOUT", "120"))
 APIFY_MONTHLY_BUDGET_USD = float(os.environ.get("APIFY_MONTHLY_BUDGET_USD", "4.0"))
 APIFY_ENABLED = bool(APIFY_TOKEN)
 
+# --- Firecrawl fallback (free-tier alternative, tried before Apify) ---------
+FIRECRAWL_API_KEY = os.environ.get("FIRECRAWL_API_KEY", "").strip()
+FIRECRAWL_TIMEOUT = int(os.environ.get("FIRECRAWL_TIMEOUT", "45"))
+
 
 @dataclass(frozen=True)
 class Theme:

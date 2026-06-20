@@ -12,7 +12,7 @@ import html
 import re
 import time
 
-from . import store, classify as classifier, apify, extract
+from . import store, classify as classifier, apify, firecrawl, extract
 from .config import MAX_ITEMS_PER_SOURCE, CLASSIFY_FETCH, CLASSIFY_MAX_FETCH
 from .fetch import parse_feed, get_html
 from .sources import enabled_sources
@@ -121,6 +121,9 @@ def run() -> dict:
         via = s.get("via", "")
         print(f"  {flag} {s['source']}: +{s.get('new', 0)} [{via}]"
               + ("" if s["ok"] else f"  ({s.get('error')})"))
+    fc_use = firecrawl.usage_summary()
+    if fc_use["enabled"]:
+        print(f"  firecrawl: {fc_use['calls_this_run']} call(s) this run")
     if apify_use["enabled"]:
         print(f"  apify: {apify_use['calls_this_run']} call(s) this run; "
               f"month spend ~${apify_use['monthly_spend_usd']:.3f} / "

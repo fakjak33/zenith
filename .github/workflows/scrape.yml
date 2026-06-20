@@ -23,8 +23,9 @@ jobs:
 
       - name: Run Zenith scrape
         env:
-          # Optional: set this repo secret to enable the Apify fallback for
-          # direct-blocked sources. Leave unset to run free/direct-only.
+          # Optional fallbacks for direct-blocked sources (leave unset to run
+          # free/direct-only). Firecrawl is tried before Apify (cheaper free tier).
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
         run: python -m zenith.scrape
 

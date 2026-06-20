@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 import requests
 
 from .config import USER_AGENT, REQUEST_TIMEOUT, BROWSER_HEADERS
-from . import apify
+from . import apify, firecrawl
 
 
 @lru_cache(maxsize=256)
@@ -56,10 +56,11 @@ def get_html(url: str, timeout: int = REQUEST_TIMEOUT) -> tuple[str | None, str]
     """Hybrid page fetch for *blocked* sources.
 
     Tier 1 (free): direct request with a browser UA.
-    Tier 2 (paid, budget-gated): Apify, only if the direct tier is blocked.
+    Tier 2 (free-tier): Firecrawl, if FIRECRAWL_API_KEY is set.
+    Tier 3 (paid, budget-gated): Apify, last resort.
 
-    Returns (html_or_none, via) where via ∈ {'direct', 'apify', 'apify:…',
-    'blocked', 'robots'}.
+    Returns (html_or_none, via) where via ∈ {'direct', 'firecrawl', 'apify',
+    'apify:…' / 'firecrawl:…', 'blocked', 'robots'}.
     """
     if not allowed(url):
         return None, "robots"
@@ -68,11 +69,19 @@ def get_html(url: str, timeout: int = REQUEST_TIMEOUT) -> tuple[str | None, str]
         # honor the page's real charset (avoids mojibake on smart quotes etc.)
         r.encoding = r.apparent_encoding or r.encoding
         return r.text, "direct"
-    # direct blocked/empty -> Apify fallback (no-op if disabled or over budget)
+    # direct blocked/empty -> Firecrawl (free-tier) -> Apify (budget-gated)
+    last = "blocked"
+    if firecrawl.enabled():
+        html, note = firecrawl.fetch_html(url)
+        if html:
+            return html, "firecrawl"
+        last = note
     html, note = apify.fetch_html(url)
     if html:
         return html, "apify"
-    return None, note if note.startswith("apify") else "blocked"
+    if note != "apify:disabled":
+        last = note
+    return None, last
 
 
 def parse_feed(url: str):

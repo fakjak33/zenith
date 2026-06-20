@@ -1,6 +1,6 @@
 import json
 
-from zenith import store, extract, apify, config
+from zenith import store, extract, apify, firecrawl, config
 from zenith.sources import SOURCES, enabled_sources
 from zenith.classify import from_entry, _html_has_visual
 
@@ -102,3 +102,17 @@ def test_apify_budget_gate(monkeypatch):
 def test_apify_usage_summary_shape():
     u = apify.usage_summary()
     assert {"enabled", "actor", "crawler", "budget_usd", "calls_this_run"} <= set(u)
+
+
+def test_firecrawl_disabled_without_key(monkeypatch):
+    monkeypatch.setattr(config, "FIRECRAWL_API_KEY", "")
+    html, note = firecrawl.fetch_html("https://example.com")
+    assert html is None and note == "firecrawl:disabled"
+    assert firecrawl.enabled() is False
+
+
+def test_get_html_respects_robots(monkeypatch):
+    from zenith import fetch
+    monkeypatch.setattr(fetch, "allowed", lambda url: False)
+    html, via = fetch.get_html("https://example.com/blocked")
+    assert html is None and via == "robots"
