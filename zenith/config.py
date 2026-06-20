@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -11,6 +12,7 @@ ARCHIVE_DIR = DATA_DIR / "archive"
 LATEST_JSON = DATA_DIR / "latest.json"
 SEEN_JSON = DATA_DIR / "seen.json"
 STATUS_JSON = DATA_DIR / "status.json"
+USAGE_JSON = DATA_DIR / "apify_usage.json"
 for _d in (DATA_DIR, ARCHIVE_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
@@ -20,6 +22,33 @@ REQUEST_TIMEOUT = 15
 MAX_ITEMS_PER_SOURCE = 25       # cap per source per run
 CLASSIFY_FETCH = True           # fetch article pages to classify text vs visual
 CLASSIFY_MAX_FETCH = 120        # cap page fetches per run (politeness/time)
+
+# A realistic browser User-Agent for the *direct* fetch tier. Many sites that
+# return 403 to a bot UA serve fine to a normal browser UA — this unblocks a
+# lot of "blocked" sources for free, before we ever fall back to Apify.
+BROWSER_HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                   "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"),
+    "Accept": ("text/html,application/xhtml+xml,application/xml;q=0.9,"
+               "image/avif,image/webp,*/*;q=0.8"),
+    "Accept-Language": "en-US,en;q=0.9",
+}
+
+# --- Apify fallback (only used when the direct tier is blocked) -------------
+# Token comes from env / Streamlit secret / GitHub Action secret — never hard-coded.
+APIFY_TOKEN = os.environ.get("APIFY_TOKEN", "").strip()
+# Default to Apify's general-purpose Store crawler in cheerio mode (no browser =
+# cheapest). For the hardest Cloudflare/JS sites, set APIFY_CRAWLER=playwright.
+APIFY_ACTOR = os.environ.get("APIFY_ACTOR", "apify/website-content-crawler").strip()
+APIFY_CRAWLER = os.environ.get("APIFY_CRAWLER", "cheerio").strip()   # cheerio | playwright
+# Residential proxy reaches the hardest anti-bot sites but costs much more than
+# the FREE tier supports — off by default. Set APIFY_RESIDENTIAL=1 if you upgrade.
+APIFY_RESIDENTIAL = os.environ.get("APIFY_RESIDENTIAL", "").strip() in ("1", "true", "True")
+APIFY_TIMEOUT = int(os.environ.get("APIFY_TIMEOUT", "120"))
+# Soft monthly safety cap (USD). The FREE plan grants ~$5/mo; stop calling Apify
+# once we estimate we've spent this much so a run can never blow the budget.
+APIFY_MONTHLY_BUDGET_USD = float(os.environ.get("APIFY_MONTHLY_BUDGET_USD", "4.0"))
+APIFY_ENABLED = bool(APIFY_TOKEN)
 
 
 @dataclass(frozen=True)

@@ -8,7 +8,8 @@ from urllib.parse import urlsplit
 
 import requests
 
-from .config import USER_AGENT, REQUEST_TIMEOUT
+from .config import USER_AGENT, REQUEST_TIMEOUT, BROWSER_HEADERS
+from . import apify
 
 
 @lru_cache(maxsize=256)
@@ -34,15 +35,44 @@ def allowed(url: str) -> bool:
         return True
 
 
-def get(url: str, timeout: int = REQUEST_TIMEOUT) -> requests.Response | None:
-    """GET with our UA + timeout; None on failure."""
+def get(url: str, timeout: int = REQUEST_TIMEOUT,
+        browser_ua: bool = False) -> requests.Response | None:
+    """GET with timeout; None on failure.
+
+    ``browser_ua=True`` sends a realistic browser User-Agent (helps with sites
+    that 403 a bot UA). Defaults to the polite Zenith UA for feed endpoints.
+    """
+    headers = dict(BROWSER_HEADERS) if browser_ua else {"User-Agent": USER_AGENT}
     try:
-        r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=timeout)
+        r = requests.get(url, headers=headers, timeout=timeout)
         if r.status_code == 200:
             return r
     except Exception:
         return None
     return None
+
+
+def get_html(url: str, timeout: int = REQUEST_TIMEOUT) -> tuple[str | None, str]:
+    """Hybrid page fetch for *blocked* sources.
+
+    Tier 1 (free): direct request with a browser UA.
+    Tier 2 (paid, budget-gated): Apify, only if the direct tier is blocked.
+
+    Returns (html_or_none, via) where via ∈ {'direct', 'apify', 'apify:…',
+    'blocked', 'robots'}.
+    """
+    if not allowed(url):
+        return None, "robots"
+    r = get(url, timeout=timeout, browser_ua=True)
+    if r is not None and r.content:
+        # honor the page's real charset (avoids mojibake on smart quotes etc.)
+        r.encoding = r.apparent_encoding or r.encoding
+        return r.text, "direct"
+    # direct blocked/empty -> Apify fallback (no-op if disabled or over budget)
+    html, note = apify.fetch_html(url)
+    if html:
+        return html, "apify"
+    return None, note if note.startswith("apify") else "blocked"
 
 
 def parse_feed(url: str):
