@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
@@ -10,7 +12,9 @@ from zenith.sources import SOURCES
 from zenith.auth import require_password
 from zenith.ui_theme import CSS, BANNER, section, card_html
 
-st.set_page_config(page_title="ZENITH // research", layout="wide", page_icon="▲")
+_FAVICON = Path(__file__).parent / "assets" / "favicon.png"
+_PAGE_ICON = str(_FAVICON) if _FAVICON.exists() else "▲"
+st.set_page_config(page_title="ZENITH // research", layout="wide", page_icon=_PAGE_ICON)
 st.markdown(CSS, unsafe_allow_html=True)
 require_password()
 st.markdown(BANNER, unsafe_allow_html=True)
