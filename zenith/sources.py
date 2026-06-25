@@ -43,10 +43,8 @@ SOURCES: list[Source] = [
     Source("A Wealth of Common Sense", "insight", "rss", "https://awealthofcommonsense.com/feed/"),
     Source("The Irrelevant Investor", "insight", "rss", "https://theirrelevantinvestor.com/feed/",
            enabled=False, note="feed now returns 0 entries (blog dormant/moved)"),
-    Source("The Big Picture (Ritholtz)", "insight", "rss", "https://ritholtz.com/feed/"),
     Source("Calculated Risk", "insight", "rss",
            "https://www.calculatedriskblog.com/feeds/posts/default"),
-    Source("FT Alphaville", "insight", "rss", "https://www.ft.com/alphaville?format=rss"),
     Source("Musings on Markets (Damodaran)", "insight", "rss",
            "https://aswathdamodaran.blogspot.com/feeds/posts/default"),
     Source("Robert Carver (Systematic)", "insight", "rss",
@@ -55,18 +53,26 @@ SOURCES: list[Source] = [
            "https://www.philosophicaleconomics.com/feed/"),
     Source("Pragmatic Capitalism (Discipline Funds)", "insight", "rss",
            "https://disciplinefunds.com/feed/"),
-    Source("Marginal Revolution", "insight", "rss", "https://marginalrevolution.com/feed"),
-    Source("Conversable Economist", "insight", "rss", "https://conversableeconomist.com/feed/"),
     Source("Econbrowser", "insight", "rss", "https://econbrowser.com/feed"),
     Source("Quantian's Newsletter", "insight", "rss", "https://quantian.substack.com/feed"),
-    Source("Project Syndicate (Economics)", "insight", "rss", "https://www.project-syndicate.org/rss"),
     Source("Mauldin Economics (Frontline)", "insight", "rss", "https://www.mauldineconomics.com/feed",
            enabled=False, note="feed 404 (no current public RSS)"),
     Source("Top Traders Unplugged (podcast)", "insight", "rss", "https://toptradersunplugged.com/feed/"),
     # --- new verified RSS feeds (probed 2026-06) ---
-    Source("Meb Faber / Cambria", "insight", "rss", "https://mebfaber.com/feed/"),
+    Source("Meb Faber / Cambria", "insight", "rss", "https://mebfaber.com/feed/",
+           note="feed itself is healthy (HTTP 200, valid RSS). The intermittent 'Error "
+                "establishing a database connection' on click-through is a transient "
+                "server-side WordPress/DB outage on mebfaber.com — not a Zenith bug; "
+                "resolves on retry. cambriainvestments.com/feed mirrors the same content"),
     Source("Simplify Asset Management", "insight", "rss", "https://www.simplify.us/blog/rss.xml"),
     Source("FactSet Insight", "insight", "rss", "https://insight.factset.com/rss.xml"),
+    # --- institutional substitutes for closed/paywalled desks (probed 2026-06-24) ---
+    Source("ISABELNET (bank chart-of-the-day mirror)", "insight", "rss",
+           "https://www.isabelnet.com/feed/",
+           note="mirrors Chart-of-the-Day from Deutsche Bank, Goldman, Morgan Stanley, "
+                "Nomura, SocGen, BofA — the free substitute for those paywalled desks"),
+    Source("Allocate Smartly", "insight", "rss", "https://allocatesmartly.com/feed/",
+           note="empirical tactical asset-allocation research & backtests"),
     # --- HTML-hub sources: no RSS, but their insights index scrapes cleanly via
     #     the direct (browser-UA) tier — confirmed returning article links 2026-06 ---
     Source("Blackstone (Insights)", "insight", "html", "https://www.blackstone.com/insights/",
@@ -107,12 +113,19 @@ SOURCES: list[Source] = [
     Source("Deutsche Bank (Chart of the Day)", "insight", "html",
            "https://www.dbresearch.com/", enabled=False,
            note="DB Research is LOGIN-gated — no scraper (Firecrawl/Apify) can bypass auth; "
-                "would need DB credentials. Chart of the Day is often mirrored on isabelnet.com"),
-    Source("SSRN (FEN top papers)", "research", "html",
+                "would need DB credentials. Chart of the Day is now captured via the enabled "
+                "ISABELNET feed above, which mirrors DB's charts"),
+    Source("Nomura / Morgan Stanley Quant / Société Générale (research desks)", "insight",
+           "rss", "", enabled=False,
+           note="no public free RSS (all probed 404/403). Their published charts/insights "
+                "surface via the enabled ISABELNET feed above; no direct feed to automate"),
+    Source("SSRN (FEN top papers) / Google Scholar", "research", "html",
            "https://papers.ssrn.com/sol3/Jeljour_results.cfm?form_name=journalBrowse&journal_id=203",
            enabled=False,
-           note="SSRN browse is session/login-gated + bot-protected; RSS restricted. "
-                "arXiv q-fin (enabled) covers most open quant-finance preprints instead"),
+           note="SSRN browse is session/login-gated + bot-protected; RSS restricted. Google "
+                "Scholar dropped RSS years ago — no free feed exists for either. Open quant-"
+                "finance research is covered by arXiv q-fin + Quantpedia + Alpha Architect "
+                "(all enabled). SSRN PDFs are often free to download manually, but not feedable"),
     Source("Hedgeye", "insight", "rss", "https://app.hedgeye.com/feed_items.rss",
            enabled=False, note="403 blocked; subscriber-gated"),
 
@@ -130,12 +143,17 @@ SOURCES: list[Source] = [
            "https://www.federalreserve.gov/feeds/working_papers.xml"),
     Source("Federal Reserve (Speeches)", "research", "rss",
            "https://www.federalreserve.gov/feeds/speeches.xml"),
-    Source("SF Fed Economic Letter", "research", "rss",
-           "https://www.frbsf.org/economic-research/feed/", enabled=False,
-           note="feed 404 (FRBSF dropped this RSS)"),
+    Source("SF Fed (Research & Insights)", "research", "rss",
+           "https://www.frbsf.org/research-and-insights/feed/", enabled=False,
+           note="replaces old frbsf.org/economic-research 404, but this feed currently "
+                "parses 0 entries (JS-rendered/empty). Disabled until it yields items"),
+    Source("Bank of England (Publications)", "research", "rss",
+           "https://www.bankofengland.co.uk/rss/publications"),
     Source("Bank Underground (Bank of England)", "research", "rss",
            "https://bankunderground.co.uk/feed/"),
     Source("arXiv q-fin (Quant Finance)", "research", "rss", "http://export.arxiv.org/rss/q-fin"),
+    Source("Quantpedia", "research", "rss", "https://quantpedia.com/feed/",
+           note="empirical quant-strategy research; summarizes SSRN/academic papers"),
     # Journal table-of-contents (abstracts free; full text links out)
     Source("Journal of Finance (TOC)", "research", "rss",
            "https://onlinelibrary.wiley.com/feed/15406261/most-recent"),
@@ -163,6 +181,18 @@ SOURCES: list[Source] = [
     # enabled; commercial headline feeds (Yahoo/CNBC/Nasdaq) are disabled.
     Source("Federal Reserve (Press)", "news", "rss",
            "https://www.federalreserve.gov/feeds/press_all.xml"),
+    # --- demoted from insights: retail econ/markets commentary, low institutional
+    #     value. Kept enabled but render only in the minimized News section ---
+    Source("FT Alphaville", "news", "rss", "https://www.ft.com/alphaville?format=rss",
+           note="demoted from insights: retail commentary, low institutional value"),
+    Source("The Big Picture (Ritholtz)", "news", "rss", "https://ritholtz.com/feed/",
+           note="demoted from insights: retail commentary, low institutional value"),
+    Source("Marginal Revolution", "news", "rss", "https://marginalrevolution.com/feed",
+           note="demoted from insights: retail commentary, low institutional value"),
+    Source("Conversable Economist", "news", "rss", "https://conversableeconomist.com/feed/",
+           note="demoted from insights: retail commentary, low institutional value"),
+    Source("Project Syndicate (Economics)", "news", "rss", "https://www.project-syndicate.org/rss",
+           note="demoted from insights: retail commentary, low institutional value"),
     Source("Yahoo Finance", "news", "rss", "https://finance.yahoo.com/news/rssindex",
            enabled=False, note="disabled: news minimized per user"),
     Source("CNBC / commercial headline feeds", "news", "rss", "", enabled=False,

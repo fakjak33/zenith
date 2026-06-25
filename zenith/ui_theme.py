@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
+import base64
+from pathlib import Path
+
 from .config import THEME
+
+_ROOT = Path(__file__).resolve().parent.parent
+_ASSETS = _ROOT / "assets"
 
 CSS = f"""
 <style>
@@ -112,9 +118,30 @@ def _logo_svg(size: int = 84) -> str:
     )
 
 
+def _logo_mark(size: int = 88) -> str:
+    """The Zenith disc logo as an <img>.
+
+    Prefers Streamlit's static file server (``static/logo.png`` -> ``app/static``):
+    the browser fetches the PNG once and caches it, instead of the ~100 KB base64
+    blob being re-sent inline in the banner HTML on every rerun. Falls back to a
+    self-contained base64 embed, then to the legacy SVG vortex, if the file is
+    missing or static serving is disabled."""
+    served = _ROOT / "static" / "logo.png"
+    if served.exists():
+        return (f'<img src="app/static/logo.png" width="{size}" height="{size}" '
+                f'alt="Zenith logo" style="display:block;" />')
+    png = _ASSETS / "logo_256.png"
+    if png.exists():
+        b64 = base64.b64encode(png.read_bytes()).decode("ascii")
+        return (f'<img src="data:image/png;base64,{b64}" width="{size}" '
+                f'height="{size}" alt="Zenith logo" '
+                f'style="display:block;" />')
+    return _logo_svg(size)
+
+
 BANNER = f"""
 <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.3em; position:relative; z-index:2;">
-  <div style="line-height:0;">{_logo_svg(88)}</div>
+  <div style="line-height:0;">{_logo_mark(88)}</div>
   <div>
     <div style="font-family:{THEME.font_display}; font-size:4.4rem; letter-spacing:0.16em;
                 color:#fff; line-height:0.9; -webkit-text-stroke:1px #fff;">ZENITH</div>
