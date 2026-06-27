@@ -1,0 +1,54 @@
+name: CAS compute
+
+on:
+  schedule:
+    - cron: "30 22 * * 1-5"     # ~daily after US close (Mon-Fri), prices/strategies/themes
+    - cron: "30 23 * * 5"       # Friday late — weekly, picks up the new COT release
+    - cron: "0 12 1 * *"        # 1st of month — monthly, refresh 13F
+  workflow_dispatch:
+    inputs:
+      cadence:
+        description: "daily | weekly | monthly"
+        default: "weekly"
+
+permissions:
+  contents: write
+
+jobs:
+  cas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Pick cadence
+        id: cad
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "cadence=${{ github.event.inputs.cadence }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "0 12 1 * *" ]; then
+            echo "cadence=monthly" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "30 23 * * 5" ]; then
+            echo "cadence=weekly" >> "$GITHUB_OUTPUT"
+          else
+            echo "cadence=daily" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run CAS compute
+        run: python -m zenith.cas.compute --cadence ${{ steps.cad.outputs.cadence }}
+
+      - name: Commit CAS data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git add data/cas/
+          if git diff --cached --quiet; then
+            echo "No CAS changes."
+          else
+            git commit -m "cas: $(date -u +%Y-%m-%d) compute"
+            git push
+          fi

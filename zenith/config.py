@@ -13,7 +13,25 @@ LATEST_JSON = DATA_DIR / "latest.json"
 SEEN_JSON = DATA_DIR / "seen.json"
 STATUS_JSON = DATA_DIR / "status.json"
 USAGE_JSON = DATA_DIR / "apify_usage.json"
-for _d in (DATA_DIR, ARCHIVE_DIR):
+
+# --- CAS (Complex Adaptive Systems) monitor -------------------------------
+CAS_DIR = DATA_DIR / "cas"
+CAS_ARCHIVE_DIR = CAS_DIR / "archive"
+CAS_CACHE_DIR = CAS_DIR / "cache"            # raw data caches (prices, cot, …)
+# one JSON file per CAS artefact, mirroring the feeds-side store
+CAS_FILES = {
+    "signals": CAS_DIR / "signals_latest.json",
+    "positioning": CAS_DIR / "positioning.json",
+    "themes": CAS_DIR / "themes.json",
+    "rebalance": CAS_DIR / "rebalance.json",
+    "consensus": CAS_DIR / "consensus.json",
+    "overlap": CAS_DIR / "overlap.json",
+    "registry": CAS_DIR / "registry.json",
+    "contingency": CAS_DIR / "contingency.json",
+    "status": CAS_DIR / "status.json",
+}
+
+for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "vol_spike",
+    "name": "Volatility spike / risk-off",
+    "trigger": "regime risk-off or VIX percentile > 0.85",
+    "proactive": "Trim high-beta & crowded-long themes; raise cash; pre-buy downside hedges while cheap (SPY/QQQ puts, VIX calls).",
+    "reactive": "Add to quality/min-vol (USMV/QUAL); rotate toward defensives (XLP/XLU); avoid catching falling knives in lev-long COT extremes.",
+    "active": false,
+    "status": "regime=risk-on, VIX pct=77%"
+  },
+  {
+    "id": "rate_shock",
+    "name": "Rate shock / curve move",
+    "trigger": "10y yield percentile > 0.85 or sharp 10y-2y change",
+    "proactive": "Reduce long-duration (TLT) and rate-sensitive (XLU/XLRE) exposure; favor financials (XLF/KRE) on steepening.",
+    "reactive": "Reassess growth/tech (QQQ/IGV) sensitivity; hedge duration.",
+    "active": true,
+    "status": "10y yield pct=96%"
+  },
+  {
+    "id": "crowding_unwind",
+    "name": "Crowded-trade unwind",
+    "trigger": "leveraged/managed-money COT at positive extreme with weakening price trend",
+    "proactive": "Lighten the crowded theme into strength; set trailing stops.",
+    "reactive": "Expect sharp mean-reversion; size down; wait for positioning to reset before re-entering.",
+    "active": true,
+    "status": "SOXX flashing crowded-sell"
+  },
+  {
+    "id": "theme_reversal",
+    "name": "Leading-theme reversal",
+    "trigger": "top relative-strength theme rolls below its 50d MA",
+    "proactive": "Take partial profits on extended leaders (e.g. semis/gold).",
+    "reactive": "Rotate into the next emerging relative-strength theme.",
+    "active": false,
+    "status": "monitor leading themes vs 50d MA"
+  },
+  {
+    "id": "liquidity_event",
+    "name": "Liquidity / event window",
+    "trigger": "triple-witching / quarter-end / index rebalance within 5 days",
+    "proactive": "Expect flow-driven dislocation; reduce new risk into the print.",
+    "reactive": "Fade exaggerated rebalance moves once the window passes.",
+    "active": true,
+    "status": "Russell reconstitution in 2d"
+  }
+]

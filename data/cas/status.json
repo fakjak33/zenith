@@ -1,0 +1,59 @@
+{
+  "date": "2026-06-24",
+  "cadence": "weekly",
+  "n_signals": 643,
+  "n_assets": 56,
+  "regime": "risk-on",
+  "segments": [
+    {
+      "segment": "prices",
+      "ok": true,
+      "n": 53,
+      "source": "yfinance(cache)"
+    },
+    {
+      "segment": "strategies",
+      "ok": true,
+      "n": 530
+    },
+    {
+      "segment": "finviz",
+      "ok": false,
+      "n": 0,
+      "source": "finviz",
+      "error": "Error tokenizing data. C error: Expected 1 fields in line 7, saw 4\n"
+    },
+    {
+      "segment": "themes",
+      "ok": true,
+      "n": 33
+    },
+    {
+      "segment": "fred",
+      "ok": true,
+      "n": 2600,
+      "source": "fred(cache)"
+    },
+    {
+      "segment": "regime",
+      "ok": true,
+      "n": 1
+    },
+    {
+      "segment": "rebalance",
+      "ok": true,
+      "n": 2
+    },
+    {
+      "segment": "cot",
+      "ok": true,
+      "n": 530,
+      "source": "cftc(cache)"
+    },
+    {
+      "segment": "flows",
+      "ok": true,
+      "n": 77
+    }
+  ]
+}
