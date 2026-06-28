@@ -81,8 +81,11 @@ SOURCES: list[Source] = [
            link_pattern=r"/insights/(articles|pages)/"),
     Source("AQR (Insights)", "insight", "html", "https://www.aqr.com/Insights",
            link_pattern=r"/Insights/"),
-    Source("Man Institute", "insight", "html", "https://www.man.com/insights",
-           link_pattern=r"/insights/"),
+    Source("Man Institute (Man Group)", "insight", "html", "https://www.man.com/insights",
+           link_pattern=r"/insights/|/maninstitute/",
+           note="Man Group publishes no free RSS (all feed URLs 404); the insights page is an "
+                "anti-bot SPA. Returns items only via the Firecrawl tier — set FIRECRAWL_API_KEY "
+                "in the GitHub Action secret. Reports blocked until a key is added"),
     Source("BlackRock Investment Institute", "insight", "html",
            "https://www.blackrock.com/us/individual/insights",
            link_pattern=r"/insights/"),
