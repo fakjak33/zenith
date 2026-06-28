@@ -127,17 +127,17 @@ def _logo_mark(size: int = 64) -> str:
     self-contained base64 embed, then to the legacy SVG vortex, if the file is
     missing or static serving is disabled.
 
-    ``image-rendering: pixelated`` keeps the 8-bit pixel art crisp at any size."""
-    pix = "image-rendering:pixelated; image-rendering:crisp-edges; display:block;"
+    The mark is a smooth gradient outline (no fill), so use normal rendering."""
+    sty = "display:block;"
     served = _ROOT / "static" / "logo.png"
     if served.exists():
         return (f'<img src="app/static/logo.png" width="{size}" height="{size}" '
-                f'alt="Zenith logo" style="{pix}" />')
+                f'alt="Zenith logo" style="{sty}" />')
     png = _ASSETS / "logo_256.png"
     if png.exists():
         b64 = base64.b64encode(png.read_bytes()).decode("ascii")
         return (f'<img src="data:image/png;base64,{b64}" width="{size}" '
-                f'height="{size}" alt="Zenith logo" style="{pix}" />')
+                f'height="{size}" alt="Zenith logo" style="{sty}" />')
     return _logo_svg(size)
 
 
