@@ -79,22 +79,28 @@ def build() -> None:
     ang = (np.degrees(np.arctan2(xx - cx, -(yy - cy)))) % 360.0
     rad = np.clip(dist / r, 0, 1)
 
+    # --- outline only, no fill: trace the boundary of the coloured area -------
+    # (the outer disc circle + the inner Z-ribbon edges), as a soft band via a
+    # dilate-minus-erode of the fields mask, then tint it with the palette
+    # gradient. Everything else stays transparent.
+    mask = Image.fromarray((fields * 255).astype(np.uint8), "L")
+    grow = 7                                   # half-thickness of the outline band
+    dil = mask.filter(ImageFilter.MaxFilter(grow * 2 + 1))
+    ero = mask.filter(ImageFilter.MinFilter(grow * 2 + 1))
+    band = np.clip(np.asarray(dil).astype(np.int16) - np.asarray(ero).astype(np.int16), 0, 255)
+    band = np.asarray(Image.fromarray(band.astype(np.uint8), "L")
+                      .filter(ImageFilter.GaussianBlur(1.2)))      # smooth, anti-aliased
+
     out = np.zeros((h, w, 4), dtype=np.uint8)
-    fy, fx = np.where(fields)
-    for y, x in zip(fy.tolist(), fx.tolist()):
-        base = _angular_color(ang[y, x])
-        # radial depth: lighter near centre, slightly deeper toward the rim
-        col = _lerp(_lerp(base, (255, 255, 255), 0.10),
-                    _lerp(base, DEEP_NAVY, 0.18), rad[y, x])
-        out[y, x, 0], out[y, x, 1], out[y, x, 2], out[y, x, 3] = col[0], col[1], col[2], 255
+    oy, ox = np.where(band > 6)
+    for y, x in zip(oy.tolist(), ox.tolist()):
+        col = _angular_color(ang[y, x])        # palette gradient around the mark
+        out[y, x, 0], out[y, x, 1], out[y, x, 2], out[y, x, 3] = col[0], col[1], col[2], band[y, x]
 
     img = Image.fromarray(out, "RGBA")
-    # feather the field edges so the cut against the transparent ribbon is smooth
-    alpha = img.getchannel("A").filter(ImageFilter.GaussianBlur(0.6))
-    img.putalpha(alpha)
 
-    # trim to the disc bbox (square) and export the sizes the app uses
-    L, T, R, B = int(cx - r), int(cy - r), int(cx + r), int(cy + r)
+    # trim to the disc bbox (square) and export — smooth resampling (no longer 8-bit)
+    L, T, R, B = int(cx - r - grow), int(cy - r - grow), int(cx + r + grow), int(cy + r + grow)
     img = img.crop((L, T, R, B))
     ASSETS.mkdir(exist_ok=True)
     STATIC.mkdir(exist_ok=True)
@@ -103,10 +109,8 @@ def build() -> None:
     img.resize((64, 64), Image.LANCZOS).save(ASSETS / "favicon.png")
     img.resize((256, 256), Image.LANCZOS).save(STATIC / "logo.png")
 
-    cream_left = int(((out[:, :, 3] > 10) &
-                      (out[:, :, 0] > 225) & (out[:, :, 1] > 220) & (out[:, :, 2] > 195)).sum())
-    print(f"disc center=({cx:.0f},{cy:.0f}) r={r:.0f}  painted={len(fy):,}px  "
-          f"residual_cream={cream_left}px  -> assets/logo*.png, static/logo.png")
+    print(f"disc center=({cx:.0f},{cy:.0f}) r={r:.0f}  outline_px={len(oy):,}  "
+          f"-> gradient outline (no fill), transparent  -> assets/logo*.png, static/logo.png")
 
 
 if __name__ == "__main__":

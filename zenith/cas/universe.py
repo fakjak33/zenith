@@ -58,6 +58,15 @@ def all_etfs() -> dict[str, str]:
     return out
 
 
+def master_etfs() -> list[str]:
+    """The curated liquid master ETF list (~400) that the 151-strategies CAS model
+    scans. Union of the core universe above + etf_master.MASTER_ETFS."""
+    from .etf_master import master_tickers
+    core = list(all_etfs())
+    seen = set(core)
+    return core + [t for t in master_tickers() if t not in seen]
+
+
 def asset_class_of(ticker: str) -> str:
     if ticker in SECTORS:
         return "sector"

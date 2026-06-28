@@ -7,7 +7,7 @@ import pandas as pd
 
 from zenith.cas import schema, consensus, overlap
 from zenith.cas.signals import indicators as ind
-from zenith.cas.signals import strategies
+from zenith.cas.signals import strategies, strategies151
 
 
 def _ramp(n=300, start=100.0, step=0.5):
@@ -80,6 +80,28 @@ def test_consensus_variety_and_state():
     assert rec["state"] == "buy"
     assert rec["signal_variety"] == 6
     assert 0.0 <= rec["entropy"] <= 1.0
+
+
+def test_strategies151_emits_families_for_uptrend():
+    df = _ramp()
+    sigs = strategies151.compute({"SPY": df}, category_of=lambda t: "broad")
+    fams = {s["family"] for s in sigs}
+    assert all(f.startswith("s151_") for f in fams)
+    assert "s151_sma_cross_50_200" in fams and "s151_tsmom" in fams
+    # an uptrend should make the trend families bullish
+    trend = next(s for s in sigs if s["family"] == "s151_tsmom")
+    assert trend["signal"] > 0.5 and trend["segment"] == "strategies"
+    assert all(schema.validate(s) for s in sigs)
+
+
+def test_master_etf_list_is_sane():
+    from zenith.cas.etf_master import MASTER_ETFS, master_tickers
+    from zenith.cas.universe import master_etfs
+    assert len(MASTER_ETFS) > 300
+    assert "SPY" in MASTER_ETFS and "SMH" in MASTER_ETFS
+    # master_etfs() unions the core universe with the master list, no dupes
+    mt = master_etfs()
+    assert len(mt) == len(set(mt)) and len(mt) >= len(master_tickers())
 
 
 def test_consensus_entropy_high_when_split():

@@ -20,26 +20,42 @@ from datetime import date
 from . import store_cas, consensus, overlap, registry, contingency
 from .universe import all_etfs, COT_MAP
 from .sources import prices, cot, finviz, fred, edgar13f, calendar as cal
-from .signals import strategies, flows, themes, rebalance, regime
+from .signals import strategies, strategies151, flows, themes, rebalance, regime
+from .universe import master_etfs
+from .etf_master import category_of as master_category_of
 
 
 def run(cadence: str = "daily") -> dict:
     status: list[dict] = []
     signals: list[dict] = []
-    tickers = list(all_etfs())
+    # pull the full master list once (superset of the core universe); the core
+    # segments use the subset, the 151-model uses the whole thing
+    master = master_etfs()
+    core = list(all_etfs())
 
     # --- prices (always) ---
-    px, st = prices.get_history(tickers)
+    px, st = prices.get_history(master)
     status.append({"segment": "prices", **st})
+    core_px = {t: px[t] for t in core if t in px}
 
     # --- strategies (always, if prices) ---
-    if px:
+    if core_px:
         try:
-            s = strategies.compute(px)
+            s = strategies.compute(core_px)
             signals += s
             status.append({"segment": "strategies", "ok": True, "n": len(s)})
         except Exception as e:
             status.append({"segment": "strategies", "ok": False, "error": str(e)[:200]})
+
+    # --- 151-strategies model across the master ETF list ---
+    if px:
+        try:
+            s151 = strategies151.compute(px, category_of=master_category_of)
+            signals += s151
+            status.append({"segment": "strategies151", "ok": True, "n": len(s151),
+                           "universe": len(px)})
+        except Exception as e:
+            status.append({"segment": "strategies151", "ok": False, "error": str(e)[:200]})
 
         # --- themes (always) ---
         groups, gst = finviz.get_groups("sector")
