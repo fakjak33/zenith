@@ -35,7 +35,13 @@ CAS_FILES = {
     "hitrate": CAS_DIR / "hitrate.json",
 }
 
-for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR):
+# --- Weekly Brief (market commentary) -------------------------------------
+BRIEF_DIR = DATA_DIR / "brief"
+BRIEF_FILES = {
+    "brief": BRIEF_DIR / "brief.json",          # the assembled weekly brief
+}
+
+for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping

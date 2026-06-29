@@ -50,9 +50,14 @@ def set_weight(family: str, weight: float) -> None:
 
 
 def add_note(family: str, title: str, abstract: str,
-             weight_adjustment: float | None = None) -> dict:
-    """Append a research note (e.g. a pasted abstract) against a family, and
-    optionally nudge that family's weight."""
+             weight_adjustment: float | None = None,
+             source: str = "", status: str = "") -> dict:
+    """Append a research note (e.g. a pasted abstract or an uploaded paper) against
+    a family, and optionally nudge that family's weight.
+
+    ``source`` records where it came from (URL / filename); ``status`` lets the
+    in-app uploader flag a note as 'pending-review' for the /zenith-research skill
+    to process into a scaffold later."""
     reg = load()
     note = {
         "ts": datetime.utcnow().isoformat(timespec="seconds"),
@@ -60,6 +65,10 @@ def add_note(family: str, title: str, abstract: str,
         "title": title.strip()[:200],
         "abstract": abstract.strip()[:4000],
     }
+    if source:
+        note["source"] = source.strip()[:500]
+    if status:
+        note["status"] = status.strip()[:40]
     if weight_adjustment is not None:
         reg["weights"][family] = round(float(weight_adjustment), 3)
         note["weight_set_to"] = reg["weights"][family]

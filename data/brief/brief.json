@@ -1,0 +1,2118 @@
+{
+  "as_of": "2026-06-28",
+  "disclaimer": "Weekly Brief is auto-generated from free/best-effort data (yfinance, FRED, finviz, Zenith feeds). Fed-funds odds and dealer-gamma are labelled proxies. Decision-support, not investment advice.",
+  "talking_points": [
+    "U.S. stocks fell this week — S&P 500 -2.4% (1-month -2.6%); Nasdaq -4.5%, small caps +1.4%.",
+    "Sectors: Health Care led (+7.8%), Technology lagged (-5.3%).",
+    "Commodities/FX: gold -3.5%, oil -8.2%, the dollar +0.6%.",
+    "Rates: 10y Treasury at 4.4%, 2s10s 0.31. Fed funds 3.5–3.75%; the 1y market implies ~33.0 bps over 12m.",
+    "Volatility: VIX at 18.41 (moderate), 1-week +12.3%.",
+    "Breadth: 64% of the S&P 500 is above its 50-day average (65% above the 200-day).",
+    "Options: SPY dealer gamma is negative (vol-amplifying) — moves can accelerate."
+  ],
+  "market_overview": [
+    {
+      "ticker": "SPY",
+      "label": "S&P 500",
+      "last": 728.99,
+      "w1": -0.0238,
+      "m1": -0.0261,
+      "m3": 0.133,
+      "ytd": 0.0727,
+      "spark": [
+        686.7305,
+        683.3783,
+        684.0846,
+        685.8651,
+        690.1026,
+        688.0037,
+        685.338,
+        691.8135,
+        688.3121,
+        682.5627,
+        690.2816,
+        677.6687,
+        682.6621,
+        678.7828,
+        685.6562,
+        676.7337,
+        668.8256,
+        672.7548,
+        665.4934,
+        656.3121,
+        651.5016,
+        632.4606,
+        653.5563,
+        657.526,
+        677.7141,
+        698.1414,
+        706.8988,
+        706.6296,
+        709.8612,
+        718.7982,
+        731.9443,
+        737.4003,
+        746.2475,
+        731.8446,
+        743.724,
+        752.6609,
+        757.6182,
+        735.6548,
+        723.5659,
+        752.8904,
+        746.74,
+        733.24
+      ]
+    },
+    {
+      "ticker": "QQQ",
+      "label": "Nasdaq 100",
+      "last": 706.52,
+      "w1": -0.045,
+      "m1": -0.0304,
+      "m3": 0.2327,
+      "ytd": 0.1551,
+      "spark": [
+        622.4603,
+        617.9708,
+        616.5342,
+        619.0084,
+        624.7648,
+        619.7965,
+        619.2977,
+        629.6432,
+        620.4051,
+        604.3231,
+        612.8729,
+        599.2251,
+        604.3629,
+        599.9932,
+        607.8048,
+        600.1629,
+        598.3372,
+        606.2585,
+        598.9657,
+        591.623,
+        583.3389,
+        561.9625,
+        583.6686,
+        587.9439,
+        610.3992,
+        636.7003,
+        646.08,
+        650.7049,
+        656.8282,
+        673.41,
+        695.0062,
+        712.507,
+        718.9998,
+        700.7599,
+        716.7523,
+        734.7925,
+        745.3409,
+        704.286,
+        692.9285,
+        743.1833,
+        739.807,
+        710.62
+      ]
+    },
+    {
+      "ticker": "DIA",
+      "label": "Dow 30",
+      "last": 517.75,
+      "w1": 0.0043,
+      "m1": 0.0242,
+      "m3": 0.1314,
+      "ytd": 0.0786,
+      "spark": [
+        483.3897,
+        479.9951,
+        486.1291,
+        488.8687,
+        488.2831,
+        489.9294,
+        490.1975,
+        486.5931,
+        485.5704,
+        491.25,
+        497.6742,
+        491.1706,
+        493.484,
+        485.1592,
+        491.9692,
+        482.6837,
+        472.4539,
+        472.0363,
+        467.5527,
+        458.3666,
+        459.4666,
+        449.7227,
+        463.7607,
+        464.1592,
+        477.4798,
+        482.9296,
+        492.7131,
+        491.3874,
+        489.8126,
+        493.4008,
+        497.4176,
+        495.484,
+        499.1619,
+        492.6357,
+        504.7427,
+        505.6701,
+        512.6511,
+        508.313,
+        498.8887,
+        517.0292,
+        515.52,
+        518.52
+      ]
+    },
+    {
+      "ticker": "IWM",
+      "label": "Small Caps",
+      "last": 299.83,
+      "w1": 0.0143,
+      "m1": 0.035,
+      "m3": 0.2146,
+      "ytd": 0.2102,
+      "spark": [
+        251.6628,
+        247.0022,
+        251.6827,
+        257.1997,
+        260.267,
+        264.6587,
+        268.672,
+        263.633,
+        258.574,
+        259.4404,
+        265.7741,
+        258.4645,
+        262.8961,
+        259.4105,
+        264.8878,
+        258.1657,
+        249.8503,
+        251.8022,
+        247.8885,
+        247.0425,
+        248.1898,
+        242.5233,
+        248.9679,
+        252.31,
+        260.6801,
+        268.7509,
+        276.692,
+        274.8663,
+        273.2602,
+        278.6174,
+        286.1196,
+        284.653,
+        283.7752,
+        272.3523,
+        284.4436,
+        291.3372,
+        290.968,
+        280.9818,
+        281.3808,
+        294.64,
+        295.59,
+        296.69
+      ]
+    },
+    {
+      "ticker": "EFA",
+      "label": "Dev. ex-US",
+      "last": 102.54,
+      "w1": -0.0179,
+      "m1": -0.0058,
+      "m3": 0.1004,
+      "ytd": 0.0734,
+      "spark": [
+        94.9081,
+        94.9377,
+        96.621,
+        96.4143,
+        97.3003,
+        97.9795,
+        97.8712,
+        100.4996,
+        99.1707,
+        100.1945,
+        102.37,
+        102.5276,
+        102.7146,
+        102.8426,
+        103.9254,
+        98.5308,
+        96.749,
+        97.4676,
+        96.5718,
+        95.0164,
+        93.7859,
+        92.3388,
+        97.0739,
+        96.8179,
+        100.5882,
+        101.7006,
+        102.2913,
+        99.6629,
+        99.3872,
+        100.5095,
+        103.1773,
+        102.1239,
+        101.8483,
+        100.3323,
+        102.3602,
+        103.0591,
+        103.384,
+        100.667,
+        99.9877,
+        104.08,
+        104.41,
+        102.26
+      ]
+    },
+    {
+      "ticker": "EEM",
+      "label": "Emerging Mkts",
+      "last": 67.19,
+      "w1": -0.0509,
+      "m1": -0.0124,
+      "m3": 0.2176,
+      "ytd": 0.2009,
+      "spark": [
+        54.1386,
+        54.5962,
+        56.566,
+        56.5759,
+        57.2126,
+        57.5708,
+        58.3965,
+        60.028,
+        58.7944,
+        58.496,
+        60.1971,
+        60.5453,
+        60.8736,
+        61.3312,
+        62.3857,
+        58.1179,
+        57.0236,
+        58.5258,
+        58.0781,
+        57.3221,
+        56.2277,
+        54.9146,
+        56.9341,
+        57.0137,
+        60.2469,
+        61.8784,
+        62.8533,
+        62.0276,
+        62.6643,
+        63.7984,
+        67.141,
+        67.5389,
+        67.0316,
+        63.9277,
+        65.5393,
+        68.2552,
+        70.4339,
+        64.256,
+        64.3257,
+        69.75,
+        70.79,
+        67.25
+      ]
+    },
+    {
+      "ticker": "GLD",
+      "label": "Gold",
+      "last": 373.63,
+      "w1": -0.0348,
+      "m1": -0.0853,
+      "m3": -0.0674,
+      "ytd": -0.0619,
+      "spark": [
+        411.93,
+        398.89,
+        408.76,
+        411.49,
+        421.63,
+        421.29,
+        451.79,
+        476.1,
+        444.95,
+        453.97,
+        467.03,
+        451.39,
+        458.28,
+        481.28,
+        477.48,
+        468.14,
+        473.51,
+        476.24,
+        460.43,
+        426.41,
+        404.13,
+        414.7,
+        437.82,
+        431.81,
+        437.13,
+        440.46,
+        442.09,
+        431.04,
+        421.91,
+        423.18,
+        430.96,
+        434.65,
+        427.21,
+        411.5,
+        413.82,
+        412.77,
+        411.95,
+        396.24,
+        374.58,
+        396.55,
+        387.12,
+        365.92
+      ]
+    },
+    {
+      "ticker": "SLV",
+      "label": "Silver",
+      "last": 53.28,
+      "w1": -0.1047,
+      "m1": -0.2107,
+      "m3": -0.1233,
+      "ytd": -0.1897,
+      "spark": [
+        65.22,
+        68.98,
+        69.08,
+        69.71,
+        78.6,
+        81.02,
+        87.13,
+        101.59,
+        75.44,
+        79.18,
+        76.04,
+        67.73,
+        70.09,
+        80.57,
+        80.45,
+        74.68,
+        75.94,
+        77.91,
+        73.22,
+        65.68,
+        62.95,
+        63.44,
+        68.14,
+        65.94,
+        69.08,
+        71.84,
+        72.15,
+        68.38,
+        66.2,
+        68.29,
+        70.13,
+        78.0,
+        75.51,
+        66.9,
+        68.36,
+        68.36,
+        67.99,
+        61.57,
+        57.66,
+        63.47,
+        59.51,
+        51.78
+      ]
+    },
+    {
+      "ticker": "TLT",
+      "label": "20y Treasuries",
+      "last": 87.36,
+      "w1": 0.007,
+      "m1": 0.0282,
+      "m3": 0.0264,
+      "ytd": 0.0228,
+      "spark": [
+        86.396,
+        86.2291,
+        85.8366,
+        85.7286,
+        86.1899,
+        86.1703,
+        86.0623,
+        86.1703,
+        85.5127,
+        85.2585,
+        86.224,
+        87.9087,
+        88.2042,
+        88.4111,
+        88.9333,
+        88.3987,
+        87.4399,
+        86.1351,
+        86.2043,
+        86.4811,
+        85.0181,
+        84.6524,
+        85.6059,
+        85.983,
+        85.8342,
+        86.1716,
+        86.3899,
+        85.8937,
+        85.7151,
+        85.2746,
+        85.7427,
+        85.2248,
+        84.5873,
+        82.6947,
+        84.3482,
+        85.4041,
+        85.65,
+        85.06,
+        84.88,
+        85.72,
+        86.75,
+        87.38
+      ]
+    },
+    {
+      "ticker": "HYG",
+      "label": "High Yield",
+      "last": 79.83,
+      "w1": -0.0022,
+      "m1": 0.0014,
+      "m3": 0.027,
+      "ytd": 0.0146,
+      "spark": [
+        78.6495,
+        78.7177,
+        78.8835,
+        78.942,
+        79.0396,
+        79.0883,
+        79.1761,
+        79.1664,
+        79.1176,
+        79.0186,
+        79.3126,
+        79.1852,
+        79.3029,
+        79.2636,
+        79.244,
+        78.9137,
+        78.4902,
+        78.6576,
+        78.2538,
+        78.4607,
+        77.978,
+        77.5348,
+        78.5542,
+        78.9006,
+        79.1381,
+        79.633,
+        79.7517,
+        79.5439,
+        79.5736,
+        79.6523,
+        79.7518,
+        79.5727,
+        79.4433,
+        78.9459,
+        79.503,
+        79.8214,
+        79.9,
+        79.43,
+        79.47,
+        80.04,
+        80.01,
+        79.85
+      ]
+    },
+    {
+      "ticker": "LQD",
+      "label": "IG Credit",
+      "last": 109.5,
+      "w1": 0.0039,
+      "m1": 0.009,
+      "m3": 0.0271,
+      "ytd": 0.013,
+      "spark": [
+        108.5753,
+        108.5851,
+        108.3987,
+        108.173,
+        108.6734,
+        108.4968,
+        108.693,
+        108.7323,
+        108.4968,
+        108.3077,
+        108.8888,
+        109.5388,
+        109.9032,
+        110.0214,
+        110.0312,
+        109.5698,
+        108.8682,
+        107.8799,
+        107.4154,
+        107.9095,
+        107.0695,
+        106.358,
+        107.827,
+        108.2338,
+        108.3628,
+        109.0972,
+        109.1865,
+        108.6804,
+        108.5018,
+        108.1899,
+        108.7776,
+        108.5186,
+        108.1401,
+        106.7155,
+        107.9607,
+        108.8474,
+        108.92,
+        108.17,
+        108.16,
+        108.99,
+        109.07,
+        109.41
+      ]
+    },
+    {
+      "ticker": "UUP",
+      "label": "US Dollar",
+      "last": 28.46,
+      "w1": 0.0057,
+      "m1": 0.0256,
+      "m3": 0.0234,
+      "ytd": 0.0498,
+      "spark": [
+        26.95,
+        27.05,
+        27.07,
+        27.27,
+        27.35,
+        27.43,
+        27.15,
+        26.47,
+        26.85,
+        27.01,
+        26.79,
+        26.82,
+        27.08,
+        27.09,
+        27.1,
+        27.46,
+        27.47,
+        27.55,
+        27.73,
+        27.58,
+        27.65,
+        27.84,
+        27.73,
+        27.75,
+        27.44,
+        27.29,
+        27.32,
+        27.53,
+        27.53,
+        27.41,
+        27.35,
+        27.35,
+        27.62,
+        27.79,
+        27.77,
+        27.7,
+        27.76,
+        28.02,
+        28.05,
+        27.97,
+        28.3,
+        28.53
+      ]
+    },
+    {
+      "ticker": "USO",
+      "label": "Crude Oil",
+      "last": 105.48,
+      "w1": -0.0817,
+      "m1": -0.195,
+      "m3": -0.1005,
+      "ytd": 0.5296,
+      "spark": [
+        70.2,
+        69.74,
+        70.22,
+        70.54,
+        73.48,
+        71.65,
+        71.82,
+        75.66,
+        79.52,
+        77.88,
+        78.02,
+        76.38,
+        79.4,
+        80.9,
+        79.77,
+        90.2,
+        108.77,
+        108.05,
+        115.03,
+        117.36,
+        114.54,
+        124.2,
+        124.09,
+        138.08,
+        124.82,
+        122.59,
+        121.32,
+        134.72,
+        139.6,
+        142.8,
+        133.95,
+        138.66,
+        143.0,
+        152.96,
+        140.92,
+        130.78,
+        137.27,
+        133.02,
+        134.3,
+        121.21,
+        114.87,
+        106.29
+      ]
+    },
+    {
+      "ticker": "COPX",
+      "label": "Copper Miners",
+      "last": 76.18,
+      "w1": -0.1088,
+      "m1": -0.1151,
+      "m3": 0.0746,
+      "ytd": 0.0427,
+      "spark": [
+        72.0604,
+        72.5,
+        76.65,
+        75.62,
+        79.84,
+        80.77,
+        82.23,
+        90.42,
+        84.81,
+        86.61,
+        89.03,
+        87.15,
+        86.66,
+        90.85,
+        94.45,
+        87.02,
+        79.95,
+        82.29,
+        78.66,
+        72.38,
+        73.0,
+        71.61,
+        78.15,
+        76.74,
+        83.52,
+        86.08,
+        86.25,
+        82.46,
+        78.69,
+        79.05,
+        83.57,
+        87.59,
+        89.38,
+        79.37,
+        83.35,
+        88.44,
+        93.66,
+        80.64,
+        77.45,
+        89.81,
+        85.48,
+        75.7
+      ]
+    },
+    {
+      "ticker": "BITO",
+      "label": "Bitcoin",
+      "last": 8.12,
+      "w1": -0.0514,
+      "m1": -0.2036,
+      "m3": -0.1349,
+      "ytd": -0.3449,
+      "spark": [
+        12.0577,
+        12.1471,
+        13.0119,
+        12.5348,
+        13.0418,
+        13.1809,
+        12.3161,
+        12.3062,
+        11.5308,
+        10.0982,
+        9.7301,
+        8.9938,
+        9.1132,
+        8.8645,
+        9.2724,
+        9.3665,
+        9.3565,
+        9.6953,
+        10.1537,
+        9.6355,
+        9.5159,
+        9.0377,
+        9.3326,
+        9.4423,
+        10.0306,
+        10.2699,
+        10.4294,
+        10.6488,
+        10.4294,
+        10.725,
+        11.1344,
+        11.1844,
+        11.1144,
+        10.4654,
+        10.3355,
+        9.996,
+        9.17,
+        8.22,
+        8.43,
+        9.05,
+        8.56,
+        8.15
+      ]
+    },
+    {
+      "ticker": "^VIX",
+      "label": "VIX",
+      "last": 18.41,
+      "w1": 0.1226,
+      "m1": 0.1301,
+      "m3": -0.4071,
+      "ytd": 0.2688,
+      "spark": [
+        13.6,
+        14.95,
+        14.75,
+        14.49,
+        16.75,
+        20.09,
+        16.09,
+        16.35,
+        16.34,
+        21.77,
+        17.79,
+        20.6,
+        20.23,
+        19.55,
+        19.86,
+        21.15,
+        25.5,
+        27.29,
+        22.37,
+        26.78,
+        25.33,
+        30.61,
+        23.87,
+        21.04,
+        19.12,
+        17.94,
+        19.5,
+        18.71,
+        18.81,
+        18.29,
+        17.08,
+        17.99,
+        18.43,
+        17.44,
+        16.59,
+        15.74,
+        15.77,
+        21.51,
+        22.22,
+        16.2,
+        16.4,
+        18.63
+      ]
+    }
+  ],
+  "sectors": [
+    {
+      "ticker": "XLV",
+      "label": "Health Care",
+      "w1": 0.078,
+      "m1": 0.0824
+    },
+    {
+      "ticker": "XLRE",
+      "label": "Real Estate",
+      "w1": 0.0405,
+      "m1": 0.0226
+    },
+    {
+      "ticker": "XLU",
+      "label": "Utilities",
+      "w1": 0.0388,
+      "m1": 0.03
+    },
+    {
+      "ticker": "XLP",
+      "label": "Cons. Staples",
+      "w1": 0.024,
+      "m1": 0.0085
+    },
+    {
+      "ticker": "XLE",
+      "label": "Energy",
+      "w1": 0.0085,
+      "m1": -0.0485
+    },
+    {
+      "ticker": "XLI",
+      "label": "Industrials",
+      "w1": 0.0041,
+      "m1": 0.0421
+    },
+    {
+      "ticker": "XLF",
+      "label": "Financials",
+      "w1": 0.0035,
+      "m1": 0.0455
+    },
+    {
+      "ticker": "XLB",
+      "label": "Materials",
+      "w1": -0.0003,
+      "m1": 0.012
+    },
+    {
+      "ticker": "XLY",
+      "label": "Cons. Discretionary",
+      "w1": -0.0219,
+      "m1": -0.0572
+    },
+    {
+      "ticker": "XLC",
+      "label": "Communication",
+      "w1": -0.0274,
+      "m1": -0.0843
+    },
+    {
+      "ticker": "XLK",
+      "label": "Technology",
+      "w1": -0.0528,
+      "m1": -0.0168
+    }
+  ],
+  "industries": [
+    {
+      "ticker": "ARKG",
+      "label": "Genomic Revolution",
+      "w1": 0.124,
+      "m1": 0.2923
+    },
+    {
+      "ticker": "XBI",
+      "label": "Biotech (equal-wt)",
+      "w1": 0.1053,
+      "m1": 0.1568
+    },
+    {
+      "ticker": "GNOM",
+      "label": "Genomics",
+      "w1": 0.0807,
+      "m1": 0.1733
+    },
+    {
+      "ticker": "IBB",
+      "label": "Biotech",
+      "w1": 0.079,
+      "m1": 0.1031
+    },
+    {
+      "ticker": "IHE",
+      "label": "US Pharma",
+      "w1": 0.0789,
+      "m1": 0.0823
+    },
+    {
+      "ticker": "JETS",
+      "label": "Airlines",
+      "w1": 0.0735,
+      "m1": 0.1444
+    },
+    {
+      "ticker": "PPH",
+      "label": "Pharmaceuticals",
+      "w1": 0.0674,
+      "m1": 0.0442
+    },
+    {
+      "ticker": "IHF",
+      "label": "Health Care Providers",
+      "w1": 0.0635,
+      "m1": 0.1035
+    },
+    {
+      "ticker": "ITB",
+      "label": "Home Construction",
+      "w1": 0.0569,
+      "m1": 0.1229
+    },
+    {
+      "ticker": "KRE",
+      "label": "Regional Banks",
+      "w1": 0.0542,
+      "m1": 0.0867
+    },
+    {
+      "ticker": "IAK",
+      "label": "Insurance (iShares)",
+      "w1": 0.0526,
+      "m1": 0.0813
+    },
+    {
+      "ticker": "KIE",
+      "label": "Insurance",
+      "w1": 0.0525,
+      "m1": 0.0884
+    },
+    {
+      "ticker": "IAT",
+      "label": "Regional Banks (iShares)",
+      "w1": 0.0493,
+      "m1": 0.0922
+    },
+    {
+      "ticker": "XHE",
+      "label": "Health Care Equipment",
+      "w1": 0.0482,
+      "m1": 0.0833
+    },
+    {
+      "ticker": "BUG",
+      "label": "Cybersecurity (Global X)",
+      "w1": 0.0481,
+      "m1": 0.0833
+    },
+    {
+      "ticker": "KBE",
+      "label": "Banks",
+      "w1": 0.0468,
+      "m1": 0.0816
+    },
+    {
+      "ticker": "XHB",
+      "label": "Homebuilders",
+      "w1": 0.0429,
+      "m1": 0.121
+    },
+    {
+      "ticker": "VNQ",
+      "label": "US REITs",
+      "w1": 0.0416,
+      "m1": 0.027
+    },
+    {
+      "ticker": "IHI",
+      "label": "Medical Devices",
+      "w1": 0.0399,
+      "m1": 0.0394
+    },
+    {
+      "ticker": "MLPX",
+      "label": "Midstream",
+      "w1": 0.0397,
+      "m1": 0.0132
+    },
+    {
+      "ticker": "WCLD",
+      "label": "Cloud (WisdomTree)",
+      "w1": 0.0393,
+      "m1": 0.0431
+    },
+    {
+      "ticker": "IYT",
+      "label": "Transports",
+      "w1": 0.0386,
+      "m1": 0.0322
+    },
+    {
+      "ticker": "PEJ",
+      "label": "Leisure & Entertainment",
+      "w1": 0.0342,
+      "m1": 0.083
+    },
+    {
+      "ticker": "FIW",
+      "label": "Water (First Trust)",
+      "w1": 0.0336,
+      "m1": 0.0611
+    },
+    {
+      "ticker": "PHO",
+      "label": "Water Resources",
+      "w1": 0.0307,
+      "m1": 0.0535
+    },
+    {
+      "ticker": "IPAY",
+      "label": "Mobile Payments",
+      "w1": 0.0306,
+      "m1": 0.0104
+    },
+    {
+      "ticker": "MOO",
+      "label": "Agribusiness",
+      "w1": 0.0294,
+      "m1": -0.0153
+    },
+    {
+      "ticker": "XRT",
+      "label": "Retail (equal-wt)",
+      "w1": 0.0292,
+      "m1": 0.059
+    },
+    {
+      "ticker": "HACK",
+      "label": "Cybersecurity (ETFMG)",
+      "w1": 0.0276,
+      "m1": 0.0747
+    },
+    {
+      "ticker": "IFRA",
+      "label": "Infrastructure (iShares)",
+      "w1": 0.0242,
+      "m1": 0.0291
+    },
+    {
+      "ticker": "IEO",
+      "label": "Oil & Gas E&P (iShares)",
+      "w1": 0.0237,
+      "m1": -0.0303
+    },
+    {
+      "ticker": "REM",
+      "label": "Mortgage REITs",
+      "w1": 0.0233,
+      "m1": 0.0195
+    },
+    {
+      "ticker": "XTN",
+      "label": "Transportation (equal-wt)",
+      "w1": 0.0224,
+      "m1": 0.0484
+    },
+    {
+      "ticker": "CLOU",
+      "label": "Cloud (Global X)",
+      "w1": 0.0179,
+      "m1": -0.0054
+    },
+    {
+      "ticker": "PKB",
+      "label": "Building & Construction",
+      "w1": 0.0178,
+      "m1": 0.0647
+    },
+    {
+      "ticker": "AMLP",
+      "label": "MLPs",
+      "w1": 0.0152,
+      "m1": -0.0237
+    },
+    {
+      "ticker": "VEGI",
+      "label": "Agribusiness (iShares)",
+      "w1": 0.0144,
+      "m1": 0.0053
+    },
+    {
+      "ticker": "KBWB",
+      "label": "Big Banks",
+      "w1": 0.014,
+      "m1": 0.085
+    },
+    {
+      "ticker": "XOP",
+      "label": "Oil & Gas E&P",
+      "w1": 0.0136,
+      "m1": -0.0485
+    },
+    {
+      "ticker": "CIBR",
+      "label": "Cybersecurity",
+      "w1": 0.0106,
+      "m1": 0.0414
+    },
+    {
+      "ticker": "PAVE",
+      "label": "US Infrastructure",
+      "w1": 0.0048,
+      "m1": 0.0374
+    },
+    {
+      "ticker": "FCG",
+      "label": "Natural Gas",
+      "w1": 0.0005,
+      "m1": -0.06
+    },
+    {
+      "ticker": "XES",
+      "label": "Oil Equipment & Services",
+      "w1": -0.0012,
+      "m1": -0.0817
+    },
+    {
+      "ticker": "RTH",
+      "label": "Retail (VanEck)",
+      "w1": -0.0021,
+      "m1": -0.0252
+    },
+    {
+      "ticker": "FINX",
+      "label": "FinTech",
+      "w1": -0.0028,
+      "m1": -0.0028
+    },
+    {
+      "ticker": "WOOD",
+      "label": "Timber & Forestry",
+      "w1": -0.0071,
+      "m1": -0.0022
+    },
+    {
+      "ticker": "ITA",
+      "label": "Aerospace & Defense",
+      "w1": -0.0092,
+      "m1": 0.0281
+    },
+    {
+      "ticker": "IGV",
+      "label": "Software",
+      "w1": -0.01,
+      "m1": -0.0519
+    },
+    {
+      "ticker": "FAN",
+      "label": "Wind",
+      "w1": -0.0154,
+      "m1": -0.0634
+    },
+    {
+      "ticker": "SKYY",
+      "label": "Cloud Computing",
+      "w1": -0.0175,
+      "m1": -0.0207
+    },
+    {
+      "ticker": "SEA",
+      "label": "Shipping (US Global)",
+      "w1": -0.0188,
+      "m1": -0.0432
+    },
+    {
+      "ticker": "ESPO",
+      "label": "Video Games & eSports",
+      "w1": -0.02,
+      "m1": -0.026
+    },
+    {
+      "ticker": "PPA",
+      "label": "Defense (Invesco)",
+      "w1": -0.0207,
+      "m1": -0.0159
+    },
+    {
+      "ticker": "OIH",
+      "label": "Oil Services",
+      "w1": -0.0258,
+      "m1": -0.1175
+    },
+    {
+      "ticker": "FDN",
+      "label": "Internet",
+      "w1": -0.0273,
+      "m1": -0.0583
+    },
+    {
+      "ticker": "MJ",
+      "label": "Cannabis (ETFMG)",
+      "w1": -0.0302,
+      "m1": -0.052
+    },
+    {
+      "ticker": "BOAT",
+      "label": "Shipping",
+      "w1": -0.0313,
+      "m1": -0.0374
+    },
+    {
+      "ticker": "BETZ",
+      "label": "Sports Betting & iGaming",
+      "w1": -0.0354,
+      "m1": 0.0075
+    },
+    {
+      "ticker": "XAR",
+      "label": "Aerospace & Defense (equal-wt)",
+      "w1": -0.0357,
+      "m1": -0.017
+    },
+    {
+      "ticker": "GRID",
+      "label": "Smart Grid",
+      "w1": -0.0453,
+      "m1": -0.043
+    },
+    {
+      "ticker": "ROBO",
+      "label": "Robotics",
+      "w1": -0.0465,
+      "m1": -0.0751
+    },
+    {
+      "ticker": "BLOK",
+      "label": "Blockchain",
+      "w1": -0.0541,
+      "m1": -0.0472
+    },
+    {
+      "ticker": "AIQ",
+      "label": "AI",
+      "w1": -0.0546,
+      "m1": -0.03
+    },
+    {
+      "ticker": "IYW",
+      "label": "US Technology",
+      "w1": -0.0549,
+      "m1": -0.0268
+    },
+    {
+      "ticker": "IAI",
+      "label": "Broker-Dealers",
+      "w1": -0.0552,
+      "m1": -0.0077
+    },
+    {
+      "ticker": "PSI",
+      "label": "Semis (Invesco)",
+      "w1": -0.0563,
+      "m1": 0.0506
+    },
+    {
+      "ticker": "SLX",
+      "label": "Steel",
+      "w1": -0.0589,
+      "m1": -0.1017
+    },
+    {
+      "ticker": "MSOS",
+      "label": "US Cannabis",
+      "w1": -0.0601,
+      "m1": 0.0086
+    },
+    {
+      "ticker": "BOTZ",
+      "label": "Robotics & AI",
+      "w1": -0.0615,
+      "m1": -0.1013
+    },
+    {
+      "ticker": "TAN",
+      "label": "Solar",
+      "w1": -0.0616,
+      "m1": -0.1937
+    },
+    {
+      "ticker": "SIL",
+      "label": "Silver Miners",
+      "w1": -0.0634,
+      "m1": -0.1164
+    },
+    {
+      "ticker": "GDXJ",
+      "label": "Junior Gold Miners",
+      "w1": -0.0646,
+      "m1": -0.109
+    },
+    {
+      "ticker": "GDX",
+      "label": "Gold Miners",
+      "w1": -0.0668,
+      "m1": -0.0988
+    },
+    {
+      "ticker": "SMH",
+      "label": "Semiconductors",
+      "w1": -0.0731,
+      "m1": 0.0271
+    },
+    {
+      "ticker": "RING",
+      "label": "Gold Miners (iShares)",
+      "w1": -0.0755,
+      "m1": -0.1092
+    },
+    {
+      "ticker": "LIT",
+      "label": "Lithium & Battery",
+      "w1": -0.0757,
+      "m1": -0.1122
+    },
+    {
+      "ticker": "ICLN",
+      "label": "Clean Energy",
+      "w1": -0.0758,
+      "m1": -0.1554
+    },
+    {
+      "ticker": "ARKX",
+      "label": "Space & Exploration",
+      "w1": -0.0761,
+      "m1": -0.1227
+    },
+    {
+      "ticker": "XME",
+      "label": "Metals & Mining",
+      "w1": -0.0764,
+      "m1": -0.1206
+    },
+    {
+      "ticker": "URNM",
+      "label": "Uranium Miners",
+      "w1": -0.0769,
+      "m1": -0.1229
+    },
+    {
+      "ticker": "SOXX",
+      "label": "Semiconductors (iShares)",
+      "w1": -0.0774,
+      "m1": 0.0465
+    },
+    {
+      "ticker": "PICK",
+      "label": "Global Metals & Mining",
+      "w1": -0.0787,
+      "m1": -0.1067
+    },
+    {
+      "ticker": "UFO",
+      "label": "Space (Procure)",
+      "w1": -0.0812,
+      "m1": -0.307
+    },
+    {
+      "ticker": "NLR",
+      "label": "Nuclear",
+      "w1": -0.0838,
+      "m1": -0.1224
+    },
+    {
+      "ticker": "IRBO",
+      "label": "AI & Robotics",
+      "w1": -0.0839,
+      "m1": 0.0173
+    },
+    {
+      "ticker": "URA",
+      "label": "Uranium",
+      "w1": -0.0877,
+      "m1": -0.131
+    },
+    {
+      "ticker": "WGMI",
+      "label": "Bitcoin Miners",
+      "w1": -0.0883,
+      "m1": -0.0446
+    },
+    {
+      "ticker": "REMX",
+      "label": "Rare Earth/Strategic Metals",
+      "w1": -0.0944,
+      "m1": -0.1173
+    },
+    {
+      "ticker": "XSD",
+      "label": "Semis (equal-wt)",
+      "w1": -0.1009,
+      "m1": -0.0793
+    },
+    {
+      "ticker": "QCLN",
+      "label": "Clean Energy (First Trust)",
+      "w1": -0.1065,
+      "m1": -0.1337
+    },
+    {
+      "ticker": "PBW",
+      "label": "Clean Energy (Invesco)",
+      "w1": -0.1078,
+      "m1": -0.1767
+    },
+    {
+      "ticker": "COPX",
+      "label": "Copper Miners",
+      "w1": -0.1088,
+      "m1": -0.1151
+    }
+  ],
+  "stock_heatmap": {
+    "best_1w": [
+      {
+        "ticker": "TECH",
+        "w1": 0.2254,
+        "m1": 0.4764
+      },
+      {
+        "ticker": "ABBV",
+        "w1": 0.1703,
+        "m1": 0.1762
+      },
+      {
+        "ticker": "CRL",
+        "w1": 0.1662,
+        "m1": 0.3116
+      },
+      {
+        "ticker": "INCY",
+        "w1": 0.1581,
+        "m1": 0.1686
+      },
+      {
+        "ticker": "UAL",
+        "w1": 0.1504,
+        "m1": 0.2086
+      },
+      {
+        "ticker": "IQV",
+        "w1": 0.1393,
+        "m1": 0.1541
+      },
+      {
+        "ticker": "GLW",
+        "w1": 0.1341,
+        "m1": 0.1598
+      },
+      {
+        "ticker": "RVTY",
+        "w1": 0.1302,
+        "m1": 0.1677
+      },
+      {
+        "ticker": "MRK",
+        "w1": 0.1299,
+        "m1": 0.0777
+      },
+      {
+        "ticker": "CIEN",
+        "w1": 0.1198,
+        "m1": -0.1762
+      },
+      {
+        "ticker": "VEEV",
+        "w1": 0.1178,
+        "m1": 0.0812
+      },
+      {
+        "ticker": "JNJ",
+        "w1": 0.115,
+        "m1": 0.101
+      },
+      {
+        "ticker": "TPL",
+        "w1": 0.1146,
+        "m1": -0.0239
+      },
+      {
+        "ticker": "DHR",
+        "w1": 0.1097,
+        "m1": 0.1355
+      },
+      {
+        "ticker": "DLTR",
+        "w1": 0.1094,
+        "m1": 0.2921
+      },
+      {
+        "ticker": "BAX",
+        "w1": 0.1081,
+        "m1": 0.1408
+      },
+      {
+        "ticker": "BLDR",
+        "w1": 0.1061,
+        "m1": 0.1506
+      },
+      {
+        "ticker": "NRG",
+        "w1": 0.1059,
+        "m1": 0.0823
+      },
+      {
+        "ticker": "TMO",
+        "w1": 0.1042,
+        "m1": 0.1257
+      },
+      {
+        "ticker": "MTD",
+        "w1": 0.1039,
+        "m1": 0.1553
+      }
+    ],
+    "worst_1w": [
+      {
+        "ticker": "ON",
+        "w1": -0.2546,
+        "m1": -0.2742
+      },
+      {
+        "ticker": "WDC",
+        "w1": -0.2141,
+        "m1": 0.1055
+      },
+      {
+        "ticker": "ORCL",
+        "w1": -0.194,
+        "m1": -0.2222
+      },
+      {
+        "ticker": "ALB",
+        "w1": -0.1662,
+        "m1": -0.2447
+      },
+      {
+        "ticker": "QCOM",
+        "w1": -0.1624,
+        "m1": -0.1856
+      },
+      {
+        "ticker": "MPWR",
+        "w1": -0.1601,
+        "m1": -0.1894
+      },
+      {
+        "ticker": "STX",
+        "w1": -0.1586,
+        "m1": 0.0343
+      },
+      {
+        "ticker": "ARES",
+        "w1": -0.1563,
+        "m1": -0.1292
+      },
+      {
+        "ticker": "MRVL",
+        "w1": -0.1411,
+        "m1": 0.3426
+      },
+      {
+        "ticker": "APO",
+        "w1": -0.1397,
+        "m1": -0.092
+      },
+      {
+        "ticker": "PLTR",
+        "w1": -0.121,
+        "m1": -0.1478
+      },
+      {
+        "ticker": "MCHP",
+        "w1": -0.1187,
+        "m1": -0.0921
+      },
+      {
+        "ticker": "TXN",
+        "w1": -0.1159,
+        "m1": -0.1009
+      },
+      {
+        "ticker": "NXPI",
+        "w1": -0.1127,
+        "m1": -0.1558
+      },
+      {
+        "ticker": "AVGO",
+        "w1": -0.1112,
+        "m1": -0.1334
+      },
+      {
+        "ticker": "ADI",
+        "w1": -0.1094,
+        "m1": -0.0693
+      },
+      {
+        "ticker": "ECHO",
+        "w1": -0.1087,
+        "m1": -0.2055
+      },
+      {
+        "ticker": "CME",
+        "w1": -0.103,
+        "m1": -0.2041
+      },
+      {
+        "ticker": "NKE",
+        "w1": -0.0985,
+        "m1": -0.1058
+      },
+      {
+        "ticker": "KEYS",
+        "w1": -0.0963,
+        "m1": -0.0546
+      }
+    ],
+    "breadth": {
+      "n": 502,
+      "pct_above_50dma": 0.643,
+      "pct_above_200dma": 0.649
+    }
+  },
+  "rates": {
+    "curve": {
+      "DGS3MO": {
+        "label": "3M UST",
+        "value": 3.84,
+        "date": "2026-06-25"
+      },
+      "DGS6MO": {
+        "label": "6M UST",
+        "value": 3.95,
+        "date": "2026-06-25"
+      },
+      "DGS1": {
+        "label": "1Y UST",
+        "value": 3.96,
+        "date": "2026-06-25"
+      },
+      "DGS2": {
+        "label": "2Y UST",
+        "value": 4.09,
+        "date": "2026-06-25"
+      },
+      "DGS5": {
+        "label": "5Y UST",
+        "value": 4.15,
+        "date": "2026-06-25"
+      },
+      "DGS10": {
+        "label": "10Y UST",
+        "value": 4.4,
+        "date": "2026-06-25"
+      },
+      "DGS30": {
+        "label": "30Y UST",
+        "value": 4.86,
+        "date": "2026-06-25"
+      },
+      "T10Y2Y": {
+        "label": "10y-2y",
+        "value": 0.31,
+        "date": "2026-06-26"
+      },
+      "T10Y3M": {
+        "label": "10y-3m",
+        "value": 0.55,
+        "date": "2026-06-26"
+      },
+      "T10YIE": {
+        "label": "10y breakeven",
+        "value": 2.2,
+        "date": "2026-06-26"
+      },
+      "BAMLH0A0HYM2": {
+        "label": "HY OAS",
+        "value": 2.78,
+        "date": "2026-06-25"
+      },
+      "BAMLC0A0CM": {
+        "label": "IG OAS",
+        "value": 0.76,
+        "date": "2026-06-25"
+      },
+      "MORTGAGE30US": {
+        "label": "30y mortgage",
+        "value": 6.49,
+        "date": "2026-06-25"
+      },
+      "DFF": {
+        "label": "Fed funds (eff)",
+        "value": 3.63,
+        "date": "2026-06-25"
+      },
+      "DFEDTARU": {
+        "label": "Target upper",
+        "value": 3.75,
+        "date": "2026-06-28"
+      },
+      "DFEDTARL": {
+        "label": "Target lower",
+        "value": 3.5,
+        "date": "2026-06-28"
+      },
+      "IRLTLT01DEM156N": {
+        "label": "Germany 10y",
+        "value": 3.0465,
+        "date": "2026-05-01"
+      },
+      "IRLTLT01JPM156N": {
+        "label": "Japan 10y",
+        "value": 2.65,
+        "date": "2026-05-01"
+      },
+      "IRLTLT01GBM156N": {
+        "label": "UK 10y",
+        "value": 4.9416,
+        "date": "2026-05-01"
+      },
+      "IRLTLT01CAM156N": {
+        "label": "Canada 10y",
+        "value": 3.5415,
+        "date": "2026-05-01"
+      }
+    },
+    "fed_funds": {
+      "effective": 3.63,
+      "target_lower": 3.5,
+      "target_upper": 3.75,
+      "implied_12m_change_bps": 33.0,
+      "next_fomc": [
+        "2026-07-29",
+        "2026-09-16",
+        "2026-10-28",
+        "2026-12-09"
+      ],
+      "note": "Implied path is a rough proxy (1Y UST minus effective fed funds). Full FedWatch probabilities require CME data (paid)."
+    }
+  },
+  "earnings": [],
+  "news": [
+    {
+      "title": "MiB: Carl Richards on Sketching Wealth Strategy",
+      "source": "The Big Picture (Ritholtz)",
+      "link": "https://ritholtz.com/2026/06/mib-carl-richards/",
+      "hot": true
+    },
+    {
+      "title": "Saturday assorted links",
+      "source": "Marginal Revolution",
+      "link": "https://marginalrevolution.com/marginalrevolution/2026/06/saturday-assorted-links-567.html?utm_source=rss&utm_medium=rss&utm_campaign=saturday-assorted-links-567",
+      "hot": true
+    },
+    {
+      "title": "Blackpool fact of the day, observations on northern England",
+      "source": "Marginal Revolution",
+      "link": "https://marginalrevolution.com/marginalrevolution/2026/06/blackpool-fact-of-the-day-observations-on-northern-england.html?utm_source=rss&utm_medium=rss&utm_campaign=blackpool-fact-of-the-day-observations-on-northern-england",
+      "hot": true
+    },
+    {
+      "title": "Renationalising British utilities",
+      "source": "Marginal Revolution",
+      "link": "https://marginalrevolution.com/marginalrevolution/2026/06/renationalising-british-utilities.html?utm_source=rss&utm_medium=rss&utm_campaign=renationalising-british-utilities",
+      "hot": true
+    },
+    {
+      "title": "My ARC talk on AI and jobs",
+      "source": "Marginal Revolution",
+      "link": "https://marginalrevolution.com/marginalrevolution/2026/06/my-arc-talk-on-ai-and-jobs.html?utm_source=rss&utm_medium=rss&utm_campaign=my-arc-talk-on-ai-and-jobs",
+      "hot": true
+    },
+    {
+      "title": "10 Weekend Reads",
+      "source": "The Big Picture (Ritholtz)",
+      "link": "https://ritholtz.com/2026/06/10-weekend-reads-97/",
+      "hot": false
+    }
+  ],
+  "cas": {
+    "frm_top": [
+      {
+        "asof": "2026-06-28",
+        "asset": "VLUE",
+        "asset_class": "style",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": 0.9334,
+        "state": "buy",
+        "score": 0.9334,
+        "percentile": null,
+        "rationale": "Value/US composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      },
+      {
+        "asof": "2026-06-28",
+        "asset": "PSI",
+        "asset_class": "industry",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": 0.8314,
+        "state": "buy",
+        "score": 0.8314,
+        "percentile": null,
+        "rationale": "Semis (Invesco)/US composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      },
+      {
+        "asof": "2026-06-28",
+        "asset": "PIE",
+        "asset_class": "style",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": 0.813,
+        "state": "buy",
+        "score": 0.813,
+        "percentile": null,
+        "rationale": "Momentum/Emerging Mkts composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      },
+      {
+        "asof": "2026-06-28",
+        "asset": "WGMI",
+        "asset_class": "industry",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": 0.8087,
+        "state": "buy",
+        "score": 0.8087,
+        "percentile": null,
+        "rationale": "Bitcoin Miners/US composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      },
+      {
+        "asof": "2026-06-28",
+        "asset": "SOXX",
+        "asset_class": "industry",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": 0.7842,
+        "state": "buy",
+        "score": 0.7842,
+        "percentile": null,
+        "rationale": "Semiconductors (iShares)/US composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      }
+    ],
+    "frm_bottom": [
+      {
+        "asof": "2026-06-28",
+        "asset": "ESPO",
+        "asset_class": "industry",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": -0.5194,
+        "state": "sell",
+        "score": -0.5194,
+        "percentile": null,
+        "rationale": "Video Games & eSports/US composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      },
+      {
+        "asof": "2026-06-28",
+        "asset": "IHI",
+        "asset_class": "industry",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": -0.4988,
+        "state": "sell",
+        "score": -0.4988,
+        "percentile": null,
+        "rationale": "Medical Devices/US composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      },
+      {
+        "asof": "2026-06-28",
+        "asset": "KWEB",
+        "asset_class": "region_sector",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": -0.425,
+        "state": "sell",
+        "score": -0.425,
+        "percentile": null,
+        "rationale": "China Internet/China composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      },
+      {
+        "asof": "2026-06-28",
+        "asset": "FINX",
+        "asset_class": "industry",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": -0.4159,
+        "state": "sell",
+        "score": -0.4159,
+        "percentile": null,
+        "rationale": "FinTech/US composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      },
+      {
+        "asof": "2026-06-28",
+        "asset": "IPAY",
+        "asset_class": "industry",
+        "segment": "factor_rotation",
+        "family": "frm_composite",
+        "horizon": "months",
+        "signal": -0.4005,
+        "state": "sell",
+        "score": -0.4005,
+        "percentile": null,
+        "rationale": "Mobile Payments/US composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)",
+        "source": "yfinance",
+        "confidence": "medium"
+      }
+    ],
+    "consensus_top": [
+      {
+        "asset": "GNOM",
+        "asset_class": "industry_theme",
+        "composite": 0.4681,
+        "state": "buy",
+        "behavioral": 1.0,
+        "physical": 0.3886,
+        "entanglement": 0.1128,
+        "horizon_agreement": 0.333,
+        "signal_variety": 19,
+        "entropy": 0.751,
+        "confidence": 0.315,
+        "n_signals": 19
+      },
+      {
+        "asset": "PSI",
+        "asset_class": "equity",
+        "composite": 0.4443,
+        "state": "buy",
+        "behavioral": 0.3715,
+        "physical": 0.6766,
+        "entanglement": 0.2656,
+        "horizon_agreement": 0.333,
+        "signal_variety": 19,
+        "entropy": 0.8,
+        "confidence": 0.253,
+        "n_signals": 19
+      },
+      {
+        "asset": "IDV",
+        "asset_class": "equity",
+        "composite": 0.4102,
+        "state": "buy",
+        "behavioral": 0.161,
+        "physical": 0.7422,
+        "entanglement": 0.3569,
+        "horizon_agreement": 0.333,
+        "signal_variety": 19,
+        "entropy": 0.767,
+        "confidence": 0.295,
+        "n_signals": 19
+      },
+      {
+        "asset": "VLUE",
+        "asset_class": "factor",
+        "composite": 0.4031,
+        "state": "buy",
+        "behavioral": -0.0021,
+        "physical": 0.7803,
+        "entanglement": 0.3192,
+        "horizon_agreement": 0.333,
+        "signal_variety": 29,
+        "entropy": 0.586,
+        "confidence": 0.8,
+        "n_signals": 29
+      },
+      {
+        "asset": "IVLU",
+        "asset_class": "equity",
+        "composite": 0.3989,
+        "state": "buy",
+        "behavioral": 0.2921,
+        "physical": 0.6486,
+        "entanglement": 0.2769,
+        "horizon_agreement": 0.667,
+        "signal_variety": 19,
+        "entropy": 0.828,
+        "confidence": 0.272,
+        "n_signals": 19
+      }
+    ],
+    "hitrate": {
+      "1m": {
+        "hit_rate": 0.521,
+        "n": 5212
+      },
+      "3m": {
+        "hit_rate": 0.564,
+        "n": 4985
+      },
+      "6m": {
+        "hit_rate": 0.603,
+        "n": 4635
+      },
+      "12m": {
+        "hit_rate": 0.607,
+        "n": 3949
+      }
+    }
+  },
+  "gex": [
+    {
+      "ticker": "SPY",
+      "spot": 728.99,
+      "net_gex_bn": -3.829,
+      "regime": "negative (vol-amplifying)"
+    },
+    {
+      "ticker": "QQQ",
+      "spot": 706.52,
+      "net_gex_bn": -2.144,
+      "regime": "negative (vol-amplifying)"
+    },
+    {
+      "ticker": "IWM",
+      "spot": 299.83,
+      "net_gex_bn": 0.293,
+      "regime": "positive (vol-dampening)"
+    }
+  ]
+}
