@@ -74,17 +74,19 @@ def run() -> dict:
     core = list(src.OVERVIEW) + list(SECTORS) + list(INDUSTRY_ETFS) + list(REGION_SECTOR_ETFS)
     px, pst = cas_prices.get_history(core, period="1y")
 
-    ov = src.market_overview(px)
+    ov = src.market_overview(px)                       # {group: [rows]}
+    ov_all = [r for grp in ov.values() for r in grp]
     sectors = src.sector_perf(px)
     industries = src.industry_perf(px)
     heat = src.stock_heatmap()
     rt = src.rates()
-    movers = {r["ticker"] for r in (heat.get("best_1w", []) + heat.get("worst_1w", []))}
-    news = src.market_moving_news(movers)
+    movers = (heat.get("leaders_1w", []) + heat.get("laggards_1w", []))
+    news = src.ticker_news(movers)
     earn = src.earnings()
     gx = src.gex()
+    rotation = src.rotation_by_timeframe()
     cas_h = _cas_highlights()
-    tp = talking_points(ov, sectors, rt, gx, heat)
+    tp = talking_points(ov_all, sectors, rt, gx, heat)
 
     brief = {
         "as_of": date.today().isoformat(),
@@ -95,16 +97,18 @@ def run() -> dict:
         "industries": industries,
         "stock_heatmap": heat,
         "rates": rt,
+        "rotation": rotation,
         "earnings": earn,
         "news": news,
         "cas": cas_h,
         "gex": gx,
     }
     save("brief", brief)
-    print(f"[brief] {brief['as_of']}: overview={len(ov)} sectors={len(sectors)} "
-          f"industries={len(industries)} movers={len(movers)} earnings={len(earn)} "
-          f"news={len(news)} gex={len(gx)} talking_points={len(tp)} "
-          f"(prices ok={pst.get('ok')})")
+    print(f"[brief] {brief['as_of']}: overview={len(ov_all)} sectors={len(sectors)} "
+          f"industries={len(industries)} movers={len(movers)} "
+          f"earnings_recent={len(earn.get('recent', []))} earnings_upcoming={len(earn.get('upcoming', []))} "
+          f"news={len(news)} gex={len(gx)} rotation_tf={len(rotation)} "
+          f"talking_points={len(tp)} (prices ok={pst.get('ok')})")
     return brief
 
 

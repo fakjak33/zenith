@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import io
 import math
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import numpy as np
 import pandas as pd
@@ -21,19 +21,42 @@ from ..cas.sources import prices as cas_prices
 from ..cas.sources import fred as cas_fred
 from ..cas import store_cas
 
-# --- market overview universe (ordered) ------------------------------------
-OVERVIEW: dict[str, str] = {
+# --- market overview, grouped by asset class -------------------------------
+EQUITY: dict[str, str] = {
     "SPY": "S&P 500", "QQQ": "Nasdaq 100", "DIA": "Dow 30", "IWM": "Small Caps",
-    "EFA": "Dev. ex-US", "EEM": "Emerging Mkts", "GLD": "Gold", "SLV": "Silver",
-    "TLT": "20y Treasuries", "HYG": "High Yield", "LQD": "IG Credit", "UUP": "US Dollar",
-    "USO": "Crude Oil", "COPX": "Copper Miners", "BITO": "Bitcoin", "^VIX": "VIX",
+    "RSP": "S&P Equal-Wt", "EFA": "Dev. ex-US", "VGK": "Europe", "EWJ": "Japan",
+    "EEM": "Emerging Mkts", "^VIX": "VIX",
 }
+COMMODITY: dict[str, str] = {
+    "DBC": "Broad Commodities", "GLD": "Gold", "SLV": "Silver", "USO": "Crude Oil",
+    "UNG": "Nat Gas", "COPX": "Copper Miners", "GDX": "Gold Miners", "DBA": "Agriculture",
+    "URA": "Uranium",
+}
+BOND: dict[str, str] = {
+    "SHY": "1-3y UST", "IEF": "7-10y UST", "TLT": "20y+ UST", "LQD": "IG Credit",
+    "HYG": "High Yield", "EMB": "EM Bonds", "MUB": "Munis", "TIP": "TIPS",
+    "BND": "US Agg", "BNDX": "Intl Bonds",
+}
+FX: dict[str, str] = {
+    "UUP": "US Dollar", "FXE": "Euro", "FXY": "Yen", "BITO": "Bitcoin",
+}
+# group key -> (label, dict). Ordered for display.
+GROUPS: dict[str, tuple[str, dict]] = {
+    "equity": ("Equities", EQUITY), "commodity": ("Commodities", COMMODITY),
+    "bond": ("Bonds & rates", BOND), "fx": ("FX & crypto", FX),
+}
+# union, kept for compatibility / one-shot price pulls
+OVERVIEW: dict[str, str] = {**EQUITY, **COMMODITY, **BOND, **FX}
 
-# mega-cap watchlist for the earnings section (kept small — yfinance is per-ticker)
+# mega/large-cap watchlist — the yfinance fallback when the Nasdaq calendar is
+# unreachable (the primary source is the full Nasdaq earnings calendar).
 EARNINGS_WATCH = [
     "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA", "AVGO", "BRK-B", "LLY",
     "JPM", "V", "MA", "UNH", "XOM", "JNJ", "PG", "HD", "COST", "ABBV",
     "WMT", "NFLX", "CRM", "BAC", "KO", "PEP", "AMD", "ORCL", "MCD", "CSCO",
+    "MU", "INTC", "QCOM", "TXN", "AMAT", "LRCX", "ADBE", "NOW", "PANW", "SNOW",
+    "NKE", "SBUX", "FDX", "GS", "MS", "C", "WFC", "DIS", "BA", "CAT",
+    "GE", "DE", "PFE", "MRK", "TMO", "DHR", "ABT", "UPS", "T", "VZ",
 ]
 
 # GEX is heavy (per-ticker option chains) — keep to the most liquid index ETFs.
@@ -79,21 +102,33 @@ def _spark(close: pd.Series, points: int = 40) -> list[float]:
     return [round(float(x), 4) for x in s.tolist()]
 
 
+def _series(close: pd.Series, points: int = 252) -> list[dict]:
+    """~1y of DAILY closes [{d,c}] for rebased comparative charts (daily so the
+    1-week / 1-month windows still have resolution)."""
+    s = close.dropna().tail(points)
+    return [{"d": i.date().isoformat(), "c": round(float(v), 4)} for i, v in s.items()]
+
+
 def _perf(close: pd.Series) -> dict:
     return {"last": round(float(close.iloc[-1]), 2),
             "w1": _ret(close, 5), "m1": _ret(close, 21), "m3": _ret(close, 63),
-            "ytd": _ytd(close), "spark": _spark(close)}
+            "ytd": _ytd(close), "spark": _spark(close), "series": _series(close)}
 
 
 # --- sections --------------------------------------------------------------
-def market_overview(px: dict[str, pd.DataFrame]) -> list[dict]:
+def group_overview(px: dict[str, pd.DataFrame], group: dict[str, str]) -> list[dict]:
     out = []
-    for t, label in OVERVIEW.items():
+    for t, label in group.items():
         df = px.get(t)
         if df is None or df.empty:
             continue
         out.append({"ticker": t, "label": label, **_perf(df["close"])})
     return out
+
+
+def market_overview(px: dict[str, pd.DataFrame]) -> dict[str, list[dict]]:
+    """All asset-class groups -> {group_key: [rows]}."""
+    return {key: group_overview(px, gd) for key, (_, gd) in GROUPS.items()}
 
 
 def sector_perf(px: dict[str, pd.DataFrame]) -> list[dict]:
@@ -104,7 +139,8 @@ def sector_perf(px: dict[str, pd.DataFrame]) -> list[dict]:
         if df is None or df.empty:
             continue
         out.append({"ticker": t, "label": label,
-                    "w1": _ret(df["close"], 5), "m1": _ret(df["close"], 21)})
+                    "w1": _ret(df["close"], 5), "m1": _ret(df["close"], 21),
+                    "m3": _ret(df["close"], 63), "series": _series(df["close"])})
     return sorted(out, key=lambda r: (r["w1"] is None, -(r["w1"] or 0)))
 
 
@@ -120,26 +156,33 @@ def industry_perf(px: dict[str, pd.DataFrame]) -> list[dict]:
     return sorted(out, key=lambda r: (r["w1"] is None, -(r["w1"] or 0)))
 
 
-def sp500_constituents(max_age_hours: float = 168.0) -> list[str]:
-    cached = store_cas.cache_get("sp500_list", max_age_hours)
+def sp500_map(max_age_hours: float = 168.0) -> dict[str, str]:
+    """Ticker -> company name for the current S&P 500 (free, via Wikipedia)."""
+    cached = store_cas.cache_get("sp500_map", max_age_hours)
     if cached:
         return cached
     try:
         r = requests.get("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
                          headers=BROWSER_HEADERS, timeout=20)
         r.raise_for_status()
-        tables = pd.read_html(io.StringIO(r.text))
-        syms = [str(s).replace(".", "-") for s in tables[0]["Symbol"].tolist()]
-        if syms:
-            store_cas.cache_put("sp500_list", syms)
-        return syms
+        tbl = pd.read_html(io.StringIO(r.text))[0]
+        mp = {str(s).replace(".", "-").strip(): str(n).strip()
+              for s, n in zip(tbl["Symbol"], tbl["Security"])}
+        if mp:
+            store_cas.cache_put("sp500_map", mp)
+        return mp
     except Exception:
-        return []
+        return {}
+
+
+def sp500_constituents(max_age_hours: float = 168.0) -> list[str]:
+    return list(sp500_map(max_age_hours))
 
 
 def stock_heatmap(top: int = 20) -> dict:
-    """Best/worst S&P 500 movers (1w & 1m) + a simple breadth read."""
-    syms = sp500_constituents()
+    """Leaders/laggards among S&P 500 names (1w & 1m, with company names) + breadth."""
+    names = sp500_map()
+    syms = list(names)
     if not syms:
         return {}
     px, _ = cas_prices.get_history(syms, period="1y")
@@ -148,7 +191,8 @@ def stock_heatmap(top: int = 20) -> dict:
         c = df["close"]
         if len(c) < 60:
             continue
-        rows.append({"ticker": t, "w1": _ret(c, 5), "m1": _ret(c, 21)})
+        rows.append({"ticker": t, "name": names.get(t, t),
+                     "w1": _ret(c, 5), "m1": _ret(c, 21)})
         n += 1
         if len(c) >= 50 and c.iloc[-1] > c.tail(50).mean():
             above50 += 1
@@ -157,7 +201,7 @@ def stock_heatmap(top: int = 20) -> dict:
     rows = [r for r in rows if r["w1"] is not None]
     by_w = sorted(rows, key=lambda r: r["w1"], reverse=True)
     return {
-        "best_1w": by_w[:top], "worst_1w": by_w[-top:][::-1],
+        "leaders_1w": by_w[:top], "laggards_1w": by_w[-top:][::-1],
         "breadth": {"n": n,
                     "pct_above_50dma": round(above50 / n, 3) if n else None,
                     "pct_above_200dma": round(above200 / n, 3) if n else None},
@@ -195,9 +239,14 @@ def rates() -> dict:
     }
 
 
-def earnings(watch: list[str] | None = None, window_days: int = 10) -> list[dict]:
-    """Upcoming earnings dates for the mega-cap watchlist (best-effort, yfinance)."""
-    watch = watch or EARNINGS_WATCH
+def _nasdaq_earnings(day: str) -> list[dict]:
+    url = f"https://api.nasdaq.com/api/calendar/earnings?date={day}"
+    r = requests.get(url, headers={**BROWSER_HEADERS, "Accept": "application/json"}, timeout=20)
+    r.raise_for_status()
+    return (r.json().get("data") or {}).get("rows") or []
+
+
+def _yf_earnings_fallback(window_days: int = 8) -> list[dict]:
     try:
         import yfinance as yf
     except Exception:
@@ -205,7 +254,7 @@ def earnings(watch: list[str] | None = None, window_days: int = 10) -> list[dict
     today = pd.Timestamp.today().normalize()
     end = today + pd.Timedelta(days=window_days)
     out = []
-    for t in watch:
+    for t in EARNINGS_WATCH:
         try:
             ed = yf.Ticker(t).get_earnings_dates(limit=8)
             if ed is None or ed.empty:
@@ -213,11 +262,96 @@ def earnings(watch: list[str] | None = None, window_days: int = 10) -> list[dict
             idx = ed.index.tz_localize(None) if ed.index.tz is not None else ed.index
             for dt in idx:
                 if today <= dt <= end:
-                    out.append({"ticker": t, "date": dt.date().isoformat()})
+                    out.append({"ticker": t, "name": t, "date": dt.date().isoformat(), "time": ""})
                     break
         except Exception:
             continue
-    return sorted(out, key=lambda r: r["date"])
+    return out
+
+
+def earnings(window_back: int = 5, window_fwd: int = 8, max_recent_px: int = 25,
+             max_age_hours: float = 18.0) -> dict:
+    """Recent (with 1-week price reaction) + upcoming major earnings. Primary source
+    is the free Nasdaq earnings calendar; falls back to a yfinance watchlist."""
+    cached = store_cas.cache_get("earnings_cal", max_age_hours)
+    if cached:
+        return cached
+    today = date.today()
+    recent, upcoming = [], []
+    try:
+        for delta in range(-window_back, window_fwd + 1):
+            d = today + timedelta(days=delta)
+            if d.weekday() >= 5:
+                continue
+            for row in _nasdaq_earnings(d.isoformat()):
+                sym = str(row.get("symbol", "")).strip()
+                if not sym:
+                    continue
+                rec = {"ticker": sym, "name": str(row.get("name", "")).strip(),
+                       "date": d.isoformat(), "time": str(row.get("time", "")),
+                       "eps_forecast": row.get("epsForecast", ""), "surprise": row.get("surprise", "")}
+                (recent if d < today else upcoming).append(rec)
+    except Exception:
+        pass
+    if not recent and not upcoming:                       # Nasdaq blocked -> fallback
+        upcoming = _yf_earnings_fallback()
+    if recent:                                            # 1-week price reaction (best-effort)
+        syms = list({r["ticker"] for r in recent})[:max_recent_px]
+        px, _ = cas_prices.get_history(syms, period="6mo")
+        for r in recent:
+            df = px.get(r["ticker"])
+            r["move_1w"] = _ret(df["close"], 5) if (df is not None and not df.empty) else None
+    out = {"recent": sorted(recent, key=lambda r: r["date"], reverse=True),
+           "upcoming": sorted(upcoming, key=lambda r: r["date"])}
+    store_cas.cache_put("earnings_cal", out)
+    return out
+
+
+def ticker_news(movers: list[dict], per: int = 2, max_tickers: int = 10) -> list[dict]:
+    """Ticker-specific headlines for the week's biggest movers via Google News RSS
+    (yfinance's per-ticker news is broken). ``movers`` = [{ticker,name,w1}]."""
+    try:
+        import feedparser
+    except Exception:
+        return []
+    out = []
+    for m in movers[:max_tickers]:
+        query = (m.get("name") or m["ticker"]) + " stock"
+        url = ("https://news.google.com/rss/search?q=" + requests.utils.quote(query)
+               + "&hl=en-US&gl=US&ceid=US:en")
+        try:
+            feed = feedparser.parse(url)
+            items = [{"title": e.title, "link": e.link,
+                      "published": getattr(e, "published", "")[:16]}
+                     for e in feed.entries[:per]]
+        except Exception:
+            items = []
+        if items:
+            out.append({"ticker": m["ticker"], "name": m.get("name", ""),
+                        "move": m.get("w1"), "items": items})
+    return out
+
+
+# --- factor rotation by timeframe (for the toggle in Additional charts) -----
+_TF_DAYS = {"1w": 5, "1m": 21, "3m": 63, "6m": 126, "1y": 252}
+
+
+def rotation_by_timeframe() -> dict[str, list[dict]]:
+    """Cross-sectional factor/industry rotation ranked within peer groups, for each
+    look-back window. {timeframe: [{ticker,label,group,region,signal}]}."""
+    from ..cas.universe import frm_universe
+    from ..cas.signals.factor_rotation import _trailing_return, _cross_section
+    uni = frm_universe()
+    px, _ = cas_prices.get_history(list(uni), period="2y")
+    closes = {t: px[t]["close"] for t in uni if t in px and len(px[t]) >= 60}
+    out: dict[str, list[dict]] = {}
+    for tf, lb in _TF_DAYS.items():
+        tr = {t: _trailing_return(c, lb=lb, skip=0) for t, c in closes.items()}
+        cs = _cross_section(tr, lambda t: (uni[t]["group"], uni[t]["region"]))
+        out[tf] = [{"ticker": t, "label": uni[t]["label"], "group": uni[t]["group"],
+                    "region": uni[t]["region"], "signal": round(sig, 4)}
+                   for t, sig in cs.items()]
+    return out
 
 
 # --- options / dealer gamma (GEX) proxy ------------------------------------

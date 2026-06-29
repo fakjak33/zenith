@@ -25,13 +25,23 @@ def test_perf_basic():
     assert p["w1"] > 0                      # rising series -> positive 1w
 
 
-def test_market_overview_from_prices():
+def test_market_overview_grouped():
     px = {"SPY": pd.DataFrame({"close": _series()}),
-          "QQQ": pd.DataFrame({"close": _series(step=1.0)})}
+          "QQQ": pd.DataFrame({"close": _series(step=1.0)}),
+          "GLD": pd.DataFrame({"close": _series(step=0.2)}),
+          "TLT": pd.DataFrame({"close": _series(step=-0.1)})}
     ov = src.market_overview(px)
-    tickers = {r["ticker"] for r in ov}
-    assert {"SPY", "QQQ"} <= tickers
-    assert all("spark" in r for r in ov)
+    assert set(ov) >= {"equity", "commodity", "bond", "fx"}     # grouped by asset class
+    eq = {r["ticker"] for r in ov["equity"]}
+    assert {"SPY", "QQQ"} <= eq
+    assert {"GLD"} <= {r["ticker"] for r in ov["commodity"]}
+    assert all("spark" in r and "series" in r for r in ov["equity"])
+
+
+def test_series_is_daily_dicts():
+    s = src._series(_series(n=400))
+    assert s and isinstance(s[0], dict) and {"d", "c"} <= set(s[0])
+    assert len(s) <= 252
 
 
 def test_bs_gamma_peaks_atm():
