@@ -20,6 +20,8 @@ DEFAULT_WEIGHTS = {
     "formulaic_alpha_combo": 1.0, "relative_strength": 1.0,
     "cot_leveraged_positioning": 1.0, "cot_managed_money_positioning": 1.0,
     "cot_asset_manager_positioning": 1.0, "risk_regime": 1.0,
+    "frm_ts_mom": 1.0, "frm_cs_region": 1.0,
+    "frm_cs_peer": 1.0, "frm_composite": 1.0,
 }
 
 
