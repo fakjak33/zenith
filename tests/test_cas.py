@@ -7,7 +7,8 @@ import pandas as pd
 
 from zenith.cas import schema, consensus, overlap
 from zenith.cas.signals import indicators as ind
-from zenith.cas.signals import strategies, strategies151
+from zenith.cas.signals import strategies, strategies151, factor_rotation as frot
+from zenith.cas.backtest import factor_momentum as fm
 
 
 def _ramp(n=300, start=100.0, step=0.5):
@@ -109,3 +110,102 @@ def test_consensus_entropy_high_when_split():
             + [schema.make_signal("Z", "strategies", f"s{i}", -0.9) for i in range(3)])
     rec = next(r for r in consensus.build(sigs) if r["asset"] == "Z")
     assert rec["entropy"] > 0.4        # disagreement -> high entropy
+
+
+# --- factor rotation momentum model ---------------------------------------
+def test_frm_ts_momentum_positive_on_uptrend():
+    # three US-region style ETFs, all rising -> TS momentum bullish, segment set
+    prices = {t: _ramp(step=0.5) for t in ("VLUE", "MTUM", "QUAL")}
+    sigs = frot.compute(prices=prices)
+    assert sigs and all(schema.validate(s) for s in sigs)
+    ts = [s for s in sigs if s["family"] == "frm_ts_mom"]
+    assert ts and all(s["signal"] > 0 for s in ts)
+    assert all(s["segment"] == "factor_rotation" for s in sigs)
+    assert {"frm_ts_mom", "frm_cs_region", "frm_cs_peer",
+            "frm_composite"} <= {s["family"] for s in sigs}
+
+
+def test_frm_cross_section_is_monotonic():
+    # different slopes -> different trailing returns -> ranked within the US style peers
+    prices = {"VLUE": _ramp(step=1.0), "MTUM": _ramp(step=0.5), "QUAL": _ramp(step=0.1)}
+    sigs = frot.compute(prices=prices)
+    csr = {s["asset"]: s["signal"] for s in sigs if s["family"] == "frm_cs_region"}
+    assert csr["VLUE"] > csr["MTUM"] > csr["QUAL"]
+    assert csr["VLUE"] > 0 and csr["QUAL"] < 0
+
+
+def test_frm_cross_section_by_group_segregates_peers():
+    # an industry ETF and a style ETF in the same region must NOT be ranked together
+    prices = {"VLUE": _ramp(step=1.0), "MTUM": _ramp(step=0.1), "ITA": _ramp(step=0.5)}
+    sigs = frot.compute(prices=prices)
+    csr = {s["asset"]: s["signal"] for s in sigs if s["family"] == "frm_cs_region"}
+    # ITA is the only 'industry' member -> no peer cross-section -> 0
+    assert csr["ITA"] == 0.0
+    # the two styles still rank against each other
+    assert csr["VLUE"] > csr["MTUM"]
+
+
+def test_frm_universe_tags_sane():
+    from zenith.cas.universe import (frm_tickers, master_etfs, frm_tag, style_of, region_of)
+    tickers = frm_tickers()
+    assert len(tickers) == len(set(tickers))            # unique
+    assert {"MTUM", "IVLU", "EMGF", "ITA", "SMH", "EUFN"} <= set(tickers)
+    assert set(tickers) <= set(master_etfs())           # all price-pulled
+    assert style_of("IVLU") == "Value" and region_of("IVLU") == "DEV"
+    assert frm_tag("ITA")["group"] == "industry"
+    assert frm_tag("EUFN")["group"] == "region_sector" and frm_tag("EUFN")["region"] == "EU"
+    assert "factor_rotation" in schema.SEGMENTS
+
+
+def test_help_badge_and_section_render():
+    from zenith.ui_theme import help_badge, section
+    from zenith.cas.help_text import HELP
+    b = help_badge(HELP["frm"])
+    assert "z-help" in b and "z-tip" in b
+    assert help_badge("") == ""
+    sec = section("Title", 0, help="hint <x>")        # html-escaped, no raw <
+    assert "z-help" in sec and "&lt;x&gt;" in sec
+
+
+def test_hitrate_math_on_trending_series():
+    from zenith.cas.analytics import history
+    # a steadily rising series: TS signal positive AND forward returns positive -> high hit-rate
+    df = _ramp(n=600, step=0.5)
+    hits = history._series_hits(df["close"])
+    h1 = hits["1m"]
+    assert h1[1] > 0 and h1[0] / h1[1] > 0.9
+
+
+def test_aqr_header_finder():
+    from zenith.cas.backtest import factor_data
+    raw = pd.DataFrame([["AQR disclaimer"], ["more text"], ["DATE"], ["1990-01-31"]])
+    assert factor_data._find_header_row(raw) == 2
+    assert factor_data._find_header_row(pd.DataFrame([["x"], ["y"]])) is None
+
+
+# --- academic-factor backtest math (no network) ---------------------------
+def _ar1_series(phi, n=400, seed=0):
+    rng = np.random.default_rng(seed)
+    e = rng.normal(0, 1, n)
+    r = np.zeros(n)
+    for i in range(1, n):
+        r[i] = phi * r[i - 1] + e[i]
+    idx = pd.period_range("1990-01", periods=n, freq="M")
+    return pd.Series(r, index=idx)
+
+
+def test_ar1_detects_positive_persistence():
+    b, t = fm.ar1(_ar1_series(0.3))
+    assert b > 0 and abs(t) > 1.96            # significant positive autocorrelation
+
+
+def test_ar1_detects_mean_reversion():
+    b, _ = fm.ar1(_ar1_series(-0.3))
+    assert b < 0                              # negative autocorrelation
+
+
+def test_ts_strategy_and_sharpe_run():
+    s = _ar1_series(0.3)
+    strat = fm.ts_strategy(s)
+    assert len(strat) > 0
+    assert isinstance(fm.sharpe(strat), float)

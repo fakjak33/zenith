@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import html
 from pathlib import Path
 
 from .config import THEME
@@ -78,6 +79,21 @@ h1, h2, h3, h4 {{ font-family: {THEME.font_display}; color: #fff; }}
     letter-spacing: 0.16em; margin: 0.5rem 0 0.3rem 0; padding: 0.2rem 0.5rem;
     border-left: 4px solid var(--sec, {THEME.teal}); }}
 .parallax-tag {{ color: {THEME.muted}; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; }}
+
+/* "?" help badge with a hover tooltip (for custom HTML where Streamlit's native
+   help= doesn't reach: section headers, cards, metrics) */
+.z-help {{ display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px;
+    border:1px solid {THEME.muted}; border-radius:50%; color:{THEME.muted}; font-size:0.62rem;
+    line-height:1; cursor:help; position:relative; margin-left:0.4rem; vertical-align:middle;
+    font-family:{THEME.font_body}; text-transform:none; letter-spacing:0; }}
+.z-help:hover {{ color:{THEME.teal}; border-color:{THEME.teal}; }}
+.z-help .z-tip {{ visibility:hidden; opacity:0; position:absolute; z-index:60; bottom:150%; left:50%;
+    transform:translateX(-50%); width:max-content; max-width:min(340px,72vw); background:{THEME.panel};
+    color:{THEME.text}; border:2px solid {THEME.border}; padding:0.5rem 0.65rem; font-size:0.74rem;
+    line-height:1.3; letter-spacing:0.01em; text-transform:none; text-align:left; font-weight:400;
+    box-shadow:0 6px 24px rgba(0,0,0,0.55); transition:opacity 0.12s ease; pointer-events:none;
+    white-space:normal; }}
+.z-help:hover .z-tip {{ visibility:visible; opacity:1; }}
 </style>
 """
 
@@ -153,13 +169,25 @@ BANNER = f"""
 """
 
 
-def section(label: str, idx: int = 0) -> str:
+def help_badge(text: str) -> str:
+    """An inline '?' badge whose hover tooltip shows ``text``. Safe to embed in any
+    HTML rendered with unsafe_allow_html (section headers, cards, metric labels)."""
+    if not text:
+        return ""
+    safe = html.escape(str(text))
+    return f'<span class="z-help">?<span class="z-tip">{safe}</span></span>'
+
+
+def section(label: str, idx: int = 0, help: str | None = None) -> str:
     cols = THEME.section_colors
     c1, c2 = cols[idx % len(cols)], cols[(idx + 1) % len(cols)]
     grad = f"linear-gradient(90deg, {c1}, {c2})"
-    return (f'<div class="parallax-sec" style="--sec:{c1}; background:{grad}; '
-            f'-webkit-background-clip:text; background-clip:text; '
-            f'-webkit-text-fill-color:transparent;">{label}</div>')
+    badge = help_badge(help) if help else ""
+    # gradient clip applies to the label text only; the help badge stays muted
+    return (f'<div class="parallax-sec" style="--sec:{c1};">'
+            f'<span style="background:{grad}; -webkit-background-clip:text; '
+            f'background-clip:text; -webkit-text-fill-color:transparent;">{label}</span>'
+            f'{badge}</div>')
 
 
 def card_html(item: dict) -> str:

@@ -29,6 +29,10 @@ CAS_FILES = {
     "registry": CAS_DIR / "registry.json",
     "contingency": CAS_DIR / "contingency.json",
     "status": CAS_DIR / "status.json",
+    "factor_rotation": CAS_DIR / "factor_rotation.json",
+    "backtest": CAS_DIR / "backtest_factor_momentum.json",
+    "history": CAS_DIR / "history.json",
+    "hitrate": CAS_DIR / "hitrate.json",
 }
 
 for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR):

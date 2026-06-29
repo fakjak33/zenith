@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from datetime import date
 
-SEGMENTS = ("strategies", "flows", "themes", "rebalance", "regime")
+SEGMENTS = ("strategies", "flows", "themes", "rebalance", "regime", "factor_rotation")
 STATES = ("buy", "neutral", "sell")
 HORIZONS = ("intraday", "days", "weeks", "months")
 CONFIDENCE = ("low", "medium", "high")

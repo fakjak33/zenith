@@ -20,7 +20,8 @@ from datetime import date
 from . import store_cas, consensus, overlap, registry, contingency
 from .universe import all_etfs, COT_MAP
 from .sources import prices, cot, finviz, fred, edgar13f, calendar as cal
-from .signals import strategies, strategies151, flows, themes, rebalance, regime
+from .signals import (strategies, strategies151, flows, themes, rebalance, regime,
+                      factor_rotation)
 from .universe import master_etfs
 from .etf_master import category_of as master_category_of
 
@@ -68,6 +69,15 @@ def run(cadence: str = "daily") -> dict:
         except Exception as e:
             status.append({"segment": "themes", "ok": False, "error": str(e)[:200]})
 
+        # --- factor rotation momentum (always) ---
+        try:
+            frm = factor_rotation.compute(px)
+            signals += frm
+            store_cas.save("factor_rotation", frm)
+            status.append({"segment": "factor_rotation", "ok": True, "n": len(frm)})
+        except Exception as e:
+            status.append({"segment": "factor_rotation", "ok": False, "error": str(e)[:200]})
+
     # --- regime (always) ---
     fred_data, fst = fred.get_series(list(fred.DEFAULT_SERIES))
     status.append({"segment": "fred", **fst})
@@ -109,6 +119,16 @@ def run(cadence: str = "daily") -> dict:
         status.append({"segment": "edgar13f", **est})
         store_cas.save("positioning", {**store_cas.load("positioning", {}), "edgar_13f": f13})
 
+    # --- factor-momentum academic backtest (monthly; validates the FRM model) ---
+    if cadence == "monthly":
+        try:
+            from .backtest import factor_momentum as bt
+            bt_out = bt.run()
+            status.append({"segment": "backtest", "ok": True,
+                           "n": bt_out.get("n_factors", 0)})
+        except Exception as e:
+            status.append({"segment": "backtest", "ok": False, "error": str(e)[:200]})
+
     # --- aggregate ---
     cons = consensus.build(signals)
     ovl = overlap.build(signals)
@@ -121,6 +141,14 @@ def run(cadence: str = "daily") -> dict:
     # store overlap without the bulky matrix duplicated under each asset
     store_cas.save("overlap", {"ranked": ovl["ranked"], "matrix": ovl["matrix"]})
     store_cas.archive_signals(day, signals)
+
+    # --- signal history + predictive hit-rate (uses cached FRM 5y prices) ---
+    try:
+        from .analytics import history
+        h = history.run()
+        status.append({"segment": "history+hitrate", "ok": True, "n": h.get("n_assets", 0)})
+    except Exception as e:
+        status.append({"segment": "history+hitrate", "ok": False, "error": str(e)[:200]})
 
     status_out = {"date": day, "cadence": cadence, "n_signals": len(signals),
                   "n_assets": len(cons), "regime": regime_summary.get("label", "?"),
