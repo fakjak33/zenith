@@ -51,7 +51,7 @@ MACRO = {
 STYLE_GRID: dict[str, dict[str, str | None]] = {
     "Value":       {"US": "VLUE", "DEV": "IVLU", "EM": "FNDE"},
     "Momentum":    {"US": "MTUM", "DEV": "IMTM", "EM": "PIE"},
-    "Quality":     {"US": "QUAL", "DEV": "IQLT", "EM": None},
+    "Quality":     {"US": "QUAL", "DEV": "IQLT", "EM": "XSOE"},   # XSOE = EM ex-SOE, a quality proxy
     "LowVol":      {"US": "USMV", "DEV": "EFAV", "EM": "EEMV"},
     "Size":        {"US": "SIZE", "DEV": "ISCF", "EM": "DGS"},
     "Dividend":    {"US": "VYM",  "DEV": "IDV",  "EM": "DEM"},
