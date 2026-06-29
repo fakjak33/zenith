@@ -74,7 +74,8 @@ def insights_research_news(items, key_prefix):
             render_items(news)
 
 
-tab_today, tab_cas, tab_archive, tab_sources = st.tabs(["TODAY", "CAS", "ARCHIVE", "SOURCES"])
+tab_today, tab_brief, tab_cas, tab_archive, tab_sources = st.tabs(
+    ["TODAY", "WEEKLY BRIEF", "CAS", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     latest = store.load_latest()
@@ -84,6 +85,11 @@ with tab_today:
     if not latest and dates:
         latest = store.load_archive(dates[0])
     insights_research_news(latest, "today")
+
+with tab_brief:
+    st.markdown(section("Weekly Brief — markets in one read", 0), unsafe_allow_html=True)
+    from zenith.brief import view as brief_view
+    brief_view.render()
 
 with tab_cas:
     st.markdown(section("CAS — Complex Adaptive Systems monitor", 2), unsafe_allow_html=True)

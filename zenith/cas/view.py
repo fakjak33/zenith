@@ -328,17 +328,36 @@ def _consensus() -> None:
 
 
 def _registry() -> None:
-    st.markdown(section("Models & research notes", 0), unsafe_allow_html=True)
+    st.markdown(section("Models & research notes", 0,
+                        help="Tune how much each model counts toward the consensus, and log "
+                             "research that should shape the models."), unsafe_allow_html=True)
     reg = registry.load()
 
-    st.markdown("**Refine a model by pasting a research summary / abstract**")
-    fam = st.selectbox("Family", sorted(reg["weights"].keys()))
+    st.markdown("**Add research — paste an abstract, link a URL, or upload a paper**")
+    fam = st.selectbox("Family this informs", sorted(reg["weights"].keys()),
+                       help="Which model family the research bears on.")
     title = st.text_input("Note title / paper")
+    url = st.text_input("Source URL (optional)",
+                        help="A link to the paper/insight. The /zenith-research Claude skill can "
+                             "later turn a flagged note into a signal-module scaffold.")
+    upload = st.file_uploader("Upload a paper (PDF/txt, optional)", type=["pdf", "txt", "md"])
     abstract = st.text_area("Paste abstract or summary", height=150)
     w = st.slider("Set weight for this family", 0.0, 2.0, float(reg["weights"].get(fam, 1.0)), 0.05)
     if st.button("Save note + weight"):
-        registry.add_note(fam, title or "(untitled)", abstract, weight_adjustment=w)
-        st.success(f"Saved note against '{fam}' and set weight to {w}.")
+        src = url.strip()
+        body = abstract.strip()
+        if upload is not None:
+            src = src or upload.name
+            if not body:
+                try:
+                    body = upload.getvalue().decode("utf-8", "ignore")[:4000]
+                except Exception:
+                    body = f"(uploaded {upload.name}; binary — process with /zenith-research)"
+        status = "pending-review" if (src or upload) and not body.strip() else ""
+        registry.add_note(fam, title or (src or "(untitled)"), body,
+                          weight_adjustment=w, source=src, status=status)
+        st.success(f"Saved note against '{fam}' (weight {w}). "
+                   + ("Flagged pending-review for the /zenith-research skill." if status else ""))
 
     st.markdown(section("Current family weights", 2), unsafe_allow_html=True)
     st.dataframe(pd.DataFrame([{"family": k, "weight": v} for k, v in reg["weights"].items()]),
@@ -347,7 +366,10 @@ def _registry() -> None:
     st.markdown(section("Research notes log", 4), unsafe_allow_html=True)
     if reg["notes"]:
         for n in reg["notes"][:30]:
-            st.markdown(f"**{n['title']}**  ·  _{n['family']}_  ·  {n['ts']}")
+            flag = f"  ·  🟡 {n['status']}" if n.get("status") else ""
+            st.markdown(f"**{n['title']}**  ·  _{n['family']}_  ·  {n['ts']}{flag}")
+            if n.get("source"):
+                st.caption(f"source: {n['source']}")
             if n.get("abstract"):
                 st.caption(n["abstract"][:600])
     else:
