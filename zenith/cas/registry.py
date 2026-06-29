@@ -9,7 +9,7 @@ in consensus.py can read these weights; notes are shown in the UI for context.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from . import store_cas
 
@@ -60,7 +60,9 @@ def add_note(family: str, title: str, abstract: str,
     to process into a scaffold later."""
     reg = load()
     note = {
-        "ts": datetime.utcnow().isoformat(timespec="seconds"),
+        # tz-aware UTC (utcnow() is deprecated); strip tzinfo to keep the prior
+        # naive "YYYY-MM-DDTHH:MM:SS" string format used by existing notes
+        "ts": datetime.now(timezone.utc).replace(tzinfo=None).isoformat(timespec="seconds"),
         "family": family,
         "title": title.strip()[:200],
         "abstract": abstract.strip()[:4000],
