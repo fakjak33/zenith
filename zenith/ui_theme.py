@@ -94,6 +94,16 @@ h1, h2, h3, h4 {{ font-family: {THEME.font_display}; color: #fff; }}
     box-shadow:0 6px 24px rgba(0,0,0,0.55); transition:opacity 0.12s ease; pointer-events:none;
     white-space:normal; }}
 .z-help:hover .z-tip {{ visibility:visible; opacity:1; }}
+
+/* breathing room around charts & tables so axis labels never crowd/clip */
+[data-testid="stVegaLiteChart"], [data-testid="stArrowVegaLiteChart"],
+.stVegaLiteChart, [data-testid="stAltairChart"] {{
+    margin: 0.6rem 0 1.6rem 0 !important; overflow: visible !important;
+}}
+[data-testid="stVegaLiteChart"] svg, [data-testid="stArrowVegaLiteChart"] svg {{ overflow: visible !important; }}
+[data-testid="stDataFrame"] {{ margin: 0.5rem 0 1.4rem 0 !important; }}
+[data-testid="stMetric"] {{ padding: 0.3rem 0.2rem; }}
+.block-container {{ padding-left: 2.2rem; padding-right: 2.2rem; }}
 </style>
 """
 
@@ -134,36 +144,59 @@ def _logo_svg(size: int = 84) -> str:
     )
 
 
-def _logo_anim(size: int = 72) -> str:
-    """Animated Zenith mark — a wireframe sphere (longitude/latitude ellipses) that
-    rotates, with two semi-transparent trailing copies (phase-offset) for a motion
-    trail. Palette gradient stroke. Pure inline SVG + SMIL, so it animates in the
-    browser with no JS."""
-    gid = f"zsph{size}"
-    deep = "#163f54"
-    ells = "".join(
-        f'<ellipse cx="50" cy="50" rx="{rx}" ry="{ry}" fill="none" '
-        f'stroke="url(#{gid})" stroke-width="1.7"/>'
-        for rx, ry in [(15, 43), (30, 43), (43, 15), (43, 30)])
+def _rot(dur: float, frm: int = 0, to: int = 360, begin: str = "0") -> str:
+    return (f'<animateTransform attributeName="transform" attributeType="XML" '
+            f'type="rotate" from="{frm} 50 50" to="{to} 50 50" dur="{dur}s" '
+            f'begin="{begin}s" repeatCount="indefinite"/>')
 
-    def spin(opacity: float, begin: str) -> str:
-        return (f'<g opacity="{opacity}">{ells}'
-                f'<animateTransform attributeName="transform" attributeType="XML" '
-                f'type="rotate" from="0 50 50" to="360 50 50" dur="11s" '
-                f'begin="{begin}s" repeatCount="indefinite"/></g>')
 
-    trails = spin(0.16, "-0.7") + spin(0.40, "-0.35") + spin(1.0, "0")
-    return (
-        f'<svg width="{size}" height="{size}" viewBox="0 0 100 100" '
-        f'xmlns="http://www.w3.org/2000/svg" style="display:block">'
-        f'<defs><linearGradient id="{gid}" gradientUnits="userSpaceOnUse" '
-        f'x1="6" y1="6" x2="94" y2="94">'
-        f'<stop offset="0" stop-color="{THEME.mint}"/>'
-        f'<stop offset="0.45" stop-color="{THEME.teal}"/>'
-        f'<stop offset="0.8" stop-color="{THEME.navy}"/>'
-        f'<stop offset="1" stop-color="{deep}"/></linearGradient></defs>'
-        f'<circle cx="50" cy="50" r="43.5" fill="none" stroke="url(#{gid})" '
-        f'stroke-width="1" opacity="0.3"/>{trails}</svg>')
+def _logo_anim(size: int = 76) -> str:
+    """Animated Zenith mark — a multi-layer orrery: a counter-rotating wireframe
+    sphere (with a motion trail), an outer dashed ring spinning the other way, three
+    orbiting nodes, and a pulsing gradient core. Warm palette gradients (mauve →
+    mustard → orange, and navy → mint → mustard). Pure inline SVG + SMIL (no JS)."""
+    g1, g2, gc = f"zg1{size}", f"zg2{size}", f"zgc{size}"
+    defs = (
+        f'<linearGradient id="{g1}" x1="0" y1="0" x2="1" y2="1">'
+        f'<stop offset="0" stop-color="{THEME.mauve}"/>'
+        f'<stop offset="0.5" stop-color="{THEME.mustard}"/>'
+        f'<stop offset="1" stop-color="{THEME.orange}"/></linearGradient>'
+        f'<linearGradient id="{g2}" x1="0" y1="1" x2="1" y2="0">'
+        f'<stop offset="0" stop-color="{THEME.navy}"/>'
+        f'<stop offset="0.5" stop-color="{THEME.mint}"/>'
+        f'<stop offset="1" stop-color="{THEME.mustard}"/></linearGradient>'
+        f'<radialGradient id="{gc}">'
+        f'<stop offset="0" stop-color="{THEME.mustard}"/>'
+        f'<stop offset="0.6" stop-color="{THEME.orange}"/>'
+        f'<stop offset="1" stop-color="{THEME.mauve}"/></radialGradient>')
+
+    # wireframe sphere (rotates one way) + 2 phase-offset trail copies
+    ells = "".join(f'<ellipse cx="50" cy="50" rx="{rx}" ry="{ry}" fill="none" '
+                   f'stroke="url(#{g2})" stroke-width="1.7"/>'
+                   for rx, ry in [(16, 40), (31, 40), (40, 16), (40, 31)])
+    sphere = "".join(f'<g opacity="{op}">{ells}{_rot(9, begin=bg)}</g>'
+                     for op, bg in [(0.18, "-0.7"), (0.45, "-0.35"), (1.0, "0")])
+
+    # outer dashed ring, spinning the OTHER way
+    outer = (f'<g><circle cx="50" cy="50" r="46" fill="none" stroke="url(#{g1})" '
+             f'stroke-width="2" stroke-dasharray="5 7" opacity="0.9"/>{_rot(18, 360, 0)}</g>')
+
+    # three orbiting nodes (a little planetary system)
+    orbit = ("<g>"
+             + "".join(f'<g transform="rotate({a} 50 50)">'
+                       f'<circle cx="50" cy="8" r="2.6" fill="url(#{g1})"/></g>'
+                       for a in (0, 120, 240))
+             + _rot(7) + "</g>")
+
+    # pulsing gradient core
+    core = (f'<circle cx="50" cy="50" r="7" fill="url(#{gc})">'
+            f'<animate attributeName="r" values="6;9.5;6" dur="3.2s" repeatCount="indefinite"/>'
+            f'<animate attributeName="opacity" values="0.85;1;0.85" dur="3.2s" repeatCount="indefinite"/>'
+            f'</circle>')
+
+    return (f'<svg width="{size}" height="{size}" viewBox="0 0 100 100" '
+            f'xmlns="http://www.w3.org/2000/svg" style="display:block">'
+            f'<defs>{defs}</defs>{outer}{sphere}{orbit}{core}</svg>')
 
 
 def _logo_mark(size: int = 64) -> str:
