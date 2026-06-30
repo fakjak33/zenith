@@ -61,7 +61,11 @@ def get_history(tickers: list[str], period: str = "2y",
                 continue
             for t in batch:
                 try:
-                    df = raw[t] if len(batch) > 1 else raw
+                    # handle both grouped (MultiIndex) and flat single-ticker frames
+                    if isinstance(raw.columns, pd.MultiIndex):
+                        df = raw[t]
+                    else:
+                        df = raw
                     df = df.rename(columns=str.lower)[["open", "high", "low", "close", "volume"]]
                     df = df.dropna(how="all")
                     if len(df) >= 60:             # need enough history to be useful
