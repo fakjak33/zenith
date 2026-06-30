@@ -134,6 +134,38 @@ def _logo_svg(size: int = 84) -> str:
     )
 
 
+def _logo_anim(size: int = 72) -> str:
+    """Animated Zenith mark — a wireframe sphere (longitude/latitude ellipses) that
+    rotates, with two semi-transparent trailing copies (phase-offset) for a motion
+    trail. Palette gradient stroke. Pure inline SVG + SMIL, so it animates in the
+    browser with no JS."""
+    gid = f"zsph{size}"
+    deep = "#163f54"
+    ells = "".join(
+        f'<ellipse cx="50" cy="50" rx="{rx}" ry="{ry}" fill="none" '
+        f'stroke="url(#{gid})" stroke-width="1.7"/>'
+        for rx, ry in [(15, 43), (30, 43), (43, 15), (43, 30)])
+
+    def spin(opacity: float, begin: str) -> str:
+        return (f'<g opacity="{opacity}">{ells}'
+                f'<animateTransform attributeName="transform" attributeType="XML" '
+                f'type="rotate" from="0 50 50" to="360 50 50" dur="11s" '
+                f'begin="{begin}s" repeatCount="indefinite"/></g>')
+
+    trails = spin(0.16, "-0.7") + spin(0.40, "-0.35") + spin(1.0, "0")
+    return (
+        f'<svg width="{size}" height="{size}" viewBox="0 0 100 100" '
+        f'xmlns="http://www.w3.org/2000/svg" style="display:block">'
+        f'<defs><linearGradient id="{gid}" gradientUnits="userSpaceOnUse" '
+        f'x1="6" y1="6" x2="94" y2="94">'
+        f'<stop offset="0" stop-color="{THEME.mint}"/>'
+        f'<stop offset="0.45" stop-color="{THEME.teal}"/>'
+        f'<stop offset="0.8" stop-color="{THEME.navy}"/>'
+        f'<stop offset="1" stop-color="{deep}"/></linearGradient></defs>'
+        f'<circle cx="50" cy="50" r="43.5" fill="none" stroke="url(#{gid})" '
+        f'stroke-width="1" opacity="0.3"/>{trails}</svg>')
+
+
 def _logo_mark(size: int = 64) -> str:
     """The Zenith disc logo as an <img>.
 
@@ -159,7 +191,7 @@ def _logo_mark(size: int = 64) -> str:
 
 BANNER = f"""
 <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.3em; position:relative; z-index:2;">
-  <div style="line-height:0;">{_logo_mark(64)}</div>
+  <div style="line-height:0;">{_logo_anim(76)}</div>
   <div>
     <div style="font-family:{THEME.font_display}; font-size:4.4rem; letter-spacing:0.16em;
                 color:#fff; line-height:0.9; -webkit-text-stroke:1px #fff;">ZENITH</div>
