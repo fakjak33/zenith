@@ -33,6 +33,7 @@ CAS_FILES = {
     "backtest": CAS_DIR / "backtest_factor_momentum.json",
     "history": CAS_DIR / "history.json",
     "hitrate": CAS_DIR / "hitrate.json",
+    "price_panel": CAS_DIR / "price_panel.json",   # committed: powers app price overlays
 }
 
 # --- Weekly Brief (market commentary) -------------------------------------

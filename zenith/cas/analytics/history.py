@@ -148,9 +148,29 @@ def build_hitrate(closes: dict[str, pd.Series]) -> dict:
     }
 
 
+def build_price_panel(px: dict[str, pd.DataFrame], max_points: int = 90) -> dict:
+    """Compact committed price panel {ticker: {d:[...], c:[...]}} (~2y, downsampled
+    so the file stays small) so the app's price overlays work without the gitignored
+    price cache."""
+    panel = {}
+    for t, df in px.items():
+        if df is None or "close" not in df:
+            continue
+        c = df["close"].dropna()
+        if len(c) > max_points:
+            c = c.iloc[:: max(1, len(c) // max_points)]
+        if len(c) < 4:
+            continue
+        panel[t] = {"d": [i.date().isoformat() for i in c.index],
+                    "c": [round(float(v), 2) for v in c.values]}
+    return panel
+
+
 def run(prices: dict[str, pd.DataFrame] | None = None) -> dict:
-    """Compute + persist history.json and hitrate.json."""
+    """Compute + persist history.json and hitrate.json (+ price panel if prices given)."""
     closes = _frm_prices(prices)
     store_cas.save("history", build_history(closes))
     store_cas.save("hitrate", build_hitrate(closes))
+    if prices:
+        store_cas.save("price_panel", build_price_panel(prices))
     return {"n_assets": len(closes)}

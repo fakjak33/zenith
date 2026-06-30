@@ -193,6 +193,10 @@ def _build_frm_universe() -> dict[str, dict[str, str]]:
         uni.setdefault(tkr, {"group": "industry", "label": label, "region": "US"})
     for tkr, (label, region) in REGION_SECTOR_ETFS.items():
         uni.setdefault(tkr, {"group": "region_sector", "label": label, "region": region})
+    # curated factor / strategic-beta ETFs (group='beta', tagged by factor)
+    from .beta_etfs import BETA_ETFS
+    for tkr, (factor, name) in BETA_ETFS.items():
+        uni.setdefault(tkr, {"group": "beta", "label": factor, "region": "US", "name": name})
     return uni
 
 
@@ -226,4 +230,11 @@ def asset_class_of(ticker: str) -> str:
 
 
 def label_of(ticker: str) -> str:
-    return all_etfs().get(ticker, ticker)
+    """Human-readable name for a ticker, from the core universe, the curated beta
+    list, or the factor-rotation tag (industry/style label)."""
+    if ticker in all_etfs():
+        return all_etfs()[ticker]
+    tag = _FRM_UNIVERSE.get(ticker)
+    if tag:
+        return tag.get("name") or tag.get("label") or ticker
+    return ticker

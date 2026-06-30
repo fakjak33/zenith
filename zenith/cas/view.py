@@ -58,7 +58,15 @@ def _colcfg(cols) -> dict:
 
 
 def _price_series(ticker: str):
-    """Daily close for a ticker from the cached CAS price panel (no network)."""
+    """Close series for a ticker. Reads the COMMITTED price panel first (works on
+    the deployed app where the price cache is gitignored), then the local cache."""
+    panel = store_cas.load("price_panel", {})
+    rec = panel.get(ticker) if isinstance(panel, dict) else None
+    if rec and rec.get("d") and rec.get("c"):
+        try:
+            return pd.Series(rec["c"], index=pd.to_datetime(rec["d"]))
+        except Exception:
+            pass
     import io
     cache = store_cas.cache_get("prices_2y", 999) or store_cas.cache_get("prices_5y", 999) or {}
     j = cache.get(ticker)
