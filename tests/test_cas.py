@@ -186,11 +186,22 @@ def test_help_badge_and_section_render():
 
 def test_hitrate_math_on_trending_series():
     from zenith.cas.analytics import history
+    from zenith.cas.signals import factor_rotation as frm
     # a steadily rising series: TS signal positive AND forward returns positive -> high hit-rate
     df = _ramp(n=600, step=0.5)
-    hits = history._series_hits(df["close"])
+    hits = history._series_hits(df["close"], frm._ts_momentum)
     h1 = hits["1m"]
     assert h1[1] > 0 and h1[0] / h1[1] > 0.9
+
+
+def test_build_history_has_frm_families():
+    from zenith.cas.analytics import history
+    from zenith.cas.universe import frm_tickers
+    closes = {t: _ramp(n=400, step=0.3)["close"] for t in frm_tickers()[:6]}
+    rows = history.build_history(closes)
+    fams = {r["family"] for r in rows}
+    assert {"frm_ts_mom", "frm_cs_region", "frm_composite"} <= fams
+    assert all({"date", "asset", "family", "signal"} <= set(r) for r in rows)
 
 
 def test_aqr_header_finder():
