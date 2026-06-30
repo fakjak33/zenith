@@ -174,6 +174,14 @@ def test_frm_universe_tags_sane():
     assert "factor_rotation" in schema.SEGMENTS
 
 
+def test_logo_anim_well_formed():
+    import xml.dom.minidom as md
+    from zenith.ui_theme import _logo_anim
+    svg = _logo_anim(76)
+    md.parseString(svg)                       # raises if not well-formed XML
+    assert svg.startswith("<svg") and svg.count("animateTransform") == 3   # rotating + 2 trails
+
+
 def test_help_badge_and_section_render():
     from zenith.ui_theme import help_badge, section
     from zenith.cas.help_text import HELP
