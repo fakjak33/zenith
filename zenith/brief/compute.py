@@ -71,13 +71,17 @@ def talking_points(ov: list[dict], sectors: list[dict], rt: dict, gx: list[dict]
 
 
 def run() -> dict:
-    core = list(src.OVERVIEW) + list(SECTORS) + list(INDUSTRY_ETFS) + list(REGION_SECTOR_ETFS)
-    px, pst = cas_prices.get_history(core, period="1y")
+    # overview + sectors need long history for the 6M/1Y/3Y columns -> pull 5y;
+    # industries/region-sectors only need 1y (w1/m1).
+    core5 = list(src.OVERVIEW) + list(SECTORS)
+    px5, pst = cas_prices.get_history(core5, period="5y")
+    indpx, _ = cas_prices.get_history(list(INDUSTRY_ETFS) + list(REGION_SECTOR_ETFS), period="1y")
 
-    ov = src.market_overview(px)                       # {group: [rows]}
+    ov = src.market_overview(px5)                      # {group: [rows]}
     ov_all = [r for grp in ov.values() for r in grp]
-    sectors = src.sector_perf(px)
-    industries = src.industry_perf(px)
+    sectors = src.sector_perf(px5)
+    industries = src.industry_perf(indpx)
+    intraday = src._intraday(core5)
     heat = src.stock_heatmap()
     rt = src.rates()
     movers = (heat.get("leaders_1w", []) + heat.get("laggards_1w", []))
@@ -93,6 +97,7 @@ def run() -> dict:
         "disclaimer": DISCLAIMER,
         "talking_points": tp,
         "market_overview": ov,
+        "intraday": intraday,
         "sectors": sectors,
         "industries": industries,
         "stock_heatmap": heat,

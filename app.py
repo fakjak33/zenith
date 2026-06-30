@@ -78,10 +78,11 @@ tab_today, tab_brief, tab_cas, tab_archive, tab_sources = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "ARCHIVE", "SOURCES"])
 
 with tab_today:
+    from zenith.ui_theme import stamp
     latest = store.load_latest()
     dates = store.archive_dates()
-    st.caption(f"Most recent scrape: {dates[0] if dates else '—'} · "
-               f"{len(latest)} new items. New items only — already-seen items don't repeat.")
+    st.markdown(stamp(dates[0] if dates else "—", "Today"), unsafe_allow_html=True)
+    st.caption(f"{len(latest)} new items. New items only — already-seen items don't repeat.")
     if not latest and dates:
         latest = store.load_archive(dates[0])
     insights_research_news(latest, "today")

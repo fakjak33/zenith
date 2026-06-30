@@ -169,6 +169,15 @@ BANNER = f"""
 """
 
 
+def stamp(as_of: str, page: str = "") -> str:
+    """A prominent 'data as of' banner so every page shows its anchor date."""
+    pre = f"{page} · " if page else ""
+    return (f'<div style="font-family:{THEME.font_display}; font-size:0.95rem; '
+            f'letter-spacing:0.12em; color:{THEME.mustard}; border-left:4px solid {THEME.mustard}; '
+            f'padding:0.2rem 0.7rem; margin:0.1rem 0 0.7rem 0; text-transform:uppercase;">'
+            f'{pre}data as of {as_of}</div>')
+
+
 def help_badge(text: str) -> str:
     """An inline '?' badge whose hover tooltip shows ``text``. Safe to embed in any
     HTML rendered with unsafe_allow_html (section headers, cards, metric labels)."""
