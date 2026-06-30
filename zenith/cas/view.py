@@ -116,9 +116,10 @@ def render() -> None:
                 "(or wait for the scheduled Action) to populate signals.")
         return
     regime = status.get("regime", "?")
-    st.caption(f"As of {status.get('date','?')} · cadence {status.get('cadence','?')} · "
-               f"{status.get('n_signals',0)} signals · {status.get('n_assets',0)} assets · "
-               f"regime: **{regime}**")
+    from ..ui_theme import stamp
+    st.markdown(stamp(status.get("date", "?"), "CAS"), unsafe_allow_html=True)
+    st.caption(f"cadence {status.get('cadence','?')} · {status.get('n_signals',0)} signals · "
+               f"{status.get('n_assets',0)} assets · regime: **{regime}**")
 
     seg = st.radio("CAS segment", SEGMENT_TABS, horizontal=True, label_visibility="collapsed")
     if _TAB_HELP.get(seg):

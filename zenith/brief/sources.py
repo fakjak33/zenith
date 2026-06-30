@@ -25,7 +25,7 @@ from ..cas import store_cas
 EQUITY: dict[str, str] = {
     "SPY": "S&P 500", "QQQ": "Nasdaq 100", "DIA": "Dow 30", "IWM": "Small Caps",
     "RSP": "S&P Equal-Wt", "EFA": "Dev. ex-US", "VGK": "Europe", "EWJ": "Japan",
-    "EEM": "Emerging Mkts", "^VIX": "VIX",
+    "EEM": "Emerging Mkts", "MCHI": "China", "INDA": "India", "^VIX": "VIX",
 }
 COMMODITY: dict[str, str] = {
     "DBC": "Broad Commodities", "GLD": "Gold", "SLV": "Silver", "USO": "Crude Oil",
@@ -109,9 +109,36 @@ def _series(close: pd.Series, points: int = 252) -> list[dict]:
     return [{"d": i.date().isoformat(), "c": round(float(v), 4)} for i, v in s.items()]
 
 
+def _intraday(tickers: list[str], max_age_hours: float = 18.0) -> dict[str, list[dict]]:
+    """Hourly closes over the last ~5 trading days, for the 1-week comparative
+    charts (so a week of price action has real resolution). Cached; degrades to {}."""
+    key = "intraday_1h"
+    cached = store_cas.cache_get(key, max_age_hours)
+    if cached is not None:
+        return {t: cached.get(t, []) for t in tickers}
+    try:
+        import yfinance as yf
+        raw = yf.download(tickers, period="5d", interval="1h", auto_adjust=True,
+                          group_by="ticker", threads=True, progress=False)
+    except Exception:
+        return {}
+    out: dict[str, list[dict]] = {}
+    for t in tickers:
+        try:
+            df = raw[t] if isinstance(raw.columns, pd.MultiIndex) else raw
+            c = df["Close"].dropna() if "Close" in df else df.iloc[:, 0].dropna()
+            out[t] = [{"d": i.isoformat(), "c": round(float(v), 4)} for i, v in c.items()]
+        except Exception:
+            continue
+    if out:
+        store_cas.cache_put(key, out)
+    return out
+
+
 def _perf(close: pd.Series) -> dict:
     return {"last": round(float(close.iloc[-1]), 2),
             "w1": _ret(close, 5), "m1": _ret(close, 21), "m3": _ret(close, 63),
+            "m6": _ret(close, 126), "y1": _ret(close, 252), "y3": _ret(close, 756),
             "ytd": _ytd(close), "spark": _spark(close), "series": _series(close)}
 
 
@@ -239,6 +266,17 @@ def rates() -> dict:
     }
 
 
+def _mktcap_num(x) -> float | None:
+    """Parse a Nasdaq market-cap string ('$1,234,000,000') to a float (USD)."""
+    if x is None:
+        return None
+    s = str(x).replace("$", "").replace(",", "").strip()
+    try:
+        return float(s) if s and s not in ("N/A", "n/a") else None
+    except ValueError:
+        return None
+
+
 def _nasdaq_earnings(day: str) -> list[dict]:
     url = f"https://api.nasdaq.com/api/calendar/earnings?date={day}"
     r = requests.get(url, headers={**BROWSER_HEADERS, "Accept": "application/json"}, timeout=20)
@@ -289,7 +327,8 @@ def earnings(window_back: int = 5, window_fwd: int = 8, max_recent_px: int = 25,
                     continue
                 rec = {"ticker": sym, "name": str(row.get("name", "")).strip(),
                        "date": d.isoformat(), "time": str(row.get("time", "")),
-                       "eps_forecast": row.get("epsForecast", ""), "surprise": row.get("surprise", "")}
+                       "eps_forecast": row.get("epsForecast", ""), "surprise": row.get("surprise", ""),
+                       "mktcap": _mktcap_num(row.get("marketCap"))}
                 (recent if d < today else upcoming).append(rec)
     except Exception:
         pass

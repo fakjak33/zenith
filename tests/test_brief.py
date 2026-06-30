@@ -44,6 +44,25 @@ def test_series_is_daily_dicts():
     assert len(s) <= 252
 
 
+def test_perf_has_long_horizons():
+    p = src._perf(_series(n=900))           # enough history for 3y (756)
+    assert {"m6", "y1", "y3"} <= set(p)
+    assert p["y3"] is not None and p["m6"] is not None
+
+
+def test_mktcap_parse():
+    assert src._mktcap_num("$1,234,000,000") == 1234000000.0
+    assert src._mktcap_num("N/A") is None and src._mktcap_num(None) is None
+
+
+def test_grad_css_diverging():
+    from zenith.brief import view as bv
+    up = bv._grad_css(0.10)
+    dn = bv._grad_css(-0.10)
+    assert "background-color" in up and "background-color" in dn
+    assert up != dn and bv._grad_css(None) == ""
+
+
 def test_bs_gamma_peaks_atm():
     atm = src._bs_gamma(100, 100, 0.1, 0.2)
     otm = src._bs_gamma(100, 150, 0.1, 0.2)
