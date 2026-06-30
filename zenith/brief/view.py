@@ -119,7 +119,8 @@ def _rebased_chart(rows: list[dict], window, intraday: dict | None = None,
         base = alt.Chart(big).encode(
             x=alt.X("d:T", title=None, axis=alt.Axis(labelOverlap=False)),
             y=alt.Y("pct:Q", title="% change"),
-            color=alt.Color("label:N", legend=alt.Legend(title=None, columns=2)))
+            color=alt.Color("label:N", legend=alt.Legend(title=None, columns=2, labelLimit=0),
+                            scale=alt.Scale(scheme="tableau20")))
         line = base.mark_line(interpolate="monotone", strokeWidth=2)
         pts = base.mark_circle(size=42).encode(opacity=alt.condition(sel, alt.value(1), alt.value(0)),
             tooltip=["label", alt.Tooltip("d:T", title="time"),
@@ -194,13 +195,12 @@ def _bar(rows: list[dict], value: str, title: str, height_per: int = 22) -> None
     df[value + "_pct"] = df[value].apply(lambda v: None if v is None else round(v * 100, 2))
     try:
         import altair as alt
-        ch = (alt.Chart(df).mark_bar().encode(
+        ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
             x=alt.X(f"{value}_pct:Q", title=f"{title} (%)"),
-            y=alt.Y("label:N", sort="-x", title=None),
-            color=alt.condition(alt.datum[f"{value}_pct"] >= 0,
-                                alt.value("#2ec4b6"), alt.value("#ff5a3c")),
+            y=alt.Y("label:N", sort="-x", title=None, axis=alt.Axis(labelLimit=0)),
+            color=alt.Color(f"{value}_pct:Q", scale=alt.Scale(scheme="redyellowgreen"), legend=None),
             tooltip=["label", f"{value}_pct"],
-        ).properties(height=max(160, height_per * len(df))))
+        ).properties(height=max(180, height_per * len(df))))
         st.altair_chart(ch, use_container_width=True)
     except Exception:
         st.dataframe(df[["label", value + "_pct"]], use_container_width=True, hide_index=True)

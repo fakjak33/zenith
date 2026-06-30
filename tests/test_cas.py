@@ -179,7 +179,9 @@ def test_logo_anim_well_formed():
     from zenith.ui_theme import _logo_anim
     svg = _logo_anim(76)
     md.parseString(svg)                       # raises if not well-formed XML
-    assert svg.startswith("<svg") and svg.count("animateTransform") == 3   # rotating + 2 trails
+    assert svg.startswith("<svg")
+    assert svg.count("animateTransform") >= 4   # multiple counter-rotating parts
+    assert "<animate " in svg                   # pulsing core
 
 
 def test_help_badge_and_section_render():

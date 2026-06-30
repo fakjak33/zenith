@@ -15,24 +15,23 @@ from .help_text import HELP
 
 _STATE_COLOR = {"buy": "#2ec4b6", "neutral": "#b8b8b8", "sell": "#ff5a3c"}
 
-SEGMENT_TABS = ["Overview", "Strategies", "Flows & positioning", "Relative strength",
-                "Factor Rotation", "Asset detail", "History & hit-rate", "Rebalance",
-                "Contingency", "BCT consensus", "Models & notes"]
+SEGMENT_TABS = ["Overview", "Signals", "Factor Rotation", "Asset detail",
+                "History & hit-rate", "Calendar", "Playbook", "Models & notes"]
 
 # one-line plain-English subtitle clarifying what makes each tab distinct
 _TAB_HELP = {
-    "Overview": "The big picture — where ALL the models agree (strongest buys & sells across everything).",
-    "Strategies": "Per-ticker technical signals (trend, momentum, mean-reversion, breakouts).",
-    "Flows & positioning": "Who's positioned how — futures positioning (COT) + a volume proxy.",
-    "Relative strength": "Which sectors/themes are beating or lagging the S&P 500.",
-    "Factor Rotation": "Which investment STYLES & FACTORS are trending (value, momentum, quality… + industries).",
+    "Overview": "START HERE — the big picture: strongest buys/sells across ALL models + the consensus ensemble.",
+    "Signals": "Browse one model family at a time: Strategies (chart patterns), Relative strength (vs S&P 500), or Flows (positioning).",
+    "Factor Rotation": "Which investment STYLES & FACTORS are trending (value, momentum, quality… + industries & beta ETFs).",
     "Asset detail": "Zoom into ONE ticker — every model's read on it, plus its price.",
-    "History & hit-rate": "How signals evolved over time, and how often they were right.",
-    "Rebalance": "Upcoming market-structure dates that drive flows (expirations, index rebalances).",
-    "Contingency": "Pre-planned playbooks that arm when conditions trigger.",
-    "BCT consensus": "The ensemble score combining every model per asset.",
+    "History & hit-rate": "How signals evolved over time vs price, and how often they were right.",
+    "Calendar": "Upcoming market-structure dates that drive flows (expirations, index rebalances).",
+    "Playbook": "Pre-planned contingency playbooks that arm when conditions trigger.",
     "Models & notes": "Tune how much each model counts, and log research.",
 }
+
+# sub-views inside the merged 'Signals' tab
+_SIGNAL_VIEWS = ["Strategies", "Relative strength", "Flows & positioning"]
 
 # per-column header help ("?" on table headers) + legends
 COLS = {
@@ -110,12 +109,13 @@ def _signal_bar(rows: list[dict], value: str = "signal", label: str = "label",
     df = pd.DataFrame(rows)
     try:
         import altair as alt
-        ch = (alt.Chart(df).mark_bar().encode(
+        ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
             x=alt.X(f"{value}:Q", title=None, scale=alt.Scale(domain=list(dom))),
-            y=alt.Y(f"{label}:N", sort="-x", title=None),
-            color=alt.condition(alt.datum[value] >= 0, alt.value("#2ec4b6"), alt.value("#ff5a3c")),
+            y=alt.Y(f"{label}:N", sort="-x", title=None, axis=alt.Axis(labelLimit=0)),
+            color=alt.Color(f"{value}:Q", scale=alt.Scale(scheme="redyellowgreen", domain=list(dom)),
+                            legend=None),
             tooltip=[c for c in df.columns if c in (label, value, "region", "group", "family")],
-        ).properties(height=max(160, height_per * len(df))))
+        ).properties(height=max(170, height_per * len(df))))
         st.altair_chart(ch, use_container_width=True)
     except Exception:
         st.dataframe(df, use_container_width=True, hide_index=True)
@@ -141,27 +141,35 @@ def render() -> None:
 
     if seg == "Overview":
         _overview(df)
-    elif seg == "Strategies":
-        _segment(df, "strategies", "Per-asset strategy signals (101-alpha + classics)",
-                 help_key="signal")
-    elif seg == "Flows & positioning":
-        _flows(df)
-    elif seg == "Relative strength":
-        _relative_strength(df)
+    elif seg == "Signals":
+        _signals(df)
     elif seg == "Factor Rotation":
         _factor_rotation(df)
     elif seg == "Asset detail":
         _asset_detail(df)
     elif seg == "History & hit-rate":
         _history()
-    elif seg == "Rebalance":
+    elif seg == "Calendar":
         _rebalance()
-    elif seg == "Contingency":
+    elif seg == "Playbook":
         _contingency()
-    elif seg == "BCT consensus":
-        _consensus()
     elif seg == "Models & notes":
         _registry()
+
+
+def _signals(df: pd.DataFrame) -> None:
+    """Merged browser for the three similar per-model signal views."""
+    view = st.radio("Model family", _SIGNAL_VIEWS, horizontal=True, key="sig_view")
+    st.caption({"Strategies": "Per-ticker technical/statistical signals (trend, momentum, "
+                              "mean-reversion, breakouts, oscillators).",
+                "Relative strength": "Sectors/themes vs the S&P 500 — who's leading or lagging.",
+                "Flows & positioning": "Futures positioning (CFTC COT) + a volume-participation proxy."}[view])
+    if view == "Strategies":
+        _segment(df, "strategies", "Strategy signals (technicals + 101-alpha)", help_key="signal")
+    elif view == "Relative strength":
+        _relative_strength(df)
+    else:
+        _flows(df)
 
 
 def _glossary() -> None:
@@ -227,6 +235,10 @@ def _overview(df: pd.DataFrame) -> None:
         st.dataframe(top[cols], use_container_width=True, height=400, hide_index=True,
                      column_config=_colcfg(cols))
 
+    # --- BCT consensus ensemble (folded in from its old tab) ---
+    with st.expander("🧠 BCT consensus — the full ensemble score per asset (advanced)"):
+        _consensus()
+
 
 def _segment_heatmap(df: pd.DataFrame, cons: list[dict]) -> None:
     if df.empty:
@@ -245,8 +257,8 @@ def _segment_heatmap(df: pd.DataFrame, cons: list[dict]) -> None:
     try:
         import altair as alt
         ch = (alt.Chart(sub).mark_rect().encode(
-            x=alt.X("segment:N", title=None, axis=alt.Axis(labelAngle=-30)),
-            y=alt.Y("label:N", title=None, sort=order),
+            x=alt.X("segment:N", title=None, axis=alt.Axis(labelAngle=-30, labelLimit=0)),
+            y=alt.Y("label:N", title=None, sort=order, axis=alt.Axis(labelLimit=0)),
             color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1]),
                             legend=alt.Legend(title="signal")),
             tooltip=["asset", "segment", alt.Tooltip("signal:Q", format="+.2f")],
@@ -330,9 +342,9 @@ def _theme_heatmap(sub: pd.DataFrame) -> None:
     rs["row"] = rs["asset"].map(lambda t: f"{t} · {label_of(t)}"[:26])
     try:
         import altair as alt
-        ch = (alt.Chart(rs).mark_rect().encode(
-            x=alt.X("family:N", title=None, axis=alt.Axis(labelAngle=-30)),
-            y=alt.Y("row:N", title=None),
+        ch = (alt.Chart(rs).mark_rect(stroke="#0b0b0b", strokeWidth=1).encode(
+            x=alt.X("family:N", title=None, axis=alt.Axis(labelAngle=-30, labelLimit=0)),
+            y=alt.Y("row:N", title=None, axis=alt.Axis(labelLimit=0)),
             color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
             tooltip=["asset", "family", alt.Tooltip("signal:Q", format="+.2f"), "rationale"],
         ).properties(height=max(300, 24 * len(top))))
@@ -368,12 +380,12 @@ def _expanded_heatmap() -> None:
         st.caption("**Core styles × region**")
         try:
             import altair as alt
-            ch = (alt.Chart(styles).mark_rect().encode(
-                x=alt.X("region:N", title=None),
-                y=alt.Y("label:N", title=None),
+            ch = (alt.Chart(styles).mark_rect(stroke="#0b0b0b", strokeWidth=1).encode(
+                x=alt.X("region:N", title=None, axis=alt.Axis(labelLimit=0)),
+                y=alt.Y("label:N", title=None, axis=alt.Axis(labelLimit=0)),
                 color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
                 tooltip=["asset", "label", "region", alt.Tooltip("signal:Q", format="+.2f")],
-            ).properties(height=300))
+            ).properties(height=340))
             st.altair_chart(ch, use_container_width=True)
         except Exception:
             st.dataframe(styles.pivot_table(index="label", columns="region", values="signal"),
@@ -460,12 +472,12 @@ def _rotation_timeframe() -> None:
         df = pd.DataFrame(styles)
         try:
             import altair as alt
-            ch = (alt.Chart(df).mark_rect().encode(
-                x=alt.X("region_lbl:N", title=None),
-                y=alt.Y("label:N", title=None),
+            ch = (alt.Chart(df).mark_rect(stroke="#0b0b0b", strokeWidth=1).encode(
+                x=alt.X("region_lbl:N", title=None, axis=alt.Axis(labelLimit=0)),
+                y=alt.Y("label:N", title=None, axis=alt.Axis(labelLimit=0)),
                 color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
                 tooltip=["ticker", "label", "region_lbl", alt.Tooltip("signal:Q", format="+.2f")],
-            ).properties(height=320))
+            ).properties(height=340))
             st.altair_chart(ch, use_container_width=True)
         except Exception:
             st.dataframe(df.pivot_table(index="label", columns="region_lbl", values="signal"),
@@ -478,13 +490,13 @@ def _frm_heatmap(comp: pd.DataFrame) -> None:
         return
     try:
         import altair as alt
-        chart = (alt.Chart(comp).mark_rect().encode(
-            x=alt.X("region:N", title=None),
-            y=alt.Y("label:N", title=None),
+        chart = (alt.Chart(comp).mark_rect(stroke="#0b0b0b", strokeWidth=1).encode(
+            x=alt.X("region:N", title=None, axis=alt.Axis(labelLimit=0)),
+            y=alt.Y("label:N", title=None, axis=alt.Axis(labelLimit=0)),
             color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1]),
                             legend=alt.Legend(title="composite")),
             tooltip=["asset", "label", "region", "signal", "state"],
-        ).properties(height=320))
+        ).properties(height=340))
         st.altair_chart(chart, use_container_width=True)
     except Exception:
         st.dataframe(comp.pivot_table(index="label", columns="region", values="signal",
