@@ -15,18 +15,23 @@ from .help_text import HELP
 
 _STATE_COLOR = {"buy": "#2ec4b6", "neutral": "#b8b8b8", "sell": "#ff5a3c"}
 
-SEGMENT_TABS = ["Overview", "Strategies", "Flows & positioning", "Themes",
+SEGMENT_TABS = ["Overview", "Strategies", "Flows & positioning", "Relative strength",
                 "Factor Rotation", "Asset detail", "History & hit-rate", "Rebalance",
                 "Contingency", "BCT consensus", "Models & notes"]
 
-# short hover help per segment tab
+# one-line plain-English subtitle clarifying what makes each tab distinct
 _TAB_HELP = {
-    "Overview": HELP["overlap"], "Strategies": "Per-asset technical/statistical strategy battery.",
-    "Flows & positioning": HELP["flows"], "Themes": HELP["themes"],
-    "Factor Rotation": HELP["frm"], "Asset detail": "Every CAS signal for one ticker, in one place.",
-    "History & hit-rate": HELP["hitrate"],
-    "Rebalance": HELP["rebalance"], "Contingency": "Pre-planned playbooks that arm on triggers.",
-    "BCT consensus": HELP["consensus"], "Models & notes": "Tune model weights and log research.",
+    "Overview": "The big picture — where ALL the models agree (strongest buys & sells across everything).",
+    "Strategies": "Per-ticker technical signals (trend, momentum, mean-reversion, breakouts).",
+    "Flows & positioning": "Who's positioned how — futures positioning (COT) + a volume proxy.",
+    "Relative strength": "Which sectors/themes are beating or lagging the S&P 500.",
+    "Factor Rotation": "Which investment STYLES & FACTORS are trending (value, momentum, quality… + industries).",
+    "Asset detail": "Zoom into ONE ticker — every model's read on it, plus its price.",
+    "History & hit-rate": "How signals evolved over time, and how often they were right.",
+    "Rebalance": "Upcoming market-structure dates that drive flows (expirations, index rebalances).",
+    "Contingency": "Pre-planned playbooks that arm when conditions trigger.",
+    "BCT consensus": "The ensemble score combining every model per asset.",
+    "Models & notes": "Tune how much each model counts, and log research.",
 }
 
 # per-column header help ("?" on table headers) + legends
@@ -141,8 +146,8 @@ def render() -> None:
                  help_key="signal")
     elif seg == "Flows & positioning":
         _flows(df)
-    elif seg == "Themes":
-        _themes(df)
+    elif seg == "Relative strength":
+        _relative_strength(df)
     elif seg == "Factor Rotation":
         _factor_rotation(df)
     elif seg == "Asset detail":
@@ -159,10 +164,29 @@ def render() -> None:
         _registry()
 
 
+def _glossary() -> None:
+    with st.expander("📖 New here? Plain-English glossary (click to expand)"):
+        st.markdown(
+            "- **Signal** — a model's view, from **-1 (strong sell)** to **+1 (strong buy)**; 0 = neutral.\n"
+            "- **Buy / neutral / sell (state)** — the signal bucketed: buy ≥ +0.15, sell ≤ -0.15.\n"
+            "- **Confidence** — how much to trust it (low/medium/high), based on strength & corroboration.\n"
+            "- **Segment** — a family of models: *Strategies* (chart patterns), *Relative strength* "
+            "(vs the S&P 500), *Factor Rotation* (investment styles), *Flows* (positioning).\n"
+            "- **Factor / style** — a way of picking stocks: **Value** (cheap), **Momentum** (rising), "
+            "**Quality** (profitable), **Low-Vol** (stable), **Size** (small companies), **Dividend**, "
+            "**Growth**, **Buyback**, **Multifactor** (a mix).\n"
+            "- **Time-series momentum** — an asset judged on its OWN recent trend. "
+            "**Cross-sectional** — ranked AGAINST its peers.\n"
+            "- **Consensus / composite** — all models for one asset blended into a single score.\n"
+            "- **Hit-rate** — how often a signal's direction matched what price actually did next "
+            "(50% = coin-flip).")
+
+
 def _overview(df: pd.DataFrame) -> None:
     cons = store_cas.load("consensus", [])
     ovl = store_cas.load("overlap", {})
     ranked = ovl.get("ranked", [])
+    _glossary()
 
     # --- strongest buys vs sells (the headline read) ---
     st.markdown(section("Strongest signals — buys vs sells", 0, help=HELP["consensus"]),
@@ -267,29 +291,30 @@ def _flows(df: pd.DataFrame) -> None:
     st.write(", ".join(d.replace("_", " ") for d in MANUAL_DYNAMICS))
 
 
-def _themes(df: pd.DataFrame) -> None:
-    st.markdown(section("Themes — sector / industry / theme rotation", 0, help=HELP["themes"]),
+def _relative_strength(df: pd.DataFrame) -> None:
+    st.markdown(section("Relative strength — vs the S&P 500", 0, help=HELP["themes"]),
                 unsafe_allow_html=True)
+    st.caption("How sectors/themes are doing **relative to the S&P 500** (SPY). Positive = "
+               "outperforming. This tab is purely relative strength; for style/factor momentum "
+               "see **Factor Rotation**.")
     sub = df[df["segment"] == "themes"].copy() if not df.empty else pd.DataFrame()
     if sub.empty:
-        st.caption("No theme signals yet. Run the CAS compute.")
+        st.caption("No relative-strength signals yet. Run the CAS compute.")
         return
     sub["label"] = sub["asset"].map(label_of)
-    st.caption("Families: **relative_strength** (3m/6m vs SPY) · **rs_short** (1m) · **rs_long** (6m) "
-               "· **trend_vs_200dma** (absolute trend). Tickers show their descriptive label.")
+    st.caption("Families: **relative_strength** (3m/6m blend vs SPY) · **rs_short** (1-month) · "
+               "**rs_long** (6-month) · **trend_vs_200dma** (is it above its 200-day average?).")
     _buy_sell_panels(sub)
 
-    st.markdown(section("Theme signals — asset × family", 2, help=HELP["themes"]),
+    st.markdown(section("Relative strength — sector/theme × family", 2, help=HELP["themes"]),
                 unsafe_allow_html=True)
     _theme_heatmap(sub)
 
-    st.markdown(section("All theme signals", 3), unsafe_allow_html=True)
+    st.markdown(section("All relative-strength signals", 3), unsafe_allow_html=True)
     cols = ["asset", "label", "family", "state", "signal", "horizon", "confidence", "rationale"]
     have = [c for c in cols if c in sub.columns]
     st.dataframe(sub[have].sort_values("signal", ascending=False), use_container_width=True,
                  height=420, hide_index=True, column_config=_colcfg(have))
-
-    _expanded_heatmap()
 
 
 def _theme_heatmap(sub: pd.DataFrame) -> None:
@@ -328,17 +353,19 @@ def _expanded_heatmap() -> None:
     rows = []
     for s in frm:
         tag = frm_tag(s["asset"]) or {}
-        rows.append({"asset": s["asset"], "label": tag.get("label", s["asset"]),
+        rows.append({"asset": s["asset"],
+                     "label": tag.get("label", s["asset"]),
+                     "named": f"{s['asset']} · {label_of(s['asset'])}"[:32],
                      "group": tag.get("group", ""), "signal": s["signal"],
                      "region": REGION_LABEL.get(tag.get("region"), tag.get("region", ""))})
     rdf = pd.DataFrame(rows)
-    st.markdown(section("Expanded composite — every tracked factor, style, industry & theme", 4,
-                        help="The full Factor-Rotation universe (~120 ETFs), not just the 13 core "
+    st.markdown(section("Expanded composite — every tracked factor, style, industry & beta ETF", 4,
+                        help="The FULL Factor-Rotation universe (~330 ETFs), not just the 13 core "
                              "styles. Green = bullish composite, red = bearish."),
                 unsafe_allow_html=True)
     styles = rdf[rdf["group"] == "style"]
     if not styles.empty:
-        st.caption("**Styles × region**")
+        st.caption("**Core styles × region**")
         try:
             import altair as alt
             ch = (alt.Chart(styles).mark_rect().encode(
@@ -351,14 +378,17 @@ def _expanded_heatmap() -> None:
         except Exception:
             st.dataframe(styles.pivot_table(index="label", columns="region", values="signal"),
                          use_container_width=True)
-    ind = rdf[rdf["group"] == "industry"].sort_values("signal", ascending=False)
-    if not ind.empty:
-        st.caption("**Industries — top & bottom by composite**")
-        _signal_bar(pd.concat([ind.head(18), ind.tail(18)]).to_dict("records"))
-    rs = rdf[rdf["group"] == "region_sector"].sort_values("signal", ascending=False)
-    if not rs.empty:
-        st.caption("**Region-sectors**")
-        _signal_bar(rs.to_dict("records"))
+    for grp, title in [("beta", "Factor / strategic-beta ETFs"), ("industry", "Industries"),
+                       ("region_sector", "Region-sectors")]:
+        g = rdf[rdf["group"] == grp].sort_values("signal", ascending=False)
+        if g.empty:
+            continue
+        n = len(g)
+        cap = f"**{title} — top & bottom 15 of {n} by composite**" if n > 30 else f"**{title}** ({n})"
+        st.caption(cap)
+        show = pd.concat([g.head(15), g.tail(15)]) if n > 30 else g
+        _signal_bar(show.rename(columns={"named": "label", "label": "factor"}).to_dict("records"),
+                    label="label", height_per=20)
 
 
 def _factor_rotation(df: pd.DataFrame) -> None:
@@ -381,8 +411,12 @@ def _factor_rotation(df: pd.DataFrame) -> None:
         comp = sub[sub["family"] == "frm_composite"]
         _buy_sell_panels(comp, cols=["asset", "group", "label", "region", "signal", "confidence"])
 
+        _rotation_timeframe()
+
         st.markdown(section("Style composite — factor × region", 2, help=HELP["frm_composite"]),
                     unsafe_allow_html=True)
+        st.caption("Composite blends 1/3/6/12-month momentum (see the timeframe toggle above for "
+                   "a single look-back).")
         styles = sub[(sub["family"] == "frm_composite") & (sub["group"] == "style")]
         _frm_heatmap(styles)
 
@@ -403,7 +437,39 @@ def _factor_rotation(df: pd.DataFrame) -> None:
     else:
         st.caption("No factor-rotation signals yet. Run `python -m zenith.cas.compute` to populate.")
 
+    _expanded_heatmap()
     _frm_backtest()
+
+
+def _rotation_timeframe() -> None:
+    """Factor rotation ranked by a single chosen look-back window."""
+    from .universe import REGION_LABEL
+    rot = store_cas.load("rotation", {})
+    if not rot:
+        return
+    st.markdown(section("Rotation by look-back window", 1,
+                        help="Cross-sectional rank within each peer group over ONE look-back "
+                             "(1/3/6/12 months). +1 = strongest momentum vs peers, -1 = weakest."),
+                unsafe_allow_html=True)
+    tf = st.radio("Look-back window", ["1m", "3m", "6m", "1y"], index=1, horizontal=True, key="frm_tf")
+    rows = rot.get(tf, [])
+    styles = [r for r in rows if r.get("group") == "style"]
+    for r in styles:
+        r["region_lbl"] = REGION_LABEL.get(r.get("region"), r.get("region", ""))
+    if styles:
+        df = pd.DataFrame(styles)
+        try:
+            import altair as alt
+            ch = (alt.Chart(df).mark_rect().encode(
+                x=alt.X("region_lbl:N", title=None),
+                y=alt.Y("label:N", title=None),
+                color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
+                tooltip=["ticker", "label", "region_lbl", alt.Tooltip("signal:Q", format="+.2f")],
+            ).properties(height=320))
+            st.altair_chart(ch, use_container_width=True)
+        except Exception:
+            st.dataframe(df.pivot_table(index="label", columns="region_lbl", values="signal"),
+                         use_container_width=True)
 
 
 def _frm_heatmap(comp: pd.DataFrame) -> None:

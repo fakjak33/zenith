@@ -104,6 +104,25 @@ def _cross_section(tr: dict[str, float], key_fn) -> dict[str, float]:
     return out
 
 
+_TF_DAYS = {"1m": 21, "3m": 63, "6m": 126, "1y": 252}
+
+
+def rotation_by_timeframe(prices: dict[str, pd.DataFrame]) -> dict[str, list[dict]]:
+    """Cross-sectional factor/industry/beta rotation ranked within peer groups, for
+    each look-back window. {timeframe: [{ticker,label,group,region,signal}]}."""
+    uni = univ.frm_universe()
+    closes = {t: prices[t]["close"] for t in uni
+              if t in prices and "close" in prices[t] and len(prices[t]) >= 60}
+    out: dict[str, list[dict]] = {}
+    for tf, lb in _TF_DAYS.items():
+        tr = {t: _trailing_return(c, lb=lb, skip=0) for t, c in closes.items()}
+        cs = _cross_section(tr, lambda t: (uni[t]["group"], uni[t]["region"]))
+        out[tf] = [{"ticker": t, "label": uni[t]["label"], "group": uni[t]["group"],
+                    "region": uni[t]["region"], "signal": round(sig, 4)}
+                   for t, sig in cs.items()]
+    return out
+
+
 def compute(prices: dict[str, pd.DataFrame] | None = None) -> list[dict]:
     """Run the factor-rotation model over the tagged FRM universe.
 
