@@ -74,6 +74,7 @@ def run(cadence: str = "daily") -> dict:
             frm = factor_rotation.compute(px)
             signals += frm
             store_cas.save("factor_rotation", frm)
+            store_cas.save("rotation", factor_rotation.rotation_by_timeframe(px))
             status.append({"segment": "factor_rotation", "ok": True, "n": len(frm)})
         except Exception as e:
             status.append({"segment": "factor_rotation", "ok": False, "error": str(e)[:200]})
