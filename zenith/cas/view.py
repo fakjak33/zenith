@@ -441,9 +441,10 @@ def _frm_backtest() -> None:
                      use_container_width=True, height=360)
 
 
-def _price_signal_overlay(ticker: str) -> None:
+def _price_signal_overlay(ticker: str, hist_rows: list[dict] | None = None) -> None:
     price = _price_series(ticker)
-    hist = [h for h in store_cas.load("history", []) if h.get("asset") == ticker]
+    hist = (hist_rows if hist_rows is not None
+            else [h for h in store_cas.load("history", []) if h.get("asset") == ticker])
     try:
         import altair as alt
     except Exception:
@@ -522,72 +523,80 @@ def _asset_detail(df: pd.DataFrame) -> None:
 
 def _history() -> None:
     from .universe import frm_tag, REGION_LABEL
-    st.markdown(section("Signal history — how a signal has evolved", 0, help=HELP["history"]),
+    st.markdown(section("Signal history — how signals evolved, vs price", 0, help=HELP["history"]),
                 unsafe_allow_html=True)
+    st.caption("**frm_ts_mom** = own-trend momentum · **frm_cs_region** = ranked vs peers "
+               "(cross-sectional) · **frm_composite** = the blend (0.6 TS + 0.3 CS-region + "
+               "0.1 CS-peer). Grey line = the asset's price (rebased) so you can see if the signal "
+               "leads the move.")
     hist = store_cas.load("history", [])
     if hist:
         hdf = pd.DataFrame(hist)
         assets = sorted(hdf["asset"].unique())
-        default_ix = assets.index("MTUM") if "MTUM" in assets else 0
-        pick = st.selectbox("Asset", assets, index=default_ix,
-                            help="Pick a factor/industry ETF to see its signal trend.")
-        one = hdf[hdf["asset"] == pick].copy()
+        c1, c2 = st.columns([1, 2])
+        pick = c1.selectbox("Asset", assets,
+                            index=assets.index("MTUM") if "MTUM" in assets else 0)
+        fams = sorted(hdf[hdf["asset"] == pick]["family"].unique())
+        chosen = c2.multiselect("Signals to compare", fams, default=fams,
+                                help="Compare time-series vs cross-sectional vs the composite.")
         tag = frm_tag(pick) or {}
-        st.caption(f"{tag.get('label', pick)} · {REGION_LABEL.get(tag.get('region'), '')} · "
-                   f"families: {', '.join(sorted(one['family'].unique()))}")
-        try:
-            import altair as alt
-            one["date"] = pd.to_datetime(one["date"])
-            chart = (alt.Chart(one).mark_line(point=False).encode(
-                x=alt.X("date:T", title=None),
-                y=alt.Y("signal:Q", scale=alt.Scale(domain=[-1, 1]), title="signal"),
-                color=alt.Color("family:N", legend=alt.Legend(title="family")),
-                tooltip=["date:T", "family:N", "signal:Q"],
-            ).properties(height=300))
-            st.altair_chart(chart, use_container_width=True)
-        except Exception:
-            st.line_chart(one.pivot_table(index="date", columns="family", values="signal"))
+        st.caption(f"{label_of(pick)} · {tag.get('group','')} / "
+                   f"{REGION_LABEL.get(tag.get('region'), tag.get('region',''))}")
+        rows = hdf[(hdf["asset"] == pick) & (hdf["family"].isin(chosen))].to_dict("records")
+        _price_signal_overlay(pick, hist_rows=rows)
     else:
-        st.caption("No signal history yet — it backfills on the next CAS run "
-                   "(`python -m zenith.cas.compute`).")
+        st.caption("No signal history yet — it backfills on the next CAS run.")
 
+    # --- hit-rate, selectable across models ---
     st.markdown(section("Predictive hit-rate — did the signal call the move?", 2, help=HELP["hitrate"]),
                 unsafe_allow_html=True)
     hr = store_cas.load("hitrate", {})
-    if not hr:
+    if not hr or "models" not in hr:
         st.caption("No hit-rate yet. Run the CAS compute to backfill it.")
         return
-    st.caption(f"{hr.get('model','')} · {hr.get('n_assets',0)} assets · as of {hr.get('as_of','?')} · "
-               "% of directional calls that matched the actual forward return (50% = coin-flip).")
-    byh = hr.get("by_horizon", {})
-    if byh:
-        order = ["1m", "3m", "6m", "12m"]
-        cols = st.columns(len(order))
-        for i, h in enumerate(order):
-            rec = byh.get(h, {})
-            rate = rec.get("hit_rate")
-            cols[i].metric(f"{h} hit-rate",
-                           "—" if rate is None else f"{rate:.0%}",
-                           help=f"n = {rec.get('n', 0)} observations")
-    bg = hr.get("by_group", {})
-    if bg:
-        rows = []
-        for grp, d in bg.items():
-            row = {"group": grp}
-            for h in ("1m", "3m", "6m", "12m"):
-                r = d.get(h, {})
-                row[h] = None if r.get("hit_rate") is None else round(r["hit_rate"], 3)
-            rows.append(row)
-        st.markdown(section("Hit-rate by group", 4), unsafe_allow_html=True)
-        st.dataframe(pd.DataFrame(rows), use_container_width=True, height=200)
+    models = hr["models"]
+    mkey = st.selectbox("Model / signal", list(models),
+                        format_func=lambda k: models[k].get("label", k),
+                        help="Pick any backfillable CAS model to see its predictive hit-rate.")
+    m = models[mkey]
+    st.caption(f"{m.get('label','')} · {hr.get('n_assets',0)} assets · as of {hr.get('as_of','?')}. "
+               "Each number is the % of directional calls that matched the ACTUAL forward return "
+               "(50% = coin-flip; higher = predictive). " + hr.get("note", ""))
+    byh = m.get("by_horizon", {})
+    cols = st.columns(4)
+    for i, h in enumerate(["1m", "3m", "6m", "12m"]):
+        rec = byh.get(h, {})
+        rate = rec.get("hit_rate")
+        cols[i].metric(f"{h} hit-rate", "—" if rate is None else f"{rate:.0%}",
+                       help=f"n = {rec.get('n', 0)} observations")
+
+    st.markdown(section("Hit-rate by asset group", 4,
+                        help="Rows = factor / industry / region-sector groups; columns = forward "
+                             "horizons. Each cell = % of that group's directional calls that were right."),
+                unsafe_allow_html=True)
+    bg = m.get("by_group", {})
+    rows = []
+    for grp, d in bg.items():
+        row = {"group": grp}
+        for h in ("1m", "3m", "6m", "12m"):
+            r = d.get(h, {})
+            row[h] = None if r.get("hit_rate") is None else round(r["hit_rate"], 3)
+        rows.append(row)
+    if rows:
+        cc = {h: st.column_config.NumberColumn(h, help=f"{h} forward hit-rate (fraction).")
+              for h in ("1m", "3m", "6m", "12m")}
+        st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True, column_config=cc)
 
 
 def _rebalance() -> None:
     st.markdown(section("Upcoming rebalance & key dates", 0), unsafe_allow_html=True)
     events = store_cas.load("rebalance", [])
     if events:
+        cc = {"days_until": st.column_config.Column(help="Calendar days until the event."),
+              "kind": st.column_config.Column(help="Event type (opex / index_rebal / period_end)."),
+              "note": st.column_config.Column(help="Why it matters for flows.")}
         st.dataframe(pd.DataFrame(events)[["date", "days_until", "event", "kind", "note"]],
-                     use_container_width=True, height=420)
+                     use_container_width=True, height=420, hide_index=True, column_config=cc)
     else:
         st.caption("No upcoming events loaded.")
 
@@ -610,7 +619,10 @@ def _consensus() -> None:
                "entanglement = cross-horizon agreement. Variety/entropy = Ashby's-Law analogue.")
     cons = store_cas.load("consensus", [])
     if cons:
-        st.dataframe(pd.DataFrame(cons), use_container_width=True, height=560)
+        cdf = pd.DataFrame(cons)
+        cdf.insert(1, "label", cdf["asset"].map(label_of))
+        st.dataframe(cdf, use_container_width=True, height=560, hide_index=True,
+                     column_config=_colcfg(list(cdf.columns)))
 
 
 def _registry() -> None:

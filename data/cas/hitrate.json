@@ -1,80 +1,398 @@
 {
   "as_of": "2026-06-29",
-  "model": "Factor Rotation Momentum (time-series)",
-  "n_assets": 133,
-  "by_horizon": {
-    "1m": {
-      "hit_rate": 0.523,
-      "n": 5645
+  "n_assets": 132,
+  "horizons": [
+    "1m",
+    "3m",
+    "6m",
+    "12m"
+  ],
+  "models": {
+    "frm_ts_mom": {
+      "by_horizon": {
+        "1m": {
+          "hit_rate": 0.523,
+          "n": 5628
+        },
+        "3m": {
+          "hit_rate": 0.556,
+          "n": 5380
+        },
+        "6m": {
+          "hit_rate": 0.591,
+          "n": 4998
+        },
+        "12m": {
+          "hit_rate": 0.616,
+          "n": 4247
+        }
+      },
+      "by_group": {
+        "industry": {
+          "1m": {
+            "hit_rate": 0.509,
+            "n": 4308
+          },
+          "3m": {
+            "hit_rate": 0.524,
+            "n": 4119
+          },
+          "6m": {
+            "hit_rate": 0.564,
+            "n": 3829
+          },
+          "12m": {
+            "hit_rate": 0.588,
+            "n": 3260
+          }
+        },
+        "region_sector": {
+          "1m": {
+            "hit_rate": 0.451,
+            "n": 175
+          },
+          "3m": {
+            "hit_rate": 0.485,
+            "n": 165
+          },
+          "6m": {
+            "hit_rate": 0.57,
+            "n": 151
+          },
+          "12m": {
+            "hit_rate": 0.544,
+            "n": 125
+          }
+        },
+        "style": {
+          "1m": {
+            "hit_rate": 0.584,
+            "n": 1145
+          },
+          "3m": {
+            "hit_rate": 0.686,
+            "n": 1096
+          },
+          "6m": {
+            "hit_rate": 0.697,
+            "n": 1018
+          },
+          "12m": {
+            "hit_rate": 0.731,
+            "n": 862
+          }
+        }
+      },
+      "label": "Factor-Rotation — time-series momentum"
     },
-    "3m": {
-      "hit_rate": 0.556,
-      "n": 5395
+    "strat_trend": {
+      "by_horizon": {
+        "1m": {
+          "hit_rate": 0.518,
+          "n": 5115
+        },
+        "3m": {
+          "hit_rate": 0.538,
+          "n": 4893
+        },
+        "6m": {
+          "hit_rate": 0.567,
+          "n": 4526
+        },
+        "12m": {
+          "hit_rate": 0.579,
+          "n": 3821
+        }
+      },
+      "by_group": {
+        "industry": {
+          "1m": {
+            "hit_rate": 0.505,
+            "n": 3904
+          },
+          "3m": {
+            "hit_rate": 0.509,
+            "n": 3738
+          },
+          "6m": {
+            "hit_rate": 0.542,
+            "n": 3456
+          },
+          "12m": {
+            "hit_rate": 0.557,
+            "n": 2931
+          }
+        },
+        "region_sector": {
+          "1m": {
+            "hit_rate": 0.438,
+            "n": 160
+          },
+          "3m": {
+            "hit_rate": 0.487,
+            "n": 152
+          },
+          "6m": {
+            "hit_rate": 0.563,
+            "n": 142
+          },
+          "12m": {
+            "hit_rate": 0.525,
+            "n": 118
+          }
+        },
+        "style": {
+          "1m": {
+            "hit_rate": 0.579,
+            "n": 1051
+          },
+          "3m": {
+            "hit_rate": 0.656,
+            "n": 1003
+          },
+          "6m": {
+            "hit_rate": 0.662,
+            "n": 928
+          },
+          "12m": {
+            "hit_rate": 0.67,
+            "n": 772
+          }
+        }
+      },
+      "label": "Strategies — multi-horizon trend"
     },
-    "6m": {
-      "hit_rate": 0.591,
-      "n": 5010
+    "strat_momentum": {
+      "by_horizon": {
+        "1m": {
+          "hit_rate": 0.518,
+          "n": 5570
+        },
+        "3m": {
+          "hit_rate": 0.553,
+          "n": 5330
+        },
+        "6m": {
+          "hit_rate": 0.583,
+          "n": 4963
+        },
+        "12m": {
+          "hit_rate": 0.59,
+          "n": 4225
+        }
+      },
+      "by_group": {
+        "industry": {
+          "1m": {
+            "hit_rate": 0.5,
+            "n": 4288
+          },
+          "3m": {
+            "hit_rate": 0.522,
+            "n": 4105
+          },
+          "6m": {
+            "hit_rate": 0.562,
+            "n": 3824
+          },
+          "12m": {
+            "hit_rate": 0.563,
+            "n": 3262
+          }
+        },
+        "region_sector": {
+          "1m": {
+            "hit_rate": 0.461,
+            "n": 178
+          },
+          "3m": {
+            "hit_rate": 0.548,
+            "n": 168
+          },
+          "6m": {
+            "hit_rate": 0.605,
+            "n": 157
+          },
+          "12m": {
+            "hit_rate": 0.609,
+            "n": 133
+          }
+        },
+        "style": {
+          "1m": {
+            "hit_rate": 0.594,
+            "n": 1104
+          },
+          "3m": {
+            "hit_rate": 0.678,
+            "n": 1057
+          },
+          "6m": {
+            "hit_rate": 0.66,
+            "n": 982
+          },
+          "12m": {
+            "hit_rate": 0.69,
+            "n": 830
+          }
+        }
+      },
+      "label": "Strategies — 6-month momentum"
     },
-    "12m": {
-      "hit_rate": 0.616,
-      "n": 4254
+    "strat_ma_cross": {
+      "by_horizon": {
+        "1m": {
+          "hit_rate": 0.523,
+          "n": 5910
+        },
+        "3m": {
+          "hit_rate": 0.556,
+          "n": 5658
+        },
+        "6m": {
+          "hit_rate": 0.586,
+          "n": 5266
+        },
+        "12m": {
+          "hit_rate": 0.59,
+          "n": 4502
+        }
+      },
+      "by_group": {
+        "industry": {
+          "1m": {
+            "hit_rate": 0.511,
+            "n": 4549
+          },
+          "3m": {
+            "hit_rate": 0.53,
+            "n": 4356
+          },
+          "6m": {
+            "hit_rate": 0.566,
+            "n": 4057
+          },
+          "12m": {
+            "hit_rate": 0.567,
+            "n": 3474
+          }
+        },
+        "region_sector": {
+          "1m": {
+            "hit_rate": 0.492,
+            "n": 189
+          },
+          "3m": {
+            "hit_rate": 0.583,
+            "n": 180
+          },
+          "6m": {
+            "hit_rate": 0.6,
+            "n": 165
+          },
+          "12m": {
+            "hit_rate": 0.568,
+            "n": 139
+          }
+        },
+        "style": {
+          "1m": {
+            "hit_rate": 0.576,
+            "n": 1172
+          },
+          "3m": {
+            "hit_rate": 0.652,
+            "n": 1122
+          },
+          "6m": {
+            "hit_rate": 0.658,
+            "n": 1044
+          },
+          "12m": {
+            "hit_rate": 0.683,
+            "n": 889
+          }
+        }
+      },
+      "label": "Strategies — 50/200 MA cross"
+    },
+    "strat_ma_200": {
+      "by_horizon": {
+        "1m": {
+          "hit_rate": 0.508,
+          "n": 5889
+        },
+        "3m": {
+          "hit_rate": 0.54,
+          "n": 5640
+        },
+        "6m": {
+          "hit_rate": 0.57,
+          "n": 5251
+        },
+        "12m": {
+          "hit_rate": 0.585,
+          "n": 4487
+        }
+      },
+      "by_group": {
+        "industry": {
+          "1m": {
+            "hit_rate": 0.495,
+            "n": 4528
+          },
+          "3m": {
+            "hit_rate": 0.512,
+            "n": 4336
+          },
+          "6m": {
+            "hit_rate": 0.548,
+            "n": 4039
+          },
+          "12m": {
+            "hit_rate": 0.563,
+            "n": 3455
+          }
+        },
+        "region_sector": {
+          "1m": {
+            "hit_rate": 0.484,
+            "n": 192
+          },
+          "3m": {
+            "hit_rate": 0.5,
+            "n": 182
+          },
+          "6m": {
+            "hit_rate": 0.533,
+            "n": 167
+          },
+          "12m": {
+            "hit_rate": 0.493,
+            "n": 142
+          }
+        },
+        "style": {
+          "1m": {
+            "hit_rate": 0.562,
+            "n": 1169
+          },
+          "3m": {
+            "hit_rate": 0.654,
+            "n": 1122
+          },
+          "6m": {
+            "hit_rate": 0.659,
+            "n": 1045
+          },
+          "12m": {
+            "hit_rate": 0.689,
+            "n": 890
+          }
+        }
+      },
+      "label": "Strategies — price vs 200-day"
     }
   },
-  "by_group": {
-    "industry": {
-      "1m": {
-        "hit_rate": 0.509,
-        "n": 4325
-      },
-      "3m": {
-        "hit_rate": 0.524,
-        "n": 4134
-      },
-      "6m": {
-        "hit_rate": 0.564,
-        "n": 3841
-      },
-      "12m": {
-        "hit_rate": 0.588,
-        "n": 3267
-      }
-    },
-    "region_sector": {
-      "1m": {
-        "hit_rate": 0.451,
-        "n": 175
-      },
-      "3m": {
-        "hit_rate": 0.485,
-        "n": 165
-      },
-      "6m": {
-        "hit_rate": 0.57,
-        "n": 151
-      },
-      "12m": {
-        "hit_rate": 0.544,
-        "n": 125
-      }
-    },
-    "style": {
-      "1m": {
-        "hit_rate": 0.584,
-        "n": 1145
-      },
-      "3m": {
-        "hit_rate": 0.686,
-        "n": 1096
-      },
-      "6m": {
-        "hit_rate": 0.697,
-        "n": 1018
-      },
-      "12m": {
-        "hit_rate": 0.731,
-        "n": 862
-      }
-    }
-  },
-  "note": "Backfilled from price history; directional calls only. Not investment advice."
+  "note": "Backfilled from price history; directional calls only (|signal|>0.05). 50% = coin-flip. COT/flows accrue forward-only. Not investment advice."
 }
