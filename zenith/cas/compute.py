@@ -142,10 +142,13 @@ def run(cadence: str = "daily") -> dict:
     store_cas.save("overlap", {"ranked": ovl["ranked"], "matrix": ovl["matrix"]})
     store_cas.archive_signals(day, signals)
 
-    # --- signal history + predictive hit-rate (uses cached FRM 5y prices) ---
+    # --- signal history + predictive hit-rate (history fetches deep 5y FRM prices;
+    #     the committed price panel is built from the broad master px so the app's
+    #     price overlays work without the gitignored cache) ---
     try:
         from .analytics import history
         h = history.run()
+        store_cas.save("price_panel", history.build_price_panel(px))
         status.append({"segment": "history+hitrate", "ok": True, "n": h.get("n_assets", 0)})
     except Exception as e:
         status.append({"segment": "history+hitrate", "ok": False, "error": str(e)[:200]})

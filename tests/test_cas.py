@@ -194,6 +194,32 @@ def test_hitrate_math_on_trending_series():
     assert h1[1] > 0 and h1[0] / h1[1] > 0.9
 
 
+def test_beta_etfs_integrated():
+    from zenith.cas.beta_etfs import BETA_ETFS
+    from zenith.cas.universe import frm_universe, frm_tickers, frm_tag, master_etfs, label_of
+    assert len(BETA_ETFS) > 150
+    uni = frm_universe()
+    beta_only = [t for t in BETA_ETFS if (frm_tag(t) or {}).get("group") == "beta"]
+    assert beta_only                                  # at least some new beta names
+    t = beta_only[0]
+    assert frm_tag(t)["region"] == "US" and frm_tag(t)["label"]
+    assert label_of(t) != t                           # resolves to a real name
+    assert set(frm_tickers()) <= set(master_etfs())   # all price-pulled
+    assert sum(1 for v in uni.values() if v["group"] == "beta") > 100
+
+
+def test_price_panel_build_and_read(tmp_path, monkeypatch):
+    from zenith.cas.analytics import history
+    from zenith.cas import store_cas, view
+    px = {"SPY": _ramp(n=300), "QQQ": _ramp(n=300, step=1.0)}
+    panel = history.build_price_panel(px)
+    assert "SPY" in panel and panel["SPY"]["d"] and panel["SPY"]["c"]
+    monkeypatch.setitem(store_cas.CAS_FILES, "price_panel", tmp_path / "panel.json")
+    store_cas.save("price_panel", panel)
+    s = view._price_series("SPY")
+    assert s is not None and len(s) > 3
+
+
 def test_build_history_has_frm_families():
     from zenith.cas.analytics import history
     from zenith.cas.universe import frm_tickers
