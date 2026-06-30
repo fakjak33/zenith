@@ -142,15 +142,15 @@ def compute(prices: dict[str, pd.DataFrame] | None = None) -> list[dict]:
         comp = ind.clip1(0.6 * tsig + 0.3 * csr + 0.1 * csp)
         base = dict(asset_class=group, horizon="months", source=SRC)
         out.append(make_signal(
-            t, "factor_rotation", "frm_ts_mom", tsig, confidence="medium",
+            t, "factor_rotation", "frm_ts_mom", tsig,
             rationale=f"{label}/{rlabel} time-series momentum (vol-scaled 1/3/6/12m)", **base))
         out.append(make_signal(
-            t, "factor_rotation", "frm_cs_region", csr, confidence="medium",
+            t, "factor_rotation", "frm_cs_region", csr,
             rationale=f"{label}/{rlabel} cross-sectional rank within {group} peers in {rlabel}", **base))
         out.append(make_signal(
-            t, "factor_rotation", "frm_cs_peer", csp, confidence="low",
+            t, "factor_rotation", "frm_cs_peer", csp,
             rationale=f"{label}/{rlabel} cross-sectional rank vs same label across regions", **base))
         out.append(make_signal(
-            t, "factor_rotation", "frm_composite", comp, confidence="medium",
+            t, "factor_rotation", "frm_composite", comp,
             rationale=f"{label}/{rlabel} composite = 0.6·TS + 0.3·CS(region) + 0.1·CS(peer)", **base))
     return out

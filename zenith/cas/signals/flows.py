@@ -48,7 +48,7 @@ def from_cot(cot: dict[str, list]) -> list[dict]:
             sig = ind.clip1((-z if contrarian else z) / 2.0)
             out.append(make_signal(
                 etf, "flows", family, sig, asset_class=ac, horizon="weeks",
-                source="cftc", confidence="medium", percentile=pct,
+                source="cftc", percentile=pct,
                 rationale=f"{market}: {field} z={z:+.2f}, pct={pct:.0%} "
                           f"({'contrarian' if contrarian else 'follow'})"))
     return out

@@ -114,6 +114,10 @@ INDUSTRY_ETFS: dict[str, str] = {
     # thematic / misc
     "MSOS": "US Cannabis", "MJ": "Cannabis (ETFMG)", "BLOK": "Blockchain", "WGMI": "Bitcoin Miners",
     "ARKX": "Space & Exploration", "UFO": "Space (Procure)", "SEA": "Shipping (US Global)",
+    "IYZ": "Telecom", "PBJ": "Food & Beverage", "XSW": "Software (equal-wt)",
+    "ARKW": "Next-Gen Internet", "EVX": "Environmental Services", "IGE": "Natural Resources",
+    "KBWP": "Property & Casualty Insurance", "PSCT": "Small-Cap Tech",
+    "FTXL": "Semiconductors (Nasdaq)",
 }
 
 # --- Region-specific sector ETFs (US-listed) — genuinely sparse; only the liquid

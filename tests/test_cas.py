@@ -35,6 +35,23 @@ def test_state_band():
     assert schema.state_from_signal(0.05) == "neutral"
 
 
+def test_dynamic_confidence():
+    assert schema.confidence_of(0.7) == "high"
+    assert schema.confidence_of(0.4) == "medium"
+    assert schema.confidence_of(0.1) == "low"
+    assert schema.confidence_of(0.4, percentile=0.95) == "high"   # extreme percentile bumps
+    # make_signal derives confidence from strength when not given
+    assert schema.make_signal("X", "strategies", "f", 0.8)["confidence"] == "high"
+    assert schema.make_signal("X", "strategies", "f", 0.05)["confidence"] == "low"
+
+
+def test_themes_emits_multiple_families():
+    from zenith.cas.signals import themes
+    data = {"SPY": _ramp(step=0.3), "XLK": _ramp(step=0.6), "XLE": _ramp(step=0.1)}
+    fams = {s["family"] for s in themes.compute(data)}
+    assert {"relative_strength", "rs_short", "rs_long", "trend_vs_200dma"} <= fams
+
+
 # --- indicators / strategies ----------------------------------------------
 def test_uptrend_is_bullish():
     df = _ramp()

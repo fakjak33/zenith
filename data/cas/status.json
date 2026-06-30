@@ -1,14 +1,14 @@
 {
-  "date": "2026-06-28",
+  "date": "2026-06-29",
   "cadence": "weekly",
-  "n_signals": 7333,
-  "n_assets": 420,
+  "n_signals": 7607,
+  "n_assets": 429,
   "regime": "risk-on",
   "segments": [
     {
       "segment": "prices",
       "ok": true,
-      "n": 417,
+      "n": 426,
       "source": "yfinance",
       "error": ""
     },
@@ -20,8 +20,8 @@
     {
       "segment": "strategies151",
       "ok": true,
-      "n": 5838,
-      "universe": 417
+      "n": 5964,
+      "universe": 426
     },
     {
       "segment": "finviz",
@@ -33,18 +33,19 @@
     {
       "segment": "themes",
       "ok": true,
-      "n": 33
+      "n": 132
     },
     {
       "segment": "factor_rotation",
       "ok": true,
-      "n": 488
+      "n": 528
     },
     {
       "segment": "fred",
       "ok": true,
       "n": 2600,
-      "source": "fred(cache)"
+      "source": "fred",
+      "error": ""
     },
     {
       "segment": "regime",
@@ -65,12 +66,12 @@
     {
       "segment": "flows",
       "ok": true,
-      "n": 441
+      "n": 450
     },
     {
       "segment": "history+hitrate",
       "ok": true,
-      "n": 122
+      "n": 133
     }
   ]
 }

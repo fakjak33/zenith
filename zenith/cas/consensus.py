@@ -27,8 +27,9 @@ BEHAVIORAL = {"mean_reversion", "rsi_reversion", "cot_leveraged_positioning",
               "cot_managed_money_positioning", "etf_volume_flow_proxy"}
 PHYSICAL = {"momentum", "ma_single_200", "ma_cross_50_200", "multi_ma",
             "donchian_breakout", "vol_regime", "trend_following", "risk_regime",
-            "relative_strength", "frm_ts_mom", "frm_cs_region",
-            "frm_cs_peer", "frm_composite"}
+            "relative_strength", "rs_short", "rs_long", "trend_vs_200dma",
+            "cot_dealer_positioning", "cot_asset_manager_positioning",
+            "frm_ts_mom", "frm_cs_region", "frm_cs_peer", "frm_composite"}
 
 _HORIZON_AXIS = {"intraday": 0, "days": 0, "weeks": 1, "months": 2}
 
