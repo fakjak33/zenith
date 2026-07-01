@@ -1,8 +1,8 @@
 {
-  "date": "2026-06-29",
-  "cadence": "weekly",
-  "n_signals": 10894,
-  "n_assets": 594,
+  "date": "2026-07-01",
+  "cadence": "monthly",
+  "n_signals": 10893,
+  "n_assets": 593,
   "regime": "risk-on",
   "segments": [
     {
@@ -43,8 +43,9 @@
     {
       "segment": "fred",
       "ok": true,
-      "n": 1560,
-      "source": "fred(cache)"
+      "n": 2600,
+      "source": "fred",
+      "error": ""
     },
     {
       "segment": "regime",
@@ -54,18 +55,31 @@
     {
       "segment": "rebalance",
       "ok": true,
-      "n": 2
+      "n": 1
     },
     {
       "segment": "cot",
       "ok": true,
       "n": 530,
-      "source": "cftc(cache)"
+      "source": "cftc",
+      "error": ""
     },
     {
       "segment": "flows",
       "ok": true,
       "n": 615
+    },
+    {
+      "segment": "edgar13f",
+      "ok": true,
+      "n": 5,
+      "source": "edgar",
+      "error": ""
+    },
+    {
+      "segment": "backtest",
+      "ok": true,
+      "n": 42
     },
     {
       "segment": "history+hitrate",

@@ -6,7 +6,7 @@
     "proactive": "Trim high-beta & crowded-long themes; raise cash; pre-buy downside hedges while cheap (SPY/QQQ puts, VIX calls).",
     "reactive": "Add to quality/min-vol (USMV/QUAL); rotate toward defensives (XLP/XLU); avoid catching falling knives in lev-long COT extremes.",
     "active": false,
-    "status": "regime=risk-on, VIX pct=50%"
+    "status": "regime=risk-on, VIX pct=37%"
   },
   {
     "id": "rate_shock",
@@ -24,7 +24,7 @@
     "proactive": "Lighten the crowded theme into strength; set trailing stops.",
     "reactive": "Expect sharp mean-reversion; size down; wait for positioning to reset before re-entering.",
     "active": true,
-    "status": "SOXX flashing crowded-sell"
+    "status": "XBI flashing crowded-sell"
   },
   {
     "id": "theme_reversal",
@@ -41,7 +41,7 @@
     "trigger": "triple-witching / quarter-end / index rebalance within 5 days",
     "proactive": "Expect flow-driven dislocation; reduce new risk into the print.",
     "reactive": "Fade exaggerated rebalance moves once the window passes.",
-    "active": true,
-    "status": "Quarter-end in 1d"
+    "active": false,
+    "status": "no event within 5d"
   }
 ]
