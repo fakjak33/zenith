@@ -174,14 +174,16 @@ def test_frm_universe_tags_sane():
     assert "factor_rotation" in schema.SEGMENTS
 
 
-def test_logo_anim_well_formed():
+def test_logo_vector_well_formed():
     import xml.dom.minidom as md
-    from zenith.ui_theme import _logo_anim
-    svg = _logo_anim(76)
+    from zenith.ui_theme import _logo_vector, THEME
+    svg = _logo_vector(84)
     md.parseString(svg)                       # raises if not well-formed XML
     assert svg.startswith("<svg")
-    assert svg.count("animateTransform") >= 4   # multiple counter-rotating parts
-    assert "<animate " in svg                   # pulsing core
+    assert "clip-path" in svg and "<animate " in svg          # clipped sphere + sun pulse
+    assert "<rect" not in svg                                 # transparent (no bg rect)
+    palette = [THEME.coral, THEME.orange, THEME.mustard, THEME.mint, THEME.teal, THEME.navy]
+    assert sum(c in svg for c in palette) >= 5                # uses the palette
 
 
 def test_help_badge_and_section_render():
