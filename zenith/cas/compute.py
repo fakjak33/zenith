@@ -19,7 +19,7 @@ from datetime import date
 
 from . import store_cas, consensus, overlap, registry, contingency
 from .universe import all_etfs, COT_MAP
-from .sources import prices, cot, finviz, fred, edgar13f, calendar as cal
+from .sources import prices, cot, fred, edgar13f, calendar as cal
 from .signals import (strategies, strategies151, flows, themes, rebalance, regime,
                       factor_rotation)
 from .universe import master_etfs
@@ -58,11 +58,9 @@ def run(cadence: str = "daily") -> dict:
         except Exception as e:
             status.append({"segment": "strategies151", "ok": False, "error": str(e)[:200]})
 
-        # --- themes (always) ---
-        groups, gst = finviz.get_groups("sector")
-        status.append({"segment": "finviz", **gst})
+        # --- themes (always; price-based relative strength) ---
         try:
-            th = themes.compute(px, groups)
+            th = themes.compute(px)
             signals += th
             store_cas.save("themes", th)
             status.append({"segment": "themes", "ok": True, "n": len(th)})
