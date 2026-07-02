@@ -144,6 +144,34 @@ def _logo_svg(size: int = 84) -> str:
     )
 
 
+def _logo_vector(size: int = 76) -> str:
+    """The Zenith sun-sphere mark — a mid-century layered orb: concentric bands
+    centered on a cream sun (cool near the sun, warm sweeping to the outer rim),
+    clipped to a circle. Transparent background, palette colors, with a subtle
+    sun-glow pulse. Pure inline SVG (+ tiny SMIL) so it scales and animates."""
+    uid = f"zsun{size}"
+    sx, sy = 50, 33                       # sun sits in the upper third
+    cream = "#fdf6e3"
+    # (radius, color) drawn largest→smallest so bands stack; centered on the sun
+    bands = [(74, THEME.coral), (63, THEME.orange), (53, THEME.mustard),
+             (43, THEME.mint), (34, THEME.teal), (26, THEME.navy), (18, "#163f54")]
+    circles = "".join(f'<circle cx="{sx}" cy="{sy}" r="{r}" fill="{c}"/>' for r, c in bands)
+    halo = (f'<circle cx="{sx}" cy="{sy}" r="11" fill="{cream}" opacity="0.35">'
+            f'<animate attributeName="r" values="11;16;11" dur="4.5s" repeatCount="indefinite"/>'
+            f'<animate attributeName="opacity" values="0.35;0.08;0.35" dur="4.5s" repeatCount="indefinite"/>'
+            f'</circle>')
+    sun = (f'<circle cx="{sx}" cy="{sy}" r="8.5" fill="{cream}">'
+           f'<animate attributeName="r" values="8.5;9.6;8.5" dur="4.5s" repeatCount="indefinite"/>'
+           f'</circle>')
+    return (
+        f'<svg width="{size}" height="{size}" viewBox="0 0 100 100" '
+        f'xmlns="http://www.w3.org/2000/svg" style="display:block">'
+        f'<defs><clipPath id="{uid}"><circle cx="50" cy="52" r="46"/></clipPath></defs>'
+        f'<g clip-path="url(#{uid})">{circles}{halo}{sun}</g>'
+        f'<circle cx="50" cy="52" r="46" fill="none" stroke="{cream}" '
+        f'stroke-width="0.8" opacity="0.25"/></svg>')
+
+
 def _rot(dur: float, frm: int = 0, to: int = 360, begin: str = "0") -> str:
     return (f'<animateTransform attributeName="transform" attributeType="XML" '
             f'type="rotate" from="{frm} 50 50" to="{to} 50 50" dur="{dur}s" '
@@ -224,7 +252,7 @@ def _logo_mark(size: int = 64) -> str:
 
 BANNER = f"""
 <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.3em; position:relative; z-index:2;">
-  <div style="line-height:0;">{_logo_anim(76)}</div>
+  <div style="line-height:0;">{_logo_vector(84)}</div>
   <div>
     <div style="font-family:{THEME.font_display}; font-size:4.4rem; letter-spacing:0.16em;
                 color:#fff; line-height:0.9; -webkit-text-stroke:1px #fff;">ZENITH</div>
