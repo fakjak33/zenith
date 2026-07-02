@@ -34,7 +34,9 @@ SOURCES: list[Source] = [
     # ================= INSIGHTS (firms / managers / analysts) =================
     # Apollo Academy carries Torsten Slok's "Daily Spark" in its main feed.
     Source("Apollo Academy (incl. Daily Spark)", "insight", "rss",
-           "https://www.apolloacademy.com/feed/"),
+           "https://www.apolloacademy.com/feed/", enabled=False,
+           note="feed now returns HTTP 200 but 0 entries (site restructured 2026); Daily Spark "
+                "not currently feedable. Re-enable if a working feed URL reappears"),
     Source("Bespoke Investment Group", "insight", "rss", "https://www.bespokepremium.com/feed/"),
     Source("Alpha Architect", "insight", "rss", "https://alphaarchitect.com/feed/"),
     Source("Newfound (Flirting with Models)", "insight", "rss", "https://blog.thinknewfound.com/feed/"),
@@ -73,6 +75,19 @@ SOURCES: list[Source] = [
                 "Nomura, SocGen, BofA — the free substitute for those paywalled desks"),
     Source("Allocate Smartly", "insight", "rss", "https://allocatesmartly.com/feed/",
            note="empirical tactical asset-allocation research & backtests"),
+    # --- expansion (probed 2026-07; reachable via the browser-UA feed retry) ---
+    Source("Net Interest (Marc Rubinstein)", "insight", "rss", "https://www.netinterest.co/feed",
+           note="weekly financial-sector deep dives"),
+    Source("The Macro Compass (Peccatiello)", "insight", "rss",
+           "https://themacrocompass.substack.com/feed", note="global macro & liquidity"),
+    Source("Moontower (Kris Abdelmessih)", "insight", "rss", "https://moontower.substack.com/feed",
+           note="volatility / options / market-structure"),
+    Source("The Overshoot (Matthew Klein)", "insight", "rss", "https://theovershoot.co/feed",
+           note="macro & markets analysis"),
+    Source("Chartbook (Adam Tooze)", "insight", "rss", "https://adamtooze.substack.com/feed",
+           note="economic history & macro"),
+    Source("Mott Capital", "insight", "rss", "https://mottcapitalmanagement.com/feed/",
+           note="macro & single-name markets commentary"),
     # --- HTML-hub sources: no RSS, but their insights index scrapes cleanly via
     #     the direct (browser-UA) tier — confirmed returning article links 2026-06 ---
     Source("Blackstone (Insights)", "insight", "html", "https://www.blackstone.com/insights/",
@@ -103,9 +118,11 @@ SOURCES: list[Source] = [
            link_pattern=r"/publications/",
            note="anti-bot SPA: needs FIRECRAWL_API_KEY or APIFY_RESIDENTIAL=1; "
                 "reports blocked until a key is set"),
-    Source("Citadel", "insight", "html", "https://www.citadel.com/insights/", enabled=False,
-           note="citadel.com robots.txt DISALLOWS /insights — we respect robots before any "
-                "fetch tier, so no scraper (Firecrawl/Apify) is even attempted. Cannot be scraped"),
+    Source("Citadel (Insights)", "insight", "html", "https://www.citadel.com/insights/",
+           link_pattern=r"/insights/",
+           note="RE-ENABLED 2026-07: citadel.com robots.txt now allows all (was DISALLOW /insights). "
+                "Direct fetch still hits a Cloudflare 403, so it needs the Firecrawl tier "
+                "(set FIRECRAWL_API_KEY) or Apify residential — reports blocked until a key is set"),
     # --- registered but genuinely unreachable even with paid tools ---
     Source("KKR (Insights)", "insight", "html", "https://www.kkr.com/insights", enabled=False,
            note="robots.txt disallows crawling /insights — respected, not scraped"),
@@ -113,11 +130,15 @@ SOURCES: list[Source] = [
            enabled=False, note="robots.txt disallows crawling /insights — respected"),
     Source("Jane Street", "insight", "rss", "", enabled=False,
            note="no free machine-readable feed (user: low insight value anyway)"),
-    Source("Deutsche Bank (Chart of the Day)", "insight", "html",
+    Source("DWS (Deutsche Bank AM — Insights)", "insight", "html",
+           "https://www.dws.com/en-us/insights/", link_pattern=r"/insights/",
+           note="RE-ADDED 2026-07 for the Deutsche Bank family: DWS is Deutsche Bank's asset-"
+                "management arm; its public insights hub scrapes via the direct/Firecrawl tier. "
+                "(DB Research proper stays login-gated; Chart-of-the-Day still mirrored by ISABELNET.)"),
+    Source("Deutsche Bank Research (login-gated)", "insight", "html",
            "https://www.dbresearch.com/", enabled=False,
-           note="DB Research is LOGIN-gated — no scraper (Firecrawl/Apify) can bypass auth; "
-                "would need DB credentials. Chart of the Day is now captured via the enabled "
-                "ISABELNET feed above, which mirrors DB's charts"),
+           note="DB Research is LOGIN-gated — no scraper can bypass auth. Covered indirectly via "
+                "the enabled DWS hub + the ISABELNET Chart-of-the-Day mirror above"),
     Source("Nomura / Morgan Stanley Quant / Société Générale (research desks)", "insight",
            "rss", "", enabled=False,
            note="no public free RSS (all probed 404/403). Their published charts/insights "
@@ -154,6 +175,12 @@ SOURCES: list[Source] = [
            "https://www.bankofengland.co.uk/rss/publications"),
     Source("Bank Underground (Bank of England)", "research", "rss",
            "https://bankunderground.co.uk/feed/"),
+    Source("Atlanta Fed (macroblog)", "research", "rss", "https://www.atlantafed.org/rss/macroblog",
+           note="Atlanta Fed research blog (probed 2026-07)"),
+    Source("BIS (central bankers' speeches)", "research", "rss",
+           "https://www.bis.org/doclist/cbspeeches.rss", note="global central-bank speeches"),
+    Source("OECD Ecoscope", "research", "rss", "https://oecdecoscope.blog/feed/",
+           note="OECD economics blog"),
     Source("arXiv q-fin (Quant Finance)", "research", "rss", "http://export.arxiv.org/rss/q-fin"),
     Source("Quantpedia", "research", "rss", "https://quantpedia.com/feed/",
            note="empirical quant-strategy research; summarizes SSRN/academic papers"),

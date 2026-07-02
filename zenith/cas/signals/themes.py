@@ -31,7 +31,7 @@ def _trend_vs_sma(close: pd.Series, d: int = 200) -> float:
     return ind.clip1((close.iloc[-1] / m.iloc[-1] - 1.0) * 6)
 
 
-def compute(data: dict[str, pd.DataFrame], finviz_groups: list[dict] | None = None) -> list[dict]:
+def compute(data: dict[str, pd.DataFrame]) -> list[dict]:
     out: list[dict] = []
     bench = data.get("SPY", {}).get("close") if "SPY" in data else None
 
@@ -58,18 +58,4 @@ def compute(data: dict[str, pd.DataFrame], finviz_groups: list[dict] | None = No
             t, "themes", "trend_vs_200dma", _trend_vs_sma(close, 200), asset_class=ac,
             horizon="months", source="yfinance",
             rationale=f"{lbl} price vs its 200-day average (absolute trend)"))
-
-    # Finviz breadth confirmation at the sector level (best-effort)
-    if finviz_groups:
-        for g in finviz_groups:
-            name = str(g.get("name", ""))
-            perf_m = g.get("perf_month") or g.get("performance_month") or 0
-            try:
-                pm = float(str(perf_m).replace("%", "")) / 100.0
-            except ValueError:
-                continue
-            out.append(make_signal(
-                name, "themes", "finviz_group_momentum", ind.clip1(np.tanh(8 * pm)),
-                asset_class="sector", horizon="weeks", source="finviz", confidence="low",
-                rationale=f"Finviz {name} 1m perf {pm:+.1%}"))
     return out

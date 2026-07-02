@@ -14,10 +14,17 @@ from . import apify, firecrawl
 
 @lru_cache(maxsize=256)
 def _robots(host_scheme: str):
+    # Fetch robots.txt ourselves with a browser UA. urllib's rp.read() uses the
+    # python-urllib UA, which Cloudflare/anti-bot hosts 403 — and a 403 on
+    # robots.txt makes robotparser assume "disallow all", a FALSE block (this hid
+    # Citadel, whose robots.txt actually permits everything). We fetch with a real
+    # UA and parse the real rules; if robots is unreachable we fail-open.
     rp = robotparser.RobotFileParser()
-    rp.set_url(f"{host_scheme}/robots.txt")
+    r = get(f"{host_scheme}/robots.txt", browser_ua=True)
+    if r is None:
+        return None
     try:
-        rp.read()
+        rp.parse(r.text.splitlines())
     except Exception:
         return None
     return rp
@@ -85,20 +92,28 @@ def get_html(url: str, timeout: int = REQUEST_TIMEOUT) -> tuple[str | None, str]
 
 
 def parse_feed(url: str):
-    """Return feedparser result (entries) for a feed URL, or None on failure."""
+    """Return feedparser result (entries) for a feed URL, or None on failure.
+
+    Tries the polite Zenith UA first; if that fails or yields no entries, retries
+    with a realistic browser UA — many hosts (Substack, some WordPress,
+    tandfonline, apolloacademy) 403 a bot UA but serve feed readers fine.
+
+    NOTE: we do NOT apply robots.txt to feed endpoints — RSS/Atom feeds are
+    published expressly for syndication and feed readers fetch them directly.
+    robots.txt IS respected for article-page fetches during classification.
+    """
     import feedparser
 
-    # NOTE: we do NOT apply robots.txt to feed endpoints — RSS/Atom feeds are
-    # published expressly for syndication and feed readers fetch them directly.
-    # robots.txt IS respected for article-page fetches during classification.
-    try:
-        # fetch ourselves so we control UA/timeout, then hand bytes to feedparser
-        r = get(url)
-        if r is None:
-            return None
-        parsed = feedparser.parse(r.content)
-        if parsed.bozo and not parsed.entries:
-            return None
-        return parsed
-    except Exception:
-        return None
+    for browser in (False, True):
+        try:
+            r = get(url, browser_ua=browser)
+            if r is None:
+                continue
+            parsed = feedparser.parse(r.content)
+            if parsed.entries:              # got items -> good regardless of bozo
+                return parsed
+            if not parsed.bozo and browser:  # valid-but-empty feed on the retry
+                return parsed
+        except Exception:
+            continue
+    return None
