@@ -118,9 +118,58 @@ def screen_cas() -> None:
             warn(label_of(t) == t, f"{t} label does not resolve to a name")
 
 
+def screen_pretom() -> None:
+    print("[pretom]")
+    from zenith.pretom import load as pretom_load, archive_months, load_month
+
+    status = pretom_load("status", {})
+    check(bool(status), "PRETOM status present")
+    if status:
+        check(_days_old(status.get("date", "")) <= 5,
+              f"PRETOM status fresh ({status.get('date')})")
+        warn(status.get("calendar_check") not in ("ok", "n/a", "no-universe"),
+             f"trading-calendar cross-check: {status.get('calendar_check')}")
+
+    basket = pretom_load("basket", {})
+    check(bool(basket), "basket_latest present")
+    if basket:
+        names = basket.get("names", [])
+        check(60 <= len(names) <= 130, f"basket size sane ({len(names)})")
+        tickers = [n["ticker"] for n in names]
+        check(len(tickers) == len(set(tickers)), "no duplicate tickers in basket")
+        ranks = [n["rank"] for n in names]
+        check(sorted(ranks) == list(range(1, len(names) + 1)),
+              "ranks unique and contiguous from 1")
+        check(all(0.0 <= (n["score"] or 0) <= 1.0 for n in names),
+              "scores within [0, 1]")
+        check(all(0.0 <= (n["pct_below_high"] or 0) <= 1.0 for n in names),
+              "pct_below_high within [0, 1]")
+        warn(basket.get("universe", {}).get("coverage", 1.0) < 0.85,
+             f"universe price coverage low ({basket.get('universe', {}).get('coverage')})")
+
+    months = archive_months()
+    hist = pretom_load("history", {})
+    rows = hist.get("rows", [])
+    check(len(rows) >= 20, f"history populated ({len(rows)} rows)")
+    check(len(rows) == len(months), "history rows match archived months")
+    for r in rows:
+        if not r.get("final"):
+            continue
+        for w in ("classic", "t1"):
+            ex = (r.get(w) or {}).get("ew_excess")
+            check(ex is not None and -1.0 <= ex <= 1.0,
+                  f"{r['month']} {w} ew_excess sane ({ex})")
+    if months:
+        latest = load_month(months[0])
+        stats_state = latest.get("stats", {}).get("state")
+        if stats_state in ("window", "post", "final"):
+            check(bool(latest.get("panel")), "latest basket has a price panel")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
+    screen_pretom()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")

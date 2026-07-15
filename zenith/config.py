@@ -43,7 +43,18 @@ BRIEF_FILES = {
     "brief": BRIEF_DIR / "brief.json",          # the assembled weekly brief
 }
 
-for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR):
+# --- PRETOM (intramonth momentum short screener) ---------------------------
+PRETOM_DIR = DATA_DIR / "pretom"
+PRETOM_ARCHIVE_DIR = PRETOM_DIR / "archive"      # one basket snapshot per month
+PRETOM_FILES = {
+    "basket": PRETOM_DIR / "basket_latest.json",   # current month's ranked basket
+    "history": PRETOM_DIR / "history.json",        # tracker rows across all baskets
+    "status": PRETOM_DIR / "status.json",          # state machine + run health
+    "universe": PRETOM_DIR / "universe.json",      # last-good Russell 1000 snapshot
+}
+
+for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR,
+           PRETOM_DIR, PRETOM_ARCHIVE_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping
