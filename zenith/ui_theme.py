@@ -145,23 +145,29 @@ def _logo_svg(size: int = 84) -> str:
 
 
 def _logo_vector(size: int = 76) -> str:
-    """The Zenith sun-sphere mark — a mid-century layered orb: concentric bands
-    centered on a cream sun (cool near the sun, warm sweeping to the outer rim),
-    clipped to a circle. Transparent background, palette colors, with a subtle
-    sun-glow pulse. Pure inline SVG (+ tiny SMIL) so it scales and animates."""
+    """The Zenith sun mark, minimalist cut — an off-centre cream sun radiating
+    open contour rings (cool near the sun, warming toward the rim), clipped to
+    a circle. Stroked outlines only, no fills, so the background shows through
+    the gaps (Parallax-style transparency), and each ring fades with distance
+    from the sun. Subtle SMIL sun-glow pulse. Transparent background."""
     uid = f"zsun{size}"
     sx, sy = 50, 33                       # sun sits in the upper third
     cream = "#fdf6e3"
-    # (radius, color) drawn largest→smallest so bands stack; centered on the sun
-    bands = [(74, THEME.coral), (63, THEME.orange), (53, THEME.mustard),
-             (43, THEME.mint), (34, THEME.teal), (26, THEME.navy), (18, "#163f54")]
-    circles = "".join(f'<circle cx="{sx}" cy="{sy}" r="{r}" fill="{c}"/>' for r, c in bands)
-    halo = (f'<circle cx="{sx}" cy="{sy}" r="11" fill="{cream}" opacity="0.35">'
-            f'<animate attributeName="r" values="11;16;11" dur="4.5s" repeatCount="indefinite"/>'
+    # (radius, color, opacity) — contour rings radiating outward from the sun
+    rings = [(18, "#163f54", 0.95), (26, THEME.navy, 0.85),
+             (34, THEME.teal, 0.72), (43, THEME.mint, 0.60),
+             (53, THEME.mustard, 0.48), (63, THEME.orange, 0.38),
+             (74, THEME.coral, 0.30)]
+    circles = "".join(
+        f'<circle cx="{sx}" cy="{sy}" r="{r}" fill="none" stroke="{c}" '
+        f'stroke-width="3.2" opacity="{o}"/>' for r, c, o in rings)
+    halo = (f'<circle cx="{sx}" cy="{sy}" r="11" fill="none" stroke="{cream}" '
+            f'stroke-width="1.4" opacity="0.35">'
+            f'<animate attributeName="r" values="11;15;11" dur="4.5s" repeatCount="indefinite"/>'
             f'<animate attributeName="opacity" values="0.35;0.08;0.35" dur="4.5s" repeatCount="indefinite"/>'
             f'</circle>')
-    sun = (f'<circle cx="{sx}" cy="{sy}" r="8.5" fill="{cream}">'
-           f'<animate attributeName="r" values="8.5;9.6;8.5" dur="4.5s" repeatCount="indefinite"/>'
+    sun = (f'<circle cx="{sx}" cy="{sy}" r="7.5" fill="{cream}" opacity="0.9">'
+           f'<animate attributeName="r" values="7.5;8.4;7.5" dur="4.5s" repeatCount="indefinite"/>'
            f'</circle>')
     return (
         f'<svg width="{size}" height="{size}" viewBox="0 0 100 100" '
