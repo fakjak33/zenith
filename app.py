@@ -26,7 +26,10 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "rates & fixed income, earnings, factor rotation, and plain-English talking points.\n"
         "2. **CAS** — a *model & signal monitor*: many models score every ETF **buy → neutral → sell**, "
         "combined into a consensus, with factor rotation, per-ticker detail, and a signal hit-rate.\n"
-        "3. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "3. **PRETOM** — a monthly *short screener* built on the intramonth momentum cycle: "
+        "it ranks the Russell 1000 by distance below the 52-week high and tracks a short-bias "
+        "basket through the pre-month-end selling window.\n"
+        "4. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every number is **decision-support, not investment advice**. Hover any **?** for a definition.")
 
@@ -85,11 +88,15 @@ def insights_research_news(items, key_prefix):
             render_items(news)
 
 
-tab_today, tab_brief, tab_cas, tab_archive, tab_sources = st.tabs(
-    ["TODAY", "WEEKLY BRIEF", "CAS", "ARCHIVE", "SOURCES"])
+tab_today, tab_brief, tab_cas, tab_pretom, tab_archive, tab_sources = st.tabs(
+    ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
+    from zenith.pretom.view import today_badge
+    _badge = today_badge()
+    if _badge:
+        st.markdown(_badge, unsafe_allow_html=True)
     latest = store.load_latest()
     dates = store.archive_dates()
     st.markdown(stamp(dates[0] if dates else "—", "Today"), unsafe_allow_html=True)
@@ -107,6 +114,12 @@ with tab_cas:
     st.markdown(section("CAS — Complex Adaptive Systems monitor", 2), unsafe_allow_html=True)
     from zenith.cas import view as cas_view
     cas_view.render()
+
+with tab_pretom:
+    st.markdown(section("PRETOM — intramonth momentum short screener", 4),
+                unsafe_allow_html=True)
+    from zenith.pretom import view as pretom_view
+    pretom_view.render()
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)
