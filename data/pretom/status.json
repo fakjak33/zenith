@@ -1,11 +1,11 @@
 {
-  "date": "2026-07-16",
-  "state": "FORMING",
+  "date": "2026-07-17",
+  "state": "LOCKED",
   "month": "2026-07",
-  "tau_offset": -11,
-  "days_to_open": 2,
-  "days_to_close_classic": 7,
-  "days_to_close_t1": 8,
+  "tau_offset": -10,
+  "days_to_open": 1,
+  "days_to_close_classic": 6,
+  "days_to_close_t1": 7,
   "schedule": {
     "tau": "2026-07-31",
     "lock_by": "2026-07-17",
@@ -15,8 +15,8 @@
     "post_start": "2026-07-28",
     "post_end": "2026-08-05"
   },
-  "calendar_check": "n/a",
-  "n_months": 24,
+  "calendar_check": "ok",
+  "n_months": 25,
   "segments": [
     {
       "segment": "universe",
@@ -24,6 +24,32 @@
       "source": "vanguard_vone",
       "n": 1024,
       "weights_source": "vone"
+    },
+    {
+      "segment": "prices(lock)",
+      "ok": true,
+      "n": 1019,
+      "requested": 1025,
+      "error": ""
+    },
+    {
+      "segment": "lock",
+      "ok": true,
+      "n": 101,
+      "month": "2026-07",
+      "late": false
+    },
+    {
+      "segment": "prices(2026-07)",
+      "ok": true,
+      "n": 102,
+      "requested": 102,
+      "error": ""
+    },
+    {
+      "segment": "reconcile(2026-07)",
+      "ok": true,
+      "state": "locked"
     }
   ]
 }
