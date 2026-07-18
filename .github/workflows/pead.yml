@@ -1,0 +1,50 @@
+name: PEAD compute
+
+on:
+  schedule:
+    - cron: "15 23 * * 1-5"     # weekdays ~30 min after PRETOM (post-US-close);
+                                # the script self-gates on the trading calendar
+                                # and backscans 5 days, so a missed run heals
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | backfill"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pead
+  cancel-in-progress: false
+
+jobs:
+  pead:
+    runs-on: ubuntu-latest
+    # daily auto is light (only the day's reporters + active book); the
+    # dispatch-only backfill walks ~1000 tickers of earnings history and is
+    # resumable across dispatches via week-long caches
+    timeout-minutes: ${{ github.event.inputs.action == 'backfill' && 120 || 30 }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run PEAD compute
+        run: python -m zenith.pead.compute --action ${{ github.event.inputs.action || 'auto' }}
+
+      - name: Commit PEAD data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/pead/
+          if git diff --cached --quiet; then
+            echo "No PEAD changes."
+          else
+            git commit -m "pead: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi

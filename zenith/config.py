@@ -53,6 +53,15 @@ PRETOM_FILES = {
     "universe": PRETOM_DIR / "universe.json",      # last-good Russell 1000 snapshot
 }
 
+# --- PEAD (post-earnings announcement drift screener) -----------------------
+PEAD_DIR = DATA_DIR / "pead"
+PEAD_ARCHIVE_DIR = PEAD_DIR / "archive"          # one signal sheet per reaction day
+PEAD_FILES = {
+    "signals": PEAD_DIR / "signals_latest.json",   # recent sheets + active book + drift curve
+    "history": PEAD_DIR / "history.json",          # append-only picks + horizon evaluations
+    "status": PEAD_DIR / "status.json",            # run health + day state
+}
+
 # --- FMOM (factor momentum — Gupta & Kelly TSFM/CSFM) -----------------------
 FMOM_DIR = DATA_DIR / "fmom"
 FMOM_ARCHIVE_DIR = FMOM_DIR / "archive"          # one signal snapshot per month
@@ -68,7 +77,8 @@ FMOM_FILES = {
 }
 
 for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR,
-           PRETOM_DIR, PRETOM_ARCHIVE_DIR, FMOM_DIR, FMOM_ARCHIVE_DIR):
+           PRETOM_DIR, PRETOM_ARCHIVE_DIR, PEAD_DIR, PEAD_ARCHIVE_DIR,
+           FMOM_DIR, FMOM_ARCHIVE_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping
