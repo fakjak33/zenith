@@ -166,10 +166,94 @@ def screen_pretom() -> None:
             check(bool(latest.get("panel")), "latest basket has a price panel")
 
 
+def screen_fmom() -> None:
+    print("[fmom]")
+    from zenith.fmom import load as fmom_load, archive_months as fmom_months
+    from zenith.fmom.history import summarize
+
+    signals = fmom_load("signals", {})
+    check(bool(signals.get("models")), "fmom signals present")
+    if not signals.get("models"):
+        return
+    check(_days_old(signals.get("as_of", "")) <= 40,
+          f"fmom signals fresh ({signals.get('as_of')})")
+    for key, m in signals["models"].items():
+        rows = m.get("rows", [])
+        check(len(rows) >= 3, f"{key}: enough factors ({len(rows)})")
+        svals = [r["s"] for r in rows if r.get("s") is not None]
+        check(len(svals) == len(rows) and all(-2.0001 <= s <= 2.0001 for s in svals),
+              f"{key}: signals present and within ±2")
+        wl = sum(r["weight"] for r in rows if r["weight"] > 0)
+        ws = sum(r["weight"] for r in rows if r["weight"] < 0)
+        check((wl == 0 or abs(wl - 1) < 0.02) and (ws == 0 or abs(ws + 1) < 0.02),
+              f"{key}: leg weights sum to ±1 (long {wl:.3f}, short {ws:.3f})")
+        check((wl == 0 or ws == 0) == m.get("degenerate", False),
+              f"{key}: degenerate flag consistent")
+        ranks = [r["rank"] for r in rows]
+        check(sorted(ranks) == list(range(1, len(rows) + 1)),
+              f"{key}: ranks contiguous from 1")
+        n_top = sum(1 for r in rows if r["decile"] == "top")
+        n_bot = sum(1 for r in rows if r["decile"] == "bottom")
+        check(n_top >= 1 and n_bot >= 1, f"{key}: decile flags present")
+        top = max(rows, key=lambda r: r["s"])
+        print(f"       {key}: {m['formation_month']} strongest={top['factor']} "
+              f"s={top['s']:+.2f} (eyeball vs last month's tape)")
+
+    bt = fmom_load("backtest", {}).get("families", {})
+    check(bool(bt), "fmom backtest present")
+    for fam, b in bt.items():
+        stats = (b.get("stats") or {}).get("tsfm") or {}
+        check(stats.get("n_months", 0) >= 24, f"backtest({fam}): enough history "
+              f"({stats.get('n_months')} months)")
+        check(bool(b.get("recent_panel")), f"backtest({fam}): heatmap panel present")
+
+    hist = fmom_load("history", {})
+    rows = hist.get("rows", [])
+    check(len(rows) >= 20, f"fmom history populated ({len(rows)} rows)")
+    dupes = len(rows) - len({(r["month"], r["model"]) for r in rows})
+    check(dupes == 0, f"no duplicate (month, model) history rows ({dupes})")
+    bad = [f"{r['month']}/{r['model']}" for r in rows if r.get("evaluated")
+           and not (r["realized"].get("model_ret") is not None
+                    and -1.0 <= r["realized"]["model_ret"] <= 1.0)]
+    check(not bad, f"all evaluated realized returns sane "
+                   f"({len(bad)} bad: {', '.join(bad[:5])})" if bad
+          else "all evaluated realized returns sane")
+    summary = summarize(rows)
+    check(bool(summary.get("models")), "fmom tracker summary computable")
+    warn(len(summary.get("pending_months", [])) > 2,
+         f"fmom: {len(summary.get('pending_months', []))} months pending evaluation")
+
+    check(bool(fmom_load("etf_catalog", {}).get("etfs")), "etf catalog committed")
+    check(len(fmom_months()) >= 1, "fmom archive has months")
+
+    oc = fmom_load("osap_catalog", {})
+    if "osap_tsfm" in signals["models"]:
+        check(oc.get("n", 0) >= 200 and oc.get("n_documented", 0) >= 200,
+              f"osap catalog documented ({oc.get('n_documented')}/{oc.get('n')})")
+        stale = signals["models"]["osap_tsfm"]["formation_month"]
+        check(stale >= "2024-01", f"osap vintage sane ({stale})")
+    scr = fmom_load("screens", {})
+    if scr:
+        check(scr.get("n_screens", 0) >= 20,
+              f"stock screens present ({scr.get('n_screens')})")
+        bad = []
+        for k, s in (scr.get("screens") or {}).items():
+            lv = [r["value"] for r in s.get("long", [])]
+            sv = [r["value"] for r in s.get("short", [])]
+            asc = s.get("high_is") == "short"
+            ok_order = (lv == sorted(lv, reverse=not asc)
+                        and sv == sorted(sv, reverse=asc))
+            if not (lv and sv and ok_order):
+                bad.append(k)
+        check(not bad, f"screen sides ordered correctly ({', '.join(bad[:4])})"
+              if bad else "screen sides ordered correctly")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
     screen_pretom()
+    screen_fmom()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")
