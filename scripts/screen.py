@@ -249,11 +249,73 @@ def screen_fmom() -> None:
               if bad else "screen sides ordered correctly")
 
 
+def screen_pead() -> None:
+    print("[pead]")
+    from zenith.pead import load as pead_load, load_day, archive_days
+
+    st = pead_load("status", {})
+    check(bool(st), "pead status present")
+    check(_days_old(st.get("date", "")) <= 4, f"pead status fresh ({st.get('date')})")
+
+    sig = pead_load("signals", {})
+    check(bool(sig), "pead signals_latest present")
+    hist = pead_load("history", {})
+    rows = hist.get("rows", [])
+    days = archive_days()
+    check(bool(days), "pead archive has signal sheets")
+    if not (sig and rows and days):
+        return
+
+    check(bool(sig.get("disclaimer")), "pead disclaimer present")
+
+    keys = [(r["ticker"], r["report_date"]) for r in rows]
+    check(len(keys) == len(set(keys)), "no duplicate (ticker, report_date) in history")
+
+    comps = [r.get("composite") for r in rows if r.get("composite") is not None]
+    check(all(0 <= c <= 100 for c in comps), "history composites all within [0, 100]")
+    check(all(r.get("side") in ("long", "short") for r in rows),
+          "history rows all long/short (mixed never tracked)")
+
+    hist_keys = set(keys)
+    act = sig.get("active_book", {})
+    book = act.get("long", []) + act.get("short", [])
+    check(all((r["ticker"], r["report_date"]) in hist_keys for r in book),
+          "active book is a subset of history")
+    warn(not book, "active book empty (fine in a quiet earnings week)")
+
+    sheet = load_day(days[0])
+    el = [r for r in sheet.get("signals", []) if not r.get("excluded_reason")]
+    check(all(r.get("ranks") and r.get("composite") is not None for r in el),
+          "latest sheet: every eligible row has ranks + composite")
+    for r in el:
+        raw = r.get("raw", {})
+        bad = (r["side"] == "long" and ((raw.get("sue") or 0) <= 0
+                                        or (raw.get("ear") or 0) <= 0)) or \
+              (r["side"] == "short" and ((raw.get("sue") or 0) >= 0
+                                         or (raw.get("ear") or 0) >= 0))
+        check(not bad, f"two-confirmation gate holds for {r['ticker']}")
+
+    curve = sig.get("drift_curve", [])
+    if curve:
+        tds = [p["td"] for p in curve]
+        check(tds == sorted(tds) and len(tds) == len(set(tds)),
+              "drift curve td axis strictly increasing")
+    else:
+        warn(True, "drift curve empty (backfill / weekly refresh pending)")
+
+    evald = sum(1 for r in rows for h in r["horizons"].values() if h.get("evaluated"))
+    xs = [h.get("excess_ret") for r in rows for h in r["horizons"].values()
+          if h.get("evaluated") and h.get("excess_ret") is not None]
+    check(all(-1.0 <= v <= 2.0 for v in xs), "evaluated excess returns sane")
+    print(f"       history={len(rows)} sheets={len(days)} horizons_evaluated={evald}")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
     screen_pretom()
     screen_fmom()
+    screen_pead()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")
