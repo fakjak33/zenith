@@ -106,8 +106,12 @@ def _banner(state: dict) -> None:
         msg = (f"short window opens in {state['days_to_open']} trading "
                f"day{'s' * (state['days_to_open'] != 1)} ({s['win_start']})")
     elif state["state"] == "WINDOW_OPEN":
-        msg = (f"day {k + 10} of 7 · classic close {s['win_end_classic']} "
-               f"(τ−4) · T+1 close {s['win_end_t1']} (τ−3)")
+        if state["t1_tail"]:
+            msg = (f"T+1 extension day (τ−3) · classic window closed "
+                   f"{s['win_end_classic']} (τ−4) · T+1 close today")
+        else:
+            msg = (f"day {k + 10} of 6 · classic close {s['win_end_classic']} "
+                   f"(τ−4) · T+1 close {s['win_end_t1']} (τ−3)")
     elif state["state"] == "POST":
         msg = f"reversal watch — the bounce window runs through {s['post_end']} (τ+3)"
     else:
@@ -130,8 +134,11 @@ def today_badge() -> str | None:
         text = (f"▲ PRETOM basket locked — short window opens in "
                 f"{state['days_to_open']} trading day{'s' * (state['days_to_open'] != 1)}")
     elif stt == "WINDOW_OPEN":
-        text = (f"▲ PRETOM WINDOW OPEN — day {k + 10} of 7 "
-                f"(classic closes in {state['days_to_close_classic']} td)")
+        if state["t1_tail"]:
+            text = "▲ PRETOM T+1 extension day (τ−3) — classic window closed"
+        else:
+            text = (f"▲ PRETOM WINDOW OPEN — day {k + 10} of 6 "
+                    f"(classic closes in {state['days_to_close_classic']} td)")
     elif stt == "FORMING" and state["days_to_open"] <= 4:
         text = f"PRETOM window opens in {state['days_to_open']} trading days"
     elif stt == "POST":
