@@ -163,3 +163,182 @@ def load_all() -> dict[str, pd.Series]:
     out = load_french_factors()
     out.update(load_aqr_factors())
     return out
+
+
+# --- generic loaders for the FMOM feature (additive; nothing above changes) --
+def _parse_cached_table(cached: str) -> pd.DataFrame:
+    """Round-trip a to_json(orient='split') table. Depending on the pandas
+    version the index was serialized as epoch seconds, milliseconds or even
+    nanoseconds, and read_json may or may not auto-convert (sometimes with the
+    WRONG unit, collapsing every date into 1970) — so parse with
+    convert_axes=False and pick the epoch unit from the magnitude."""
+    tbl = pd.read_json(io.StringIO(cached), orient="split", convert_axes=False)
+    idx = pd.Index(tbl.index)
+    numeric = pd.to_numeric(idx, errors="coerce")
+    if not pd.isna(numeric).any():
+        v = pd.Index(numeric).astype("int64")
+        m = int(max(abs(v.max()), abs(v.min())))
+        unit = ("ns" if m > int(1e17) else "us" if m > int(1e14)
+                else "ms" if m > int(1e11) else "s")
+        tbl.index = pd.to_datetime(v, unit=unit)
+    else:
+        tbl.index = pd.to_datetime(idx)
+    return tbl
+
+
+def load_french_sorts(dataset: str, long_col: str, short_col: str,
+                      table: int = 0,
+                      max_age_hours: float = 720.0) -> pd.Series | None:
+    """Long-short monthly return series from a Ken French univariate-sort
+    dataset (value-weighted table by default): ``long_col − short_col``, in
+    decimals. Cached ~30 days per dataset. None on any failure."""
+    key = f"ff_sort_{dataset}_{table}"
+    cached = store_cas.cache_get(key, max_age_hours)
+    if cached:
+        tbl = _parse_cached_table(cached)
+    else:
+        try:
+            import pandas_datareader.data as web
+            tbl = _to_ts_index(
+                web.DataReader(dataset, "famafrench", start=_START)[table] / 100.0)
+        except Exception:
+            return None
+        tbl.columns = [str(c).strip() for c in tbl.columns]
+        store_cas.cache_put(key, tbl.to_json(orient="split"))
+    tbl.columns = [str(c).strip() for c in tbl.columns]
+    if long_col not in tbl.columns or short_col not in tbl.columns:
+        return None
+    ls = (tbl[long_col] - tbl[short_col]).dropna()
+    # sort tables use -99.99/-999 as missing markers; a real monthly L-S
+    # spread never approaches that magnitude
+    return ls[ls.abs() < 1.0]
+
+
+def load_french_factor(dataset: str, column: str | None = None,
+                       max_age_hours: float = 720.0) -> pd.Series | None:
+    """A single published French factor series (e.g. F-F_Momentum_Factor),
+    monthly decimals. None on failure."""
+    key = f"ff_factor_{dataset}"
+    cached = store_cas.cache_get(key, max_age_hours)
+    if cached:
+        tbl = _parse_cached_table(cached)
+    else:
+        try:
+            import pandas_datareader.data as web
+            tbl = _to_ts_index(
+                web.DataReader(dataset, "famafrench", start=_START)[0] / 100.0)
+        except Exception:
+            return None
+        tbl.columns = [str(c).strip() for c in tbl.columns]
+        store_cas.cache_put(key, tbl.to_json(orient="split"))
+    tbl.columns = [str(c).strip() for c in tbl.columns]
+    col = column if column in tbl.columns else tbl.columns[0]
+    s = tbl[col].dropna()
+    return s[s.abs() < 1.0]
+
+
+# extra AQR workbooks used by FMOM (same host/parser as _AQR_FILES)
+_AQR_EXTRA = {
+    "HMLDEV": ("The-Devil-in-HMLs-Details-Factors-Monthly.xlsx", "HML Devil"),
+}
+
+
+def load_aqr_series(label: str, max_age_days: float = 30.0,
+                    region_col: str = "USA") -> pd.Series | None:
+    """One AQR monthly factor series (USA column) by label — the QMJ/BAB files
+    from _AQR_FILES plus the FMOM extras. None on failure."""
+    files = {**_AQR_FILES, **_AQR_EXTRA}
+    if label not in files:
+        return None
+    fname, sheet = files[label]
+    path = CAS_CACHE_DIR / fname
+    if not _fresh(path, max_age_days):
+        try:
+            import requests
+            r = requests.get(_AQR_BASE + fname,
+                             headers={"User-Agent": "Mozilla/5.0"}, timeout=60)
+            r.raise_for_status()
+            path.write_bytes(r.content)
+        except Exception:
+            pass
+    if not path.exists():
+        return None
+    try:
+        raw = pd.read_excel(path, sheet_name=sheet, header=None, engine="openpyxl")
+    except Exception:
+        # sheet name drift (e.g. 'HML Devil' vs 'HML Devil Factors') — try first sheet
+        try:
+            raw = pd.read_excel(path, sheet_name=0, header=None, engine="openpyxl")
+        except Exception:
+            return None
+    hdr = _find_header_row(raw)
+    if hdr is None:
+        return None
+    tbl = raw.iloc[hdr + 1:].copy()
+    tbl.columns = [str(c).strip() for c in raw.iloc[hdr].tolist()]
+    tbl = tbl.rename(columns={tbl.columns[0]: "DATE"})
+    tbl["DATE"] = pd.to_datetime(tbl["DATE"], errors="coerce")
+    tbl = tbl.dropna(subset=["DATE"]).set_index("DATE")
+    if region_col not in tbl.columns:
+        return None
+    s = pd.to_numeric(tbl[region_col], errors="coerce").dropna()
+    return s if len(s) > 24 else None
+
+
+def load_osap(max_age_days: float = 60.0,
+              predictors: list[str] | None = None) -> dict[str, pd.Series]:
+    """Open Source Asset Pricing (Chen-Zimmermann) long-short predictor returns
+    — deep-history, BACKTEST-ONLY (the dataset updates about once a year).
+
+    Two optional paths, both degrade to {}:
+      * a ``PredictorLSretWide.csv`` the user drops into data/cas/cache/
+        (download from openassetpricing.com — date column + one column per
+        predictor, returns in percent);
+      * the optional ``openassetpricing`` package (not in requirements.txt) —
+        ``OpenAP().dl_port('op', 'pandas')`` filtered to the LS portfolio.
+    Never raises."""
+    cached = store_cas.cache_get("osap_returns", max_age_days * 24.0)
+    tbl: pd.DataFrame | None = None
+    fresh = False
+    if cached:
+        try:
+            tbl = _parse_cached_table(cached)
+            if len(tbl) and tbl.index.max().year < 1980:
+                tbl = None          # poisoned by an earlier bad round-trip
+        except Exception:
+            tbl = None
+    if tbl is None:
+        csv = CAS_CACHE_DIR / "PredictorLSretWide.csv"
+        if csv.exists():
+            try:
+                raw = pd.read_csv(csv)
+                dcol = raw.columns[0]
+                raw[dcol] = pd.to_datetime(raw[dcol].astype(str), errors="coerce")
+                tbl = (raw.dropna(subset=[dcol]).set_index(dcol)
+                       .apply(pd.to_numeric, errors="coerce") / 100.0)
+                fresh = True
+            except Exception:
+                tbl = None
+    if tbl is None:
+        try:
+            import openassetpricing as oap
+            port = oap.OpenAP().dl_port("op", "pandas")
+            port.columns = [str(c).lower() for c in port.columns]
+            ls = port[port["port"].astype(str).str.upper() == "LS"]
+            ls = ls.assign(date=pd.to_datetime(ls["date"], errors="coerce"))
+            tbl = (ls.pivot_table(index="date", columns="signalname",
+                                  values="ret") / 100.0)
+            fresh = True
+        except Exception:
+            return {}
+    if tbl is None or tbl.empty:
+        return {}
+    # normalize to ns resolution: the package hands back a datetime64[ms]
+    # index (polars conversion) and pandas' to_json mis-serializes non-ns
+    # datetime indexes (epoch MINUTES instead of ms) — the cache poisoner
+    tbl.index = pd.DatetimeIndex(tbl.index).astype("datetime64[ns]")
+    if fresh:       # never re-serialize a cache round-trip over itself
+        store_cas.cache_put("osap_returns", tbl.to_json(orient="split"))
+    if predictors:
+        tbl = tbl[[c for c in predictors if c in tbl.columns]]
+    return {c: tbl[c].dropna() for c in tbl.columns}

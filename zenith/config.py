@@ -53,8 +53,22 @@ PRETOM_FILES = {
     "universe": PRETOM_DIR / "universe.json",      # last-good Russell 1000 snapshot
 }
 
+# --- FMOM (factor momentum — Gupta & Kelly TSFM/CSFM) -----------------------
+FMOM_DIR = DATA_DIR / "fmom"
+FMOM_ARCHIVE_DIR = FMOM_DIR / "archive"          # one signal snapshot per month
+FMOM_FILES = {
+    "signals": FMOM_DIR / "signals_latest.json",   # current formation month, all models
+    "history": FMOM_DIR / "history.json",          # append-only picks + evaluations
+    "backtest": FMOM_DIR / "backtest.json",        # published/ETF-panel backtests
+    "holdings": FMOM_DIR / "holdings_latest.json", # replication layer bin members
+    "etf_catalog": FMOM_DIR / "etf_catalog.json",  # Morningstar strategic-beta catalog
+    "osap_catalog": FMOM_DIR / "osap_catalog.json",  # OSAP SignalDoc definitions
+    "screens": FMOM_DIR / "screens_latest.json",   # per-characteristic stock screens
+    "status": FMOM_DIR / "status.json",            # run health + per-source as-of dates
+}
+
 for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR,
-           PRETOM_DIR, PRETOM_ARCHIVE_DIR):
+           PRETOM_DIR, PRETOM_ARCHIVE_DIR, FMOM_DIR, FMOM_ARCHIVE_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping

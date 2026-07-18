@@ -21,7 +21,7 @@ st.markdown(BANNER, unsafe_allow_html=True)
 
 with st.expander("What is Zenith?  ·  a 20-second orientation"):
     st.markdown(
-        "**Zenith is three tools in one, all built from free data:**\n"
+        "**Zenith is five tools in one, all built from free data:**\n"
         "1. **Weekly Brief** — a concise, visual market read: what moved, sectors & industries, "
         "rates & fixed income, earnings, factor rotation, and plain-English talking points.\n"
         "2. **CAS** — a *model & signal monitor*: many models score every ETF **buy → neutral → sell**, "
@@ -29,7 +29,11 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "3. **PRETOM** — a monthly *short screener* built on the intramonth momentum cycle: "
         "it ranks the Russell 1000 by distance below the 52-week high and tracks a short-bias "
         "basket through the pre-month-end selling window.\n"
-        "4. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "4. **FACTOR MOMENTUM** — Gupta & Kelly's *'Factor Momentum Everywhere'* run live, three "
+        "ways: tradable factor ETFs, Man-style 13-style composites, and the academic 65-factor "
+        "set — each with time-series (TSFM) and cross-sectional (CSFM) 1-1 models, tracked "
+        "monthly.\n"
+        "5. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every number is **decision-support, not investment advice**. Hover any **?** for a definition.")
 
@@ -88,8 +92,8 @@ def insights_research_news(items, key_prefix):
             render_items(news)
 
 
-tab_today, tab_brief, tab_cas, tab_pretom, tab_archive, tab_sources = st.tabs(
-    ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "ARCHIVE", "SOURCES"])
+tab_today, tab_brief, tab_cas, tab_pretom, tab_fmom, tab_archive, tab_sources = st.tabs(
+    ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "FACTOR MOMENTUM", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -120,6 +124,12 @@ with tab_pretom:
                 unsafe_allow_html=True)
     from zenith.pretom import view as pretom_view
     pretom_view.render()
+
+with tab_fmom:
+    st.markdown(section("FACTOR MOMENTUM — Gupta & Kelly, three ways", 3),
+                unsafe_allow_html=True)
+    from zenith.fmom import view as fmom_view
+    fmom_view.render()
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)

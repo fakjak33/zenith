@@ -1,0 +1,47 @@
+name: FMOM compute
+
+on:
+  schedule:
+    - cron: "30 13 1-4 * *"     # days 1-4 each month, after the previous month
+                                # completes; the script is idempotent so the
+                                # extra days heal a missed or failed first run
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | backfill | replicate"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fmom
+  cancel-in-progress: false
+
+jobs:
+  fmom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45          # replicate (Phase 3) pulls ~1000 tickers
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run FMOM compute
+        run: python -m zenith.fmom.compute --action ${{ github.event.inputs.action || 'auto' }}
+
+      - name: Commit FMOM data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/fmom/
+          if git diff --cached --quiet; then
+            echo "No FMOM changes."
+          else
+            git commit -m "fmom: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi
