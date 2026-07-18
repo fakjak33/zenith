@@ -306,7 +306,11 @@ def screen_pead() -> None:
     evald = sum(1 for r in rows for h in r["horizons"].values() if h.get("evaluated"))
     xs = [h.get("excess_ret") for r in rows for h in r["horizons"].values()
           if h.get("evaluated") and h.get("excess_ret") is not None]
-    check(all(-1.0 <= v <= 2.0 for v in xs), "evaluated excess returns sane")
+    # real vertical movers reach ±2-3x (MRVL/MSTR/CRWV 2024-26); the band only
+    # guards against data corruption (bad prices -> absurd multiples)
+    check(all(-5.0 <= v <= 5.0 for v in xs), "evaluated excess returns sane")
+    warn(sum(1 for v in xs if abs(v) > 1.0) > len(xs) * 0.01,
+         "more than 1% of evaluated picks moved >100% vs SPY — eyeball prices")
     print(f"       history={len(rows)} sheets={len(days)} horizons_evaluated={evald}")
 
 
