@@ -15,7 +15,7 @@ import streamlit as st
 from . import DISCLAIMER, load, load_month, archive_months
 from . import calendar as cal
 from ..config import THEME
-from ..ui_theme import section, stamp
+from ..ui_theme import key_findings, section, stamp
 
 _STATE_META = {
     "FORMING":     (THEME.mustard, "FORMING"),
@@ -412,9 +412,97 @@ def _tracker(history: dict) -> None:
         st.dataframe(hf, use_container_width=True, hide_index=True)
 
 
+def _fmt_bp(v) -> str:
+    return "—" if v is None else f"{v * 1e4:+,.0f} bp"
+
+
+def _tom_evidence() -> None:
+    """Evidence exhibit (NOT a signal): the classic turn-of-the-month long
+    window [tau, tau+3], decomposed from SPY's full history each night."""
+    tom = load("tom", {})
+    rows, summ = tom.get("rows", []), tom.get("summary", {})
+    if not rows or not summ.get("overall"):
+        return
+    st.markdown(section("Turn of the month — the evidence (long side)", 3,
+                        help="The classic TOM effect: Xu & McConnell (2008) "
+                             "found ALL of the market's 1897-2005 excess "
+                             "return in [τ, τ+3]. Rebuilt nightly from SPY "
+                             "(1993-). An exhibit, not a signal — see the "
+                             "verdict line."), unsafe_allow_html=True)
+
+    o, s10, t24 = summ["overall"], summ.get("since_2010"), summ.get("trailing_24m")
+    verdict = ("**Verdict from our data: the edge has faded.** "
+               f"Since 2010 the TOM window beat a matched 4-day stretch of the "
+               f"rest of the month by only {_fmt_bp((s10 or {}).get('tom_minus_rest_avg'))} "
+               f"per month (paired t = {(s10 or {}).get('t_stat', '—')}), and the "
+               f"trailing 24 months were {_fmt_bp((t24 or {}).get('tom_minus_rest_avg'))}. "
+               "Compare the 2000s below, where TOM days carried essentially all "
+               "of the market's return — exactly what the papers found. Tracked "
+               "here so a revival would show up, not to trade today.")
+    st.markdown(verdict)
+
+    periods = list((summ.get("by_decade") or {}).items())
+    if t24:
+        periods.append(("last 24m", t24))
+    recs = []
+    for label, b in periods:
+        if not b:
+            continue
+        recs.append({"period": label, "window": "TOM [τ, τ+3]",
+                     "value": b["tom_avg"]})
+        recs.append({"period": label, "window": "Rest of month (4-day match)",
+                     "value": b["rest_avg"]})
+    if recs:
+        df = pd.DataFrame(recs)
+        import altair as alt
+        order = [p for p, _ in periods]
+        ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
+            x=alt.X("period:N", sort=order, title=None,
+                    axis=alt.Axis(labelAngle=0, labelLimit=0)),
+            xOffset=alt.XOffset("window:N"),
+            y=alt.Y("value:Q", title="avg 4-day return",
+                    axis=alt.Axis(format="+.2%", labelLimit=0)),
+            color=alt.Color("window:N", title=None,
+                            scale=alt.Scale(range=[THEME.teal, THEME.muted]),
+                            legend=alt.Legend(orient="top")),
+            tooltip=[alt.Tooltip("period:N"), alt.Tooltip("window:N"),
+                     alt.Tooltip("value:Q", format="+.2%")]))
+        st.altair_chart(ch.properties(height=260), use_container_width=True)
+
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Months tracked", o["n_months"],
+              help=f"Complete months since {tom.get('start', '?')} (SPY 1993 "
+                   "inception — the 1897-2005 evidence is the papers', not ours).")
+    m2.metric("TOM 4-day avg", _fmt_pct(o["tom_avg"]),
+              help="Average SPY return over [τ, τ+3], entry at the τ−1 close.")
+    m3.metric("TOM hit rate", f"{o['tom_hit']:.0%}",
+              help="Share of months where the TOM window return was positive.")
+    m4.metric("Edge t-stat (1993–)", f"{o['t_stat']:.2f}" if o.get("t_stat") is not None else "—",
+              help="Paired t on (TOM − matched rest-of-month) monthly returns. "
+                   "Below ~2 = not statistically distinguishable from zero.")
+    st.caption(tom.get("note", ""))
+
+
 # ------------------------------------------------------------------ render --
 def render() -> None:
     st.caption(DISCLAIMER)
+    st.markdown(key_findings([
+        {"stat": "$1 in the winners-minus-losers trade ONLY during [τ−9, τ−4] "
+                 "grew to $18.78 over 1980–2025 — vs $2.37 the whole rest of "
+                 "the month.",
+         "cite": "Nathan, Suominen & Tasa (2026)"},
+        {"stat": "Distance below the 52-week high beats classic 12-2 momentum "
+                 "as the loser sort: $45.72 vs $18.78 per $1. It is this "
+                 "basket's primary rank.",
+         "cite": "Nathan, Suominen & Tasa (2026)"},
+        {"stat": "~70% of the loser hit reverses by τ+3 — month-end price "
+                 "pressure, not news. Shorts are covered, not held.",
+         "cite": "Nathan, Suominen & Tasa (2026)"},
+        {"stat": "1897–2005, ALL of the market's excess return fell in the "
+                 "4-day turn-of-the-month window [τ, τ+3]. Our own SPY data "
+                 "says the edge faded after 2009 — evidence below.",
+         "cite": "Lakonishok & Smidt (1988) · Xu & McConnell (2008)"},
+    ]), unsafe_allow_html=True)
     state = _live_state()
     _banner(state)
 
@@ -441,6 +529,20 @@ def render() -> None:
             "**After the window**: ~70% of the underperformance reverses by τ+3 "
             "(it's price pressure, not news) — so the tracker also measures the "
             "bounce, and shorts are typically covered by τ−3/τ−4, not held.\n\n"
+            "**The long side of the same cycle — turn of the month (TOM)**: the "
+            "cash institutions raise before month-end gets put back to work at "
+            "the turn. Lakonishok & Smidt (1988, *RFS*) found the effect in 90 "
+            "years of DJIA data; Xu & McConnell (2008, *FAJ*, 'Equity Returns at "
+            "the Turn of the Month') show that over 1897–2005 — and still over "
+            "1987–2005 — essentially **all** of the U.S. market's excess return "
+            "accrued in the four trading days [τ, τ+3]. Confirmed "
+            "internationally (Kunkel, Compton & Beyer 2003); mechanism: Ogden "
+            "(1990) and Etula, Rinne, Suominen & Vaittinen (2020, *JF*, 'Dash "
+            "for Cash') — the same liquidity cycle this tab shorts into. The "
+            "evidence monitor below rebuilds the decomposition nightly from "
+            "SPY's full history so you can judge whether the effect still "
+            "exists — in our data it largely stopped paying after 2009, which "
+            "is why it is presented as evidence, not as a signal.\n\n"
             "*Backfilled history uses today's Russell 1000 membership — delisted "
             "losers are missing, so historical stats are slightly flattered.*")
 
@@ -526,6 +628,9 @@ def render() -> None:
                              "both windows, equal- and cap-weighted, vs SPY."),
                 unsafe_allow_html=True)
     _tracker(load("history", {}))
+
+    # --- TOM evidence exhibit -------------------------------------------------
+    _tom_evidence()
 
     # --- archive browser ------------------------------------------------------
     months = archive_months()

@@ -18,7 +18,7 @@ from . import history as ph
 from .signals import WEIGHTS, CONVICTION, POOL_MIN
 from ..pretom import calendar as cal
 from ..config import THEME
-from ..ui_theme import section, stamp
+from ..ui_theme import key_findings, section, stamp
 
 HORIZON_LABEL = {"h5": "+5 td", "h20": "+20 td", "h60": "+60 td",
                  "next_earn": "to next earnings"}
@@ -72,6 +72,25 @@ COLS = {
     "Win rate": "Share of evaluated picks with positive sign-adjusted excess "
                 "return at that horizon (positive = the pick worked).",
     "Avg xs": "Average sign-adjusted excess return vs SPY at that horizon.",
+    # --- announcement premium (EAP) ---
+    "Report": "Scheduled report date and session (pre-market / after-hours; "
+              "inferred from history when Nasdaq doesn't supply it).",
+    "EPS est": "Consensus EPS forecast from the Nasdaq calendar (the premium "
+               "needs no surprise — this is context, not a signal input).",
+    "EAP entry": "The tracked window opens at the close 5 trading days before "
+                 "the reaction session (Frazzini & Lamont 2007; Savor & Wilson "
+                 "2016 measure the same premium at week/day frequency).",
+    "In window": "The entry close has already printed — the announcement "
+                 "window is live for this name.",
+    "Past avg xs": "This name's own tracked announcements: mean through-window "
+                   "excess vs SPY (n in parentheses). Frazzini & Lamont: the "
+                   "premium concentrates in names whose announcements draw the "
+                   "most attention.",
+    "Pre xs": "Excess vs SPY from the entry close to the LAST close before the "
+              "reaction session — the run-up, with no event risk taken.",
+    "Through xs": "Excess vs SPY from the entry close through the reaction-"
+                  "session close — run-up plus the announcement itself, where "
+                  "most of the premium sits (Savor & Wilson 2016).",
 }
 
 
@@ -124,24 +143,36 @@ def _latest_sheet(latest: dict) -> dict:
     return load_day(days[0]) if days else {}
 
 
-def today_badge() -> str | None:
-    """Chip on the TODAY tab when the freshest sheet has live signals."""
-    days = archive_days()
-    if not days:
-        return None
-    sheet = load_day(days[0])
-    n_l, n_s = sheet.get("n_long", 0), sheet.get("n_short", 0)
-    if not (n_l or n_s):
-        return None
-    d = sheet.get("day", "")
-    if d < (date.today() - timedelta(days=4)).isoformat():   # stale sheet
-        return None
-    color = THEME.teal if n_l >= n_s else THEME.coral
-    text = f"◆ PEAD: {n_l} long / {n_s} short signal{'s' * ((n_l + n_s) != 1)} ({d})"
+def _chip(text: str, color: str) -> str:
     return (f'<div style="display:inline-block; font-family:{THEME.font_display}; '
             f'font-size:0.95rem; letter-spacing:0.1em; text-transform:uppercase; '
             f'color:{color}; border:1px solid {color}; padding:0.15rem 0.6rem; '
-            f'margin:0 0 0.6rem 0;">{text} · see PEAD tab</div>')
+            f'margin:0 0.4rem 0.6rem 0;">{text} · see PEAD tab</div>')
+
+
+EAP_BADGE_MIN = 10          # chip only when the near-term calendar is busy
+
+
+def today_badge() -> str | None:
+    """Chips on the TODAY tab: live drift signals and/or a busy announcement
+    calendar (the EAP long side)."""
+    chips = []
+    days = archive_days()
+    sheet = load_day(days[0]) if days else {}
+    n_l, n_s = sheet.get("n_long", 0), sheet.get("n_short", 0)
+    d = sheet.get("day", "")
+    if (n_l or n_s) and d >= (date.today() - timedelta(days=4)).isoformat():
+        color = THEME.teal if n_l >= n_s else THEME.coral
+        chips.append(_chip(f"◆ PEAD: {n_l} long / {n_s} short "
+                           f"signal{'s' * ((n_l + n_s) != 1)} ({d})", color))
+    eap_obj = load("eap", {})
+    cutoff = (date.today() + timedelta(days=4)).isoformat()
+    soon = [u for u in eap_obj.get("upcoming", [])
+            if u.get("reaction_day", "9999") <= cutoff]
+    if len(soon) >= EAP_BADGE_MIN:
+        chips.append(_chip(f"◆ EAP: {len(soon)} R1000 names report in the next "
+                           f"few sessions", THEME.mustard))
+    return "".join(chips) or None
 
 
 def _banner(latest: dict) -> None:
@@ -470,9 +501,109 @@ def _tracker(history: dict) -> None:
                          height=min(560, 45 + 35 * len(sf)))
 
 
+def _eap_section() -> None:
+    """The earnings-announcement premium: upcoming reporters + tracked premium."""
+    eap_obj = load("eap", {})
+    upcoming, summ = eap_obj.get("upcoming", []), eap_obj.get("summary", {})
+    if not upcoming and not summ.get("n_rows"):
+        return
+    st.markdown(section("Announcement premium — the calendar long side", 3,
+                        help="Stocks earn abnormal returns AROUND scheduled "
+                             "announcements, before anyone knows the number "
+                             "(Frazzini & Lamont 2007; Savor & Wilson 2016). "
+                             "Unconditional: every liquid R1000 reporter is "
+                             "tracked long through two windows."),
+                unsafe_allow_html=True)
+
+    thr = (summ.get("through") or {}).get("overall") or {}
+    pre = (summ.get("pre") or {}).get("overall") or {}
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Announcements tracked", f"{thr.get('n', 0):,}",
+              help="Evaluated (ticker, report) windows since ~2024, both live "
+                   "and backfilled from the PEAD archive.")
+    m2.metric("Through-window avg xs", _fmt_pct(thr.get("avg")),
+              help=COLS["Through xs"])
+    m3.metric("Pre-window avg xs", _fmt_pct(pre.get("avg")),
+              help=COLS["Pre xs"] + " Near zero here: the premium sits in the "
+                   "announcement session itself.")
+    m4.metric("Through win rate", f"{thr.get('win_rate', 0):.0%}"
+              if thr.get("win_rate") is not None else "—",
+              help="Share of announcements with positive through-window excess. "
+                   "~50% with a positive mean = a right-skewed premium: a "
+                   "minority of big post-earnings pops carries the average. "
+                   "It pays through breadth, not single names.")
+    if thr.get("median") is not None and thr.get("avg") is not None:
+        st.caption(f"Skew check: median {_fmt_pct(thr['median'])} vs mean "
+                   f"{_fmt_pct(thr['avg'])} — the premium is carried by the "
+                   "right tail. A basket collects it; a single name is a coin "
+                   "flip with event risk.")
+
+    # upcoming reporters (the forward calendar)
+    if upcoming:
+        st.markdown(f"**Upcoming R1000 reporters** ({len(upcoming)} scheduled "
+                    "in the next ~7 days)")
+        uf = pd.DataFrame([{
+            "Report": f"{u['report_date']} "
+                      f"{'AM' if 'pre' in (u.get('time') or '') else 'PM' if 'after' in (u.get('time') or '') else '?'}",
+            "Ticker": u["ticker"], "Name": (u.get("name") or "")[:32],
+            "EPS est": u.get("eps_consensus"),
+            "Cap": u.get("cap_tier") or "",
+            "EAP entry": u.get("entry_date"),
+            "In window": "●" if u.get("in_window") else "",
+            "Past avg xs": (f"{u['past_avg_excess']:+.1%} (n={u['past_n']})"
+                            if u.get("past_avg_excess") is not None else ""),
+        } for u in upcoming])
+        st.dataframe(uf, use_container_width=True, hide_index=True,
+                     height=min(420, 45 + 35 * len(uf)),
+                     column_config=_colcfg(uf.columns))
+
+    # tracked premium by month
+    monthly = [m for m in summ.get("monthly", []) if m.get("n")]
+    if monthly:
+        df = pd.DataFrame(monthly)
+        import altair as alt
+        ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
+            x=alt.X("month:N", title=None,
+                    axis=alt.Axis(labelAngle=-45, labelLimit=0)),
+            y=alt.Y("avg:Q", title="avg through-window excess",
+                    axis=alt.Axis(format="+.1%", labelLimit=0)),
+            color=alt.condition(alt.datum.avg >= 0, alt.value(THEME.teal),
+                                alt.value(THEME.coral)),
+            tooltip=[alt.Tooltip("month:N"), alt.Tooltip("n:Q"),
+                     alt.Tooltip("avg:Q", format="+.2%"),
+                     alt.Tooltip("win_rate:Q", format=".0%")]))
+        st.altair_chart(ch.properties(height=220), use_container_width=True)
+
+    tiers = (summ.get("through") or {}).get("by_cap_tier") or {}
+    tier_bits = [f"{t}: {_fmt_pct(b['avg'])} (n={b['n']})"
+                 for t, b in tiers.items() if b]
+    if tier_bits:
+        st.caption("By cap tier (through window): " + " · ".join(tier_bits)
+                   + ". Backfilled rows carry no market cap, so tiers fill in "
+                     "from live sheets going forward.")
+
+
 # ------------------------------------------------------------------ render --
 def render() -> None:
     st.caption(DISCLAIMER)
+    st.markdown(key_findings([
+        {"stat": "After an earnings surprise, prices keep drifting the same "
+                 "way for ~60 trading days. Fama: the 'granddaddy of "
+                 "underreaction events'.",
+         "cite": "Ball & Brown (1968) · Bernard & Thomas (1989/90)"},
+        {"stat": "EPS surprise + a same-signed market reaction drift roughly "
+                 "TWICE as much as either alone (≈12.5%/yr abnormal) — this "
+                 "tab's two-confirmation gate.",
+         "cite": "Brandt, Kishore, Santa-Clara & Venkatachalam (2008)"},
+        {"stat": "Stocks also earn a premium just for being SCHEDULED to "
+                 "report: >60 bp/month long announcers vs non-announcers; "
+                 "0.39%/week EW, ~20%/yr alpha. Our own 2024-26 tracking: "
+                 "+0.38% per announcement (t≈3.5).",
+         "cite": "Frazzini & Lamont (2007) · Savor & Wilson (2016)"},
+        {"stat": "Honest caveat: large-cap drift has attenuated since ~2006 — "
+                 "the tracker below scores every live pick so you can judge.",
+         "cite": "Martineau (2021)"},
+    ]), unsafe_allow_html=True)
     latest = load("signals", {})
     _banner(latest)
 
@@ -502,7 +633,23 @@ def render() -> None:
             "the drift has mostly been arbitraged away since ~2006 (2025 papers "
             "dispute this — the debate is measurement-dependent). This screener "
             "leans on the strongest surviving form (SUE+EAR agreement), flags cap "
-            "tiers, and tracks its own live results so you can judge.")
+            "tiers, and tracks its own live results so you can judge.\n\n"
+            "**The announcement premium (EAP)** — the calendar long side, needing "
+            "no surprise at all: stocks earn abnormal returns around their "
+            "*scheduled* announcement dates. Frazzini & Lamont (2007, NBER "
+            "w13090): long every stock expected to announce within the month, "
+            "short the rest, earned **>60 bp/month** (strategy variants "
+            "7–18%/yr), tied to the announcement volume surge and small-investor "
+            "attention. Savor & Wilson (2016, *JF*): 1974–2009 an equal-weighted "
+            "announcers-minus-non-announcers portfolio returned **0.39% per "
+            "week** (CAPM alpha 0.38%/wk ≈ 20%/yr) — framed as compensation for "
+            "bearing announcement risk. Barber, De George, Lehavy & Trueman "
+            "(2013, *JFE*) confirm it globally. The section below tracks every "
+            "liquid R1000 reporter long through two windows — the run-up "
+            "[R−5 → R−1 close] and through the announcement [R−5 → R close] — "
+            "and in our own 2024–26 sample the through-window premium is "
+            "**+0.38% per announcement (t≈3.5)**, right at the published "
+            "magnitude, with the usual right skew (median ≈ 0).")
 
     if not latest:
         st.info("No PEAD data yet. Run `python -m zenith.pead.compute --action "
@@ -534,6 +681,9 @@ def render() -> None:
     with st.expander(f"Reporters that did NOT qualify "
                      f"({sum(1 for r in rows if r.get('excluded_reason'))})"):
         _excluded_table(rows)
+
+    # --- announcement premium (EAP) ------------------------------------------
+    _eap_section()
 
     # --- active books --------------------------------------------------------
     hist_obj = load("history", {})

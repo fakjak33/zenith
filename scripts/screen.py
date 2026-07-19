@@ -74,8 +74,9 @@ def screen_brief() -> None:
     earn = b.get("earnings", {})
     for r in earn.get("recent", []) + earn.get("upcoming", []):
         mc = r.get("mktcap")
-        warn(isinstance(mc, (int, float)) and mc > 5e12,
-             f"earnings {r.get('ticker')} mktcap looks absurd (${mc/1e9:.0f}B) — feed quirk")
+        if isinstance(mc, (int, float)) and mc > 5e12:   # message must not
+            warn(True, f"earnings {r.get('ticker')} mktcap looks absurd "
+                       f"(${mc / 1e9:.0f}B) — feed quirk")   # format None
 
     news = b.get("news", [])
     warn(not news, "no ticker news this run")
@@ -164,6 +165,27 @@ def screen_pretom() -> None:
         stats_state = latest.get("stats", {}).get("state")
         if stats_state in ("window", "post", "final"):
             check(bool(latest.get("panel")), "latest basket has a price panel")
+
+    # --- TOM evidence artifact ------------------------------------------------
+    tom = pretom_load("tom", {})
+    check(bool(tom.get("rows")), "tom_longrun present")
+    if tom.get("rows"):
+        check(_days_old(tom.get("as_of", "")) <= 35,
+              f"tom_longrun fresh ({tom.get('as_of')})")
+        trows = tom["rows"]
+        check(all(-0.5 <= r["tom_ret"] <= 0.5 for r in trows),
+              "tom monthly returns within +/-50% sanity band")
+        check(all(r["n_tom_days"] == 4 for r in trows),
+              "every TOM window has exactly 4 trading days")
+        summ = tom.get("summary", {})
+        check(bool(summ.get("by_decade")), "tom decade summary non-empty")
+        check((summ.get("overall") or {}).get("n_months", 0) >= 300,
+              f"tom long-run depth ({(summ.get('overall') or {}).get('n_months')} months)")
+    finals = [r for r in rows if r.get("final")]
+    if finals:
+        warn(all((r.get("tom_market") or {}).get("spy_ret") is None
+                 for r in finals[-2:]),
+             "recent final months lack tom_market stats (reconcile pending)")
 
 
 def screen_fmom() -> None:
@@ -311,7 +333,33 @@ def screen_pead() -> None:
     check(all(-5.0 <= v <= 5.0 for v in xs), "evaluated excess returns sane")
     warn(sum(1 for v in xs if abs(v) > 1.0) > len(xs) * 0.01,
          "more than 1% of evaluated picks moved >100% vs SPY — eyeball prices")
-    print(f"       history={len(rows)} sheets={len(days)} horizons_evaluated={evald}")
+
+    # --- announcement premium (EAP) -------------------------------------------
+    eap_obj = pead_load("eap", {})
+    check(bool(eap_obj), "eap.json present")
+    if eap_obj:
+        check(_days_old(eap_obj.get("as_of", "")) <= 4,
+              f"eap fresh ({eap_obj.get('as_of')})")
+        today_iso = date.today().isoformat()
+        ups = eap_obj.get("upcoming", [])
+        check(all(u.get("reaction_day", "") >= today_iso for u in ups),
+              "eap upcoming reaction days are all today or later")
+        summ = eap_obj.get("summary", {})
+        check((summ.get("through") or {}).get("overall", {}) is not None
+              and (summ.get("n_rows") or 0) > 0,
+              f"eap tracked rows populated ({summ.get('n_rows')})")
+    ehist = pead_load("eap_history", {})
+    erows = ehist.get("rows", [])
+    if erows:
+        ekeys = [(r["ticker"], r["report_date"]) for r in erows]
+        check(len(ekeys) == len(set(ekeys)),
+              "no duplicate (ticker, report_date) in eap history")
+        exs = [r[w]["excess"] for r in erows for w in ("pre", "through")
+               if r.get(w, {}).get("evaluated")]
+        check(all(-5.0 <= v <= 5.0 for v in exs),
+              "eap evaluated excess returns sane")
+    print(f"       history={len(rows)} sheets={len(days)} horizons_evaluated={evald} "
+          f"eap_rows={len(erows)}")
 
 
 def main() -> None:
