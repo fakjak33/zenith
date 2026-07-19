@@ -39,7 +39,8 @@ def _frame(days: list[date], close, volume=None, open_=None, high=None) -> pd.Da
 
 @pytest.fixture
 def tmp_store(tmp_path, monkeypatch):
-    files = {k: tmp_path / f"{k}.json" for k in ("signals", "history", "status")}
+    files = {k: tmp_path / f"{k}.json"
+             for k in ("signals", "history", "status", "eap", "eap_history")}
     monkeypatch.setattr(pead, "PEAD_FILES", files)
     monkeypatch.setattr(pead, "PEAD_ARCHIVE_DIR", tmp_path / "archive")
     return tmp_path
@@ -360,3 +361,176 @@ def test_pending_reaction_days_backscan(tmp_store):
     pead.archive_day("2026-07-15", {"day": "2026-07-15"})
     got2 = pc._pending_reaction_days(today)
     assert date(2026, 7, 15) not in got2 and today in got2
+
+
+# --- earnings-announcement premium (EAP) -------------------------------------
+
+from zenith.pead import eap
+
+
+def test_eap_windows_pre_market():
+    # Wed Jul 15 2026 pre-market -> reaction same day; Jul 3 is a holiday.
+    w = eap.windows_for(date(2026, 7, 15), "time-pre-market")
+    assert w["reaction_day"] == date(2026, 7, 15)
+    assert w["through_exit"] == date(2026, 7, 15)
+    assert w["pre_exit"] == date(2026, 7, 14)
+    assert w["entry_day"] == date(2026, 7, 8)          # 5 td before reaction
+
+
+def test_eap_windows_friday_after_hours():
+    # Fri Jul 10 after-hours -> reaction Monday Jul 13; entry 5 td earlier.
+    w = eap.windows_for(date(2026, 7, 10), "time-after-hours")
+    assert w["reaction_day"] == date(2026, 7, 13)
+    assert w["pre_exit"] == date(2026, 7, 10)
+    assert w["entry_day"] == date(2026, 7, 6)
+
+
+def _eap_setup(entry_px=100.0, pre_px=102.0, through_px=105.0):
+    rep = {"ticker": "AAA", "name": "Alpha", "report_date": "2026-07-15",
+           "time": "time-pre-market", "mktcap": 30e9}
+    row = eap.make_row(rep)
+    days = _tds(date(2026, 4, 1), 80)
+    i_entry = days.index(date(2026, 7, 8))
+    i_pre = days.index(date(2026, 7, 14))
+    i_thr = days.index(date(2026, 7, 15))
+    closes = [entry_px] * len(days)
+    for i in range(i_entry + 1, len(days)):
+        closes[i] = pre_px
+    for i in range(i_thr, len(days)):
+        closes[i] = through_px
+    closes[i_pre] = pre_px
+    frame = _frame(days, closes)
+    spy = _frame(days, 500.0)["close"]
+    return row, frame, spy
+
+
+def test_eap_row_evaluation_and_excess():
+    row, frame, spy = _eap_setup()
+    assert row["cap_tier"] == "large"
+    assert not row["pre"]["evaluated"]
+    changed = eap.evaluate_row(row, frame, spy)
+    assert changed
+    assert row["gate"] is None
+    assert row["pre"]["evaluated"] and row["through"]["evaluated"]
+    assert row["pre"]["ret"] == pytest.approx(0.02)
+    assert row["through"]["ret"] == pytest.approx(0.05)
+    assert row["pre"]["excess"] == pytest.approx(0.02)   # SPY flat
+    assert row["through"]["excess"] == pytest.approx(0.05)
+
+
+def test_eap_penny_gate():
+    row, frame, spy = _eap_setup(entry_px=3.0, pre_px=3.1, through_px=3.2)
+    eap.evaluate_row(row, frame, spy)
+    assert row["gate"] == "penny"
+
+
+def test_eap_not_evaluated_before_bars():
+    row, frame, spy = _eap_setup()
+    cut = pd.Timestamp(date(2026, 7, 13))
+    changed = eap.evaluate_row(row, frame.loc[:cut], spy.loc[:cut])
+    assert not row["through"]["evaluated"]
+    assert not row["pre"]["evaluated"]          # pre exit bar (Jul 14) missing
+
+
+def test_eap_append_idempotent(tmp_store):
+    rep = {"ticker": "AAA", "name": "Alpha", "report_date": "2026-07-15",
+           "time": "time-pre-market", "mktcap": 30e9}
+    assert eap.append_rows([eap.make_row(rep)]) == 1
+    assert eap.append_rows([eap.make_row(rep)]) == 0
+    rows = pead.load("eap_history")["rows"]
+    assert len(rows) == 1 and rows[0]["ticker"] == "AAA"
+
+
+def test_eap_evaluate_pending_gates_on_exit_date(tmp_store):
+    row, frame, spy = _eap_setup()
+    eap.append_rows([row])
+    # before the through-exit date: nothing evaluates
+    assert eap.evaluate_pending({"AAA": frame}, spy, date(2026, 7, 10)) == 0
+    assert eap.evaluate_pending({"AAA": frame}, spy, date(2026, 7, 20)) == 1
+    got = pead.load("eap_history")["rows"][0]
+    assert got["through"]["excess"] == pytest.approx(0.05)
+    assert eap.pending_tickers(date(2026, 7, 20)) == []
+
+
+def test_eap_summarize_and_past_avg(tmp_store):
+    row, frame, spy = _eap_setup()
+    eap.evaluate_row(row, frame, spy)
+    row2 = eap.make_row({"ticker": "BBB", "name": "Beta",
+                         "report_date": "2026-07-15",
+                         "time": "time-pre-market", "mktcap": 1e9})
+    row2["gate"] = "illiquid"                    # gated rows must be excluded
+    rows = [row, row2]
+    s = eap.summarize(rows)
+    assert s["n_rows"] == 2 and s["n_gated"] == 1
+    assert s["through"]["overall"]["n"] == 1
+    assert s["through"]["overall"]["avg"] == pytest.approx(0.05)
+    assert s["through"]["by_cap_tier"]["large"]["win_rate"] == 1.0
+    assert s["monthly"][0]["month"] == "2026-07"
+    past = eap.past_announcement_avg(rows, "AAA")
+    assert past["n"] == 1 and past["avg_excess"] == pytest.approx(0.05)
+    assert eap.past_announcement_avg(rows, "BBB") is None
+
+
+def test_eap_build_upcoming_orders_and_flags():
+    scheduled = [
+        {"ticker": "AAA", "name": "Alpha", "report_date": "2026-07-20",
+         "time": "time-pre-market", "mktcap": 30e9, "eps_consensus": 1.5,
+         "n_estimates": 10},
+        {"ticker": "OLD", "name": "Old", "report_date": "2026-07-01",
+         "time": "time-pre-market", "mktcap": 5e9},   # reaction day passed
+        {"ticker": "BBB", "name": "Beta", "report_date": "2026-07-20",
+         "time": "time-after-hours", "mktcap": 90e9},
+    ]
+    up = eap.build_upcoming(scheduled, [], date(2026, 7, 16))
+    assert [u["ticker"] for u in up] == ["BBB", "AAA"]   # cap-desc within day
+    aaa = next(u for u in up if u["ticker"] == "AAA")
+    assert aaa["reaction_day"] == "2026-07-20"
+    assert aaa["entry_date"] == "2026-07-13"
+    assert aaa["in_window"] is True                      # entry already passed
+    assert all(u["ticker"] != "OLD" for u in up)
+
+
+def test_eap_upcoming_calendar_stubbed(monkeypatch):
+    from zenith.pead import earnings as earn
+
+    def fake_nasdaq(day, max_age_hours=None):
+        if day == date(2026, 7, 17):
+            return [{"ticker": "AAA", "name": "Alpha",
+                     "report_date": day.isoformat(), "time": "time-not-supplied",
+                     "eps_consensus": 1.0, "n_estimates": 5, "mktcap": 1e10},
+                    {"ticker": "ZZZ", "name": "NotInUniverse",
+                     "report_date": day.isoformat(), "time": "time-pre-market",
+                     "eps_consensus": None, "n_estimates": None, "mktcap": 1e9}]
+        return []
+
+    class _D(date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 7, 16)
+
+    monkeypatch.setattr(earn, "nasdaq_day", fake_nasdaq)
+    monkeypatch.setattr(earn, "infer_time", lambda t, rd: "time-after-hours")
+    monkeypatch.setattr(earn, "date", _D)
+    got = earn.upcoming_calendar(3, {"AAA": {}})
+    assert len(got) == 1
+    assert got[0]["ticker"] == "AAA"
+    assert got[0]["time"] == "time-after-hours"          # inferred slot
+
+
+def test_eap_seed_from_archives(tmp_store):
+    from zenith.pead import compute as pc
+    sheet = {"day": "2026-07-15", "backfilled": True, "signals": [
+        {"ticker": "AAA", "name": "Alpha", "report_date": "2026-07-15",
+         "time": "time-pre-market", "context": {"mktcap": 30e9}},
+        {"ticker": "BBB", "name": "Beta", "report_date": "2026-07-14",
+         "time": "time-after-hours", "context": {"mktcap": 2e9}},
+    ]}
+    pead.archive_day("2026-07-15", sheet)
+    status = []
+    added = pc._seed_eap_from_archives(status)
+    assert added == 2
+    rows = pead.load("eap_history")["rows"]
+    assert {r["ticker"] for r in rows} == {"AAA", "BBB"}
+    assert all(r["backfilled"] for r in rows)
+    # rerun is a no-op
+    assert pc._seed_eap_from_archives(status) == 0

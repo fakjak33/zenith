@@ -76,6 +76,14 @@ def _update_stats(obj: dict, px: dict, spy, today: date) -> dict:
     post = (an.post_stats(names, px, s["post_start"], s["post_end"], spy,
                           classic.get("ew_excess"))
             if today > s["post_start"] else {})
+    # TOM long window [tau, tau+3]; older archives predate the schedule keys.
+    tom_start = s.get("tom_start", s["tau"])
+    tom_end = s.get("tom_end", s["post_end"])
+    tom_sched = {"tom_start": tom_start, "tom_end": tom_end}
+    tom_market = (an.tom_market_stats(spy, tom_sched)
+                  if today >= tom_start else {})
+    tom_basket = (an.window_stats(names, px, tom_start, tom_end, spy)
+                  if today >= tom_start else {})
     obj["stats"] = {
         "state": ("final" if today >= s["post_end"] else
                   "post" if today > s["win_end_t1"] else
@@ -83,6 +91,7 @@ def _update_stats(obj: dict, px: dict, spy, today: date) -> dict:
         "updated": today.isoformat(),
         "final": today >= s["post_end"],
         "classic": classic, "t1": t1, "post": post,
+        "tom_market": tom_market, "tom_basket": tom_basket,
     }
     obj["per_name_marks"] = an.per_name_marks(names, px, s)
     panel_start = min(date.fromisoformat(obj["locked_at"]), s["win_start"])
@@ -105,7 +114,9 @@ def _rebuild_history() -> dict:
                      "final": st.get("final", False),
                      "classic": strip(st.get("classic")),
                      "t1": strip(st.get("t1")),
-                     "post": strip(st.get("post"))})
+                     "post": strip(st.get("post")),
+                     "tom_market": strip(st.get("tom_market")),
+                     "tom_basket": strip(st.get("tom_basket"))})
     out = {"as_of": date.today().isoformat(),
            "survivorship_note": ("Backfilled months use CURRENT Russell 1000 "
                                  "membership; delisted losers are absent, which "
@@ -113,6 +124,31 @@ def _rebuild_history() -> dict:
            "disclaimer": DISCLAIMER, "rows": rows}
     save("history", out)
     return out
+
+
+def _refresh_tom_longrun(status: list[dict], today: date) -> None:
+    """Rebuild the long-run TOM evidence artifact from full SPY history.
+
+    Single-ticker pull (period='max', SPY inception 1993) behind the shared
+    18h price cache, so the nightly cost is one cached read most days."""
+    try:
+        px = _fetch_prices(["SPY"], "max", status, "prices(spy-max)")
+        spy = px.get("SPY")
+        if spy is None or spy.empty:
+            raise ValueError("no SPY history")
+        rows = an.tom_longrun(spy["close"])
+        out = {"as_of": today.isoformat(),
+               "start": rows[0]["month"] if rows else None,
+               "note": ("SPY total-return proxy since 1993 inception; the "
+                        "1897-2005 evidence is Xu & McConnell (2008), not "
+                        "this dataset."),
+               "rows": rows, "summary": an.summarize_tom(rows)}
+        save("tom", out)
+        status.append({"segment": "tom_longrun", "ok": bool(rows),
+                       "n": len(rows)})
+    except Exception as e:
+        status.append({"segment": "tom_longrun", "ok": False,
+                       "error": str(e)[:200]})
 
 
 def _basket_with_div_flags(px: dict, universe: list[dict], lock_date: date,
@@ -181,6 +217,9 @@ def run_auto() -> dict:
         except Exception as e:
             status.append({"segment": f"reconcile({mstr2})", "ok": False,
                            "error": str(e)[:200]})
+
+    # --- long-run TOM evidence (SPY since 1993) ------------------------------
+    _refresh_tom_longrun(status, today)
 
     # --- current basket pointer + history + status ---------------------------
     months = archive_months()
@@ -253,6 +292,7 @@ def run_backfill(n_months: int = 24, force: bool = False) -> dict:
             status.append({"segment": f"backfill({mstr})", "ok": False,
                            "error": str(e)[:200]})
 
+    _refresh_tom_longrun(status, today)
     hist = _rebuild_history()
     print(f"[pretom] backfill wrote {done}/{len(months)} months "
           f"(history rows={len(hist['rows'])})")

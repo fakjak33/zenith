@@ -12,6 +12,15 @@ Sokobin 2006) and 52-week-high anchoring (George, Hwang & Li 2015). Exits are
 tracked at +5/+20/+60 trading days and the day before the NEXT report
 (Bernard & Thomas 1990: 25-30% of the drift concentrates around it).
 
+The tab also tracks the earnings-announcement premium (EAP) - the calendar
+LONG side that needs no surprise at all: stocks earn abnormal returns around
+their scheduled announcement dates. Frazzini & Lamont (2007, NBER w13090):
+long expected announcers / short non-announcers earns >60 bp per month
+(variants 7-18%/yr). Savor & Wilson (2016, JF): 1974-2009 an equal-weighted
+announcers-minus-non-announcers portfolio returned 0.39%/week (CAPM alpha
+0.38%/wk, ~20%/yr). Barber, De George, Lehavy & Trueman (2013, JFE) confirm
+the premium globally. See eap.py.
+
 Free / best-effort data only (Nasdaq earnings calendar, yfinance, Vanguard
 VONE holdings), computed offline in a GitHub Action that commits JSON under
 data/pead/; the app is a thin reader. Decision-support, not investment advice.
@@ -28,7 +37,8 @@ DISCLAIMER = ("PEAD signals are auto-generated from free/best-effort data (Nasda
               "surprise is a time-series proxy, not analyst consensus. Backfilled picks use "
               "current Russell 1000 membership (survivorship bias). Drift has attenuated in "
               "large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow "
-              "costs are not modeled. Decision-support, not investment advice.")
+              "costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & "
+              "Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.")
 
 
 def _read(path, default):

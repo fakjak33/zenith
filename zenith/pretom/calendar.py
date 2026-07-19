@@ -7,6 +7,10 @@ the next month. Windows follow Nathan, Suominen & Tasa (2026):
     PreTOM (classic)  [tau-9, tau-4]   six days, the paper's 1980-2025 window
     PreTOM (T+1 span) [tau-9, tau-3]   adds the post-May-2024 marginal day
     Post (reversal)   [tau-3, tau+3]   ~70% of the loser hit reverses here
+    TOM (long side)   [tau,   tau+3]   the classic turn-of-the-month window
+                                       (Lakonishok & Smidt 1988; Xu & McConnell
+                                       2008: all of the market's excess return
+                                       1897-2005 fell in these four days)
 
 The rule-based calendar covers regular NYSE holidays. Ad-hoc closures (e.g.
 national days of mourning) are caught by verify_against() and only shift day
@@ -23,6 +27,7 @@ WIN_START = -9          # first PreTOM day
 WIN_END_CLASSIC = -4    # classic window close
 WIN_END_T1 = -3         # T+1-regime marginal selling day / post-window start
 POST_END = 3            # post window runs through tau+3
+TOM_END = 3             # turn-of-the-month long window [tau, tau+3]
 LOCK_AT = -10           # basket locks the day before the window opens
 
 
@@ -131,6 +136,8 @@ def month_schedule(year: int, month: int) -> dict:
         "win_end_t1": td[WIN_END_T1 - 1],
         "post_start": td[WIN_END_T1 - 1],        # post window opens at tau-3
         "post_end": post[POST_END - 1],          # tau+3, in the next month
+        "tom_start": tau,                        # TOM long window opens at tau
+        "tom_end": post[TOM_END - 1],            # tau+3, same day as post_end
     }
 
 

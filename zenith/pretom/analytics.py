@@ -178,6 +178,107 @@ def per_name_marks(names: list[dict], px: dict[str, pd.DataFrame],
     return out
 
 
+def tom_market_stats(spy: pd.Series, sched: dict) -> dict:
+    """Market-level turn-of-the-month window [tau, tau+3]: SPY cumulative
+    return measured from the tau-1 close (Lakonishok & Smidt 1988 window as
+    dated by Xu & McConnell 2008)."""
+    p = _cum_path(spy, sched["tom_start"], sched["tom_end"])
+    if p is None or not len(p):
+        return {"n_days": 0}
+    return {
+        "n_days": int(len(p)),
+        "spy_ret": round(float(p.iloc[-1]), 6),
+        "daily": [{"d": d.date().isoformat(), "spy": round(float(v), 6)}
+                  for d, v in p.items()],
+    }
+
+
+def tom_longrun(spy: pd.Series) -> list[dict]:
+    """Per-month TOM decomposition over the full SPY history.
+
+    Sessions come from the price index itself (real trading days, so ad-hoc
+    closures can't drift the labels). For each month m the TOM window is the
+    last session of m plus the first TOM_END sessions of m+1; every other
+    session of calendar month m is "rest of month". rest_ret is the rest-days
+    mean daily return compounded over the TOM window length, so the two
+    columns compare like-for-like 4-day returns.
+    """
+    from . import calendar as cal
+
+    close = spy.dropna()
+    if len(close) < 40:
+        return []
+    ret = close.pct_change()
+    months = pd.PeriodIndex(close.index, freq="M")
+    uniq = list(months.unique())
+
+    # Map month -> its sessions (in order), from the actual index.
+    by_month = {m: close.index[months == m] for m in uniq}
+
+    rows: list[dict] = []
+    for i, m in enumerate(uniq[:-1]):
+        nxt = uniq[i + 1]
+        nxt_days = by_month[nxt]
+        if len(nxt_days) < cal.TOM_END:
+            continue                      # next month incomplete: skip
+        tom_days = [by_month[m][-1]] + list(nxt_days[:cal.TOM_END])
+        # Rest of month m = its sessions minus the ones inside ANY TOM window
+        # (its own tau, and the first TOM_END sessions that belong to m-1).
+        rest_days = [d for d in by_month[m][:-1]
+                     if d not in set(by_month[m][:cal.TOM_END])]
+        tom_r = ret.loc[tom_days].dropna()
+        rest_r = ret.loc[rest_days].dropna()
+        if len(tom_r) < cal.TOM_END + 1 or len(rest_r) < 5:
+            continue                      # needs the full window + a real rest
+        tom_ret = float((1.0 + tom_r).prod() - 1.0)
+        rest_ret = float((1.0 + rest_r.mean()) ** len(tom_r) - 1.0)
+        rows.append({
+            "month": str(m),
+            "tom_ret": round(tom_ret, 6),
+            "rest_ret": round(rest_ret, 6),
+            "n_tom_days": int(len(tom_r)),
+            "n_rest_days": int(len(rest_r)),
+        })
+    return rows
+
+
+def _tom_bucket(rows: list[dict]) -> dict | None:
+    if not rows:
+        return None
+    tom = np.array([r["tom_ret"] for r in rows], dtype=float)
+    rest = np.array([r["rest_ret"] for r in rows], dtype=float)
+    diff = tom - rest
+    n = len(diff)
+    t_stat = (float(diff.mean() / (diff.std(ddof=1) / np.sqrt(n)))
+              if n > 2 and diff.std(ddof=1) > 0 else None)
+    return {
+        "n_months": n,
+        "tom_avg": round(float(tom.mean()), 6),
+        "rest_avg": round(float(rest.mean()), 6),
+        "tom_hit": round(float((tom > 0).mean()), 4),
+        "tom_minus_rest_avg": round(float(diff.mean()), 6),
+        "t_stat": round(t_stat, 2) if t_stat is not None else None,
+    }
+
+
+def summarize_tom(rows: list[dict]) -> dict:
+    """Aggregate the per-month TOM decomposition: overall, by decade, and two
+    recency slices. t_stat is a simple paired t on (tom_ret - rest_ret)."""
+    if not rows:
+        return {"overall": None, "by_decade": {}, "since_2010": None,
+                "trailing_24m": None}
+    decades: dict[str, list[dict]] = {}
+    for r in rows:
+        key = f"{(int(r['month'][:4]) // 10) * 10}s"
+        decades.setdefault(key, []).append(r)
+    return {
+        "overall": _tom_bucket(rows),
+        "by_decade": {k: _tom_bucket(v) for k, v in sorted(decades.items())},
+        "since_2010": _tom_bucket([r for r in rows if r["month"] >= "2010"]),
+        "trailing_24m": _tom_bucket(rows[-24:]),
+    }
+
+
 def build_panel(px: dict[str, pd.DataFrame], tickers: list[str],
                 start: date, end: date) -> dict:
     """Compact committed close panel for [start, end] (powers the deployed

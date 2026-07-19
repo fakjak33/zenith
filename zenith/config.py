@@ -51,6 +51,7 @@ PRETOM_FILES = {
     "history": PRETOM_DIR / "history.json",        # tracker rows across all baskets
     "status": PRETOM_DIR / "status.json",          # state machine + run health
     "universe": PRETOM_DIR / "universe.json",      # last-good Russell 1000 snapshot
+    "tom": PRETOM_DIR / "tom_longrun.json",        # SPY turn-of-the-month evidence
 }
 
 # --- PEAD (post-earnings announcement drift screener) -----------------------
@@ -60,6 +61,8 @@ PEAD_FILES = {
     "signals": PEAD_DIR / "signals_latest.json",   # recent sheets + active book + drift curve
     "history": PEAD_DIR / "history.json",          # append-only picks + horizon evaluations
     "status": PEAD_DIR / "status.json",            # run health + day state
+    "eap": PEAD_DIR / "eap.json",                  # announcement premium: upcoming + summary
+    "eap_history": PEAD_DIR / "eap_history.json",  # append-only announcement windows
 }
 
 # --- FMOM (factor momentum — Gupta & Kelly TSFM/CSFM) -----------------------
