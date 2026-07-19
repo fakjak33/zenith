@@ -129,8 +129,22 @@ def render() -> None:
                 "(or wait for the scheduled Action) to populate signals.")
         return
     regime = status.get("regime", "?")
-    from ..ui_theme import stamp
+    from ..ui_theme import key_findings, stamp
     st.markdown(stamp(status.get("date", "?"), "CAS"), unsafe_allow_html=True)
+    st.markdown(key_findings([
+        {"stat": "Trend and momentum signals carry real but modest edge: this "
+                 "app's own hit-rate tracker runs ~52-62%, rising with horizon "
+                 "— a momentum signature, measured live on every signal.",
+         "cite": "this app's history tab"},
+        {"stat": "Factor/style rotation follows factor momentum: last month's "
+                 "winning styles tend to repeat (49 of 65 factors "
+                 "significantly persistent).",
+         "cite": "Gupta & Kelly (2019)"},
+        {"stat": "CAS is a monitor, not an advisor: signals are [-1, +1] "
+                 "views from mechanical models on free data — flows, GEX and "
+                 "fed-funds series are labelled proxies.",
+         "cite": "methodology in Models & notes"},
+    ]), unsafe_allow_html=True)
     st.caption(f"cadence {status.get('cadence','?')} · {status.get('n_signals',0)} signals · "
                f"{status.get('n_assets',0)} assets · regime: **{regime}**")
 

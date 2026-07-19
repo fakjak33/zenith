@@ -286,6 +286,35 @@ def help_badge(text: str) -> str:
     return f'<span class="z-help">?<span class="z-tip">{safe}</span></span>'
 
 
+def key_findings(items: list[dict]) -> str:
+    """Always-visible strip of the research findings a feature is built on.
+
+    items: [{"stat": headline finding, "cite": "Author & Author (Year)"}] —
+    2-4 short entries; full references belong in the tab's methodology
+    expander. Rendered as bordered chips that sit on the parallax background.
+    """
+    cols = THEME.section_colors
+    cards = []
+    for i, it in enumerate(items):
+        c = cols[i % len(cols)]
+        stat = html.escape(str(it.get("stat", "")))
+        cite = html.escape(str(it.get("cite", "")))
+        cards.append(
+            f'<div style="flex:1 1 200px; min-width:180px; border:1px solid {c}; '
+            f'border-left:4px solid {c}; border-radius:4px; padding:0.45rem 0.6rem; '
+            f'background:rgba(0,0,0,0.25);">'
+            f'<div style="font-size:0.86rem; line-height:1.35; color:#eee;">{stat}</div>'
+            f'<div style="font-family:{THEME.font_display}; font-size:0.72rem; '
+            f'letter-spacing:0.1em; color:{c}; margin-top:0.3rem; '
+            f'text-transform:uppercase;">{cite}</div></div>')
+    return (f'<div style="margin:0.2rem 0 0.8rem 0;">'
+            f'<div style="font-family:{THEME.font_display}; font-size:0.8rem; '
+            f'letter-spacing:0.14em; color:#999; text-transform:uppercase; '
+            f'margin-bottom:0.35rem;">key findings — the research behind this tab</div>'
+            f'<div style="display:flex; gap:0.6rem; flex-wrap:wrap;">'
+            + "".join(cards) + '</div></div>')
+
+
 def section(label: str, idx: int = 0, help: str | None = None) -> str:
     cols = THEME.section_colors
     c1, c2 = cols[idx % len(cols)], cols[(idx + 1) % len(cols)]

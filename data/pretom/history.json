@@ -1,7 +1,7 @@
 {
-  "as_of": "2026-07-17",
+  "as_of": "2026-07-19",
   "survivorship_note": "Backfilled months use CURRENT Russell 1000 membership; delisted losers are absent, which flatters loser recovery.",
-  "disclaimer": "PRETOM is auto-generated from free/best-effort data (Vanguard VONE holdings, yfinance). Based on Nathan, Suominen & Tasa (2026), 'The Intramonth Momentum Cycle'. Backfilled months use current index membership (survivorship bias). Shorting carries unlimited-loss risk. Decision-support, not investment advice.",
+  "disclaimer": "PRETOM is auto-generated from free/best-effort data (Vanguard VONE holdings, yfinance). Short side: Nathan, Suominen & Tasa (2026), 'The Intramonth Momentum Cycle'. TOM long window: Lakonishok & Smidt (1988); Xu & McConnell (2008). Backfilled months use current index membership (survivorship bias). Shorting carries unlimited-loss risk. Decision-support, not investment advice.",
   "rows": [
     {
       "month": "2024-07",
@@ -15,7 +15,7 @@
         "cw_ret": -0.053449,
         "spy_ret": -0.033271,
         "ew_excess": -0.006276,
-        "cw_excess": -0.020177,
+        "cw_excess": -0.020178,
         "pct_negative_end": 0.7113,
         "pct_negative_any": 0.9691
       },
@@ -24,7 +24,7 @@
         "ew_ret": -0.018917,
         "cw_ret": -0.034423,
         "spy_ret": -0.022444,
-        "ew_excess": 0.003527,
+        "ew_excess": 0.003526,
         "cw_excess": -0.011979,
         "pct_negative_end": 0.6186,
         "pct_negative_any": 0.9691
@@ -37,150 +37,220 @@
         "ew_excess": -0.038641,
         "cw_excess": -0.101424,
         "reversal_ratio": -6.1569
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.045424
+      },
+      "tom_basket": {
+        "n_priced": 97,
+        "ew_ret": -0.080216,
+        "cw_ret": -0.142191,
+        "spy_ret": -0.045424,
+        "ew_excess": -0.034792,
+        "cw_excess": -0.096767,
+        "pct_negative_end": 0.9175,
+        "pct_negative_any": 0.9588
       }
     },
     {
       "month": "2024-08",
       "locked_at": "2024-08-16",
-      "n": 98,
+      "n": 97,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 98,
-        "ew_ret": 0.033856,
-        "cw_ret": -0.018638,
+        "n_priced": 97,
+        "ew_ret": 0.033422,
+        "cw_ret": -0.018918,
         "spy_ret": 0.01169,
-        "ew_excess": 0.022166,
-        "cw_excess": -0.030328,
-        "pct_negative_end": 0.2653,
-        "pct_negative_any": 0.5102
+        "ew_excess": 0.021732,
+        "cw_excess": -0.030608,
+        "pct_negative_end": 0.268,
+        "pct_negative_any": 0.5155
       },
       "t1": {
-        "n_priced": 98,
-        "ew_ret": 0.026214,
-        "cw_ret": -0.023103,
-        "spy_ret": 0.013079,
-        "ew_excess": 0.013135,
-        "cw_excess": -0.036182,
-        "pct_negative_end": 0.2959,
-        "pct_negative_any": 0.5204
+        "n_priced": 97,
+        "ew_ret": 0.025785,
+        "cw_ret": -0.023372,
+        "spy_ret": 0.01308,
+        "ew_excess": 0.012705,
+        "cw_excess": -0.036451,
+        "pct_negative_end": 0.299,
+        "pct_negative_any": 0.5258
       },
       "post": {
-        "n_priced": 98,
-        "ew_ret": -0.039782,
-        "cw_ret": -0.061944,
+        "n_priced": 97,
+        "ew_ret": -0.038912,
+        "cw_ret": -0.06176,
         "spy_ret": -0.019936,
-        "ew_excess": -0.019846,
-        "cw_excess": -0.042008,
-        "reversal_ratio": 0.8953
+        "ew_excess": -0.018976,
+        "cw_excess": -0.041824,
+        "reversal_ratio": 0.8732
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.015653
+      },
+      "tom_basket": {
+        "n_priced": 97,
+        "ew_ret": -0.023646,
+        "cw_ret": -0.043635,
+        "spy_ret": -0.015653,
+        "ew_excess": -0.007993,
+        "cw_excess": -0.027982,
+        "pct_negative_end": 0.7526,
+        "pct_negative_any": 0.8866
       }
     },
     {
       "month": "2024-09",
       "locked_at": "2024-09-16",
-      "n": 98,
+      "n": 97,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 98,
-        "ew_ret": 0.045198,
+        "n_priced": 97,
+        "ew_ret": 0.045393,
         "cw_ret": 0.057652,
         "spy_ret": 0.018144,
-        "ew_excess": 0.027054,
-        "cw_excess": 0.039507,
-        "pct_negative_end": 0.2653,
-        "pct_negative_any": 0.6429
+        "ew_excess": 0.027249,
+        "cw_excess": 0.039508,
+        "pct_negative_end": 0.268,
+        "pct_negative_any": 0.6495
       },
       "t1": {
-        "n_priced": 98,
-        "ew_ret": 0.030373,
-        "cw_ret": 0.064942,
+        "n_priced": 97,
+        "ew_ret": 0.030609,
+        "cw_ret": 0.064941,
         "spy_ret": 0.015899,
-        "ew_excess": 0.014475,
+        "ew_excess": 0.014711,
         "cw_excess": 0.049043,
-        "pct_negative_end": 0.3776,
-        "pct_negative_any": 0.6633
+        "pct_negative_end": 0.3814,
+        "pct_negative_any": 0.6701
       },
       "post": {
-        "n_priced": 98,
-        "ew_ret": -0.019545,
+        "n_priced": 97,
+        "ew_ret": -0.019406,
         "cw_ret": 0.013732,
         "spy_ret": -0.006091,
-        "ew_excess": -0.013454,
+        "ew_excess": -0.013315,
         "cw_excess": 0.019823,
-        "reversal_ratio": 0.4973
+        "reversal_ratio": 0.4886
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.006387
+      },
+      "tom_basket": {
+        "n_priced": 97,
+        "ew_ret": -0.038383,
+        "cw_ret": -0.04408,
+        "spy_ret": -0.006387,
+        "ew_excess": -0.031996,
+        "cw_excess": -0.037693,
+        "pct_negative_end": 0.8351,
+        "pct_negative_any": 0.9485
       }
     },
     {
       "month": "2024-10",
       "locked_at": "2024-10-17",
-      "n": 98,
+      "n": 97,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 98,
-        "ew_ret": -0.009483,
-        "cw_ret": -0.005302,
+        "n_priced": 97,
+        "ew_ret": -0.008582,
+        "cw_ret": -0.005171,
         "spy_ret": -0.005684,
-        "ew_excess": -0.003799,
-        "cw_excess": 0.000382,
-        "pct_negative_end": 0.6122,
-        "pct_negative_any": 0.8878
+        "ew_excess": -0.002898,
+        "cw_excess": 0.000513,
+        "pct_negative_end": 0.6082,
+        "pct_negative_any": 0.8866
       },
       "t1": {
-        "n_priced": 98,
-        "ew_ret": 0.003154,
-        "cw_ret": -0.008737,
+        "n_priced": 97,
+        "ew_ret": 0.004148,
+        "cw_ret": -0.008616,
         "spy_ret": -0.00261,
-        "ew_excess": 0.005764,
-        "cw_excess": -0.006127,
-        "pct_negative_end": 0.5102,
-        "pct_negative_any": 0.8878
+        "ew_excess": 0.006758,
+        "cw_excess": -0.006006,
+        "pct_negative_end": 0.5052,
+        "pct_negative_any": 0.8866
       },
       "post": {
-        "n_priced": 98,
-        "ew_ret": 0.030922,
-        "cw_ret": 0.005223,
+        "n_priced": 97,
+        "ew_ret": 0.030794,
+        "cw_ret": 0.005168,
         "spy_ret": -0.004041,
-        "ew_excess": 0.034963,
-        "cw_excess": 0.009264,
-        "reversal_ratio": 9.2032
+        "ew_excess": 0.034835,
+        "cw_excess": 0.009209,
+        "reversal_ratio": 12.0204
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.005707
+      },
+      "tom_basket": {
+        "n_priced": 97,
+        "ew_ret": 0.027605,
+        "cw_ret": 0.016591,
+        "spy_ret": -0.005707,
+        "ew_excess": 0.033312,
+        "cw_excess": 0.022298,
+        "pct_negative_end": 0.3505,
+        "pct_negative_any": 0.8454
       }
     },
     {
       "month": "2024-11",
       "locked_at": "2024-11-14",
-      "n": 98,
+      "n": 97,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 98,
-        "ew_ret": 0.031304,
-        "cw_ret": 0.017746,
-        "spy_ret": 0.003641,
-        "ew_excess": 0.027663,
-        "cw_excess": 0.014105,
-        "pct_negative_end": 0.3163,
-        "pct_negative_any": 0.8878
+        "n_priced": 97,
+        "ew_ret": 0.031686,
+        "cw_ret": 0.017808,
+        "spy_ret": 0.00364,
+        "ew_excess": 0.028045,
+        "cw_excess": 0.014167,
+        "pct_negative_end": 0.3093,
+        "pct_negative_any": 0.8866
       },
       "t1": {
-        "n_priced": 98,
-        "ew_ret": 0.065212,
-        "cw_ret": 0.039366,
+        "n_priced": 97,
+        "ew_ret": 0.065654,
+        "cw_ret": 0.039411,
         "spy_ret": 0.007045,
-        "ew_excess": 0.058167,
-        "cw_excess": 0.032321,
-        "pct_negative_end": 0.2143,
-        "pct_negative_any": 0.8878
+        "ew_excess": 0.058609,
+        "cw_excess": 0.032366,
+        "pct_negative_end": 0.2165,
+        "pct_negative_any": 0.8866
       },
       "post": {
-        "n_priced": 98,
-        "ew_ret": 0.04287,
-        "cw_ret": 0.019226,
-        "spy_ret": 0.020402,
-        "ew_excess": 0.022468,
-        "cw_excess": -0.001176,
-        "reversal_ratio": -0.8122
+        "n_priced": 97,
+        "ew_ret": 0.043124,
+        "cw_ret": 0.019229,
+        "spy_ret": 0.020403,
+        "ew_excess": 0.022721,
+        "cw_excess": -0.001174,
+        "reversal_ratio": -0.8102
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.014745
+      },
+      "tom_basket": {
+        "n_priced": 97,
+        "ew_ret": 0.020977,
+        "cw_ret": 0.031657,
+        "spy_ret": 0.014745,
+        "ew_excess": 0.006231,
+        "cw_excess": 0.016912,
+        "pct_negative_end": 0.3814,
+        "pct_negative_any": 0.567
       }
     },
     {
@@ -217,6 +287,20 @@
         "ew_excess": 0.035541,
         "cw_excess": 0.051193,
         "reversal_ratio": 2.3444
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.012138
+      },
+      "tom_basket": {
+        "n_priced": 98,
+        "ew_ret": 0.04615,
+        "cw_ret": 0.070326,
+        "spy_ret": 0.012138,
+        "ew_excess": 0.034012,
+        "cw_excess": 0.058188,
+        "pct_negative_end": 0.1327,
+        "pct_negative_any": 0.5816
       }
     },
     {
@@ -231,7 +315,7 @@
         "cw_ret": -0.027646,
         "spy_ret": 0.013065,
         "ew_excess": -0.002096,
-        "cw_excess": -0.040711,
+        "cw_excess": -0.040712,
         "pct_negative_end": 0.3469,
         "pct_negative_any": 0.5918
       },
@@ -253,6 +337,20 @@
         "ew_excess": -0.013757,
         "cw_excess": 0.00106,
         "reversal_ratio": -6.5635
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.001355
+      },
+      "tom_basket": {
+        "n_priced": 98,
+        "ew_ret": -0.015172,
+        "cw_ret": -0.00922,
+        "spy_ret": -0.001355,
+        "ew_excess": -0.013817,
+        "cw_excess": -0.007865,
+        "pct_negative_end": 0.6327,
+        "pct_negative_any": 0.9286
       }
     },
     {
@@ -289,6 +387,20 @@
         "ew_excess": -0.016876,
         "cw_excess": -0.02394,
         "reversal_ratio": 0.7756
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.003401
+      },
+      "tom_basket": {
+        "n_priced": 98,
+        "ew_ret": -0.01039,
+        "cw_ret": -0.004387,
+        "spy_ret": -0.003401,
+        "ew_excess": -0.006989,
+        "cw_excess": -0.000986,
+        "pct_negative_end": 0.5918,
+        "pct_negative_any": 0.8571
       }
     },
     {
@@ -325,114 +437,170 @@
         "ew_excess": -0.065053,
         "cw_excess": -0.067791,
         "reversal_ratio": 8.536
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.034121
+      },
+      "tom_basket": {
+        "n_priced": 98,
+        "ew_ret": -0.07145,
+        "cw_ret": -0.053966,
+        "spy_ret": -0.034121,
+        "ew_excess": -0.037329,
+        "cw_excess": -0.019844,
+        "pct_negative_end": 0.8776,
+        "pct_negative_any": 0.949
       }
     },
     {
       "month": "2025-04",
       "locked_at": "2025-04-15",
-      "n": 99,
+      "n": 98,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 99,
-        "ew_ret": 0.080057,
-        "cw_ret": 0.05764,
+        "n_priced": 98,
+        "ew_ret": 0.080446,
+        "cw_ret": 0.057679,
         "spy_ret": 0.01689,
-        "ew_excess": 0.063168,
-        "cw_excess": 0.04075,
-        "pct_negative_end": 0.101,
-        "pct_negative_any": 0.899
+        "ew_excess": 0.063557,
+        "cw_excess": 0.040789,
+        "pct_negative_end": 0.102,
+        "pct_negative_any": 0.898
       },
       "t1": {
-        "n_priced": 99,
-        "ew_ret": 0.087814,
-        "cw_ret": 0.096767,
+        "n_priced": 98,
+        "ew_ret": 0.088235,
+        "cw_ret": 0.096892,
         "spy_ret": 0.024237,
-        "ew_excess": 0.063577,
-        "cw_excess": 0.07253,
-        "pct_negative_end": 0.0808,
-        "pct_negative_any": 0.899
+        "ew_excess": 0.063999,
+        "cw_excess": 0.072655,
+        "pct_negative_end": 0.0816,
+        "pct_negative_any": 0.898
       },
       "post": {
-        "n_priced": 99,
-        "ew_ret": 0.036557,
-        "cw_ret": 0.056974,
+        "n_priced": 98,
+        "ew_ret": 0.035522,
+        "cw_ret": 0.056772,
         "spy_ret": 0.030767,
-        "ew_excess": 0.00579,
-        "cw_excess": 0.026207,
-        "reversal_ratio": -0.0917
+        "ew_excess": 0.004755,
+        "cw_excess": 0.026005,
+        "reversal_ratio": -0.0748
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.016579
+      },
+      "tom_basket": {
+        "n_priced": 98,
+        "ew_ret": 0.02341,
+        "cw_ret": 0.02417,
+        "spy_ret": 0.016579,
+        "ew_excess": 0.006831,
+        "cw_excess": 0.007591,
+        "pct_negative_end": 0.3367,
+        "pct_negative_any": 0.7041
       }
     },
     {
       "month": "2025-05",
       "locked_at": "2025-05-15",
-      "n": 99,
+      "n": 98,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 99,
-        "ew_ret": -0.033008,
-        "cw_ret": -0.024158,
+        "n_priced": 98,
+        "ew_ret": -0.032768,
+        "cw_ret": -0.024116,
         "spy_ret": -0.019222,
-        "ew_excess": -0.013786,
-        "cw_excess": -0.004936,
-        "pct_negative_end": 0.8081,
-        "pct_negative_any": 0.8485
+        "ew_excess": -0.013545,
+        "cw_excess": -0.004894,
+        "pct_negative_end": 0.8061,
+        "pct_negative_any": 0.8469
       },
       "t1": {
-        "n_priced": 99,
-        "ew_ret": -0.005454,
-        "cw_ret": 0.003149,
+        "n_priced": 98,
+        "ew_ret": -0.005229,
+        "cw_ret": 0.003189,
         "spy_ret": 0.001169,
-        "ew_excess": -0.006623,
-        "cw_excess": 0.001981,
-        "pct_negative_end": 0.6566,
-        "pct_negative_any": 0.8586
+        "ew_excess": -0.006397,
+        "cw_excess": 0.002021,
+        "pct_negative_end": 0.6531,
+        "pct_negative_any": 0.8571
       },
       "post": {
-        "n_priced": 99,
-        "ew_ret": 0.049983,
-        "cw_ret": 0.058244,
+        "n_priced": 98,
+        "ew_ret": 0.050149,
+        "cw_ret": 0.058276,
         "spy_ret": 0.029045,
-        "ew_excess": 0.020938,
-        "cw_excess": 0.029199,
-        "reversal_ratio": 1.5188
+        "ew_excess": 0.021105,
+        "cw_excess": 0.029231,
+        "reversal_ratio": 1.5581
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.009965
+      },
+      "tom_basket": {
+        "n_priced": 98,
+        "ew_ret": 0.028947,
+        "cw_ret": 0.033788,
+        "spy_ret": 0.009965,
+        "ew_excess": 0.018982,
+        "cw_excess": 0.023823,
+        "pct_negative_end": 0.2551,
+        "pct_negative_any": 0.8673
       }
     },
     {
       "month": "2025-06",
       "locked_at": "2025-06-13",
-      "n": 99,
+      "n": 98,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 99,
-        "ew_ret": 0.036945,
-        "cw_ret": 0.057214,
+        "n_priced": 98,
+        "ew_ret": 0.036363,
+        "cw_ret": 0.057113,
         "spy_ret": 0.019387,
-        "ew_excess": 0.017558,
-        "cw_excess": 0.037827,
-        "pct_negative_end": 0.2828,
-        "pct_negative_any": 0.6768
+        "ew_excess": 0.016976,
+        "cw_excess": 0.037727,
+        "pct_negative_end": 0.2857,
+        "pct_negative_any": 0.6735
       },
       "t1": {
-        "n_priced": 99,
-        "ew_ret": 0.0352,
-        "cw_ret": 0.05312,
+        "n_priced": 98,
+        "ew_ret": 0.034844,
+        "cw_ret": 0.053074,
         "spy_ret": 0.019958,
-        "ew_excess": 0.015242,
-        "cw_excess": 0.033162,
-        "pct_negative_end": 0.3232,
-        "pct_negative_any": 0.6768
+        "ew_excess": 0.014886,
+        "cw_excess": 0.033116,
+        "pct_negative_end": 0.3265,
+        "pct_negative_any": 0.6735
       },
       "post": {
-        "n_priced": 99,
-        "ew_ret": 0.074707,
-        "cw_ret": 0.03576,
+        "n_priced": 98,
+        "ew_ret": 0.074812,
+        "cw_ret": 0.035681,
         "spy_ret": 0.030588,
-        "ew_excess": 0.044119,
-        "cw_excess": 0.005172,
-        "reversal_ratio": -2.5128
+        "ew_excess": 0.044224,
+        "cw_excess": 0.005094,
+        "reversal_ratio": -2.6051
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.016962
+      },
+      "tom_basket": {
+        "n_priced": 98,
+        "ew_ret": 0.053893,
+        "cw_ret": 0.0197,
+        "spy_ret": 0.016962,
+        "ew_excess": 0.036931,
+        "cw_excess": 0.002738,
+        "pct_negative_end": 0.0816,
+        "pct_negative_any": 0.5714
       }
     },
     {
@@ -469,6 +637,20 @@
         "ew_excess": -0.027425,
         "cw_excess": -0.016297,
         "reversal_ratio": 2.2167
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.010229
+      },
+      "tom_basket": {
+        "n_priced": 99,
+        "ew_ret": -0.020609,
+        "cw_ret": -0.025587,
+        "spy_ret": -0.010229,
+        "ew_excess": -0.01038,
+        "cw_excess": -0.015357,
+        "pct_negative_end": 0.6364,
+        "pct_negative_any": 0.8788
       }
     },
     {
@@ -492,7 +674,7 @@
         "ew_ret": 0.012267,
         "cw_ret": 0.001432,
         "spy_ret": 0.002673,
-        "ew_excess": 0.009594,
+        "ew_excess": 0.009593,
         "cw_excess": -0.001241,
         "pct_negative_end": 0.3434,
         "pct_negative_any": 0.7778
@@ -505,6 +687,20 @@
         "ew_excess": -0.018079,
         "cw_excess": -0.028104,
         "reversal_ratio": 1.0173
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.000308
+      },
+      "tom_basket": {
+        "n_priced": 99,
+        "ew_ret": -0.018915,
+        "cw_ret": -0.029822,
+        "spy_ret": 0.000308,
+        "ew_excess": -0.019223,
+        "cw_excess": -0.03013,
+        "pct_negative_end": 0.7071,
+        "pct_negative_any": 0.8788
       }
     },
     {
@@ -541,6 +737,20 @@
         "ew_excess": 0.022603,
         "cw_excess": 0.022956,
         "reversal_ratio": -27.6998
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.008332
+      },
+      "tom_basket": {
+        "n_priced": 99,
+        "ew_ret": 0.038262,
+        "cw_ret": 0.037485,
+        "spy_ret": 0.008332,
+        "ew_excess": 0.02993,
+        "cw_excess": 0.029153,
+        "pct_negative_end": 0.2828,
+        "pct_negative_any": 0.5657
       }
     },
     {
@@ -555,7 +765,7 @@
         "cw_ret": 0.026579,
         "spy_ret": 0.031382,
         "ew_excess": -0.009301,
-        "cw_excess": -0.004804,
+        "cw_excess": -0.004803,
         "pct_negative_end": 0.2929,
         "pct_negative_any": 0.5051
       },
@@ -573,10 +783,24 @@
         "n_priced": 99,
         "ew_ret": -0.067782,
         "cw_ret": -0.058869,
-        "spy_ret": -0.011179,
-        "ew_excess": -0.056603,
+        "spy_ret": -0.011178,
+        "ew_excess": -0.056604,
         "cw_excess": -0.047691,
-        "reversal_ratio": -6.0857
+        "reversal_ratio": -6.0858
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.00331
+      },
+      "tom_basket": {
+        "n_priced": 99,
+        "ew_ret": -0.004276,
+        "cw_ret": -0.008189,
+        "spy_ret": -0.00331,
+        "ew_excess": -0.000967,
+        "cw_excess": -0.004879,
+        "pct_negative_end": 0.5556,
+        "pct_negative_any": 0.7778
       }
     },
     {
@@ -613,42 +837,70 @@
         "ew_excess": 0.042841,
         "cw_excess": 0.042606,
         "reversal_ratio": 6.9054
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.006194
+      },
+      "tom_basket": {
+        "n_priced": 99,
+        "ew_ret": 0.033763,
+        "cw_ret": 0.040936,
+        "spy_ret": 0.006194,
+        "ew_excess": 0.027568,
+        "cw_excess": 0.034742,
+        "pct_negative_end": 0.1616,
+        "pct_negative_any": 0.4747
       }
     },
     {
       "month": "2025-12",
       "locked_at": "2025-12-16",
-      "n": 100,
+      "n": 99,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 100,
-        "ew_ret": 0.014099,
-        "cw_ret": 0.018897,
+        "n_priced": 99,
+        "ew_ret": 0.013722,
+        "cw_ret": 0.018637,
         "spy_ret": 0.01996,
-        "ew_excess": -0.005861,
-        "cw_excess": -0.001063,
-        "pct_negative_end": 0.4,
-        "pct_negative_any": 0.76
+        "ew_excess": -0.006237,
+        "cw_excess": -0.001323,
+        "pct_negative_end": 0.404,
+        "pct_negative_any": 0.7677
       },
       "t1": {
-        "n_priced": 100,
-        "ew_ret": 0.011654,
-        "cw_ret": 0.017721,
+        "n_priced": 99,
+        "ew_ret": 0.011234,
+        "cw_ret": 0.017437,
         "spy_ret": 0.019856,
-        "ew_excess": -0.008202,
-        "cw_excess": -0.002135,
-        "pct_negative_end": 0.38,
-        "pct_negative_any": 0.77
+        "ew_excess": -0.008623,
+        "cw_excess": -0.002419,
+        "pct_negative_end": 0.3838,
+        "pct_negative_any": 0.7778
       },
       "post": {
-        "n_priced": 100,
-        "ew_ret": 0.036364,
-        "cw_ret": 0.03488,
+        "n_priced": 99,
+        "ew_ret": 0.036685,
+        "cw_ret": 0.035122,
         "spy_ret": 0.002071,
-        "ew_excess": 0.034293,
-        "cw_excess": 0.032809,
-        "reversal_ratio": 5.851
+        "ew_excess": 0.034614,
+        "cw_excess": 0.033051,
+        "reversal_ratio": 5.5498
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.006987
+      },
+      "tom_basket": {
+        "n_priced": 99,
+        "ew_ret": 0.046926,
+        "cw_ret": 0.041515,
+        "spy_ret": 0.006987,
+        "ew_excess": 0.039939,
+        "cw_excess": 0.034528,
+        "pct_negative_end": 0.1919,
+        "pct_negative_any": 0.899
       }
     },
     {
@@ -682,9 +934,23 @@
         "ew_ret": -0.063387,
         "cw_ret": -0.118361,
         "spy_ret": -0.009441,
-        "ew_excess": -0.053947,
+        "ew_excess": -0.053946,
         "cw_excess": -0.10892,
-        "reversal_ratio": -5.2931
+        "reversal_ratio": -5.293
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.011311
+      },
+      "tom_basket": {
+        "n_priced": 100,
+        "ew_ret": -0.021971,
+        "cw_ret": -0.060247,
+        "spy_ret": -0.011311,
+        "ew_excess": -0.010661,
+        "cw_excess": -0.048936,
+        "pct_negative_end": 0.62,
+        "pct_negative_any": 0.86
       }
     },
     {
@@ -719,8 +985,22 @@
         "cw_ret": 0.111341,
         "spy_ret": 0.004015,
         "ew_excess": 0.074482,
-        "cw_excess": 0.107326,
+        "cw_excess": 0.107325,
         "reversal_ratio": 6.1221
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.00605
+      },
+      "tom_basket": {
+        "n_priced": 100,
+        "ew_ret": 0.000276,
+        "cw_ret": 0.03083,
+        "spy_ret": -0.00605,
+        "ew_excess": 0.006326,
+        "cw_excess": 0.03688,
+        "pct_negative_end": 0.43,
+        "pct_negative_any": 0.77
       }
     },
     {
@@ -757,6 +1037,20 @@
         "ew_excess": 0.006169,
         "cw_excess": 0.000446,
         "reversal_ratio": 0.3308
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.04266
+      },
+      "tom_basket": {
+        "n_priced": 100,
+        "ew_ret": 0.050396,
+        "cw_ret": 0.057022,
+        "spy_ret": 0.04266,
+        "ew_excess": 0.007736,
+        "cw_excess": 0.014361,
+        "pct_negative_end": 0.17,
+        "pct_negative_any": 0.29
       }
     },
     {
@@ -793,42 +1087,70 @@
         "ew_excess": -0.01215,
         "cw_excess": -0.005262,
         "reversal_ratio": -0.3971
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.017131
+      },
+      "tom_basket": {
+        "n_priced": 100,
+        "ew_ret": 0.02356,
+        "cw_ret": 0.026126,
+        "spy_ret": 0.017131,
+        "ew_excess": 0.006429,
+        "cw_excess": 0.008995,
+        "pct_negative_end": 0.39,
+        "pct_negative_any": 0.68
       }
     },
     {
       "month": "2026-05",
       "locked_at": "2026-05-14",
-      "n": 101,
+      "n": 100,
       "backfilled": true,
       "final": true,
       "classic": {
-        "n_priced": 101,
-        "ew_ret": 0.041201,
-        "cw_ret": 0.037786,
+        "n_priced": 100,
+        "ew_ret": 0.041267,
+        "cw_ret": 0.037814,
         "spy_ret": -0.003382,
-        "ew_excess": 0.044583,
-        "cw_excess": 0.041168,
-        "pct_negative_end": 0.2574,
-        "pct_negative_any": 0.5743
+        "ew_excess": 0.044648,
+        "cw_excess": 0.041195,
+        "pct_negative_end": 0.26,
+        "pct_negative_any": 0.57
       },
       "t1": {
-        "n_priced": 101,
-        "ew_ret": 0.034383,
-        "cw_ret": 0.02758,
+        "n_priced": 100,
+        "ew_ret": 0.034505,
+        "cw_ret": 0.027629,
         "spy_ret": 0.003235,
-        "ew_excess": 0.031148,
-        "cw_excess": 0.024346,
-        "pct_negative_end": 0.2574,
-        "pct_negative_any": 0.5941
+        "ew_excess": 0.03127,
+        "cw_excess": 0.024394,
+        "pct_negative_end": 0.26,
+        "pct_negative_any": 0.59
       },
       "post": {
-        "n_priced": 101,
-        "ew_ret": 0.009301,
-        "cw_ret": 0.028749,
+        "n_priced": 100,
+        "ew_ret": 0.008137,
+        "cw_ret": 0.02788,
         "spy_ret": 0.011534,
-        "ew_excess": -0.002233,
-        "cw_excess": 0.017215,
-        "reversal_ratio": 0.0501
+        "ew_excess": -0.003396,
+        "cw_excess": 0.016346,
+        "reversal_ratio": 0.0761
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": -0.000477
+      },
+      "tom_basket": {
+        "n_priced": 100,
+        "ew_ret": -0.013866,
+        "cw_ret": -0.007886,
+        "spy_ret": -0.000477,
+        "ew_excess": -0.013389,
+        "cw_excess": -0.007409,
+        "pct_negative_end": 0.61,
+        "pct_negative_any": 0.67
       }
     },
     {
@@ -865,6 +1187,20 @@
         "ew_excess": 0.05899,
         "cw_excess": 0.06058,
         "reversal_ratio": 3.3011
+      },
+      "tom_market": {
+        "n_days": 4,
+        "spy_ret": 0.013873
+      },
+      "tom_basket": {
+        "n_priced": 101,
+        "ew_ret": 0.053764,
+        "cw_ret": 0.055776,
+        "spy_ret": 0.013873,
+        "ew_excess": 0.039891,
+        "cw_excess": 0.041903,
+        "pct_negative_end": 0.1584,
+        "pct_negative_any": 0.5842
       }
     },
     {
@@ -875,7 +1211,9 @@
       "final": false,
       "classic": {},
       "t1": {},
-      "post": {}
+      "post": {},
+      "tom_market": {},
+      "tom_basket": {}
     }
   ]
 }

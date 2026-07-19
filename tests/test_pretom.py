@@ -41,6 +41,14 @@ def test_month_schedule_july_2026():
     assert s["post_end"] == date(2026, 8, 5)          # tau+3 next month
 
 
+def test_month_schedule_tom_keys():
+    s = cal.month_schedule(2026, 7)
+    assert s["tom_start"] == s["tau"] == date(2026, 7, 31)
+    assert s["tom_end"] == s["post_end"] == date(2026, 8, 5)   # tau+3
+    iso = cal.schedule_iso(s)
+    assert iso["tom_start"] == "2026-07-31" and iso["tom_end"] == "2026-08-05"
+
+
 def test_month_schedule_skips_holiday_at_month_end():
     # December 2026: Christmas (Fri Dec 25) sits inside the window span.
     s = cal.month_schedule(2026, 12)
@@ -218,6 +226,71 @@ def test_per_name_marks_and_panel():
     assert len(panel["A"]["d"]) == len(panel["A"]["c"]) > 0
 
 
+# ------------------------------------------------------------------- TOM ----
+def test_tom_market_stats_directional():
+    sched, days = _window_setup()
+    tom_days = set(cal.trading_days(sched["tom_start"], sched["tom_end"]))
+    closes, level = [], 100.0
+    for d in days:
+        if d in tom_days:
+            level *= 1.01                          # +1%/day inside [tau, tau+3]
+        closes.append(level)
+    spy = _px(days, closes)["close"]
+    s = an.tom_market_stats(spy, sched)
+    assert s["n_days"] == 4
+    assert s["spy_ret"] == pytest.approx(1.01 ** 4 - 1.0, abs=1e-6)
+    assert len(s["daily"]) == 4
+
+
+def _tom_series(start, end, bumps):
+    """Synthetic close series: +bump on each month's TOM days, flat elsewhere.
+    bumps: {'YYYY-MM': daily_return}."""
+    days = cal.trading_days(start, end)
+    months = sorted({(d.year, d.month) for d in days})
+    tom_map = {}
+    for (y, m) in months:
+        sched = cal.month_schedule(y, m)
+        for d in cal.trading_days(sched["tom_start"], sched["tom_end"]):
+            tom_map[d] = f"{y:04d}-{m:02d}"
+    closes, level = [], 100.0
+    for d in days:
+        mkey = tom_map.get(d)
+        if mkey is not None:
+            level *= 1.0 + bumps.get(mkey, 0.0)
+        closes.append(level)
+    return _px(days, closes)["close"]
+
+
+def test_tom_longrun_split_and_summary():
+    bumps = {"2026-01": 0.010, "2026-02": 0.011,
+             "2026-03": 0.012, "2026-04": 0.013}
+    spy = _tom_series(date(2026, 1, 2), date(2026, 5, 15), bumps)
+    rows = an.tom_longrun(spy)
+    got = {r["month"]: r for r in rows}
+    # Jan-Apr have complete windows inside the series; Dec/May do not.
+    assert set(got) == set(bumps)
+    for m, b in bumps.items():
+        assert got[m]["n_tom_days"] == 4
+        assert got[m]["tom_ret"] == pytest.approx((1 + b) ** 4 - 1, abs=1e-5)
+        assert got[m]["rest_ret"] == pytest.approx(0.0, abs=1e-9)
+        assert got[m]["n_rest_days"] >= 5
+
+    s = an.summarize_tom(rows)
+    assert s["overall"]["n_months"] == 4
+    assert s["overall"]["tom_hit"] == 1.0
+    assert s["overall"]["rest_avg"] == pytest.approx(0.0, abs=1e-6)
+    assert s["overall"]["tom_avg"] > 0.04
+    assert s["overall"]["t_stat"] is not None and s["overall"]["t_stat"] > 5
+    assert set(s["by_decade"]) == {"2020s"}
+    assert s["since_2010"]["n_months"] == 4
+    assert s["trailing_24m"]["n_months"] == 4
+
+
+def test_summarize_tom_empty():
+    s = an.summarize_tom([])
+    assert s["overall"] is None and s["by_decade"] == {}
+
+
 # ------------------------------------------------------- universe / store ---
 def test_vone_parser():
     items = [
@@ -238,9 +311,30 @@ def test_archive_roundtrip_and_history_schema(tmp_path, monkeypatch):
     monkeypatch.setattr(pretom, "PRETOM_ARCHIVE_DIR", tmp_path)
     obj = {"month": "2026-06", "names": [{"ticker": "X"}],
            "stats": {"classic": {"ew_ret": -0.01}, "t1": {"ew_ret": -0.012},
-                     "post": {"ew_ret": 0.008}}}
+                     "post": {"ew_ret": 0.008},
+                     "tom_market": {"spy_ret": 0.012, "n_days": 4},
+                     "tom_basket": {"ew_ret": 0.02}}}
     pretom.archive_month("2026-06", obj)
     assert pretom.archive_months() == ["2026-06"]
     back = pretom.load_month("2026-06")
     assert back["stats"]["classic"]["ew_ret"] == -0.01
     assert "t1" in back["stats"] and "post" in back["stats"]
+    assert back["stats"]["tom_market"]["spy_ret"] == 0.012
+
+
+def test_update_stats_tolerates_old_schedule(monkeypatch, tmp_path):
+    """Archives written before the TOM keys existed must still reconcile
+    (tom_start/tom_end fall back to tau/post_end)."""
+    from zenith.pretom import compute as pc
+    sched, days = _window_setup()
+    old_iso = {k: v.isoformat() for k, v in sched.items()
+               if k not in ("tom_start", "tom_end")}
+    closes = [100.0] * len(days)
+    px = {"A": _px(days, closes)}
+    obj = {"month": "2026-07", "locked_at": sched["lock_by"].isoformat(),
+           "schedule": old_iso, "names": [{"ticker": "A", "weight_pct": 1.0}]}
+    spy = _px(days, closes)["close"]
+    pc._update_stats(obj, px, spy, date(2026, 8, 10))
+    assert obj["stats"]["tom_market"]["n_days"] == 4
+    assert obj["stats"]["tom_basket"]["n_priced"] == 1
+    assert obj["stats"]["final"] is True

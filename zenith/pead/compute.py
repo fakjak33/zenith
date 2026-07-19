@@ -21,6 +21,7 @@ import time
 from datetime import date, timedelta
 
 from . import DISCLAIMER, save, load, archive_day, archive_days, load_day
+from . import eap
 from . import earnings as earn
 from . import history as hist
 from . import signals as sig
@@ -131,6 +132,46 @@ def _refresh_latest(pool: dict, status: list[dict], drift: list | None) -> dict:
     return out
 
 
+def _refresh_eap(upcoming_reps: list[dict], today: date,
+                 status: list[dict]) -> None:
+    """Write the EAP artifact: upcoming reporters + tracked-premium summary."""
+    try:
+        rows = eap.load("eap_history", {"rows": []}).get("rows", [])
+        out = {"as_of": today.isoformat(), "disclaimer": DISCLAIMER,
+               "survivorship_note": eap.SURVIVORSHIP_NOTE,
+               "upcoming": eap.build_upcoming(upcoming_reps, rows, today),
+               "summary": eap.summarize(rows)}
+        save("eap", out)
+        status.append({"segment": "eap_refresh", "ok": True,
+                       "n": len(out["upcoming"]),
+                       "tracked": out["summary"]["n_rows"]})
+    except Exception as e:
+        status.append({"segment": "eap_refresh", "ok": False,
+                       "error": str(e)[:200]})
+
+
+def _seed_eap_from_archives(status: list[dict]) -> int:
+    """EAP rows for every reporter in every archived signal sheet (the premium
+    is unconditional, so excluded/mixed reporters count too). Idempotent."""
+    new = []
+    for dstr in archive_days():
+        sheet = load_day(dstr)
+        for s in sheet.get("signals", []):
+            try:
+                new.append(eap.make_row({
+                    "ticker": s["ticker"], "name": s.get("name", ""),
+                    "report_date": s["report_date"],
+                    "time": s.get("time", ""),
+                    "mktcap": (s.get("context") or {}).get("mktcap"),
+                }, backfilled=sheet.get("backfilled", False)))
+            except (KeyError, ValueError):
+                continue
+    added = eap.append_rows(new)
+    status.append({"segment": "eap_seed", "ok": True, "n": added,
+                   "scanned": len(new)})
+    return added
+
+
 def run_auto(force: bool = False) -> dict:
     today = date.today()
     status: list[dict] = []
@@ -151,12 +192,21 @@ def run_auto(force: bool = False) -> dict:
     h = load("history", {"rows": []})
     active_tk = sorted({r["ticker"] for r in hist.active_rows(h.get("rows", []))})
 
-    # one combined pull: pending days' reporters + active book + SPY
+    # one combined pull: pending days' reporters + active book + EAP + SPY
     reporters_by_day: dict[date, list[dict]] = {}
     for r_day in pending:
         reporters_by_day[r_day] = _collect_reporters(r_day, ubt, status)
+    try:
+        upcoming_reps = earn.upcoming_calendar(7, ubt)
+        status.append({"segment": "upcoming_calendar", "ok": True,
+                       "n": len(upcoming_reps)})
+    except Exception as e:
+        upcoming_reps = []
+        status.append({"segment": "upcoming_calendar", "ok": False,
+                       "error": str(e)[:200]})
     tickers = sorted({rep["ticker"] for reps in reporters_by_day.values()
-                      for rep in reps} | set(active_tk)) + ["SPY"]
+                      for rep in reps} | set(active_tk)
+                     | set(eap.pending_tickers(today))) + ["SPY"]
     px = _fetch_prices(tickers, "1y", status, "prices") if len(tickers) > 1 else {}
     spy = px.get("SPY")
     spy_close = spy["close"] if spy is not None and not spy.empty else None
@@ -179,6 +229,7 @@ def run_auto(force: bool = False) -> dict:
                 sheet = _sheet_obj(r_day, rows, len(reps), backfilled=False)
                 archive_day(r_day.isoformat(), sheet)
                 added = hist.append_rows([hist.make_row(r) for r in _eligible(rows)])
+                eap.append_rows([eap.make_row(rep) for rep in reps])
                 pool = sig.update_pool(pool, rows, r_day)
                 status.append({"segment": f"sheet({r_day})", "ok": True,
                                "n": len(rows), "eligible": sheet["n_eligible"],
@@ -193,6 +244,12 @@ def run_auto(force: bool = False) -> dict:
             status.append({"segment": "evaluate", "ok": True, "n": filled})
         except Exception as e:
             status.append({"segment": "evaluate", "ok": False, "error": str(e)[:200]})
+        try:
+            n_eap = eap.evaluate_pending(px, spy_close, today)
+            status.append({"segment": "eap_evaluate", "ok": True, "n": n_eap})
+        except Exception as e:
+            status.append({"segment": "eap_evaluate", "ok": False,
+                           "error": str(e)[:200]})
         try:
             upcoming = {t: earn.next_earnings_date(t, today) for t in active_tk}
             n = hist.refresh_next_earnings(upcoming)
@@ -218,6 +275,7 @@ def run_auto(force: bool = False) -> dict:
         except Exception as e:
             status.append({"segment": "drift_curve", "ok": False, "error": str(e)[:200]})
 
+    _refresh_eap(upcoming_reps, today, status)
     _refresh_latest(pool, status, drift)
     h3 = load("history", {"rows": []})
     n_act = len(hist.active_rows(h3.get("rows", [])))
@@ -325,6 +383,17 @@ def run_backfill(quarters: int = 8, force: bool = False) -> dict:
     save("history", h)
     filled = hist.evaluate_pending(px, spy_close, today)
     status.append({"segment": "evaluate", "ok": True, "n": filled})
+
+    # 5. EAP: seed announcement-premium rows from every archived sheet, then
+    # evaluate both windows off the same bulk price pull
+    _seed_eap_from_archives(status)
+    n_eap = eap.evaluate_pending(px, spy_close, today)
+    status.append({"segment": "eap_evaluate", "ok": True, "n": n_eap})
+    try:
+        upcoming_reps = earn.upcoming_calendar(7, ubt)
+    except Exception:
+        upcoming_reps = []
+    _refresh_eap(upcoming_reps, today, status)
 
     drift = hist.drift_curve(load("history", {"rows": []}).get("rows", []),
                              px, spy_close)

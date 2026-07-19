@@ -751,6 +751,22 @@ def _aqr_drilldown(ts_rows: list[dict], backtest: dict) -> None:
 # ------------------------------------------------------------------ render --
 def render() -> None:
     st.caption(DISCLAIMER)
+    from ..ui_theme import key_findings
+    st.markdown(key_findings([
+        {"stat": "Equity factors persist month to month: 59 of 65 academic "
+                 "factors had positive return autocorrelation, 49 of them "
+                 "statistically significant.",
+         "cite": "Gupta & Kelly (2019)"},
+        {"stat": "Buy last month's winning factors, sell the losers, rebuild "
+                 "monthly: 0.84 Sharpe in the paper — 0.75 in our free-data "
+                 "AQR/French replication (1926–2026), the honest gap shown in "
+                 "the backtest tab.",
+         "cite": "Gupta & Kelly (2019) · this app's replication"},
+        {"stat": "Factor momentum sidestepped the 2009 momentum crash (+18% "
+                 "while stock momentum lost 31%) and is a rare diversifier "
+                 "(~0.05 correlation to index trend-following).",
+         "cite": "Gupta & Kelly (2019) · Man AHL (2026)"},
+    ]), unsafe_allow_html=True)
     signals = load("signals", {})
     if not signals or not signals.get("models"):
         st.info("No signals yet. Run `python -m zenith.fmom.compute --action "

@@ -82,6 +82,32 @@ def _int_or_none(x):
         return None
 
 
+def upcoming_calendar(days_fwd: int = 7,
+                      universe_by_ticker: dict | None = None) -> list[dict]:
+    """Scheduled reporters over the next days_fwd calendar days (today
+    included), optionally filtered to a universe. Reuses nasdaq_day and its
+    6h future-day cache; weekend dates are skipped (no announcements).
+    Powers the EAP upcoming-reporters view."""
+    out, seen = [], set()
+    d = date.today()
+    for _ in range(days_fwd + 1):
+        if d.weekday() < 5:
+            for rep in nasdaq_day(d):
+                t = rep["ticker"]
+                if universe_by_ticker is not None and t not in universe_by_ticker:
+                    continue
+                if (t, rep["report_date"]) in seen:
+                    continue
+                seen.add((t, rep["report_date"]))
+                if rep.get("time", "").endswith("not-supplied"):
+                    slot = infer_time(t, rep["report_date"])
+                    if slot:
+                        rep = {**rep, "time": slot}
+                out.append(rep)
+        d += timedelta(days=1)
+    return out
+
+
 # --- per-ticker earnings history (yfinance) ---------------------------------
 
 def earnings_history(ticker: str, max_age_hours: float = 168.0) -> list[dict]:
