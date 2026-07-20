@@ -182,8 +182,9 @@ SOURCES: list[Source] = [
     Source("OECD Ecoscope", "research", "rss", "https://oecdecoscope.blog/feed/",
            note="OECD economics blog"),
     Source("arXiv q-fin (Quant Finance)", "research", "rss", "http://export.arxiv.org/rss/q-fin"),
-    Source("Quantpedia", "research", "rss", "https://quantpedia.com/feed/",
-           note="empirical quant-strategy research; summarizes SSRN/academic papers"),
+    Source("Quantpedia", "insight", "rss", "https://quantpedia.com/feed/",
+           note="empirical quant-strategy write-ups (visual-heavy backtests); "
+                "summarizes SSRN/academic papers into actionable strategies"),
     # Journal table-of-contents (abstracts free; full text links out)
     Source("Journal of Finance (TOC)", "research", "rss",
            "https://onlinelibrary.wiley.com/feed/15406261/most-recent"),

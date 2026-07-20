@@ -15,7 +15,9 @@ import pandas as pd
 
 from . import DISCLAIMER, load, save
 
-MODELS = ("etf_tsfm", "etf_csfm", "man_tsfm", "man_csfm", "aqr_tsfm", "aqr_csfm")
+MODELS = ("etf_tsfm", "etf_csfm", "etf_tsfm_vs",
+          "man_tsfm", "man_csfm", "man_tsfm_vs",
+          "aqr_tsfm", "aqr_csfm", "aqr_tsfm_vs")
 
 
 def family_of(model: str) -> str:

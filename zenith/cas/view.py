@@ -9,6 +9,7 @@ import streamlit as st
 
 from . import store_cas, registry, contingency
 from .universe import label_of
+from ..config import THEME
 from ..ui_theme import section, help_badge
 from . import DISCLAIMER
 from .help_text import HELP
@@ -129,8 +130,14 @@ def render() -> None:
                 "(or wait for the scheduled Action) to populate signals.")
         return
     regime = status.get("regime", "?")
-    from ..ui_theme import key_findings, stamp
+    from ..ui_theme import evidence_rating, key_findings, stamp
     st.markdown(stamp(status.get("date", "?"), "CAS"), unsafe_allow_html=True)
+    st.markdown(evidence_rating(
+        "B-", "multi-model monitor",
+        "A mixed bag by design: trend/momentum families carry documented but "
+        "modest edge (own hit-rates ~52-62%, rising with horizon); flows/GEX/"
+        "fed-funds are proxies. Read as market context, not a stock-picker."),
+        unsafe_allow_html=True)
     st.markdown(key_findings([
         {"stat": "Trend and momentum signals carry real but modest edge: this "
                  "app's own hit-rate tracker runs ~52-62%, rising with horizon "
@@ -694,12 +701,92 @@ def _rebalance() -> None:
     events = store_cas.load("rebalance", [])
     if events:
         cc = {"days_until": st.column_config.Column(help="Calendar days until the event."),
-              "kind": st.column_config.Column(help="Event type (opex / index_rebal / period_end)."),
+              "kind": st.column_config.Column(help="Event type (opex / index_rebal / "
+                                                   "period_end / fomc)."),
               "note": st.column_config.Column(help="Why it matters for flows.")}
         st.dataframe(pd.DataFrame(events)[["date", "days_until", "event", "kind", "note"]],
                      use_container_width=True, height=420, hide_index=True, column_config=cc)
     else:
         st.caption("No upcoming events loaded.")
+    _fomc_section()
+
+
+def _fomc_section() -> None:
+    """FOMC cycle clock + era-split evidence (an exhibit, not a signal)."""
+    from ..ui_theme import evidence_rating
+    f = store_cas.load("fomc", {})
+    if not f.get("eras"):
+        return
+    st.markdown(section("The FOMC cycle — clock & evidence", 3,
+                        help="Cieslak, Morse & Vissing-Jorgensen (JF 2019): "
+                             "1994-2016 the equity premium was earned entirely "
+                             "in EVEN weeks of FOMC cycle time. Uppal shows "
+                             "the pattern failed out of sample after 2016 — "
+                             "shown honestly below."), unsafe_allow_html=True)
+    st.markdown(evidence_rating(
+        "C", "FOMC even-week cycle",
+        "Striking 1994-2016 (even-week days +12bp/day over odd — CMVJ, JF "
+        "2019) but NOT robust out of sample: fails 2017-2023 and the "
+        "biweekly-board-meeting leak mechanism ended in 2004 (Uppal). "
+        "A clock and an exhibit — not a signal."), unsafe_allow_html=True)
+
+    nm, wk = f.get("next_meeting"), f.get("cycle_week")
+    even_now = f.get("even_week")
+    chip_color = THEME.teal if even_now else THEME.mustard
+    st.markdown(
+        f'<div style="display:inline-block; font-family:monospace; '
+        f'font-size:1.0rem; letter-spacing:0.08em; text-transform:uppercase; '
+        f'color:{chip_color}; border:1px solid {chip_color}; '
+        f'padding:0.2rem 0.7rem; margin:0.2rem 0 0.6rem 0;">'
+        f'◉ cycle week {wk if wk is not None else "?"} '
+        f'({"EVEN" if even_now else "odd"}) · next FOMC {nm or "?"} '
+        f'({f.get("days_to_next", "?")} trading days)</div>',
+        unsafe_allow_html=True)
+
+    eras = f["eras"]
+    recs = []
+    for label, rec in eras.items():
+        for side in ("even", "odd"):
+            b = rec.get(side)
+            if b:
+                recs.append({"era": label, "week": f"{side} weeks",
+                             "avg_bp": b["avg_bp"], "t": b.get("t_stat")})
+    if recs:
+        df = pd.DataFrame(recs)
+        try:
+            import altair as alt
+            ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
+                x=alt.X("era:N", title=None,
+                        axis=alt.Axis(labelAngle=0, labelLimit=0)),
+                xOffset="week:N",
+                y=alt.Y("avg_bp:Q", title="avg daily SPY return (bp)"),
+                color=alt.Color("week:N", title=None,
+                                scale=alt.Scale(range=[THEME.teal, THEME.muted]),
+                                legend=alt.Legend(orient="top")),
+                tooltip=["era", "week", alt.Tooltip("avg_bp:Q", format="+.1f"),
+                         alt.Tooltip("t:Q", format=".2f", title="t-stat")]))
+            st.altair_chart(ch.properties(height=240), use_container_width=True)
+        except Exception:
+            st.dataframe(df, hide_index=True)
+    sample, oos = eras.get("1994-2016 (CMVJ sample)", {}), eras.get("2017-now (out of sample)", {})
+    gap_in = sample.get("even_minus_odd_bp")
+    gap_out = oos.get("even_minus_odd_bp")
+    pre_out = (oos.get("pre_fomc") or {}).get("avg_bp")
+    st.markdown(
+        f"**Verdict from our SPY data:** in the CMVJ sample the even-week edge "
+        f"was **{gap_in:+.1f} bp/day**; out of sample (2017-now) it is "
+        f"**{gap_out:+.1f} bp/day** — consistent with Uppal's finding that the "
+        f"pattern did not survive publication. The pre-FOMC day still averages "
+        f"{pre_out:+.1f} bp out of sample (Lucca-Moench drift, now concentrated "
+        f"in press-conference meetings)." if gap_in is not None and
+        gap_out is not None and pre_out is not None else
+        "Era stats appear after the next weekly compute run.")
+    st.caption("Sources: Cieslak, Morse & Vissing-Jorgensen (JF 2019) · Lucca "
+               "& Moench (JF 2015) · Uppal, 'Does the FOMC Cycle Still Drive "
+               "Stock Returns?' · meeting dates: committed fomc_dates.json "
+               f"({f.get('n_meetings', '?')} meetings "
+               f"{'-'.join(f.get('meetings_span', []) or ['?'])}), from "
+               "federalreserve.gov + the FOMCscrape archive.")
 
 
 def _contingency() -> None:

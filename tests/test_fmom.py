@@ -557,3 +557,61 @@ def test_etf_panel_missing_benchmark():
     px = _fake_px([p["ticker"] for p in ETF_PROXIES])   # no SPY
     panel, meta = etf_proxy.build_panel(px)
     assert panel.empty and not meta["ok"]
+
+
+# --- volatility-scaled lens (Barroso & Santa-Clara 2015) ---------------------
+
+def test_vol_scale_multiplier_bounds_and_direction():
+    import numpy as np
+    rng = np.random.default_rng(7)
+    calm = rng.normal(0.01, 0.01, 60)
+    wild = rng.normal(0.01, 0.08, 12)
+    r = pd.Series(list(calm) + list(wild),
+                  index=pd.date_range("2018-01-31", periods=72, freq="ME"))
+    mult = core.vol_scale_multiplier(r)
+    m = mult.dropna()
+    assert ((m >= core.VS_CAP_LO) & (m <= core.VS_CAP_HI)).all()
+    # after the vol spike the trailing-6m vol >> target -> throttled hard
+    assert m.iloc[-1] < 1.0
+    # and clearly more throttled than during the calm stretch
+    assert m.iloc[-1] < m.iloc[40]
+
+
+def test_vol_scale_next_matches_series_logic():
+    import numpy as np
+    rng = np.random.default_rng(3)
+    r = pd.Series(rng.normal(0.01, 0.03, 48),
+                  index=pd.date_range("2020-01-31", periods=48, freq="ME"))
+    nxt = core.vol_scale_next(r)
+    assert nxt is not None and core.VS_CAP_LO <= nxt <= core.VS_CAP_HI
+    assert core.vol_scale_next(r.iloc[:6]) is None       # too short
+
+
+def test_backtest_includes_vol_scaled_series():
+    panel = synth_panel(n_months=80)
+    bt = core.backtest(panel)
+    assert "tsfm_vs" in bt["series"].columns
+    assert "tsfm_vs" in bt["stats"]
+    # scaled series must differ from raw (the multiplier actually applies)
+    joined = bt["series"][["tsfm", "tsfm_vs"]].dropna()
+    assert (joined["tsfm"] != joined["tsfm_vs"]).any()
+
+
+def test_vs_block_scales_weights_only():
+    from zenith.fmom.compute import _vs_block
+    block = {"family": "etf", "lens": "tsfm", "formation_month": "2026-06",
+             "rows": [{"factor": "A", "s": 1.0, "weight": 0.6, "leg": "long"},
+                      {"factor": "B", "s": -0.5, "weight": -1.0, "leg": "short"}],
+             "n_factors": 2, "n_long": 1, "n_short": 1, "degenerate": False}
+    vs = _vs_block(block, 1.5)
+    assert vs["lens"] == "tsfm_vs" and vs["vs_multiplier"] == 1.5
+    assert vs["rows"][0]["weight"] == 0.9
+    assert vs["rows"][1]["weight"] == -1.5
+    assert vs["rows"][0]["s"] == 1.0                      # signals untouched
+    assert block["rows"][0]["weight"] == 0.6              # original not mutated
+
+
+def test_history_models_include_vs_lens():
+    from zenith.fmom.history import MODELS
+    for fam in ("etf", "man", "aqr"):
+        assert f"{fam}_tsfm_vs" in MODELS

@@ -113,6 +113,24 @@ def screen_cas() -> None:
     hr = store_cas.load("hitrate", {})
     check(bool(hr.get("models")), "multi-model hit-rate present")
 
+    # FOMC-cycle evidence exhibit
+    fomc = store_cas.load("fomc", {})
+    check(bool(fomc.get("eras")), "FOMC era stats present")
+    if fomc.get("eras"):
+        check(_days_old(fomc.get("as_of", "")) <= 10, f"fomc fresh ({fomc.get('as_of')})")
+        check((fomc.get("n_meetings") or 0) >= 200, f"FOMC meeting set complete ({fomc.get('n_meetings')})")
+        smpl = fomc["eras"].get("1994-2016 (CMVJ sample)", {})
+        gap = smpl.get("even_minus_odd_bp")
+        # sanity: the in-sample even-week edge should be materially positive
+        check(gap is not None and gap > 3, f"CMVJ-sample even-week edge replicates (+{gap} bp)")
+        for era, rec in fomc["eras"].items():
+            for side in ("even", "odd"):
+                b = rec.get(side) or {}
+                if b.get("avg_bp") is not None:
+                    check(-50 <= b["avg_bp"] <= 50, f"fomc {era}/{side} avg within +/-50bp ({b['avg_bp']})")
+        nm = fomc.get("next_meeting")
+        check(not nm or nm >= date.today().isoformat(), f"FOMC next meeting is future ({nm})")
+
     # label resolution: a few representative tickers should resolve to names
     for t in ("INDA", "MTUM"):
         if t in uni or t in [s.get("asset") for s in frm]:
@@ -207,8 +225,10 @@ def screen_fmom() -> None:
               f"{key}: signals present and within ±2")
         wl = sum(r["weight"] for r in rows if r["weight"] > 0)
         ws = sum(r["weight"] for r in rows if r["weight"] < 0)
-        check((wl == 0 or abs(wl - 1) < 0.02) and (ws == 0 or abs(ws + 1) < 0.02),
-              f"{key}: leg weights sum to ±1 (long {wl:.3f}, short {ws:.3f})")
+        # vol-scaled lens (Barroso-Santa-Clara): legs sum to ±multiplier, not ±1
+        tgt = m.get("vs_multiplier", 1.0) if key.endswith("_vs") else 1.0
+        check((wl == 0 or abs(wl - tgt) < 0.02) and (ws == 0 or abs(ws + tgt) < 0.02),
+              f"{key}: leg weights sum to ±{tgt:.2f} (long {wl:.3f}, short {ws:.3f})")
         check((wl == 0 or ws == 0) == m.get("degenerate", False),
               f"{key}: degenerate flag consistent")
         ranks = [r["rank"] for r in rows]

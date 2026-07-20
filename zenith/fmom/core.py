@@ -24,6 +24,13 @@ VOL_WINDOW = 36          # months of trailing vol (paper: previous three years)
 VOL_MIN_PERIODS = 24     # accept a signal once 2y of history exists
 CLIP = 2.0               # z-score cap (paper: +/- 2)
 
+# Volatility scaling of the MODEL (Barroso & Santa-Clara 2015): exposure is
+# scaled by target/realized vol of the strategy's own recent returns. They use
+# 6 months of daily returns; the monthly analogue is a 6-month rolling std.
+VS_WINDOW = 6            # months of realized model vol
+VS_MIN_TARGET = 12       # months before the expanding target vol is trusted
+VS_CAP_LO, VS_CAP_HI = 0.5, 2.0   # leverage bounds (BSC report ~[0.5, 2] range)
+
 
 # ------------------------------------------------------------------ signals --
 def ann_vol(monthly: pd.DataFrame) -> pd.DataFrame:
@@ -89,6 +96,47 @@ def decile_flags(s: pd.Series) -> pd.Series:
     return flags
 
 
+# ------------------------------------------------------------- vol scaling --
+def vol_scale_multiplier(model_monthly: pd.Series,
+                         window: int = VS_WINDOW) -> pd.Series:
+    """Barroso & Santa-Clara (2015) constant-vol scaling for a strategy.
+
+    multiplier_t = target_vol / realized_vol_t, where realized is the trailing
+    `window`-month std of the model's OWN returns and target is the expanding
+    full-history std — both shifted one month so the scale applied to month t
+    uses only information through t-1 (no look-ahead). Capped [0.5, 2.0].
+    BSC report the scaling roughly doubles momentum's Sharpe (0.53 -> 0.97)
+    by cutting exposure into momentum's own high-vol crash episodes.
+    """
+    r = pd.Series(model_monthly).astype(float)
+    realized = r.rolling(window, min_periods=window).std().shift(1)
+    target = r.expanding(min_periods=VS_MIN_TARGET).std().shift(1)
+    mult = (target / realized.replace(0.0, np.nan))
+    return mult.clip(VS_CAP_LO, VS_CAP_HI)
+
+
+def vol_scaled_returns(model_monthly: pd.Series,
+                       window: int = VS_WINDOW) -> pd.Series:
+    """The vol-managed version of a monthly model return series."""
+    r = pd.Series(model_monthly).astype(float)
+    return (r * vol_scale_multiplier(r, window)).dropna()
+
+
+def vol_scale_next(model_monthly: pd.Series,
+                   window: int = VS_WINDOW) -> float | None:
+    """The multiplier to apply to the UPCOMING month, from the model's return
+    history through the latest completed month (live-signal counterpart of
+    vol_scale_multiplier's shifted series)."""
+    r = pd.Series(model_monthly).dropna().astype(float)
+    if len(r) < max(window, VS_MIN_TARGET):
+        return None
+    realized = float(r.tail(window).std())
+    target = float(r.std())
+    if realized <= 0 or not math.isfinite(realized) or not math.isfinite(target):
+        return None
+    return float(min(max(target / realized, VS_CAP_LO), VS_CAP_HI))
+
+
 # ----------------------------------------------------------------- backtest --
 def perf_stats(returns: pd.Series) -> dict:
     """Annualized stats for a monthly return series."""
@@ -133,6 +181,10 @@ def backtest(monthly: pd.DataFrame) -> dict:
         if rec:
             rows[t1] = rec
     series = pd.DataFrame.from_dict(rows, orient="index").sort_index()
+    if "tsfm" in series.columns:
+        vs = vol_scaled_returns(series["tsfm"])
+        if len(vs) >= 12:
+            series["tsfm_vs"] = vs
     return {
         "series": series,
         "stats": {c: perf_stats(series[c]) for c in series.columns},

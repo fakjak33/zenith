@@ -26,6 +26,57 @@ from .universe import master_etfs
 from .etf_master import category_of as master_category_of
 
 
+def _with_fomc_events(events: list[dict]) -> list[dict]:
+    """Append upcoming FOMC announcements to the calendar events list."""
+    from .sources import fomc
+    today = date.today()
+    out = list(events)
+    seen = {(e.get("date"), e.get("kind")) for e in out}
+    for m in fomc.scheduled_days():
+        if today < m <= date.fromordinal(today.toordinal() + 120):
+            key = (m.isoformat(), "fomc")
+            if key not in seen:
+                out.append({"date": m.isoformat(), "event": "FOMC announcement",
+                            "kind": "fomc",
+                            "note": ("2pm ET statement + press conference; "
+                                     "CMVJ cycle week 0 starts the day before"),
+                            "days_until": (m - today).days})
+    return sorted(out, key=lambda e: e["date"])
+
+
+def _fomc_artifact(status: list[dict]) -> None:
+    """Era-split even/odd-week evidence + live cycle state -> data/cas/fomc.json."""
+    from .sources import fomc
+    meetings = fomc.scheduled_days()
+    if not meetings:
+        raise ValueError("no fomc_dates.json")
+    px, st = prices.get_history(["SPY"], period="max")
+    spy = px.get("SPY")
+    if spy is None or spy.empty:
+        raise ValueError("no SPY history")
+    stats = fomc.era_stats(spy["close"], meetings)
+    today = date.today()
+    prev_m, next_m = fomc.prev_meeting(today), fomc.next_meeting(today)
+    # live cycle position in calendar->trading-day terms
+    from ..pretom import calendar as tcal
+    cyc_day = (len(tcal.trading_days(prev_m, today)) - 1) if prev_m else None
+    week = fomc.week_of(cyc_day) if cyc_day is not None else None
+    if next_m and tcal.next_trading_day(today) == next_m:
+        cyc_day, week = -1, 0            # CMVJ: day -1 opens the next cycle
+    out = {"as_of": today.isoformat(),
+           "prev_meeting": prev_m.isoformat() if prev_m else None,
+           "next_meeting": next_m.isoformat() if next_m else None,
+           "days_to_next": (len(tcal.trading_days(today, next_m)) - 1
+                            if next_m else None),
+           "cycle_day": cyc_day, "cycle_week": week,
+           "even_week": (week % 2 == 0) if week is not None else None,
+           "n_meetings": len(meetings),
+           "meetings_span": [meetings[0].isoformat(), meetings[-1].isoformat()],
+           **stats}
+    store_cas.save("fomc", out)
+    status.append({"segment": "fomc", "ok": True, "n": len(meetings)})
+
+
 def run(cadence: str = "daily") -> dict:
     status: list[dict] = []
     signals: list[dict] = []
@@ -90,10 +141,21 @@ def run(cadence: str = "daily") -> dict:
 
     # --- rebalance calendar (always) ---
     events = cal.upcoming()
+    try:
+        events = _with_fomc_events(events)
+    except Exception:
+        pass
     store_cas.save("rebalance", events)
     rb = rebalance.compute(events)
     signals += rb
     status.append({"segment": "rebalance", "ok": True, "n": len(rb)})
+
+    # --- FOMC cycle evidence (weekly+; single cached SPY pull) ---
+    if cadence in ("weekly", "monthly"):
+        try:
+            _fomc_artifact(status)
+        except Exception as e:
+            status.append({"segment": "fomc", "ok": False, "error": str(e)[:200]})
 
     # --- flows / positioning (weekly+) ---
     if cadence in ("weekly", "monthly"):

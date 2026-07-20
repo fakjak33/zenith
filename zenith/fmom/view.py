@@ -58,8 +58,11 @@ SORT_MODES = {
 
 MODEL_LABEL = {
     "etf_tsfm": "ETF · TSFM", "etf_csfm": "ETF · CSFM",
+    "etf_tsfm_vs": "ETF · TSFM vol-scaled",
     "man_tsfm": "Man · TSFM", "man_csfm": "Man · CSFM",
+    "man_tsfm_vs": "Man · TSFM vol-scaled",
     "aqr_tsfm": "AQR · TSFM", "aqr_csfm": "AQR · CSFM",
+    "aqr_tsfm_vs": "AQR · TSFM vol-scaled",
 }
 
 COLS = {
@@ -364,13 +367,14 @@ def _backtest_section(bt: dict, key: str = "fmom_bt") -> None:
         return
     series["d"] = pd.to_datetime(series["d"])
     logscale = st.toggle("log scale", value=False, key=f"{key}_log")
-    long = series.melt("d", value_vars=[c for c in ("tsfm", "csfm", "ew")
+    long = series.melt("d", value_vars=[c for c in ("tsfm", "tsfm_vs", "csfm",
+                                                    "ew")
                                         if c in series],
                        var_name="model", value_name="ret").dropna()
     long["growth"] = (long.sort_values("d").groupby("model")["ret"]
                       .transform(lambda r: (1.0 + r).cumprod()))
-    label = {"tsfm": "TSFM (1-1)", "csfm": "CSFM (1-1)",
-             "ew": "EW all factors (untimed)"}
+    label = {"tsfm": "TSFM (1-1)", "tsfm_vs": "TSFM vol-scaled (BSC)",
+             "csfm": "CSFM (1-1)", "ew": "EW all factors (untimed)"}
     long["model"] = long["model"].map(label)
     try:
         import altair as alt
@@ -383,8 +387,8 @@ def _backtest_section(bt: dict, key: str = "fmom_bt") -> None:
                     scale=alt.Scale(type="log" if logscale else "linear")),
             color=alt.Color("model:N", title=None,
                             scale=alt.Scale(domain=list(label.values()),
-                                            range=[THEME.teal, THEME.navy,
-                                                   THEME.muted])),
+                                            range=[THEME.teal, THEME.mustard,
+                                                   THEME.navy, THEME.muted])),
             tooltip=["model", alt.Tooltip("d:T", title="month"),
                      alt.Tooltip("growth:Q", format=".3f", title="$1 grew to"),
                      alt.Tooltip("ret:Q", format="+.2%", title="month")],
@@ -399,8 +403,9 @@ def _backtest_section(bt: dict, key: str = "fmom_bt") -> None:
                                        values="growth"))
 
     stats = bt.get("stats") or {}
-    cols = st.columns(3)
-    for col, key in zip(cols, ("tsfm", "csfm", "ew")):
+    keys = [k for k in ("tsfm", "tsfm_vs", "csfm", "ew") if stats.get(k)]
+    cols = st.columns(len(keys) or 1)
+    for col, key in zip(cols, keys):
         s = stats.get(key) or {}
         with col:
             st.markdown(f"**{label.get(key, key)}**")
@@ -409,8 +414,13 @@ def _backtest_section(bt: dict, key: str = "fmom_bt") -> None:
                 continue
             a, b = st.columns(2)
             a.metric("Sharpe", f"{s['sharpe']:.2f}",
-                     help="Annualized mean / vol of monthly model returns. "
-                          "Paper: 1-1 TSFM ≈ 0.84 on 65 academic factors.")
+                     help=("Annualized mean / vol of monthly model returns. "
+                           "Paper: 1-1 TSFM ≈ 0.84 on 65 academic factors."
+                           if key != "tsfm_vs" else
+                           "TSFM scaled by target/realized 6m vol of its own "
+                           "returns (Barroso & Santa-Clara 2015 — momentum "
+                           "Sharpe 0.53→0.97 in their sample). Compare to "
+                           "the unscaled TSFM column."))
             b.metric("Ann. return", _fmt_pct(s.get("ann_ret")))
             a.metric("Max drawdown", _fmt_pct(s.get("max_dd")).lstrip("+"))
             b.metric("Hit rate", f"{s.get('hit_rate', 0):.0%}",
@@ -751,7 +761,13 @@ def _aqr_drilldown(ts_rows: list[dict], backtest: dict) -> None:
 # ------------------------------------------------------------------ render --
 def render() -> None:
     st.caption(DISCLAIMER)
-    from ..ui_theme import key_findings
+    from ..ui_theme import evidence_rating, key_findings
+    st.markdown(evidence_rating(
+        "A-", "factor momentum",
+        "49 of 65 factors significantly persistent (Gupta & Kelly 2019) and "
+        "our own free-data replication holds a 0.75 Sharpe over 1926-2026 — "
+        "one of the best-replicated effects in the app; monthly signal, "
+        "capacity-light."), unsafe_allow_html=True)
     st.markdown(key_findings([
         {"stat": "Equity factors persist month to month: 59 of 65 academic "
                  "factors had positive return autocorrelation, 49 of them "
@@ -766,6 +782,11 @@ def render() -> None:
                  "while stock momentum lost 31%) and is a rare diversifier "
                  "(~0.05 correlation to index trend-following).",
          "cite": "Gupta & Kelly (2019) · Man AHL (2026)"},
+        {"stat": "Scaling momentum by its own trailing volatility roughly "
+                 "doubles its Sharpe (0.53 → 0.97) by cutting exposure into "
+                 "crash episodes — shown here as the vol-scaled lens beside "
+                 "the original.",
+         "cite": "Barroso & Santa-Clara (2015) · Daniel & Moskowitz (2016)"},
     ]), unsafe_allow_html=True)
     signals = load("signals", {})
     if not signals or not signals.get("models"):
@@ -846,6 +867,29 @@ def render() -> None:
         st.caption("⚠ one-sided month: every signal shares the same sign in at "
                    "least one lens, so that model runs long-only (or short-only) "
                    "this month.")
+
+    # --- vol-scaled exposure dial (Barroso & Santa-Clara 2015) ----------------
+    vs = models.get(f"{fam}_tsfm_vs") or {}
+    if vs.get("vs_multiplier") is not None:
+        mult = vs["vs_multiplier"]
+        color = THEME.teal if mult >= 1.0 else THEME.coral
+        state = ("model vol below its long-run target — the vol-scaled lens "
+                 "runs levered" if mult >= 1.0 else
+                 "model vol elevated vs its long-run target — the vol-scaled "
+                 "lens throttles exposure (this is how BSC sidestep momentum "
+                 "crashes)")
+        st.markdown(
+            f'<div style="display:inline-block; font-family:{THEME.font_display}; '
+            f'font-size:0.95rem; letter-spacing:0.1em; text-transform:uppercase; '
+            f'color:{color}; border:1px solid {color}; padding:0.2rem 0.7rem; '
+            f'margin:0.2rem 0 0.5rem 0;">◈ vol-scaled exposure ×{mult:.2f}'
+            f'</div>', unsafe_allow_html=True)
+        st.caption(f"{state}. Same signals and relative weights as TSFM — the "
+                   "Barroso & Santa-Clara (2015) overlay only dials overall "
+                   "exposure (target vol / trailing 6-month realized vol, "
+                   "capped ×0.5–×2.0; their momentum Sharpe went 0.53 → 0.97). "
+                   "Both the raw and vol-scaled models are tracked separately "
+                   "in the backtest and monthly tracker below.")
 
     # --- signal bars ----------------------------------------------------------
     show_all = False
