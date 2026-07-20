@@ -382,12 +382,87 @@ def screen_pead() -> None:
           f"eap_rows={len(erows)}")
 
 
+def screen_edge() -> None:
+    print("[edge]")
+    from zenith.edge import load as edge_load, SCREENS
+
+    status = edge_load("status", {})
+    if not status:
+        warn(True, "edge not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("date", "")) <= 5, f"edge status fresh ({status.get('date')})")
+    for screen in SCREENS:
+        res = edge_load(screen, {})
+        if not res.get("ranked"):
+            warn(True, f"edge {screen}: no ranked data yet")
+            continue
+        rows = res["ranked"]
+        tks = [r["ticker"] for r in rows]
+        check(len(tks) == len(set(tks)), f"edge {screen}: no duplicate tickers")
+        ranks = [r["rank"] for r in rows]
+        check(ranks == list(range(1, len(rows) + 1)), f"edge {screen}: ranks contiguous")
+        check(all(0 <= (r.get("pctile") or 0) <= 100 for r in rows),
+              f"edge {screen}: pctiles within [0,100]")
+        # long/short sides are disjoint and drawn from the ranked set
+        lt = {r["ticker"] for r in res.get("long", [])}
+        sh = {r["ticker"] for r in res.get("short", [])}
+        check(not (lt & sh), f"edge {screen}: long/short disjoint")
+    iv = edge_load("ivspread", {})
+    if iv.get("ranked"):
+        check(all(abs(r.get("iv_spread", 0)) <= 1.0 for r in iv["ranked"]),
+              "edge ivspread: spreads within +/-100 vol pts")
+    si = edge_load("shortint", {})
+    if si.get("ranked"):
+        check(all(0 <= (r.get("si_float") or 0) <= 100 for r in si["ranked"]),
+              "edge shortint: si%float within [0,100]")
+    lot = edge_load("lottery", {})
+    if lot.get("ranked"):
+        # MAX-beta can exceed raw MAX when the market moved AGAINST a stock's
+        # jump (residual > raw), so only sanity-bound the daily magnitudes.
+        check(all(0 <= (r.get("max_beta") or 0) < 0.6 for r in lot["ranked"]),
+              "edge lottery: MAX-beta daily magnitude sane (<60%/day)")
+    hrows = edge_load("history", {}).get("rows", [])
+    exs = [r["excess"] for r in hrows if r.get("evaluated") and r.get("excess") is not None]
+    check(all(-5.0 <= v <= 5.0 for v in exs), "edge history: evaluated excess sane")
+    print(f"       screens={sum(1 for s in SCREENS if edge_load(s, {}).get('ranked'))} "
+          f"history={len(hrows)}")
+
+
+def screen_nightday() -> None:
+    print("[nightday]")
+    from zenith.nightday import load as nd_load
+
+    status = nd_load("status", {})
+    if not status:
+        warn(True, "nightday not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("date", "")) <= 5, f"nightday status fresh ({status.get('date')})")
+    panel = nd_load("panel", {}).get("etfs", {})
+    check(bool(panel), "nightday ETF panel present")
+    for t, d in panel.items():
+        st = d.get("stats", {})
+        if st:
+            check(abs(st.get("overnight_avg_bp", 0)) < 500
+                  and abs(st.get("intraday_avg_bp", 0)) < 500,
+                  f"nightday {t}: avg daily legs sane")
+    screen = nd_load("screen", {})
+    if screen.get("ranked"):
+        tks = [r["ticker"] for r in screen["ranked"]]
+        check(len(tks) == len(set(tks)), "nightday screen: no duplicate tickers")
+    hrows = nd_load("history", {}).get("rows", [])
+    exs = [r["excess"] for r in hrows if r.get("evaluated") and r.get("excess") is not None]
+    check(all(-5.0 <= v <= 5.0 for v in exs), "nightday history: evaluated excess sane")
+    print(f"       panel={len(panel)} screen={screen.get('n', 0)} history={len(hrows)}")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
     screen_pretom()
     screen_fmom()
     screen_pead()
+    screen_edge()
+    screen_nightday()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")

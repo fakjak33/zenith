@@ -80,9 +80,29 @@ FMOM_FILES = {
     "status": FMOM_DIR / "status.json",            # run health + per-source as-of dates
 }
 
+# --- EDGE (cross-sectional screeners: IV spread / revisions / SI / lottery) -
+EDGE_DIR = DATA_DIR / "edge"
+EDGE_FILES = {
+    "ivspread": EDGE_DIR / "ivspread.json",        # Cremers-Weinbaum IV spread ranks
+    "revisions": EDGE_DIR / "revisions.json",      # analyst estimate-revision ranks
+    "shortint": EDGE_DIR / "shortint.json",        # short interest / days-to-cover
+    "lottery": EDGE_DIR / "lottery.json",          # MAX / MAX-beta lottery short screen
+    "history": EDGE_DIR / "history.json",          # append-only decile snapshots + eval
+    "status": EDGE_DIR / "status.json",            # run health per screen
+}
+
+# --- NIGHT & DAY (overnight vs intraday return decomposition) ----------------
+NIGHTDAY_DIR = DATA_DIR / "nightday"
+NIGHTDAY_FILES = {
+    "panel": NIGHTDAY_DIR / "panel.json",          # ETF overnight/intraday cumulative series
+    "screen": NIGHTDAY_DIR / "screen.json",        # R1000 ranked overnight/intraday/tug-of-war
+    "history": NIGHTDAY_DIR / "history.json",       # decile snapshots + horizon eval
+    "status": NIGHTDAY_DIR / "status.json",
+}
+
 for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR,
            PRETOM_DIR, PRETOM_ARCHIVE_DIR, PEAD_DIR, PEAD_ARCHIVE_DIR,
-           FMOM_DIR, FMOM_ARCHIVE_DIR):
+           FMOM_DIR, FMOM_ARCHIVE_DIR, EDGE_DIR, NIGHTDAY_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping

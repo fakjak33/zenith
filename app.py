@@ -39,9 +39,16 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "ways: tradable factor ETFs, Man-style 13-style composites, and the academic 65-factor "
         "set — each with time-series (TSFM) and cross-sectional (CSFM) 1-1 models, tracked "
         "monthly.\n"
-        "6. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "6. **EDGE SCREENS** — four *rated* cross-sectional screens (option IV spread, analyst "
+        "revisions, short interest / days-to-cover, lottery MAXβ), each with an honest "
+        "evidence tier and long/short ranked ideas.\n"
+        "7. **NIGHT & DAY** — *overnight vs intraday* return decomposition: where the return is "
+        "really made, plus an overnight-momentum screen (Lou-Polk-Skouras).\n"
+        "8. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
-        "Every number is **decision-support, not investment advice**. Hover any **?** for a definition.")
+        "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
+        "signals from the weak ones. Every number is **decision-support, not investment advice**. "
+        "Hover any **?** for a definition.")
 
 
 def render_items(items, empty="Nothing here yet."):
@@ -98,19 +105,19 @@ def insights_research_news(items, key_prefix):
             render_items(news)
 
 
-tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_archive, tab_sources = st.tabs(
-    ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM", "ARCHIVE", "SOURCES"])
+(tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
+ tab_nightday, tab_archive, tab_sources) = st.tabs(
+    ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
+     "EDGE SCREENS", "NIGHT & DAY", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
     from zenith.pretom.view import today_badge
     from zenith.pead.view import today_badge as pead_today_badge
-    _badge = today_badge()
-    if _badge:
-        st.markdown(_badge, unsafe_allow_html=True)
-    _pead_badge = pead_today_badge()
-    if _pead_badge:
-        st.markdown(_pead_badge, unsafe_allow_html=True)
+    from zenith.edge.view import today_badge as edge_today_badge
+    for _b in (today_badge(), pead_today_badge(), edge_today_badge()):
+        if _b:
+            st.markdown(_b, unsafe_allow_html=True)
     latest = store.load_latest()
     dates = store.archive_dates()
     st.markdown(stamp(dates[0] if dates else "—", "Today"), unsafe_allow_html=True)
@@ -146,6 +153,18 @@ with tab_fmom:
                 unsafe_allow_html=True)
     from zenith.fmom import view as fmom_view
     fmom_view.render()
+
+with tab_edge:
+    st.markdown(section("EDGE SCREENS — rated cross-sectional signals", 3),
+                unsafe_allow_html=True)
+    from zenith.edge import view as edge_view
+    edge_view.render()
+
+with tab_nightday:
+    st.markdown(section("NIGHT & DAY — overnight vs intraday", 1),
+                unsafe_allow_html=True)
+    from zenith.nightday import view as nightday_view
+    nightday_view.render()
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)
