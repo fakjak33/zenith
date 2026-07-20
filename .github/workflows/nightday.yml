@@ -1,0 +1,45 @@
+name: NIGHT & DAY compute
+
+on:
+  schedule:
+    - cron: "30 1 * * 2-6"       # ~01:30 UTC Tue-Sat, after EDGE; prices only
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nightday
+  cancel-in-progress: false
+
+jobs:
+  nightday:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run NIGHT & DAY compute
+        run: python -m zenith.nightday.compute --action ${{ github.event.inputs.action || 'auto' }}
+
+      - name: Commit NIGHT & DAY data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/nightday/
+          if git diff --cached --quiet; then
+            echo "No NIGHT & DAY changes."
+          else
+            git commit -m "nightday: $(date -u +%Y-%m-%d)"
+            git push
+          fi

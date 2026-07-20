@@ -1,0 +1,49 @@
+name: EDGE screens compute
+
+on:
+  schedule:
+    - cron: "0 1 * * 2-6"        # ~01:00 UTC Tue-Sat (after US close, staggered
+                                 # past PEAD); self-gates on the trading calendar
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: edge
+  cancel-in-progress: false
+
+jobs:
+  edge:
+    runs-on: ubuntu-latest
+    # option-chain + .info pulls are network-heavy but cached (7d short interest,
+    # 3d revisions, 1d IV) with 200-ticker checkpoints, so steady-state is light;
+    # a cold first run may not finish 300 chains in one go and resumes next run
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run EDGE compute
+        run: python -m zenith.edge.compute --action ${{ github.event.inputs.action || 'auto' }}
+
+      - name: Commit EDGE data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/edge/
+          if git diff --cached --quiet; then
+            echo "No EDGE changes."
+          else
+            git commit -m "edge: $(date -u +%Y-%m-%d)"
+            git push
+          fi

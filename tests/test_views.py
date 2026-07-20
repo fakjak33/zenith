@@ -41,3 +41,39 @@ def test_pead_view_renders():
     assert "Frazzini" in text
     if config.PEAD_FILES["eap"].exists():
         assert "Skew check" in text                 # right-skew caveat shown
+
+
+def test_edge_view_renders():
+    # the EDGE tab renders even with no data (shows rating + 'no data' info)
+    at, text = _render("from zenith.edge import view\nview.render()\n")
+    assert "EDGE SCREENS" in text
+    assert "evidence strength" in text.lower()      # rating badge present
+
+
+def test_nightday_view_renders():
+    at, text = _render("from zenith.nightday import view\nview.render()\n")
+    assert "evidence strength" in text.lower()
+    assert "overnight" in text.lower()
+
+
+def test_fmom_view_has_vol_scaled_lens():
+    if not config.FMOM_FILES["signals"].exists():
+        pytest.skip("no committed fmom data")
+    at, text = _render("from zenith.fmom import view\nview.render()\n")
+    assert "evidence strength" in text.lower()
+
+
+def test_cas_calendar_has_fomc():
+    if not (config.CAS_DIR / "fomc.json").exists():
+        pytest.skip("no committed fomc data")
+    at = AppTest.from_string("from zenith.cas import view\nview.render()\n",
+                             default_timeout=120)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    for r in at.radio:
+        if "Calendar" in [str(o) for o in r.options]:
+            r.set_value("Calendar")
+            break
+    at.run()
+    text = " ".join(str(m.value) for m in at.markdown)
+    assert "FOMC" in text and "Verdict from our SPY" in text
