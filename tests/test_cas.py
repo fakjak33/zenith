@@ -275,3 +275,70 @@ def test_ts_strategy_and_sharpe_run():
     strat = fm.ts_strategy(s)
     assert len(strat) > 0
     assert isinstance(fm.sharpe(strat), float)
+
+
+# --- FOMC cycle time (Cieslak-Morse-Vissing-Jorgensen) -----------------------
+
+def test_fomc_week_of_cmvj_geometry():
+    from zenith.cas.sources import fomc
+    # week 0 = days -1..3, week 1 = 4..8, week 2 = 9..13, week 4 = 19..23
+    assert fomc.week_of(0) == 0
+    assert fomc.week_of(3) == 0
+    assert fomc.week_of(4) == 1
+    assert fomc.week_of(9) == 2
+    assert fomc.week_of(13) == 2
+    assert fomc.week_of(19) == 4
+    assert fomc.week_of(None) is None
+
+
+def test_fomc_committed_dates_sane():
+    from zenith.cas.sources import fomc
+    days = fomc.scheduled_days()
+    assert len(days) >= 250
+    assert days[0].isoformat() == "1994-02-04"
+    assert days[-1].year >= 2027
+    import collections
+    per_year = collections.Counter(d.year for d in days)
+    # every year has exactly 8 scheduled meetings except 2020 (March cancelled)
+    for y in range(1995, 2027):
+        assert per_year[y] == (7 if y == 2020 else 8), (y, per_year[y])
+
+
+def test_fomc_cycle_positions_and_even_mask():
+    import pandas as pd
+    from datetime import date
+    from zenith.cas.sources import fomc
+    idx = pd.bdate_range("2026-06-01", "2026-07-28")
+    meetings = [date(2026, 6, 17)]
+    pos = fomc.cycle_positions(idx, meetings)
+    assert pos[pd.Timestamp("2026-06-17")] == 0
+    assert pos[pd.Timestamp("2026-06-18")] == 1
+    assert pd.isna(pos[pd.Timestamp("2026-06-01")])
+    even, _ = fomc.even_week_mask(idx, meetings)
+    assert bool(even[pd.Timestamp("2026-06-17")])        # day 0 -> week 0
+    assert bool(even[pd.Timestamp("2026-06-16")])        # day -1 -> week 0
+    assert not bool(even[pd.Timestamp("2026-06-24")])    # day 5 -> week 1
+    assert bool(even[pd.Timestamp("2026-07-01")])        # day 10 -> week 2
+
+
+def test_fomc_era_stats_detects_planted_gap():
+    import numpy as np
+    import pandas as pd
+    from datetime import date
+    from zenith.cas.sources import fomc
+    idx = pd.bdate_range("2015-01-02", "2016-12-30")
+    meetings = [date(2015, 1, 28), date(2015, 3, 18), date(2015, 4, 29),
+                date(2015, 6, 17), date(2015, 7, 29), date(2015, 9, 17),
+                date(2015, 10, 28), date(2015, 12, 16),
+                date(2016, 1, 27), date(2016, 3, 16), date(2016, 4, 27),
+                date(2016, 6, 15), date(2016, 7, 27), date(2016, 9, 21),
+                date(2016, 11, 2), date(2016, 12, 14)]
+    even, _ = fomc.even_week_mask(idx, meetings)
+    ret = pd.Series(0.0, index=idx)
+    ret[even.values] = 0.002                     # +20bp on even-week days only
+    close = (1.0 + ret).cumprod() * 100.0
+    stats = fomc.era_stats(close, meetings)
+    rec = stats["eras"]["1994-2016 (CMVJ sample)"]
+    assert rec["even"]["avg_bp"] > 15.0
+    assert abs(rec["odd"]["avg_bp"]) < 5.0
+    assert rec["even_minus_odd_bp"] > 12.0

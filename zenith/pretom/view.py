@@ -15,7 +15,7 @@ import streamlit as st
 from . import DISCLAIMER, load, load_month, archive_months
 from . import calendar as cal
 from ..config import THEME
-from ..ui_theme import key_findings, section, stamp
+from ..ui_theme import evidence_rating, key_findings, section, stamp
 
 _STATE_META = {
     "FORMING":     (THEME.mustard, "FORMING"),
@@ -429,6 +429,12 @@ def _tom_evidence() -> None:
                              "return in [τ, τ+3]. Rebuilt nightly from SPY "
                              "(1993-). An exhibit, not a signal — see the "
                              "verdict line."), unsafe_allow_html=True)
+    st.markdown(evidence_rating(
+        "C", "turn-of-the-month long window",
+        "Powerful through 2009 (Xu & McConnell 2008: all excess return in "
+        "these 4 days, 1897-2005) but statistically dead in our SPY sample "
+        "since 2010 — kept as an evidence monitor, not a signal."),
+        unsafe_allow_html=True)
 
     o, s10, t24 = summ["overall"], summ.get("since_2010"), summ.get("trailing_24m")
     verdict = ("**Verdict from our data: the edge has faded.** "
@@ -486,6 +492,13 @@ def _tom_evidence() -> None:
 # ------------------------------------------------------------------ render --
 def render() -> None:
     st.caption(DISCLAIMER)
+    st.markdown(evidence_rating(
+        "B", "intramonth momentum short screen",
+        "Fresh top-tier research (Nathan, Suominen & Tasa 2026) with a clear "
+        "flow mechanism, but published-recently means little post-publication "
+        "out-of-sample history — our own 24-month tracker is the live test. "
+        "The TOM long window below is rated separately (C, faded)."),
+        unsafe_allow_html=True)
     st.markdown(key_findings([
         {"stat": "$1 in the winners-minus-losers trade ONLY during [τ−9, τ−4] "
                  "grew to $18.78 over 1980–2025 — vs $2.37 the whole rest of "

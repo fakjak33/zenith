@@ -118,12 +118,27 @@ def _model_block(panel: pd.DataFrame, family: str, lens: str,
             "degenerate": n_long == 0 or n_short == 0}
 
 
-def _backtest_block(panel: pd.DataFrame, meta: dict) -> dict | None:
+def _vs_block(tsfm_block: dict, mult: float) -> dict:
+    """The vol-scaled lens: SAME signals and relative weights as TSFM, with
+    every weight multiplied by the Barroso & Santa-Clara exposure multiplier
+    (scale the strategy, not the ranks). Legs sum to +/-mult, not +/-1."""
+    rows = []
+    for r in tsfm_block["rows"]:
+        rr = dict(r)
+        rr["weight"] = round(float(r["weight"]) * mult, 4)
+        rows.append(rr)
+    return {**tsfm_block, "lens": "tsfm_vs", "rows": rows,
+            "vs_multiplier": round(mult, 3),
+            "vs_state": ("full-to-levered" if mult >= 1.0 else "throttled")}
+
+
+def _backtest_block(panel: pd.DataFrame, meta: dict,
+                    bt: dict | None = None) -> dict | None:
     """Backtest + per-factor persistence stats for one family panel."""
     if panel is None or panel.empty:
         return None
     from ..cas.backtest.factor_momentum import ar1
-    bt = core.backtest(panel)
+    bt = bt if bt is not None else core.backtest(panel)
     series = [{"d": ts.strftime("%Y-%m"),
                **{c: (round(float(v), 5) if pd.notna(v) else None)
                   for c, v in row.items()}}
@@ -162,7 +177,14 @@ def _rebuild_outputs(panels: dict[str, tuple[pd.DataFrame, dict]],
                 if meta.get("annual"):
                     block["annual"] = True
                 models[f"{family}_{lens}"] = block
-        bt = _backtest_block(panel, meta)
+        btraw = core.backtest(panel) if panel is not None and not panel.empty else None
+        # vol-scaled lens: BSC multiplier from the model's own return history
+        tsfm_block = models.get(f"{family}_tsfm")
+        if tsfm_block and btraw is not None and "tsfm" in btraw["series"]:
+            mult = core.vol_scale_next(btraw["series"]["tsfm"])
+            if mult is not None:
+                models[f"{family}_tsfm_vs"] = _vs_block(tsfm_block, mult)
+        bt = _backtest_block(panel, meta, btraw)
         if bt:
             backtests[family] = bt
     sources = _sources_stamp(panels)
@@ -244,6 +266,8 @@ def run_backfill() -> dict:
     for family, (panel, _meta) in panels.items():
         if panel is None or panel.empty or family in UNTRACKED_FAMILIES:
             continue
+        bt_series = core.backtest(panel)["series"]
+        tsfm_ret = bt_series["tsfm"] if "tsfm" in bt_series else None
         for lens in ("tsfm", "csfm"):
             sig_all = (core.tsfm_signals(panel) if lens == "tsfm"
                        else core.csfm_signals(panel))
@@ -254,6 +278,12 @@ def run_backfill() -> dict:
                 w = core.leg_weights(s)
                 new_rows.append(history.make_row(
                     t.strftime("%Y-%m"), f"{family}_{lens}", w, backfilled=True))
+                if lens == "tsfm" and tsfm_ret is not None:
+                    mult = core.vol_scale_next(tsfm_ret.loc[:t])
+                    if mult is not None:
+                        new_rows.append(history.make_row(
+                            t.strftime("%Y-%m"), f"{family}_tsfm_vs", w * mult,
+                            backfilled=True))
     added = history.append_rows(new_rows)
     filled = history.evaluate_pending({f: p for f, (p, _m) in panels.items()})
     status.append({"segment": "backfill", "ok": True, "n": added})

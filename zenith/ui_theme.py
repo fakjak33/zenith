@@ -315,6 +315,34 @@ def key_findings(items: list[dict]) -> str:
             + "".join(cards) + '</div></div>')
 
 
+_TIER_COLORS = {"A": "#2ec4b6", "B": "#ffc857", "C": "#ff5a3c"}
+
+
+def evidence_rating(tier: str, label: str, note: str) -> str:
+    """Evidence-strength badge for a feature or screen segment.
+
+    tier: 'A'/'A-'/'B+'/'B'/'B-'/'C+'/'C' — A = strong live edge (replicated
+    recently, significant), B = documented but attenuated/short own-sample,
+    C = faded or exhibit-only. The note is the one-line justification with
+    the anchor citation; full references live in the methodology expander.
+    """
+    color = _TIER_COLORS.get(tier[:1].upper(), THEME.muted)
+    safe_note = html.escape(str(note))
+    safe_label = html.escape(str(label))
+    return (
+        f'<div style="display:flex; align-items:center; gap:0.6rem; '
+        f'margin:0.2rem 0 0.6rem 0;">'
+        f'<div style="font-family:{THEME.font_display}; font-size:1.5rem; '
+        f'line-height:1; color:{color}; border:2px solid {color}; '
+        f'border-radius:4px; padding:0.25rem 0.55rem; min-width:2.4rem; '
+        f'text-align:center;">{html.escape(tier)}</div>'
+        f'<div><div style="font-family:{THEME.font_display}; font-size:0.78rem; '
+        f'letter-spacing:0.12em; color:{color}; text-transform:uppercase;">'
+        f'evidence strength — {safe_label}</div>'
+        f'<div style="font-size:0.82rem; color:#ccc; line-height:1.35;">'
+        f'{safe_note}</div></div></div>')
+
+
 def section(label: str, idx: int = 0, help: str | None = None) -> str:
     cols = THEME.section_colors
     c1, c2 = cols[idx % len(cols)], cols[(idx + 1) % len(cols)]

@@ -18,7 +18,7 @@ from . import history as ph
 from .signals import WEIGHTS, CONVICTION, POOL_MIN
 from ..pretom import calendar as cal
 from ..config import THEME
-from ..ui_theme import key_findings, section, stamp
+from ..ui_theme import evidence_rating, key_findings, section, stamp
 
 HORIZON_LABEL = {"h5": "+5 td", "h20": "+20 td", "h60": "+60 td",
                  "next_earn": "to next earnings"}
@@ -514,6 +514,12 @@ def _eap_section() -> None:
                              "Unconditional: every liquid R1000 reporter is "
                              "tracked long through two windows."),
                 unsafe_allow_html=True)
+    st.markdown(evidence_rating(
+        "A-", "earnings-announcement premium",
+        "Replicates at published magnitude in our OWN 2024-26 sample: "
+        "+0.38%/announcement through the event, t≈3.5 (vs Savor & Wilson's "
+        "0.39%/week) — a live, statistically significant premium; right-"
+        "skewed, collected through breadth."), unsafe_allow_html=True)
 
     thr = (summ.get("through") or {}).get("overall") or {}
     pre = (summ.get("pre") or {}).get("overall") or {}
@@ -586,6 +592,12 @@ def _eap_section() -> None:
 # ------------------------------------------------------------------ render --
 def render() -> None:
     st.caption(DISCLAIMER)
+    st.markdown(evidence_rating(
+        "B+", "post-earnings drift screener",
+        "Six decades of evidence and the strongest surviving form "
+        "(SUE+EAR two-confirmation, Brandt et al. 2008) — but large-cap "
+        "drift has attenuated since ~2006 (Martineau 2021). The EAP section "
+        "below rates A- on our own live sample."), unsafe_allow_html=True)
     st.markdown(key_findings([
         {"stat": "After an earnings surprise, prices keep drifting the same "
                  "way for ~60 trading days. Fama: the 'granddaddy of "

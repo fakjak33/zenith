@@ -35,6 +35,7 @@ CAS_FILES = {
     "hitrate": CAS_DIR / "hitrate.json",
     "price_panel": CAS_DIR / "price_panel.json",   # committed: powers app price overlays
     "rotation": CAS_DIR / "rotation.json",         # factor rotation by look-back window
+    "fomc": CAS_DIR / "fomc.json",                 # FOMC cycle evidence + countdown
 }
 
 # --- Weekly Brief (market commentary) -------------------------------------
