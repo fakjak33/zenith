@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-07-20",
+  "as_of": "2026-07-21",
   "disclaimer": "NIGHT & DAY decomposes yfinance OHLC into overnight (close->open) and intraday (open->close) streams (Lou-Polk-Skouras 2019). The overnight tilt is real and persistent in the data but NOT cheaply tradable — capturing it literally pays the open/close spread daily. A research monitor and tilt input, not a trading system.",
   "n": 1017,
   "long": [
@@ -43,16 +43,16 @@
       "ticker": "EXC",
       "name": "Exelon Corp.",
       "sector": "Utilities",
-      "cum_overnight": 0.399,
-      "cum_intraday": -0.0243,
+      "cum_overnight": 0.4017,
+      "cum_intraday": -0.0262,
       "cum_total": 0.365,
-      "share_overnight": 0.9425,
-      "overnight_avg_bp": 6.89,
-      "intraday_avg_bp": 0.16,
-      "overnight_t": 2.72,
-      "intraday_t": 0.03,
-      "on_mom": 3.1705,
-      "tug": 0.4233,
+      "share_overnight": 0.9388,
+      "overnight_avg_bp": 6.93,
+      "intraday_avg_bp": 0.12,
+      "overnight_t": 2.73,
+      "intraday_t": 0.02,
+      "on_mom": 3.2387,
+      "tug": 0.4279,
       "n_days": 499,
       "rank": 3,
       "side": "long"
@@ -148,24 +148,6 @@
       "side": "long"
     },
     {
-      "ticker": "LNT",
-      "name": "Alliant Energy Corp.",
-      "sector": "Utilities",
-      "cum_overnight": 0.4592,
-      "cum_intraday": -0.0171,
-      "cum_total": 0.4342,
-      "share_overnight": 0.9641,
-      "overnight_avg_bp": 7.69,
-      "intraday_avg_bp": 0.22,
-      "overnight_t": 3.63,
-      "intraday_t": 0.05,
-      "on_mom": 3.045,
-      "tug": 0.4762,
-      "n_days": 499,
-      "rank": 9,
-      "side": "long"
-    },
-    {
       "ticker": "LHX",
       "name": "L3Harris Technologies Inc.",
       "sector": "Industrials",
@@ -180,25 +162,25 @@
       "on_mom": 3.0298,
       "tug": 1.2664,
       "n_days": 499,
-      "rank": 10,
+      "rank": 9,
       "side": "long"
     },
     {
       "ticker": "XEL",
       "name": "Xcel Energy Inc.",
       "sector": "Utilities",
-      "cum_overnight": 0.5705,
-      "cum_intraday": -0.0421,
+      "cum_overnight": 0.5721,
+      "cum_intraday": -0.043,
       "cum_total": 0.5044,
-      "share_overnight": 0.9313,
-      "overnight_avg_bp": 9.2,
-      "intraday_avg_bp": -0.14,
-      "overnight_t": 3.78,
+      "share_overnight": 0.9301,
+      "overnight_avg_bp": 9.22,
+      "intraday_avg_bp": -0.16,
+      "overnight_t": 3.79,
       "intraday_t": -0.03,
-      "on_mom": 2.9957,
-      "tug": 0.6125,
+      "on_mom": 3.0297,
+      "tug": 0.6151,
       "n_days": 499,
-      "rank": 11,
+      "rank": 10,
       "side": "long"
     },
     {
@@ -215,6 +197,24 @@
       "intraday_t": 0.71,
       "on_mom": 2.9735,
       "tug": -0.0464,
+      "n_days": 499,
+      "rank": 11,
+      "side": "long"
+    },
+    {
+      "ticker": "LNT",
+      "name": "Alliant Energy Corp.",
+      "sector": "Utilities",
+      "cum_overnight": 0.4564,
+      "cum_intraday": -0.0152,
+      "cum_total": 0.4342,
+      "share_overnight": 0.9677,
+      "overnight_avg_bp": 7.65,
+      "intraday_avg_bp": 0.26,
+      "overnight_t": 3.61,
+      "intraday_t": 0.05,
+      "on_mom": 2.9677,
+      "tug": 0.4717,
       "n_days": 499,
       "rank": 12,
       "side": "long"
@@ -321,7 +321,7 @@
       "intraday_avg_bp": -16.32,
       "overnight_t": 1.45,
       "intraday_t": -1.8,
-      "on_mom": 2.8794,
+      "on_mom": 2.8793,
       "tug": 0.9856,
       "n_days": 499,
       "rank": 18,
@@ -382,24 +382,6 @@
       "side": "long"
     },
     {
-      "ticker": "CPB",
-      "name": "Campbell's Co.",
-      "sector": "Consumer Staples",
-      "cum_overnight": -0.006,
-      "cum_intraday": -0.4682,
-      "cum_total": -0.4713,
-      "share_overnight": -0.0126,
-      "overnight_avg_bp": 0.13,
-      "intraday_avg_bp": -11.3,
-      "overnight_t": 0.04,
-      "intraday_t": -1.54,
-      "on_mom": 2.7649,
-      "tug": 0.4622,
-      "n_days": 499,
-      "rank": 22,
-      "side": "long"
-    },
-    {
       "ticker": "WPC",
       "name": "WP Carey Inc.",
       "sector": "Real Estate",
@@ -414,7 +396,7 @@
       "on_mom": 2.7551,
       "tug": 0.2553,
       "n_days": 499,
-      "rank": 23,
+      "rank": 22,
       "side": "long"
     },
     {
@@ -431,6 +413,24 @@
       "intraday_t": -1.19,
       "on_mom": 2.7371,
       "tug": 0.9657,
+      "n_days": 499,
+      "rank": 23,
+      "side": "long"
+    },
+    {
+      "ticker": "CPB",
+      "name": "Campbell's Co.",
+      "sector": "Consumer Staples",
+      "cum_overnight": -0.0091,
+      "cum_intraday": -0.4665,
+      "cum_total": -0.4713,
+      "share_overnight": -0.0191,
+      "overnight_avg_bp": 0.07,
+      "intraday_avg_bp": -11.24,
+      "overnight_t": 0.02,
+      "intraday_t": -1.53,
+      "on_mom": 2.6836,
+      "tug": 0.4574,
       "n_days": 499,
       "rank": 24,
       "side": "long"
@@ -454,6 +454,24 @@
       "side": "long"
     },
     {
+      "ticker": "PNC",
+      "name": "PNC Financial Services Group Inc.",
+      "sector": "Financials",
+      "cum_overnight": 0.3834,
+      "cum_intraday": 0.0924,
+      "cum_total": 0.5113,
+      "share_overnight": 0.8058,
+      "overnight_avg_bp": 6.95,
+      "intraday_avg_bp": 2.65,
+      "overnight_t": 1.65,
+      "intraday_t": 0.45,
+      "on_mom": 2.597,
+      "tug": 0.291,
+      "n_days": 499,
+      "rank": 26,
+      "side": "long"
+    },
+    {
       "ticker": "STWD",
       "name": "Starwood Property Trust Inc.",
       "sector": "Financials",
@@ -468,7 +486,7 @@
       "on_mom": 2.5753,
       "tug": 0.5521,
       "n_days": 499,
-      "rank": 26,
+      "rank": 27,
       "side": "long"
     },
     {
@@ -486,25 +504,25 @@
       "on_mom": 2.5716,
       "tug": 0.5084,
       "n_days": 499,
-      "rank": 27,
+      "rank": 28,
       "side": "long"
     },
     {
       "ticker": "GLPI",
       "name": "Gaming and Leisure Properties Inc.",
       "sector": "Real Estate",
-      "cum_overnight": 0.1685,
-      "cum_intraday": -0.1014,
+      "cum_overnight": 0.1682,
+      "cum_intraday": -0.1012,
       "cum_total": 0.05,
-      "share_overnight": 0.6243,
+      "share_overnight": 0.6244,
       "overnight_avg_bp": 3.25,
-      "intraday_avg_bp": -1.59,
+      "intraday_avg_bp": -1.58,
       "overnight_t": 1.43,
-      "intraday_t": -0.34,
-      "on_mom": 2.5493,
-      "tug": 0.2699,
+      "intraday_t": -0.33,
+      "on_mom": 2.5377,
+      "tug": 0.2694,
       "n_days": 499,
-      "rank": 28,
+      "rank": 29,
       "side": "long"
     },
     {
@@ -522,7 +540,7 @@
       "on_mom": 2.5279,
       "tug": 0.3681,
       "n_days": 499,
-      "rank": 29,
+      "rank": 30,
       "side": "long"
     },
     {
@@ -539,24 +557,6 @@
       "intraday_t": 1.48,
       "on_mom": 2.526,
       "tug": -0.2403,
-      "n_days": 499,
-      "rank": 30,
-      "side": "long"
-    },
-    {
-      "ticker": "ALNY",
-      "name": "Alnylam Pharmaceuticals Inc.",
-      "sector": "Health Care",
-      "cum_overnight": -0.1358,
-      "cum_intraday": 0.3393,
-      "cum_total": 0.1574,
-      "share_overnight": -0.2859,
-      "overnight_avg_bp": -2.03,
-      "intraday_avg_bp": 8.81,
-      "overnight_t": -0.33,
-      "intraday_t": 0.81,
-      "on_mom": 2.5115,
-      "tug": -0.4751,
       "n_days": 499,
       "rank": 31,
       "side": "long"
@@ -634,6 +634,24 @@
       "side": "long"
     },
     {
+      "ticker": "ALNY",
+      "name": "Alnylam Pharmaceuticals Inc.",
+      "sector": "Health Care",
+      "cum_overnight": -0.1413,
+      "cum_intraday": 0.3478,
+      "cum_total": 0.1574,
+      "share_overnight": -0.2889,
+      "overnight_avg_bp": -2.15,
+      "intraday_avg_bp": 8.94,
+      "overnight_t": -0.35,
+      "intraday_t": 0.82,
+      "on_mom": 2.4509,
+      "tug": -0.4891,
+      "n_days": 499,
+      "rank": 36,
+      "side": "long"
+    },
+    {
       "ticker": "BAC",
       "name": "Bank of America Corp.",
       "sector": "Financials",
@@ -648,7 +666,7 @@
       "on_mom": 2.4314,
       "tug": 0.2396,
       "n_days": 499,
-      "rank": 36,
+      "rank": 37,
       "side": "long"
     },
     {
@@ -666,7 +684,7 @@
       "on_mom": 2.4298,
       "tug": 0.3386,
       "n_days": 499,
-      "rank": 37,
+      "rank": 38,
       "side": "long"
     },
     {
@@ -684,7 +702,7 @@
       "on_mom": 2.427,
       "tug": -0.1031,
       "n_days": 499,
-      "rank": 38,
+      "rank": 39,
       "side": "long"
     },
     {
@@ -702,7 +720,7 @@
       "on_mom": 2.4149,
       "tug": 0.1579,
       "n_days": 499,
-      "rank": 39,
+      "rank": 40,
       "side": "long"
     },
     {
@@ -720,7 +738,7 @@
       "on_mom": 2.4008,
       "tug": -0.7089,
       "n_days": 499,
-      "rank": 40,
+      "rank": 41,
       "side": "long"
     },
     {
@@ -738,7 +756,7 @@
       "on_mom": 2.377,
       "tug": -0.018,
       "n_days": 499,
-      "rank": 41,
+      "rank": 42,
       "side": "long"
     },
     {
@@ -756,7 +774,7 @@
       "on_mom": 2.3633,
       "tug": 0.5333,
       "n_days": 499,
-      "rank": 42,
+      "rank": 43,
       "side": "long"
     },
     {
@@ -774,7 +792,7 @@
       "on_mom": 2.3383,
       "tug": 0.4775,
       "n_days": 499,
-      "rank": 43,
+      "rank": 44,
       "side": "long"
     },
     {
@@ -792,7 +810,7 @@
       "on_mom": 2.3264,
       "tug": 0.1956,
       "n_days": 499,
-      "rank": 44,
+      "rank": 45,
       "side": "long"
     },
     {
@@ -810,7 +828,7 @@
       "on_mom": 2.3192,
       "tug": 0.3403,
       "n_days": 499,
-      "rank": 45,
+      "rank": 46,
       "side": "long"
     },
     {
@@ -828,7 +846,7 @@
       "on_mom": 2.2985,
       "tug": 0.3849,
       "n_days": 499,
-      "rank": 46,
+      "rank": 47,
       "side": "long"
     },
     {
@@ -846,7 +864,7 @@
       "on_mom": 2.296,
       "tug": 0.185,
       "n_days": 499,
-      "rank": 47,
+      "rank": 48,
       "side": "long"
     },
     {
@@ -864,7 +882,7 @@
       "on_mom": 2.2743,
       "tug": 0.5231,
       "n_days": 497,
-      "rank": 48,
+      "rank": 49,
       "side": "long"
     },
     {
@@ -882,7 +900,7 @@
       "on_mom": 2.2707,
       "tug": -0.3088,
       "n_days": 499,
-      "rank": 49,
+      "rank": 50,
       "side": "long"
     },
     {
@@ -900,29 +918,29 @@
       "on_mom": 2.2677,
       "tug": 0.5039,
       "n_days": 499,
-      "rank": 50,
-      "side": "long"
-    },
-    {
-      "ticker": "VTR",
-      "name": "Ventas Inc.",
-      "sector": "Real Estate",
-      "cum_overnight": 0.2835,
-      "cum_intraday": 0.4758,
-      "cum_total": 0.8943,
-      "share_overnight": 0.3734,
-      "overnight_avg_bp": 5.16,
-      "intraday_avg_bp": 8.61,
-      "overnight_t": 2.07,
-      "intraday_t": 1.51,
-      "on_mom": 2.2665,
-      "tug": -0.1923,
-      "n_days": 499,
       "rank": 51,
       "side": "long"
     }
   ],
   "short": [
+    {
+      "ticker": "SCCO",
+      "name": "Southern Copper Corp.",
+      "sector": "Materials",
+      "cum_overnight": 0.9391,
+      "cum_intraday": -0.0415,
+      "cum_total": 0.8587,
+      "share_overnight": 0.9577,
+      "overnight_avg_bp": 15.2,
+      "intraday_avg_bp": 1.26,
+      "overnight_t": 1.73,
+      "intraday_t": 0.14,
+      "on_mom": -0.8685,
+      "tug": 0.9806,
+      "n_days": 499,
+      "rank": 967,
+      "side": "short"
+    },
     {
       "ticker": "ACM",
       "name": "AECOM",
@@ -938,25 +956,25 @@
       "on_mom": -0.8828,
       "tug": 0.9205,
       "n_days": 499,
-      "rank": 967,
+      "rank": 968,
       "side": "short"
     },
     {
       "ticker": "SOLS",
       "name": "Solstice Advanced Materials Inc.",
       "sector": "Materials",
-      "cum_overnight": 0.1637,
-      "cum_intraday": 0.0044,
+      "cum_overnight": 0.1639,
+      "cum_intraday": 0.0043,
       "cum_total": 0.1689,
-      "share_overnight": 0.9736,
+      "share_overnight": 0.9747,
       "overnight_avg_bp": 9.95,
-      "intraday_avg_bp": 4.74,
+      "intraday_avg_bp": 4.73,
       "overnight_t": 0.72,
       "intraday_t": 0.21,
-      "on_mom": -0.8883,
-      "tug": 0.1593,
+      "on_mom": -0.8866,
+      "tug": 0.1597,
       "n_days": 186,
-      "rank": 968,
+      "rank": 969,
       "side": "short"
     },
     {
@@ -973,24 +991,6 @@
       "intraday_t": 0.69,
       "on_mom": -0.8966,
       "tug": 1.8174,
-      "n_days": 499,
-      "rank": 969,
-      "side": "short"
-    },
-    {
-      "ticker": "POWL",
-      "name": "Powell Industries Inc.",
-      "sector": "",
-      "cum_overnight": 0.9931,
-      "cum_intraday": 1.5163,
-      "cum_total": 4.0154,
-      "share_overnight": 0.3958,
-      "overnight_avg_bp": 17.03,
-      "intraday_avg_bp": 24.91,
-      "overnight_t": 1.49,
-      "intraday_t": 1.56,
-      "on_mom": -0.9063,
-      "tug": -0.5232,
       "n_days": 499,
       "rank": 970,
       "side": "short"
@@ -1050,24 +1050,6 @@
       "side": "short"
     },
     {
-      "ticker": "ON",
-      "name": "ON Semiconductor Corp.",
-      "sector": "Information Technology",
-      "cum_overnight": 0.3861,
-      "cum_intraday": -0.1912,
-      "cum_total": 0.1212,
-      "share_overnight": 0.6689,
-      "overnight_avg_bp": 8.81,
-      "intraday_avg_bp": -0.0,
-      "overnight_t": 0.93,
-      "intraday_t": -0.0,
-      "on_mom": -0.9428,
-      "tug": 0.5773,
-      "n_days": 499,
-      "rank": 974,
-      "side": "short"
-    },
-    {
       "ticker": "AU",
       "name": "Anglogold Ashanti plc",
       "sector": "Materials",
@@ -1082,7 +1064,7 @@
       "on_mom": -0.9445,
       "tug": -1.9444,
       "n_days": 499,
-      "rank": 975,
+      "rank": 974,
       "side": "short"
     },
     {
@@ -1099,6 +1081,24 @@
       "intraday_t": 1.76,
       "on_mom": -0.9459,
       "tug": -0.9661,
+      "n_days": 499,
+      "rank": 975,
+      "side": "short"
+    },
+    {
+      "ticker": "ON",
+      "name": "ON Semiconductor Corp.",
+      "sector": "Information Technology",
+      "cum_overnight": 0.3845,
+      "cum_intraday": -0.1902,
+      "cum_total": 0.1212,
+      "share_overnight": 0.669,
+      "overnight_avg_bp": 8.78,
+      "intraday_avg_bp": 0.02,
+      "overnight_t": 0.93,
+      "intraday_t": 0.0,
+      "on_mom": -0.9502,
+      "tug": 0.5747,
       "n_days": 499,
       "rank": 976,
       "side": "short"
@@ -1143,16 +1143,16 @@
       "ticker": "CRWV",
       "name": "CoreWeave Inc. Class A",
       "sector": "",
-      "cum_overnight": 3.5055,
-      "cum_intraday": -0.5946,
+      "cum_overnight": 3.5064,
+      "cum_intraday": -0.5947,
       "cum_total": 0.8265,
       "share_overnight": 0.855,
       "overnight_avg_bp": 52.81,
       "intraday_avg_bp": -11.19,
       "overnight_t": 2.61,
       "intraday_t": -0.35,
-      "on_mom": -0.9723,
-      "tug": 4.1001,
+      "on_mom": -0.9709,
+      "tug": 4.1011,
       "n_days": 327,
       "rank": 979,
       "side": "short"
@@ -1230,6 +1230,24 @@
       "side": "short"
     },
     {
+      "ticker": "LITE",
+      "name": "Lumentum Holdings Inc.",
+      "sector": "Information Technology",
+      "cum_overnight": 7.0719,
+      "cum_intraday": 0.7113,
+      "cum_total": 12.8136,
+      "share_overnight": 0.9086,
+      "overnight_avg_bp": 46.47,
+      "intraday_avg_bp": 19.85,
+      "overnight_t": 3.41,
+      "intraday_t": 1.04,
+      "on_mom": -0.9953,
+      "tug": 6.3606,
+      "n_days": 499,
+      "rank": 984,
+      "side": "short"
+    },
+    {
       "ticker": "SNPS",
       "name": "Synopsys Inc.",
       "sector": "Information Technology",
@@ -1243,24 +1261,6 @@
       "intraday_t": -0.12,
       "on_mom": -1.0003,
       "tug": -0.0504,
-      "n_days": 499,
-      "rank": 984,
-      "side": "short"
-    },
-    {
-      "ticker": "LITE",
-      "name": "Lumentum Holdings Inc.",
-      "sector": "Information Technology",
-      "cum_overnight": 7.0617,
-      "cum_intraday": 0.7135,
-      "cum_total": 12.8136,
-      "share_overnight": 0.9082,
-      "overnight_avg_bp": 46.44,
-      "intraday_avg_bp": 19.87,
-      "overnight_t": 3.41,
-      "intraday_t": 1.04,
-      "on_mom": -1.005,
-      "tug": 6.3483,
       "n_days": 499,
       "rank": 985,
       "side": "short"
@@ -1287,18 +1287,36 @@
       "ticker": "NVDA",
       "name": "NVIDIA Corp.",
       "sector": "Information Technology",
-      "cum_overnight": 0.9308,
-      "cum_intraday": -0.1464,
+      "cum_overnight": 0.9293,
+      "cum_intraday": -0.1457,
       "cum_total": 0.6482,
-      "share_overnight": 0.8641,
-      "overnight_avg_bp": 15.05,
-      "intraday_avg_bp": -0.14,
+      "share_overnight": 0.8645,
+      "overnight_avg_bp": 15.03,
+      "intraday_avg_bp": -0.12,
       "overnight_t": 1.76,
       "intraday_t": -0.01,
-      "on_mom": -1.0249,
-      "tug": 1.0772,
+      "on_mom": -1.0402,
+      "tug": 1.0749,
       "n_days": 499,
       "rank": 987,
+      "side": "short"
+    },
+    {
+      "ticker": "CDNS",
+      "name": "Cadence Design Systems Inc.",
+      "sector": "Information Technology",
+      "cum_overnight": 0.2651,
+      "cum_intraday": -0.0916,
+      "cum_total": 0.1493,
+      "share_overnight": 0.7432,
+      "overnight_avg_bp": 5.77,
+      "intraday_avg_bp": 0.25,
+      "overnight_t": 0.88,
+      "intraday_t": 0.03,
+      "on_mom": -1.0409,
+      "tug": 0.3567,
+      "n_days": 499,
+      "rank": 988,
       "side": "short"
     },
     {
@@ -1316,43 +1334,43 @@
       "on_mom": -1.0534,
       "tug": 0.4731,
       "n_days": 112,
-      "rank": 988,
+      "rank": 989,
       "side": "short"
     },
     {
       "ticker": "TSLA",
       "name": "Tesla Inc.",
       "sector": "Consumer Discretionary",
-      "cum_overnight": 0.6519,
-      "cum_intraday": -0.1105,
+      "cum_overnight": 0.6518,
+      "cum_intraday": -0.1104,
       "cum_total": 0.4694,
-      "share_overnight": 0.8551,
+      "share_overnight": 0.8552,
       "overnight_avg_bp": 12.46,
       "intraday_avg_bp": 2.21,
       "overnight_t": 1.27,
       "intraday_t": 0.16,
-      "on_mom": -1.068,
-      "tug": 0.7624,
+      "on_mom": -1.07,
+      "tug": 0.7621,
       "n_days": 499,
-      "rank": 989,
+      "rank": 990,
       "side": "short"
     },
     {
-      "ticker": "CDNS",
-      "name": "Cadence Design Systems Inc.",
+      "ticker": "AAOI",
+      "name": "Applied Optoelectronics Inc.",
       "sector": "Information Technology",
-      "cum_overnight": 0.2604,
-      "cum_intraday": -0.0882,
-      "cum_total": 0.1493,
-      "share_overnight": 0.747,
-      "overnight_avg_bp": 5.69,
-      "intraday_avg_bp": 0.32,
-      "overnight_t": 0.87,
-      "intraday_t": 0.03,
-      "on_mom": -1.0907,
-      "tug": 0.3487,
+      "cum_overnight": 8.9245,
+      "cum_intraday": 0.0757,
+      "cum_total": 9.6756,
+      "share_overnight": 0.9916,
+      "overnight_avg_bp": 54.51,
+      "intraday_avg_bp": 29.01,
+      "overnight_t": 2.84,
+      "intraday_t": 0.86,
+      "on_mom": -1.075,
+      "tug": 8.8488,
       "n_days": 499,
-      "rank": 990,
+      "rank": 991,
       "side": "short"
     },
     {
@@ -1370,24 +1388,6 @@
       "on_mom": -1.1086,
       "tug": -1.0001,
       "n_days": 499,
-      "rank": 991,
-      "side": "short"
-    },
-    {
-      "ticker": "AAOI",
-      "name": "Applied Optoelectronics Inc.",
-      "sector": "Information Technology",
-      "cum_overnight": 8.8611,
-      "cum_intraday": 0.0826,
-      "cum_total": 9.6756,
-      "share_overnight": 0.9908,
-      "overnight_avg_bp": 54.38,
-      "intraday_avg_bp": 29.13,
-      "overnight_t": 2.84,
-      "intraday_t": 0.86,
-      "on_mom": -1.1131,
-      "tug": 8.7785,
-      "n_days": 499,
       "rank": 992,
       "side": "short"
     },
@@ -1395,16 +1395,16 @@
       "ticker": "POOL",
       "name": "Pool Corp.",
       "sector": "Consumer Discretionary",
-      "cum_overnight": 0.2983,
-      "cum_intraday": -0.5156,
+      "cum_overnight": 0.2978,
+      "cum_intraday": -0.5154,
       "cum_total": -0.3712,
-      "share_overnight": 0.3665,
-      "overnight_avg_bp": 5.97,
-      "intraday_avg_bp": -12.91,
+      "share_overnight": 0.3662,
+      "overnight_avg_bp": 5.96,
+      "intraday_avg_bp": -12.9,
       "overnight_t": 1.1,
       "intraday_t": -1.6,
-      "on_mom": -1.1141,
-      "tug": 0.8139,
+      "on_mom": -1.1209,
+      "tug": 0.8132,
       "n_days": 499,
       "rank": 993,
       "side": "short"
@@ -1446,24 +1446,6 @@
       "side": "short"
     },
     {
-      "ticker": "FRHC",
-      "name": "Freedom Holding Corp./NV",
-      "sector": "Financials",
-      "cum_overnight": 0.5167,
-      "cum_intraday": 0.259,
-      "cum_total": 0.9096,
-      "share_overnight": 0.6661,
-      "overnight_avg_bp": 8.86,
-      "intraday_avg_bp": 8.08,
-      "overnight_t": 1.96,
-      "intraday_t": 0.68,
-      "on_mom": -1.192,
-      "tug": 0.2576,
-      "n_days": 499,
-      "rank": 996,
-      "side": "short"
-    },
-    {
       "ticker": "CIEN",
       "name": "Ciena Corp.",
       "sector": "Information Technology",
@@ -1478,7 +1460,7 @@
       "on_mom": -1.2344,
       "tug": -2.4638,
       "n_days": 499,
-      "rank": 997,
+      "rank": 996,
       "side": "short"
     },
     {
@@ -1496,23 +1478,41 @@
       "on_mom": -1.2576,
       "tug": 0.8295,
       "n_days": 499,
-      "rank": 998,
+      "rank": 997,
       "side": "short"
     },
     {
       "ticker": "NFLX",
       "name": "Netflix Inc.",
       "sector": "Communication Services",
-      "cum_overnight": 0.05,
-      "cum_intraday": -0.0057,
+      "cum_overnight": 0.0501,
+      "cum_intraday": -0.0058,
       "cum_total": 0.044,
-      "share_overnight": 0.8976,
+      "share_overnight": 0.8966,
       "overnight_avg_bp": 2.09,
       "intraday_avg_bp": 1.38,
       "overnight_t": 0.31,
       "intraday_t": 0.18,
-      "on_mom": -1.2879,
-      "tug": 0.0557,
+      "on_mom": -1.287,
+      "tug": 0.0559,
+      "n_days": 499,
+      "rank": 998,
+      "side": "short"
+    },
+    {
+      "ticker": "FRHC",
+      "name": "Freedom Holding Corp./NV",
+      "sector": "Financials",
+      "cum_overnight": 0.5072,
+      "cum_intraday": 0.267,
+      "cum_total": 0.9096,
+      "share_overnight": 0.6552,
+      "overnight_avg_bp": 8.74,
+      "intraday_avg_bp": 8.21,
+      "overnight_t": 1.93,
+      "intraday_t": 0.69,
+      "on_mom": -1.3121,
+      "tug": 0.2402,
       "n_days": 499,
       "rank": 999,
       "side": "short"
@@ -1575,16 +1575,16 @@
       "ticker": "GOOGL",
       "name": "Alphabet Inc. Class A",
       "sector": "Communication Services",
-      "cum_overnight": 0.3998,
-      "cum_intraday": 0.3948,
+      "cum_overnight": 0.3987,
+      "cum_intraday": 0.3959,
       "cum_total": 0.9525,
-      "share_overnight": 0.5031,
-      "overnight_avg_bp": 7.69,
-      "intraday_avg_bp": 7.95,
+      "share_overnight": 0.5018,
+      "overnight_avg_bp": 7.67,
+      "intraday_avg_bp": 7.96,
       "overnight_t": 1.25,
       "intraday_t": 1.11,
-      "on_mom": -1.4306,
-      "tug": 0.005,
+      "on_mom": -1.4441,
+      "tug": 0.0028,
       "n_days": 499,
       "rank": 1003,
       "side": "short"
@@ -1680,24 +1680,6 @@
       "side": "short"
     },
     {
-      "ticker": "IONS",
-      "name": "Ionis Pharmaceuticals Inc.",
-      "sector": "Health Care",
-      "cum_overnight": 0.0913,
-      "cum_intraday": -0.0413,
-      "cum_total": 0.0462,
-      "share_overnight": 0.6885,
-      "overnight_avg_bp": 3.07,
-      "intraday_avg_bp": 1.86,
-      "overnight_t": 0.43,
-      "intraday_t": 0.18,
-      "on_mom": -1.6874,
-      "tug": 0.1326,
-      "n_days": 499,
-      "rank": 1009,
-      "side": "short"
-    },
-    {
       "ticker": "AA",
       "name": "Alcoa Corp.",
       "sector": "Materials",
@@ -1711,6 +1693,24 @@
       "intraday_t": 0.15,
       "on_mom": -1.7007,
       "tug": 0.501,
+      "n_days": 499,
+      "rank": 1009,
+      "side": "short"
+    },
+    {
+      "ticker": "IONS",
+      "name": "Ionis Pharmaceuticals Inc.",
+      "sector": "Health Care",
+      "cum_overnight": 0.0893,
+      "cum_intraday": -0.0396,
+      "cum_total": 0.0462,
+      "share_overnight": 0.6931,
+      "overnight_avg_bp": 3.03,
+      "intraday_avg_bp": 1.9,
+      "overnight_t": 0.42,
+      "intraday_t": 0.18,
+      "on_mom": -1.7032,
+      "tug": 0.1289,
       "n_days": 499,
       "rank": 1010,
       "side": "short"
@@ -1827,16 +1827,16 @@
       "ticker": "SUNB",
       "name": "Sunbelt Rentals Holdings Inc.",
       "sector": "",
-      "cum_overnight": -0.2935,
-      "cum_intraday": 0.3954,
+      "cum_overnight": -0.2934,
+      "cum_intraday": 0.3953,
       "cum_total": -0.0141,
-      "share_overnight": -0.426,
+      "share_overnight": -0.4261,
       "overnight_avg_bp": -34.35,
       "intraday_avg_bp": 37.67,
       "overnight_t": -1.78,
       "intraday_t": 1.52,
-      "on_mom": -2.2295,
-      "tug": -0.6888,
+      "on_mom": -2.2286,
+      "tug": -0.6887,
       "n_days": 96,
       "rank": 1017,
       "side": "short"
@@ -1847,69 +1847,69 @@
       "ticker": "AAOI",
       "name": "Applied Optoelectronics Inc.",
       "sector": "Information Technology",
-      "cum_overnight": 8.8611,
-      "cum_intraday": 0.0826,
+      "cum_overnight": 8.9245,
+      "cum_intraday": 0.0757,
       "cum_total": 9.6756,
-      "share_overnight": 0.9908,
-      "overnight_avg_bp": 54.38,
-      "intraday_avg_bp": 29.13,
+      "share_overnight": 0.9916,
+      "overnight_avg_bp": 54.51,
+      "intraday_avg_bp": 29.01,
       "overnight_t": 2.84,
       "intraday_t": 0.86,
-      "on_mom": -1.1131,
-      "tug": 8.7785,
+      "on_mom": -1.075,
+      "tug": 8.8488,
       "n_days": 499,
-      "rank": 992
+      "rank": 991
     },
     {
       "ticker": "APLD",
       "name": "Applied Digital Corp.",
       "sector": "Information Technology",
-      "cum_overnight": 7.7232,
-      "cum_intraday": -0.6372,
+      "cum_overnight": 7.7185,
+      "cum_intraday": -0.637,
       "cum_total": 2.1645,
       "share_overnight": 0.9238,
-      "overnight_avg_bp": 50.49,
-      "intraday_avg_bp": 1.16,
+      "overnight_avg_bp": 50.48,
+      "intraday_avg_bp": 1.17,
       "overnight_t": 2.97,
       "intraday_t": 0.04,
-      "on_mom": -0.1345,
-      "tug": 8.3605,
+      "on_mom": -0.1382,
+      "tug": 8.3555,
       "n_days": 498,
-      "rank": 761
+      "rank": 764
     },
     {
       "ticker": "WULF",
       "name": "Terawulf Inc.",
       "sector": "",
-      "cum_overnight": 6.5147,
-      "cum_intraday": -0.5612,
+      "cum_overnight": 6.5107,
+      "cum_intraday": -0.561,
       "cum_total": 2.2972,
       "share_overnight": 0.9207,
-      "overnight_avg_bp": 47.37,
-      "intraday_avg_bp": 0.96,
+      "overnight_avg_bp": 47.36,
+      "intraday_avg_bp": 0.97,
       "overnight_t": 2.83,
       "intraday_t": 0.04,
-      "on_mom": 0.8024,
-      "tug": 7.076,
+      "on_mom": 0.7991,
+      "tug": 7.0717,
       "n_days": 499,
-      "rank": 378
+      "rank": 377
     },
     {
       "ticker": "LITE",
       "name": "Lumentum Holdings Inc.",
       "sector": "Information Technology",
-      "cum_overnight": 7.0617,
-      "cum_intraday": 0.7135,
+      "cum_overnight": 7.0719,
+      "cum_intraday": 0.7113,
       "cum_total": 12.8136,
-      "share_overnight": 0.9082,
-      "overnight_avg_bp": 46.44,
-      "intraday_avg_bp": 19.87,
+      "share_overnight": 0.9086,
+      "overnight_avg_bp": 46.47,
+      "intraday_avg_bp": 19.85,
       "overnight_t": 3.41,
       "intraday_t": 1.04,
-      "on_mom": -1.005,
-      "tug": 6.3483,
+      "on_mom": -0.9953,
+      "tug": 6.3606,
       "n_days": 499,
-      "rank": 985
+      "rank": 984
     },
     {
       "ticker": "MP",
@@ -1960,7 +1960,7 @@
       "on_mom": 0.6579,
       "tug": 5.0513,
       "n_days": 499,
-      "rank": 428
+      "rank": 429
     },
     {
       "ticker": "PL",
@@ -2000,16 +2000,16 @@
       "ticker": "CRWV",
       "name": "CoreWeave Inc. Class A",
       "sector": "",
-      "cum_overnight": 3.5055,
-      "cum_intraday": -0.5946,
+      "cum_overnight": 3.5064,
+      "cum_intraday": -0.5947,
       "cum_total": 0.8265,
       "share_overnight": 0.855,
       "overnight_avg_bp": 52.81,
       "intraday_avg_bp": -11.19,
       "overnight_t": 2.61,
       "intraday_t": -0.35,
-      "on_mom": -0.9723,
-      "tug": 4.1001,
+      "on_mom": -0.9709,
+      "tug": 4.1011,
       "n_days": 327,
       "rank": 979
     },
@@ -2028,7 +2028,7 @@
       "on_mom": -0.1177,
       "tug": 3.9379,
       "n_days": 280,
-      "rank": 749
+      "rank": 751
     },
     {
       "ticker": "TLN",
@@ -2045,39 +2045,39 @@
       "on_mom": -0.063,
       "tug": 3.9309,
       "n_days": 499,
-      "rank": 716
+      "rank": 718
     },
     {
       "ticker": "MRVL",
       "name": "Marvell Technology Inc.",
       "sector": "Information Technology",
-      "cum_overnight": 3.25,
-      "cum_intraday": -0.3317,
+      "cum_overnight": 3.2505,
+      "cum_intraday": -0.3318,
       "cum_total": 1.8402,
       "share_overnight": 0.9074,
-      "overnight_avg_bp": 34.0,
-      "intraday_avg_bp": -2.71,
+      "overnight_avg_bp": 34.01,
+      "intraday_avg_bp": -2.72,
       "overnight_t": 2.41,
       "intraday_t": -0.18,
-      "on_mom": -0.283,
-      "tug": 3.5818,
+      "on_mom": -0.2825,
+      "tug": 3.5823,
       "n_days": 499,
-      "rank": 823
+      "rank": 826
     },
     {
       "ticker": "AVAV",
       "name": "AeroVironment Inc.",
       "sector": "Industrials",
-      "cum_overnight": 2.7878,
-      "cum_intraday": -0.7765,
+      "cum_overnight": 2.7851,
+      "cum_intraday": -0.7763,
       "cum_total": -0.1533,
-      "share_overnight": 0.7821,
-      "overnight_avg_bp": 30.29,
-      "intraday_avg_bp": -23.4,
+      "share_overnight": 0.782,
+      "overnight_avg_bp": 30.28,
+      "intraday_avg_bp": -23.38,
       "overnight_t": 2.51,
       "intraday_t": -1.45,
-      "on_mom": 1.5382,
-      "tug": 3.5642,
+      "on_mom": 1.5344,
+      "tug": 3.5614,
       "n_days": 499,
       "rank": 185
     },
@@ -2096,41 +2096,41 @@
       "on_mom": 0.1466,
       "tug": 3.4997,
       "n_days": 499,
-      "rank": 637
+      "rank": 638
     },
     {
       "ticker": "FTAI",
       "name": "FTAI Aviation Ltd.",
       "sector": "Industrials",
-      "cum_overnight": 2.751,
-      "cum_intraday": -0.4849,
+      "cum_overnight": 2.7428,
+      "cum_intraday": -0.4838,
       "cum_total": 0.9322,
-      "share_overnight": 0.8502,
-      "overnight_avg_bp": 29.71,
-      "intraday_avg_bp": -5.81,
+      "share_overnight": 0.8501,
+      "overnight_avg_bp": 29.66,
+      "intraday_avg_bp": -5.77,
       "overnight_t": 2.64,
       "intraday_t": -0.34,
-      "on_mom": -0.7645,
-      "tug": 3.2359,
+      "on_mom": -0.7843,
+      "tug": 3.2266,
       "n_days": 499,
-      "rank": 955
+      "rank": 958
     },
     {
       "ticker": "TTMI",
       "name": "TTM Technologies Inc.",
       "sector": "",
-      "cum_overnight": 3.5115,
-      "cum_intraday": 0.3559,
+      "cum_overnight": 3.5511,
+      "cum_intraday": 0.3441,
       "cum_total": 5.1171,
-      "share_overnight": 0.908,
-      "overnight_avg_bp": 34.19,
-      "intraday_avg_bp": 12.58,
-      "overnight_t": 2.62,
-      "intraday_t": 0.78,
-      "on_mom": -0.3277,
-      "tug": 3.1556,
+      "share_overnight": 0.9117,
+      "overnight_avg_bp": 34.37,
+      "intraday_avg_bp": 12.4,
+      "overnight_t": 2.64,
+      "intraday_t": 0.77,
+      "on_mom": -0.2874,
+      "tug": 3.2069,
       "n_days": 499,
-      "rank": 842
+      "rank": 827
     },
     {
       "ticker": "BMNR",
@@ -2147,7 +2147,7 @@
       "on_mom": -0.0488,
       "tug": 2.9716,
       "n_days": 277,
-      "rank": 713
+      "rank": 715
     },
     {
       "ticker": "CEG",
@@ -2164,7 +2164,7 @@
       "on_mom": 0.0837,
       "tug": 2.9669,
       "n_days": 499,
-      "rank": 660
+      "rank": 662
     },
     {
       "ticker": "TEM",
@@ -2187,18 +2187,18 @@
       "ticker": "MSTR",
       "name": "MicroStrategy Inc. Class A",
       "sector": "Information Technology",
-      "cum_overnight": 2.0779,
-      "cum_intraday": -0.8234,
+      "cum_overnight": 2.0801,
+      "cum_intraday": -0.8236,
       "cum_total": -0.4566,
-      "share_overnight": 0.7162,
-      "overnight_avg_bp": 27.64,
-      "intraday_avg_bp": -23.54,
+      "share_overnight": 0.7164,
+      "overnight_avg_bp": 27.66,
+      "intraday_avg_bp": -23.55,
       "overnight_t": 1.96,
       "intraday_t": -1.11,
-      "on_mom": -0.1544,
-      "tug": 2.9013,
+      "on_mom": -0.1491,
+      "tug": 2.9037,
       "n_days": 499,
-      "rank": 774
+      "rank": 772
     },
     {
       "ticker": "AVGO",
@@ -2215,41 +2215,41 @@
       "on_mom": 0.7288,
       "tug": 2.8134,
       "n_days": 499,
-      "rank": 398
+      "rank": 400
     },
     {
       "ticker": "STRL",
       "name": "Sterling Construction Co. Inc.",
       "sector": "",
-      "cum_overnight": 3.0608,
-      "cum_intraday": 0.314,
+      "cum_overnight": 3.0819,
+      "cum_intraday": 0.3072,
       "cum_total": 4.3358,
-      "share_overnight": 0.907,
-      "overnight_avg_bp": 31.64,
-      "intraday_avg_bp": 12.26,
+      "share_overnight": 0.9094,
+      "overnight_avg_bp": 31.74,
+      "intraday_avg_bp": 12.16,
       "overnight_t": 2.57,
-      "intraday_t": 0.75,
-      "on_mom": -0.2998,
-      "tug": 2.7468,
+      "intraday_t": 0.74,
+      "on_mom": -0.2784,
+      "tug": 2.7747,
       "n_days": 499,
-      "rank": 824
+      "rank": 823
     },
     {
       "ticker": "CELH",
       "name": "Celsius Holdings Inc.",
       "sector": "Consumer Staples",
-      "cum_overnight": 1.947,
-      "cum_intraday": -0.7926,
+      "cum_overnight": 1.9491,
+      "cum_intraday": -0.7928,
       "cum_total": -0.3889,
-      "share_overnight": 0.7107,
-      "overnight_avg_bp": 24.87,
-      "intraday_avg_bp": -26.71,
+      "share_overnight": 0.7109,
+      "overnight_avg_bp": 24.88,
+      "intraday_avg_bp": -26.72,
       "overnight_t": 2.13,
-      "intraday_t": -1.93,
-      "on_mom": 0.0425,
-      "tug": 2.7397,
+      "intraday_t": -1.94,
+      "on_mom": 0.0549,
+      "tug": 2.7418,
       "n_days": 499,
-      "rank": 680
+      "rank": 677
     },
     {
       "ticker": "NXT",
@@ -2266,24 +2266,24 @@
       "on_mom": 0.7598,
       "tug": 2.6732,
       "n_days": 499,
-      "rank": 391
+      "rank": 392
     },
     {
       "ticker": "AMKR",
       "name": "Amkor Technology Inc.",
       "sector": "Information Technology",
-      "cum_overnight": 2.0769,
-      "cum_intraday": -0.4873,
+      "cum_overnight": 2.0783,
+      "cum_intraday": -0.4876,
       "cum_total": 0.5775,
       "share_overnight": 0.81,
-      "overnight_avg_bp": 26.14,
-      "intraday_avg_bp": -7.94,
+      "overnight_avg_bp": 26.15,
+      "intraday_avg_bp": -7.95,
       "overnight_t": 2.18,
       "intraday_t": -0.54,
-      "on_mom": -0.0744,
-      "tug": 2.5642,
+      "on_mom": -0.0719,
+      "tug": 2.5658,
       "n_days": 499,
-      "rank": 724
+      "rank": 723
     },
     {
       "ticker": "KTOS",
@@ -2300,7 +2300,7 @@
       "on_mom": 1.1891,
       "tug": 2.4283,
       "n_days": 499,
-      "rank": 273
+      "rank": 272
     },
     {
       "ticker": "BWXT",
@@ -2317,7 +2317,7 @@
       "on_mom": 0.0012,
       "tug": 2.4074,
       "n_days": 499,
-      "rank": 695
+      "rank": 697
     },
     {
       "ticker": "AFRM",
@@ -2331,10 +2331,10 @@
       "intraday_avg_bp": 3.14,
       "overnight_t": 2.19,
       "intraday_t": 0.18,
-      "on_mom": 0.1856,
-      "tug": 2.3227,
+      "on_mom": 0.1852,
+      "tug": 2.3226,
       "n_days": 499,
-      "rank": 617
+      "rank": 619
     },
     {
       "ticker": "MOD",
@@ -2351,7 +2351,7 @@
       "on_mom": -0.8448,
       "tug": 2.3161,
       "n_days": 499,
-      "rank": 964
+      "rank": 963
     },
     {
       "ticker": "ORCL",
@@ -2402,7 +2402,7 @@
       "on_mom": -0.5492,
       "tug": 2.1383,
       "n_days": 430,
-      "rank": 914
+      "rank": 915
     },
     {
       "ticker": "QXO",
@@ -2419,7 +2419,7 @@
       "on_mom": -0.1691,
       "tug": 2.1184,
       "n_days": 497,
-      "rank": 779
+      "rank": 780
     },
     {
       "ticker": "VRT",
@@ -2436,7 +2436,7 @@
       "on_mom": 0.164,
       "tug": 2.0816,
       "n_days": 499,
-      "rank": 630
+      "rank": 631
     },
     {
       "ticker": "FCX",
@@ -2470,7 +2470,7 @@
       "on_mom": -0.1837,
       "tug": 2.0344,
       "n_days": 499,
-      "rank": 785
+      "rank": 786
     },
     {
       "ticker": "AAON",
@@ -2487,24 +2487,24 @@
       "on_mom": -0.1097,
       "tug": 2.0312,
       "n_days": 499,
-      "rank": 746
+      "rank": 748
     },
     {
       "ticker": "DRS",
       "name": "Leonardo DRS Inc.",
       "sector": "Industrials",
-      "cum_overnight": 1.6189,
-      "cum_intraday": -0.4023,
+      "cum_overnight": 1.6207,
+      "cum_intraday": -0.4027,
       "cum_total": 0.5653,
       "share_overnight": 0.801,
-      "overnight_avg_bp": 20.11,
-      "intraday_avg_bp": -7.5,
-      "overnight_t": 3.55,
+      "overnight_avg_bp": 20.12,
+      "intraday_avg_bp": -7.52,
+      "overnight_t": 3.56,
       "intraday_t": -0.71,
-      "on_mom": 0.5377,
-      "tug": 2.0212,
+      "on_mom": 0.5535,
+      "tug": 2.0234,
       "n_days": 499,
-      "rank": 474
+      "rank": 466
     },
     {
       "ticker": "MDB",
@@ -2538,7 +2538,7 @@
       "on_mom": -0.0843,
       "tug": 2.0106,
       "n_days": 499,
-      "rank": 734
+      "rank": 735
     },
     {
       "ticker": "HL",
@@ -2572,7 +2572,7 @@
       "on_mom": 0.3297,
       "tug": 1.9865,
       "n_days": 499,
-      "rank": 555
+      "rank": 552
     },
     {
       "ticker": "BE",
@@ -2589,7 +2589,7 @@
       "on_mom": 0.1646,
       "tug": 1.9862,
       "n_days": 498,
-      "rank": 629
+      "rank": 630
     },
     {
       "ticker": "AMD",
@@ -2603,10 +2603,10 @@
       "intraday_avg_bp": 5.27,
       "overnight_t": 2.0,
       "intraday_t": 0.41,
-      "on_mom": -0.3153,
-      "tug": 1.9764,
+      "on_mom": -0.3152,
+      "tug": 1.9765,
       "n_days": 499,
-      "rank": 834
+      "rank": 836
     },
     {
       "ticker": "CGNX",
@@ -2623,7 +2623,7 @@
       "on_mom": -0.5369,
       "tug": 1.9652,
       "n_days": 499,
-      "rank": 911
+      "rank": 913
     },
     {
       "ticker": "COHR",
@@ -2640,7 +2640,7 @@
       "on_mom": -0.8966,
       "tug": 1.8174,
       "n_days": 499,
-      "rank": 969
+      "rank": 970
     },
     {
       "ticker": "MKSI",
@@ -2674,24 +2674,7 @@
       "on_mom": -0.2467,
       "tug": 1.7563,
       "n_days": 499,
-      "rank": 808
-    },
-    {
-      "ticker": "LRCX",
-      "name": "Lam Research Corp.",
-      "sector": "Information Technology",
-      "cum_overnight": 1.8408,
-      "cum_intraday": 0.1243,
-      "cum_total": 2.1938,
-      "share_overnight": 0.9368,
-      "overnight_avg_bp": 23.58,
-      "intraday_avg_bp": 5.96,
-      "overnight_t": 2.29,
-      "intraday_t": 0.49,
-      "on_mom": 0.051,
-      "tug": 1.7165,
-      "n_days": 499,
-      "rank": 675
+      "rank": 810
     },
     {
       "ticker": "AXON",
@@ -2709,6 +2692,23 @@
       "tug": 1.7118,
       "n_days": 499,
       "rank": 633
+    },
+    {
+      "ticker": "LRCX",
+      "name": "Lam Research Corp.",
+      "sector": "Information Technology",
+      "cum_overnight": 1.8348,
+      "cum_intraday": 0.1267,
+      "cum_total": 2.1938,
+      "share_overnight": 0.9354,
+      "overnight_avg_bp": 23.54,
+      "intraday_avg_bp": 6.0,
+      "overnight_t": 2.28,
+      "intraday_t": 0.5,
+      "on_mom": 0.0384,
+      "tug": 1.7081,
+      "n_days": 499,
+      "rank": 684
     }
   ],
   "tug_intraday": [
@@ -2716,33 +2716,33 @@
       "ticker": "CRWD",
       "name": "Crowdstrike Holdings Inc. Class A",
       "sector": "Information Technology",
-      "cum_overnight": -0.1936,
-      "cum_intraday": 2.7306,
+      "cum_overnight": -0.1945,
+      "cum_intraday": 2.735,
       "cum_total": 2.0084,
-      "share_overnight": -0.0662,
-      "overnight_avg_bp": -3.05,
-      "intraday_avg_bp": 30.15,
-      "overnight_t": -0.43,
+      "share_overnight": -0.0664,
+      "overnight_avg_bp": -3.07,
+      "intraday_avg_bp": 30.17,
+      "overnight_t": -0.44,
       "intraday_t": 2.45,
-      "on_mom": -0.1225,
-      "tug": -2.9242,
+      "on_mom": -0.1369,
+      "tug": -2.9295,
       "n_days": 499,
-      "rank": 757
+      "rank": 763
     },
     {
       "ticker": "FTNT",
       "name": "Fortinet Inc.",
       "sector": "Information Technology",
       "cum_overnight": -0.2486,
-      "cum_intraday": 2.6514,
+      "cum_intraday": 2.6513,
       "cum_total": 1.7435,
       "share_overnight": -0.0857,
       "overnight_avg_bp": -3.74,
       "intraday_avg_bp": 27.99,
       "overnight_t": -0.42,
       "intraday_t": 3.1,
-      "on_mom": -0.475,
-      "tug": -2.9001,
+      "on_mom": -0.4747,
+      "tug": -2.8999,
       "n_days": 499,
       "rank": 892
     },
@@ -2761,24 +2761,24 @@
       "on_mom": -1.2344,
       "tug": -2.4638,
       "n_days": 499,
-      "rank": 997
+      "rank": 996
     },
     {
       "ticker": "TIGO",
       "name": "Millicom International Cellular SA",
       "sector": "Communication Services",
-      "cum_overnight": 0.2934,
-      "cum_intraday": 2.6607,
+      "cum_overnight": 0.2927,
+      "cum_intraday": 2.6626,
       "cum_total": 3.7346,
-      "share_overnight": 0.0993,
-      "overnight_avg_bp": 5.68,
-      "intraday_avg_bp": 27.94,
+      "share_overnight": 0.099,
+      "overnight_avg_bp": 5.67,
+      "intraday_avg_bp": 27.95,
       "overnight_t": 1.23,
       "intraday_t": 3.2,
-      "on_mom": 0.4208,
-      "tug": -2.3673,
+      "on_mom": 0.4117,
+      "tug": -2.3699,
       "n_days": 499,
-      "rank": 523
+      "rank": 528
     },
     {
       "ticker": "AHR",
@@ -2795,7 +2795,7 @@
       "on_mom": 1.8291,
       "tug": -1.9614,
       "n_days": 499,
-      "rank": 114
+      "rank": 116
     },
     {
       "ticker": "CAR",
@@ -2812,24 +2812,24 @@
       "on_mom": -0.3572,
       "tug": -1.9591,
       "n_days": 499,
-      "rank": 851
+      "rank": 852
     },
     {
       "ticker": "PANW",
       "name": "Palo Alto Networks Inc.",
       "sector": "Information Technology",
-      "cum_overnight": -0.2314,
-      "cum_intraday": 1.7187,
+      "cum_overnight": -0.2317,
+      "cum_intraday": 1.7198,
       "cum_total": 1.0897,
-      "share_overnight": -0.1186,
+      "share_overnight": -0.1187,
       "overnight_avg_bp": -4.35,
-      "intraday_avg_bp": 22.52,
+      "intraday_avg_bp": 22.53,
       "overnight_t": -0.72,
       "intraday_t": 2.26,
-      "on_mom": 0.0682,
-      "tug": -1.95,
+      "on_mom": 0.0621,
+      "tug": -1.9515,
       "n_days": 499,
-      "rank": 669
+      "rank": 674
     },
     {
       "ticker": "AU",
@@ -2846,41 +2846,41 @@
       "on_mom": -0.9445,
       "tug": -1.9444,
       "n_days": 499,
-      "rank": 975
+      "rank": 974
     },
     {
       "ticker": "ASTS",
       "name": "AST SpaceMobile Inc. Class A",
       "sector": "Communication Services",
-      "cum_overnight": 0.3802,
-      "cum_intraday": 2.2501,
+      "cum_overnight": 0.3833,
+      "cum_intraday": 2.2428,
       "cum_total": 3.4859,
-      "share_overnight": 0.1446,
-      "overnight_avg_bp": 12.0,
-      "intraday_avg_bp": 42.6,
+      "share_overnight": 0.146,
+      "overnight_avg_bp": 12.05,
+      "intraday_avg_bp": 42.55,
       "overnight_t": 0.81,
-      "intraday_t": 1.52,
-      "on_mom": -0.7237,
-      "tug": -1.8699,
+      "intraday_t": 1.51,
+      "on_mom": -0.7121,
+      "tug": -1.8595,
       "n_days": 499,
-      "rank": 947
+      "rank": 945
     },
     {
       "ticker": "ILMN",
       "name": "Illumina Inc.",
       "sector": "Health Care",
-      "cum_overnight": -0.3415,
-      "cum_intraday": 1.3847,
+      "cum_overnight": -0.3368,
+      "cum_intraday": 1.3678,
       "cum_total": 0.5703,
-      "share_overnight": -0.1978,
-      "overnight_avg_bp": -7.43,
-      "intraday_avg_bp": 20.43,
-      "overnight_t": -1.22,
-      "intraday_t": 1.85,
-      "on_mom": 0.149,
-      "tug": -1.7262,
+      "share_overnight": -0.1976,
+      "overnight_avg_bp": -7.29,
+      "intraday_avg_bp": 20.29,
+      "overnight_t": -1.2,
+      "intraday_t": 1.84,
+      "on_mom": 0.2839,
+      "tug": -1.7047,
       "n_days": 499,
-      "rank": 635
+      "rank": 578
     },
     {
       "ticker": "CORT",
@@ -2897,7 +2897,7 @@
       "on_mom": 0.1068,
       "tug": -1.3891,
       "n_days": 498,
-      "rank": 652
+      "rank": 654
     },
     {
       "ticker": "VIK",
@@ -2914,24 +2914,24 @@
       "on_mom": -0.3992,
       "tug": -1.3542,
       "n_days": 499,
-      "rank": 861
+      "rank": 862
     },
     {
       "ticker": "MEDP",
       "name": "Medpace Holdings Inc.",
       "sector": "Health Care",
-      "cum_overnight": -0.3812,
-      "cum_intraday": 0.9514,
+      "cum_overnight": -0.384,
+      "cum_intraday": 0.9602,
       "cum_total": 0.2076,
-      "share_overnight": -0.286,
-      "overnight_avg_bp": -5.91,
-      "intraday_avg_bp": 15.93,
-      "overnight_t": -0.47,
-      "intraday_t": 1.58,
-      "on_mom": 0.1585,
-      "tug": -1.3325,
+      "share_overnight": -0.2856,
+      "overnight_avg_bp": -6.0,
+      "intraday_avg_bp": 16.02,
+      "overnight_t": -0.48,
+      "intraday_t": 1.59,
+      "on_mom": 0.1295,
+      "tug": -1.3442,
       "n_days": 499,
-      "rank": 632
+      "rank": 642
     },
     {
       "ticker": "ROIV",
@@ -2948,7 +2948,7 @@
       "on_mom": -0.0724,
       "tug": -1.2881,
       "n_days": 499,
-      "rank": 721
+      "rank": 724
     },
     {
       "ticker": "RVMD",
@@ -2965,7 +2965,7 @@
       "on_mom": -0.5015,
       "tug": -1.2565,
       "n_days": 499,
-      "rank": 902
+      "rank": 903
     },
     {
       "ticker": "LLYVK",
@@ -2982,7 +2982,7 @@
       "on_mom": 0.5415,
       "tug": -1.25,
       "n_days": 499,
-      "rank": 470
+      "rank": 471
     },
     {
       "ticker": "JHX",
@@ -2999,24 +2999,24 @@
       "on_mom": -0.4816,
       "tug": -1.2337,
       "n_days": 499,
-      "rank": 897
+      "rank": 896
     },
     {
       "ticker": "LLYVA",
       "name": "Liberty Live Holdings Inc. Class A",
       "sector": "Communication Services",
-      "cum_overnight": 0.1366,
-      "cum_intraday": 1.3103,
+      "cum_overnight": 0.1364,
+      "cum_intraday": 1.3105,
       "cum_total": 1.6258,
-      "share_overnight": 0.0944,
+      "share_overnight": 0.0943,
       "overnight_avg_bp": 2.97,
       "intraday_avg_bp": 18.71,
       "overnight_t": 0.74,
       "intraday_t": 2.13,
-      "on_mom": 0.8337,
-      "tug": -1.1737,
+      "on_mom": 0.8306,
+      "tug": -1.1741,
       "n_days": 499,
-      "rank": 365
+      "rank": 366
     },
     {
       "ticker": "RPRX",
@@ -3033,24 +3033,24 @@
       "on_mom": 1.447,
       "tug": -1.1631,
       "n_days": 499,
-      "rank": 201
+      "rank": 202
     },
     {
       "ticker": "EBAY",
       "name": "eBay Inc.",
       "sector": "Consumer Discretionary",
-      "cum_overnight": 0.0107,
-      "cum_intraday": 1.1597,
+      "cum_overnight": 0.0108,
+      "cum_intraday": 1.1596,
       "cum_total": 1.1829,
       "share_overnight": 0.0092,
       "overnight_avg_bp": 1.04,
       "intraday_avg_bp": 16.81,
       "overnight_t": 0.18,
       "intraday_t": 2.27,
-      "on_mom": 0.1483,
-      "tug": -1.149,
+      "on_mom": 0.1493,
+      "tug": -1.1488,
       "n_days": 499,
-      "rank": 636
+      "rank": 637
     },
     {
       "ticker": "HUM",
@@ -3073,18 +3073,18 @@
       "ticker": "NTRA",
       "name": "Natera Inc.",
       "sector": "Health Care",
-      "cum_overnight": 0.1133,
-      "cum_intraday": 1.2359,
+      "cum_overnight": 0.1145,
+      "cum_intraday": 1.2335,
       "cum_total": 1.4891,
-      "share_overnight": 0.084,
-      "overnight_avg_bp": 3.33,
-      "intraday_avg_bp": 19.65,
+      "share_overnight": 0.0849,
+      "overnight_avg_bp": 3.35,
+      "intraday_avg_bp": 19.63,
       "overnight_t": 0.48,
       "intraday_t": 1.65,
-      "on_mom": 0.7202,
-      "tug": -1.1226,
+      "on_mom": 0.7398,
+      "tug": -1.119,
       "n_days": 499,
-      "rank": 401
+      "rank": 395
     },
     {
       "ticker": "RBLX",
@@ -3101,7 +3101,7 @@
       "on_mom": -0.3138,
       "tug": -1.1141,
       "n_days": 499,
-      "rank": 832
+      "rank": 834
     },
     {
       "ticker": "UI",
@@ -3135,7 +3135,7 @@
       "on_mom": 0.6511,
       "tug": -1.0586,
       "n_days": 499,
-      "rank": 431
+      "rank": 432
     },
     {
       "ticker": "R",
@@ -3152,7 +3152,7 @@
       "on_mom": 1.39,
       "tug": -1.0535,
       "n_days": 499,
-      "rank": 215
+      "rank": 216
     },
     {
       "ticker": "IP",
@@ -3169,7 +3169,7 @@
       "on_mom": 0.7255,
       "tug": -1.0436,
       "n_days": 499,
-      "rank": 399
+      "rank": 401
     },
     {
       "ticker": "VRSN",
@@ -3186,7 +3186,7 @@
       "on_mom": 0.5836,
       "tug": -1.0169,
       "n_days": 499,
-      "rank": 457
+      "rank": 456
     },
     {
       "ticker": "PRIM",
@@ -3203,7 +3203,7 @@
       "on_mom": -1.1086,
       "tug": -1.0001,
       "n_days": 499,
-      "rank": 991
+      "rank": 992
     },
     {
       "ticker": "PLTR",
@@ -3305,7 +3305,7 @@
       "on_mom": -0.9459,
       "tug": -0.9661,
       "n_days": 499,
-      "rank": 976
+      "rank": 975
     },
     {
       "ticker": "MDGL",
@@ -3322,24 +3322,7 @@
       "on_mom": 0.4093,
       "tug": -0.9484,
       "n_days": 499,
-      "rank": 531
-    },
-    {
-      "ticker": "AAPL",
-      "name": "Apple Inc.",
-      "sector": "Information Technology",
-      "cum_overnight": -0.1697,
-      "cum_intraday": 0.7715,
-      "cum_total": 0.4709,
-      "share_overnight": -0.1803,
-      "overnight_avg_bp": -3.06,
-      "intraday_avg_bp": 12.65,
-      "overnight_t": -0.59,
-      "intraday_t": 1.82,
-      "on_mom": 0.1412,
-      "tug": -0.9411,
-      "n_days": 499,
-      "rank": 640
+      "rank": 530
     },
     {
       "ticker": "USFD",
@@ -3356,7 +3339,24 @@
       "on_mom": 0.2695,
       "tug": -0.9382,
       "n_days": 499,
-      "rank": 583
+      "rank": 584
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple Inc.",
+      "sector": "Information Technology",
+      "cum_overnight": -0.1685,
+      "cum_intraday": 0.7689,
+      "cum_total": 0.4709,
+      "share_overnight": -0.1797,
+      "overnight_avg_bp": -3.03,
+      "intraday_avg_bp": 12.62,
+      "overnight_t": -0.59,
+      "intraday_t": 1.81,
+      "on_mom": 0.183,
+      "tug": -0.9374,
+      "n_days": 499,
+      "rank": 620
     },
     {
       "ticker": "IBM",
@@ -3390,7 +3390,7 @@
       "on_mom": 0.6892,
       "tug": -0.8653,
       "n_days": 499,
-      "rank": 418
+      "rank": 419
     },
     {
       "ticker": "SMMT",
@@ -3424,7 +3424,7 @@
       "on_mom": -0.7526,
       "tug": -0.8616,
       "n_days": 499,
-      "rank": 954
+      "rank": 955
     },
     {
       "ticker": "JNJ",
@@ -3458,7 +3458,7 @@
       "on_mom": -0.1831,
       "tug": -0.8572,
       "n_days": 499,
-      "rank": 784
+      "rank": 785
     },
     {
       "ticker": "INCY",
@@ -3475,24 +3475,24 @@
       "on_mom": 2.1764,
       "tug": -0.8333,
       "n_days": 499,
-      "rank": 60
+      "rank": 59
     },
     {
       "ticker": "WMT",
       "name": "Walmart Inc.",
       "sector": "Consumer Staples",
-      "cum_overnight": -0.074,
-      "cum_intraday": 0.7538,
+      "cum_overnight": -0.0729,
+      "cum_intraday": 0.7518,
       "cum_total": 0.624,
-      "share_overnight": -0.0894,
-      "overnight_avg_bp": -1.2,
-      "intraday_avg_bp": 12.08,
+      "share_overnight": -0.0884,
+      "overnight_avg_bp": -1.17,
+      "intraday_avg_bp": 12.06,
       "overnight_t": -0.32,
       "intraday_t": 2.1,
-      "on_mom": 0.8645,
-      "tug": -0.8278,
+      "on_mom": 0.8876,
+      "tug": -0.8248,
       "n_days": 499,
-      "rank": 359
+      "rank": 347
     },
     {
       "ticker": "FN",
@@ -3526,7 +3526,7 @@
       "on_mom": -0.4848,
       "tug": -0.8161,
       "n_days": 499,
-      "rank": 899
+      "rank": 898
     },
     {
       "ticker": "SOLV",
@@ -3543,7 +3543,7 @@
       "on_mom": 0.4744,
       "tug": -0.7818,
       "n_days": 499,
-      "rank": 495
+      "rank": 494
     },
     {
       "ticker": "T",
@@ -3560,7 +3560,7 @@
       "on_mom": 0.5444,
       "tug": -0.7734,
       "n_days": 499,
-      "rank": 469
+      "rank": 470
     },
     {
       "ticker": "CRH",
@@ -3619,16 +3619,16 @@
       "ticker": "EXC",
       "name": "Exelon Corp.",
       "sector": "Utilities",
-      "cum_overnight": 0.399,
-      "cum_intraday": -0.0243,
+      "cum_overnight": 0.4017,
+      "cum_intraday": -0.0262,
       "cum_total": 0.365,
-      "share_overnight": 0.9425,
-      "overnight_avg_bp": 6.89,
-      "intraday_avg_bp": 0.16,
-      "overnight_t": 2.72,
-      "intraday_t": 0.03,
-      "on_mom": 3.1705,
-      "tug": 0.4233,
+      "share_overnight": 0.9388,
+      "overnight_avg_bp": 6.93,
+      "intraday_avg_bp": 0.12,
+      "overnight_t": 2.73,
+      "intraday_t": 0.02,
+      "on_mom": 3.2387,
+      "tug": 0.4279,
       "n_days": 499,
       "rank": 3
     },
@@ -3718,23 +3718,6 @@
       "rank": 8
     },
     {
-      "ticker": "LNT",
-      "name": "Alliant Energy Corp.",
-      "sector": "Utilities",
-      "cum_overnight": 0.4592,
-      "cum_intraday": -0.0171,
-      "cum_total": 0.4342,
-      "share_overnight": 0.9641,
-      "overnight_avg_bp": 7.69,
-      "intraday_avg_bp": 0.22,
-      "overnight_t": 3.63,
-      "intraday_t": 0.05,
-      "on_mom": 3.045,
-      "tug": 0.4762,
-      "n_days": 499,
-      "rank": 9
-    },
-    {
       "ticker": "LHX",
       "name": "L3Harris Technologies Inc.",
       "sector": "Industrials",
@@ -3749,24 +3732,24 @@
       "on_mom": 3.0298,
       "tug": 1.2664,
       "n_days": 499,
-      "rank": 10
+      "rank": 9
     },
     {
       "ticker": "XEL",
       "name": "Xcel Energy Inc.",
       "sector": "Utilities",
-      "cum_overnight": 0.5705,
-      "cum_intraday": -0.0421,
+      "cum_overnight": 0.5721,
+      "cum_intraday": -0.043,
       "cum_total": 0.5044,
-      "share_overnight": 0.9313,
-      "overnight_avg_bp": 9.2,
-      "intraday_avg_bp": -0.14,
-      "overnight_t": 3.78,
+      "share_overnight": 0.9301,
+      "overnight_avg_bp": 9.22,
+      "intraday_avg_bp": -0.16,
+      "overnight_t": 3.79,
       "intraday_t": -0.03,
-      "on_mom": 2.9957,
-      "tug": 0.6125,
+      "on_mom": 3.0297,
+      "tug": 0.6151,
       "n_days": 499,
-      "rank": 11
+      "rank": 10
     },
     {
       "ticker": "O",
@@ -3782,6 +3765,23 @@
       "intraday_t": 0.71,
       "on_mom": 2.9735,
       "tug": -0.0464,
+      "n_days": 499,
+      "rank": 11
+    },
+    {
+      "ticker": "LNT",
+      "name": "Alliant Energy Corp.",
+      "sector": "Utilities",
+      "cum_overnight": 0.4564,
+      "cum_intraday": -0.0152,
+      "cum_total": 0.4342,
+      "share_overnight": 0.9677,
+      "overnight_avg_bp": 7.65,
+      "intraday_avg_bp": 0.26,
+      "overnight_t": 3.61,
+      "intraday_t": 0.05,
+      "on_mom": 2.9677,
+      "tug": 0.4717,
       "n_days": 499,
       "rank": 12
     },
@@ -3882,7 +3882,7 @@
       "intraday_avg_bp": -16.32,
       "overnight_t": 1.45,
       "intraday_t": -1.8,
-      "on_mom": 2.8794,
+      "on_mom": 2.8793,
       "tug": 0.9856,
       "n_days": 499,
       "rank": 18
@@ -3939,23 +3939,6 @@
       "rank": 21
     },
     {
-      "ticker": "CPB",
-      "name": "Campbell's Co.",
-      "sector": "Consumer Staples",
-      "cum_overnight": -0.006,
-      "cum_intraday": -0.4682,
-      "cum_total": -0.4713,
-      "share_overnight": -0.0126,
-      "overnight_avg_bp": 0.13,
-      "intraday_avg_bp": -11.3,
-      "overnight_t": 0.04,
-      "intraday_t": -1.54,
-      "on_mom": 2.7649,
-      "tug": 0.4622,
-      "n_days": 499,
-      "rank": 22
-    },
-    {
       "ticker": "WPC",
       "name": "WP Carey Inc.",
       "sector": "Real Estate",
@@ -3970,7 +3953,7 @@
       "on_mom": 2.7551,
       "tug": 0.2553,
       "n_days": 499,
-      "rank": 23
+      "rank": 22
     },
     {
       "ticker": "PCG",
@@ -3986,6 +3969,23 @@
       "intraday_t": -1.19,
       "on_mom": 2.7371,
       "tug": 0.9657,
+      "n_days": 499,
+      "rank": 23
+    },
+    {
+      "ticker": "CPB",
+      "name": "Campbell's Co.",
+      "sector": "Consumer Staples",
+      "cum_overnight": -0.0091,
+      "cum_intraday": -0.4665,
+      "cum_total": -0.4713,
+      "share_overnight": -0.0191,
+      "overnight_avg_bp": 0.07,
+      "intraday_avg_bp": -11.24,
+      "overnight_t": 0.02,
+      "intraday_t": -1.53,
+      "on_mom": 2.6836,
+      "tug": 0.4574,
       "n_days": 499,
       "rank": 24
     },
@@ -4007,6 +4007,23 @@
       "rank": 25
     },
     {
+      "ticker": "PNC",
+      "name": "PNC Financial Services Group Inc.",
+      "sector": "Financials",
+      "cum_overnight": 0.3834,
+      "cum_intraday": 0.0924,
+      "cum_total": 0.5113,
+      "share_overnight": 0.8058,
+      "overnight_avg_bp": 6.95,
+      "intraday_avg_bp": 2.65,
+      "overnight_t": 1.65,
+      "intraday_t": 0.45,
+      "on_mom": 2.597,
+      "tug": 0.291,
+      "n_days": 499,
+      "rank": 26
+    },
+    {
       "ticker": "STWD",
       "name": "Starwood Property Trust Inc.",
       "sector": "Financials",
@@ -4021,7 +4038,7 @@
       "on_mom": 2.5753,
       "tug": 0.5521,
       "n_days": 499,
-      "rank": 26
+      "rank": 27
     },
     {
       "ticker": "CMCSA",
@@ -4038,24 +4055,24 @@
       "on_mom": 2.5716,
       "tug": 0.5084,
       "n_days": 499,
-      "rank": 27
+      "rank": 28
     },
     {
       "ticker": "GLPI",
       "name": "Gaming and Leisure Properties Inc.",
       "sector": "Real Estate",
-      "cum_overnight": 0.1685,
-      "cum_intraday": -0.1014,
+      "cum_overnight": 0.1682,
+      "cum_intraday": -0.1012,
       "cum_total": 0.05,
-      "share_overnight": 0.6243,
+      "share_overnight": 0.6244,
       "overnight_avg_bp": 3.25,
-      "intraday_avg_bp": -1.59,
+      "intraday_avg_bp": -1.58,
       "overnight_t": 1.43,
-      "intraday_t": -0.34,
-      "on_mom": 2.5493,
-      "tug": 0.2699,
+      "intraday_t": -0.33,
+      "on_mom": 2.5377,
+      "tug": 0.2694,
       "n_days": 499,
-      "rank": 28
+      "rank": 29
     },
     {
       "ticker": "KNX",
@@ -4072,7 +4089,7 @@
       "on_mom": 2.5279,
       "tug": 0.3681,
       "n_days": 499,
-      "rank": 29
+      "rank": 30
     },
     {
       "ticker": "CASY",
@@ -4088,23 +4105,6 @@
       "intraday_t": 1.48,
       "on_mom": 2.526,
       "tug": -0.2403,
-      "n_days": 499,
-      "rank": 30
-    },
-    {
-      "ticker": "ALNY",
-      "name": "Alnylam Pharmaceuticals Inc.",
-      "sector": "Health Care",
-      "cum_overnight": -0.1358,
-      "cum_intraday": 0.3393,
-      "cum_total": 0.1574,
-      "share_overnight": -0.2859,
-      "overnight_avg_bp": -2.03,
-      "intraday_avg_bp": 8.81,
-      "overnight_t": -0.33,
-      "intraday_t": 0.81,
-      "on_mom": 2.5115,
-      "tug": -0.4751,
       "n_days": 499,
       "rank": 31
     },
@@ -4177,6 +4177,23 @@
       "rank": 35
     },
     {
+      "ticker": "ALNY",
+      "name": "Alnylam Pharmaceuticals Inc.",
+      "sector": "Health Care",
+      "cum_overnight": -0.1413,
+      "cum_intraday": 0.3478,
+      "cum_total": 0.1574,
+      "share_overnight": -0.2889,
+      "overnight_avg_bp": -2.15,
+      "intraday_avg_bp": 8.94,
+      "overnight_t": -0.35,
+      "intraday_t": 0.82,
+      "on_mom": 2.4509,
+      "tug": -0.4891,
+      "n_days": 499,
+      "rank": 36
+    },
+    {
       "ticker": "BAC",
       "name": "Bank of America Corp.",
       "sector": "Financials",
@@ -4191,7 +4208,7 @@
       "on_mom": 2.4314,
       "tug": 0.2396,
       "n_days": 499,
-      "rank": 36
+      "rank": 37
     },
     {
       "ticker": "GIS",
@@ -4208,7 +4225,7 @@
       "on_mom": 2.4298,
       "tug": 0.3386,
       "n_days": 499,
-      "rank": 37
+      "rank": 38
     },
     {
       "ticker": "GL",
@@ -4225,7 +4242,7 @@
       "on_mom": 2.427,
       "tug": -0.1031,
       "n_days": 499,
-      "rank": 38
+      "rank": 39
     },
     {
       "ticker": "MKC",
@@ -4242,7 +4259,7 @@
       "on_mom": 2.4149,
       "tug": 0.1579,
       "n_days": 499,
-      "rank": 39
+      "rank": 40
     },
     {
       "ticker": "STT",
@@ -4259,7 +4276,7 @@
       "on_mom": 2.4008,
       "tug": -0.7089,
       "n_days": 499,
-      "rank": 40
+      "rank": 41
     },
     {
       "ticker": "TGT",
@@ -4276,7 +4293,7 @@
       "on_mom": 2.377,
       "tug": -0.018,
       "n_days": 499,
-      "rank": 41
+      "rank": 42
     },
     {
       "ticker": "BLK",
@@ -4293,7 +4310,7 @@
       "on_mom": 2.3633,
       "tug": 0.5333,
       "n_days": 499,
-      "rank": 42
+      "rank": 43
     },
     {
       "ticker": "FE",
@@ -4310,7 +4327,7 @@
       "on_mom": 2.3383,
       "tug": 0.4775,
       "n_days": 499,
-      "rank": 43
+      "rank": 44
     },
     {
       "ticker": "CUBE",
@@ -4327,7 +4344,7 @@
       "on_mom": 2.3264,
       "tug": 0.1956,
       "n_days": 499,
-      "rank": 44
+      "rank": 45
     },
     {
       "ticker": "CNA",
@@ -4344,7 +4361,7 @@
       "on_mom": 2.3192,
       "tug": 0.3403,
       "n_days": 499,
-      "rank": 45
+      "rank": 46
     },
     {
       "ticker": "EPR",
@@ -4361,7 +4378,7 @@
       "on_mom": 2.2985,
       "tug": 0.3849,
       "n_days": 499,
-      "rank": 46
+      "rank": 47
     },
     {
       "ticker": "EQR",
@@ -4378,7 +4395,7 @@
       "on_mom": 2.296,
       "tug": 0.185,
       "n_days": 499,
-      "rank": 47
+      "rank": 48
     },
     {
       "ticker": "GTLS",
@@ -4395,7 +4412,7 @@
       "on_mom": 2.2743,
       "tug": 0.5231,
       "n_days": 497,
-      "rank": 48
+      "rank": 49
     },
     {
       "ticker": "DAR",
@@ -4412,7 +4429,7 @@
       "on_mom": 2.2707,
       "tug": -0.3088,
       "n_days": 499,
-      "rank": 49
+      "rank": 50
     },
     {
       "ticker": "TAP",
@@ -4429,7 +4446,7 @@
       "on_mom": 2.2677,
       "tug": 0.5039,
       "n_days": 499,
-      "rank": 50
+      "rank": 51
     },
     {
       "ticker": "VTR",
@@ -4446,7 +4463,7 @@
       "on_mom": 2.2665,
       "tug": -0.1923,
       "n_days": 499,
-      "rank": 51
+      "rank": 52
     },
     {
       "ticker": "SO",
@@ -4462,23 +4479,6 @@
       "intraday_t": -0.11,
       "on_mom": 2.2585,
       "tug": 0.3512,
-      "n_days": 499,
-      "rank": 52
-    },
-    {
-      "ticker": "PNC",
-      "name": "PNC Financial Services Group Inc.",
-      "sector": "Financials",
-      "cum_overnight": 0.3725,
-      "cum_intraday": 0.0924,
-      "cum_total": 0.4993,
-      "share_overnight": 0.8012,
-      "overnight_avg_bp": 6.79,
-      "intraday_avg_bp": 2.65,
-      "overnight_t": 1.62,
-      "intraday_t": 0.45,
-      "on_mom": 2.2455,
-      "tug": 0.2801,
       "n_days": 499,
       "rank": 53
     },
@@ -4500,23 +4500,6 @@
       "rank": 54
     },
     {
-      "ticker": "CTAS",
-      "name": "Cintas Corp.",
-      "sector": "Industrials",
-      "cum_overnight": 0.0409,
-      "cum_intraday": 0.0217,
-      "cum_total": 0.0635,
-      "share_overnight": 0.6538,
-      "overnight_avg_bp": 1.07,
-      "intraday_avg_bp": 1.32,
-      "overnight_t": 0.33,
-      "intraday_t": 0.22,
-      "on_mom": 2.2263,
-      "tug": 0.0192,
-      "n_days": 499,
-      "rank": 55
-    },
-    {
       "ticker": "KHC",
       "name": "Kraft Heinz Co.",
       "sector": "Consumer Staples",
@@ -4531,7 +4514,7 @@
       "on_mom": 2.2177,
       "tug": -0.1097,
       "n_days": 499,
-      "rank": 56
+      "rank": 55
     },
     {
       "ticker": "RTX",
@@ -4548,7 +4531,7 @@
       "on_mom": 2.2157,
       "tug": 1.151,
       "n_days": 499,
-      "rank": 57
+      "rank": 56
     },
     {
       "ticker": "BMY",
@@ -4565,7 +4548,7 @@
       "on_mom": 2.2077,
       "tug": 0.5573,
       "n_days": 499,
-      "rank": 58
+      "rank": 57
     },
     {
       "ticker": "OHI",
@@ -4582,7 +4565,7 @@
       "on_mom": 2.1954,
       "tug": -0.223,
       "n_days": 499,
-      "rank": 59
+      "rank": 58
     },
     {
       "ticker": "INCY",
@@ -4599,7 +4582,7 @@
       "on_mom": 2.1764,
       "tug": -0.8333,
       "n_days": 499,
-      "rank": 60
+      "rank": 59
     },
     {
       "ticker": "STAG",
@@ -4616,7 +4599,7 @@
       "on_mom": 2.1721,
       "tug": 0.2866,
       "n_days": 499,
-      "rank": 61
+      "rank": 60
     },
     {
       "ticker": "CAH",
@@ -4633,7 +4616,7 @@
       "on_mom": 2.17,
       "tug": -0.1431,
       "n_days": 499,
-      "rank": 62
+      "rank": 61
     },
     {
       "ticker": "INVH",
@@ -4650,7 +4633,7 @@
       "on_mom": 2.1595,
       "tug": 0.0501,
       "n_days": 499,
-      "rank": 63
+      "rank": 62
     },
     {
       "ticker": "KMB",
@@ -4667,7 +4650,7 @@
       "on_mom": 2.1579,
       "tug": 0.1063,
       "n_days": 499,
-      "rank": 64
+      "rank": 63
     },
     {
       "ticker": "REG",
@@ -4684,7 +4667,7 @@
       "on_mom": 2.1429,
       "tug": 0.0187,
       "n_days": 499,
-      "rank": 65
+      "rank": 64
     },
     {
       "ticker": "CSX",
@@ -4701,7 +4684,7 @@
       "on_mom": 2.14,
       "tug": 0.0415,
       "n_days": 499,
-      "rank": 66
+      "rank": 65
     },
     {
       "ticker": "IDA",
@@ -4718,7 +4701,7 @@
       "on_mom": 2.1395,
       "tug": 0.5675,
       "n_days": 499,
-      "rank": 67
+      "rank": 66
     },
     {
       "ticker": "JBHT",
@@ -4735,7 +4718,7 @@
       "on_mom": 2.1392,
       "tug": 0.2275,
       "n_days": 499,
-      "rank": 68
+      "rank": 67
     },
     {
       "ticker": "UGI",
@@ -4752,7 +4735,7 @@
       "on_mom": 2.131,
       "tug": -0.2484,
       "n_days": 499,
-      "rank": 69
+      "rank": 68
     },
     {
       "ticker": "WEC",
@@ -4769,7 +4752,7 @@
       "on_mom": 2.1236,
       "tug": 0.2574,
       "n_days": 499,
-      "rank": 70
+      "rank": 69
     },
     {
       "ticker": "QSR",
@@ -4786,7 +4769,7 @@
       "on_mom": 2.116,
       "tug": -0.0722,
       "n_days": 499,
-      "rank": 71
+      "rank": 70
     },
     {
       "ticker": "KDP",
@@ -4802,6 +4785,23 @@
       "intraday_t": -0.48,
       "on_mom": 2.1158,
       "tug": 0.362,
+      "n_days": 499,
+      "rank": 71
+    },
+    {
+      "ticker": "CTAS",
+      "name": "Cintas Corp.",
+      "sector": "Industrials",
+      "cum_overnight": 0.0365,
+      "cum_intraday": 0.026,
+      "cum_total": 0.0635,
+      "share_overnight": 0.5836,
+      "overnight_avg_bp": 0.98,
+      "intraday_avg_bp": 1.41,
+      "overnight_t": 0.3,
+      "intraday_t": 0.24,
+      "on_mom": 2.1125,
+      "tug": 0.0104,
       "n_days": 499,
       "rank": 72
     },
@@ -5217,18 +5217,35 @@
       "ticker": "AWK",
       "name": "American Water Works Co. Inc.",
       "sector": "Utilities",
-      "cum_overnight": 0.0794,
+      "cum_overnight": 0.0795,
       "cum_intraday": -0.0828,
       "cum_total": -0.0099,
-      "share_overnight": 0.4897,
+      "share_overnight": 0.4898,
       "overnight_avg_bp": 1.74,
       "intraday_avg_bp": -0.85,
       "overnight_t": 0.61,
       "intraday_t": -0.14,
-      "on_mom": 1.9066,
-      "tug": 0.1622,
+      "on_mom": 1.9078,
+      "tug": 0.1623,
       "n_days": 499,
       "rank": 97
+    },
+    {
+      "ticker": "NWS",
+      "name": "News Corp. Class B",
+      "sector": "Communication Services",
+      "cum_overnight": 0.7137,
+      "cum_intraday": -0.3347,
+      "cum_total": 0.1401,
+      "share_overnight": 0.6808,
+      "overnight_avg_bp": 11.19,
+      "intraday_avg_bp": -7.09,
+      "overnight_t": 2.82,
+      "intraday_t": -1.08,
+      "on_mom": 1.9053,
+      "tug": 1.0484,
+      "n_days": 499,
+      "rank": 98
     },
     {
       "ticker": "VIRT",
@@ -5245,7 +5262,7 @@
       "on_mom": 1.8863,
       "tug": 0.4949,
       "n_days": 499,
-      "rank": 98
+      "rank": 99
     },
     {
       "ticker": "HR",
@@ -5262,7 +5279,7 @@
       "on_mom": 1.884,
       "tug": 0.0038,
       "n_days": 499,
-      "rank": 99
+      "rank": 100
     },
     {
       "ticker": "COF",
@@ -5279,7 +5296,24 @@
       "on_mom": 1.8812,
       "tug": 1.0571,
       "n_days": 499,
-      "rank": 100
+      "rank": 101
+    },
+    {
+      "ticker": "CPRT",
+      "name": "Copart Inc.",
+      "sector": "Industrials",
+      "cum_overnight": 0.0827,
+      "cum_intraday": -0.5167,
+      "cum_total": -0.4767,
+      "share_overnight": 0.138,
+      "overnight_avg_bp": 1.96,
+      "intraday_avg_bp": -13.49,
+      "overnight_t": 0.51,
+      "intraday_t": -2.06,
+      "on_mom": 1.8716,
+      "tug": 0.5994,
+      "n_days": 499,
+      "rank": 102
     },
     {
       "ticker": "CHRW",
@@ -5296,7 +5330,7 @@
       "on_mom": 1.8696,
       "tug": 0.6321,
       "n_days": 499,
-      "rank": 101
+      "rank": 103
     },
     {
       "ticker": "ED",
@@ -5313,7 +5347,7 @@
       "on_mom": 1.8676,
       "tug": 0.2604,
       "n_days": 499,
-      "rank": 102
+      "rank": 104
     },
     {
       "ticker": "UNP",
@@ -5330,7 +5364,7 @@
       "on_mom": 1.8667,
       "tug": 0.1564,
       "n_days": 499,
-      "rank": 103
+      "rank": 105
     },
     {
       "ticker": "NSC",
@@ -5347,7 +5381,7 @@
       "on_mom": 1.8648,
       "tug": 0.4132,
       "n_days": 499,
-      "rank": 104
+      "rank": 106
     },
     {
       "ticker": "RJF",
@@ -5364,7 +5398,7 @@
       "on_mom": 1.8582,
       "tug": 0.0058,
       "n_days": 499,
-      "rank": 105
+      "rank": 107
     },
     {
       "ticker": "AMT",
@@ -5381,7 +5415,7 @@
       "on_mom": 1.8562,
       "tug": -0.1196,
       "n_days": 499,
-      "rank": 106
+      "rank": 108
     },
     {
       "ticker": "BRX",
@@ -5398,7 +5432,7 @@
       "on_mom": 1.8548,
       "tug": 0.2247,
       "n_days": 499,
-      "rank": 107
+      "rank": 109
     },
     {
       "ticker": "AMH",
@@ -5415,7 +5449,7 @@
       "on_mom": 1.8523,
       "tug": 0.0681,
       "n_days": 499,
-      "rank": 108
+      "rank": 110
     },
     {
       "ticker": "CNC",
@@ -5432,7 +5466,7 @@
       "on_mom": 1.8494,
       "tug": -0.6441,
       "n_days": 499,
-      "rank": 109
+      "rank": 111
     },
     {
       "ticker": "WY",
@@ -5449,7 +5483,7 @@
       "on_mom": 1.8485,
       "tug": 0.7536,
       "n_days": 499,
-      "rank": 110
+      "rank": 112
     },
     {
       "ticker": "JAN",
@@ -5466,7 +5500,7 @@
       "on_mom": 1.8464,
       "tug": -0.2251,
       "n_days": 82,
-      "rank": 111
+      "rank": 113
     },
     {
       "ticker": "VRTX",
@@ -5483,7 +5517,7 @@
       "on_mom": 1.8443,
       "tug": -0.7515,
       "n_days": 499,
-      "rank": 112
+      "rank": 114
     },
     {
       "ticker": "MUSA",
@@ -5500,7 +5534,7 @@
       "on_mom": 1.8434,
       "tug": -0.2062,
       "n_days": 499,
-      "rank": 113
+      "rank": 115
     },
     {
       "ticker": "AHR",
@@ -5517,7 +5551,7 @@
       "on_mom": 1.8291,
       "tug": -1.9614,
       "n_days": 499,
-      "rank": 114
+      "rank": 116
     },
     {
       "ticker": "BHF",
@@ -5534,24 +5568,24 @@
       "on_mom": 1.8243,
       "tug": 0.9681,
       "n_days": 499,
-      "rank": 115
+      "rank": 117
     },
     {
-      "ticker": "NWS",
-      "name": "News Corp. Class B",
-      "sector": "Communication Services",
-      "cum_overnight": 0.7095,
-      "cum_intraday": -0.3331,
-      "cum_total": 0.1401,
-      "share_overnight": 0.6805,
-      "overnight_avg_bp": 11.14,
-      "intraday_avg_bp": -7.04,
-      "overnight_t": 2.8,
-      "intraday_t": -1.07,
-      "on_mom": 1.8236,
-      "tug": 1.0425,
+      "ticker": "NTRS",
+      "name": "Northern Trust Corp.",
+      "sector": "Financials",
+      "cum_overnight": 0.4281,
+      "cum_intraday": 0.548,
+      "cum_total": 1.2108,
+      "share_overnight": 0.4386,
+      "overnight_avg_bp": 7.67,
+      "intraday_avg_bp": 9.84,
+      "overnight_t": 1.66,
+      "intraday_t": 1.49,
+      "on_mom": 1.82,
+      "tug": -0.1199,
       "n_days": 499,
-      "rank": 116
+      "rank": 118
     },
     {
       "ticker": "OGE",
@@ -5568,7 +5602,7 @@
       "on_mom": 1.8159,
       "tug": 0.2486,
       "n_days": 499,
-      "rank": 117
+      "rank": 119
     },
     {
       "ticker": "AFL",
@@ -5585,7 +5619,7 @@
       "on_mom": 1.8149,
       "tug": -0.0868,
       "n_days": 499,
-      "rank": 118
+      "rank": 120
     },
     {
       "ticker": "TECH",
@@ -5602,7 +5636,7 @@
       "on_mom": 1.8142,
       "tug": 0.8209,
       "n_days": 499,
-      "rank": 119
+      "rank": 121
     },
     {
       "ticker": "ODFL",
@@ -5619,7 +5653,7 @@
       "on_mom": 1.8135,
       "tug": 0.2077,
       "n_days": 499,
-      "rank": 120
+      "rank": 122
     },
     {
       "ticker": "KMX",
@@ -5636,7 +5670,7 @@
       "on_mom": 1.7894,
       "tug": -0.2949,
       "n_days": 499,
-      "rank": 121
+      "rank": 123
     },
     {
       "ticker": "FITB",
@@ -5653,7 +5687,7 @@
       "on_mom": 1.7882,
       "tug": 0.4925,
       "n_days": 499,
-      "rank": 122
+      "rank": 124
     },
     {
       "ticker": "DXCM",
@@ -5670,7 +5704,7 @@
       "on_mom": 1.7881,
       "tug": -0.1709,
       "n_days": 499,
-      "rank": 123
+      "rank": 125
     },
     {
       "ticker": "EVRG",
@@ -5687,7 +5721,7 @@
       "on_mom": 1.7824,
       "tug": 0.1868,
       "n_days": 499,
-      "rank": 124
+      "rank": 126
     },
     {
       "ticker": "FRT",
@@ -5704,7 +5738,24 @@
       "on_mom": 1.7823,
       "tug": 0.2145,
       "n_days": 499,
-      "rank": 125
+      "rank": 127
+    },
+    {
+      "ticker": "GH",
+      "name": "Guardant Health Inc.",
+      "sector": "",
+      "cum_overnight": 1.3042,
+      "cum_intraday": 1.0082,
+      "cum_total": 3.6272,
+      "share_overnight": 0.564,
+      "overnight_avg_bp": 19.91,
+      "intraday_avg_bp": 19.81,
+      "overnight_t": 1.71,
+      "intraday_t": 1.29,
+      "on_mom": 1.7726,
+      "tug": 0.296,
+      "n_days": 499,
+      "rank": 128
     },
     {
       "ticker": "BEN",
@@ -5721,7 +5772,7 @@
       "on_mom": 1.7638,
       "tug": 0.4423,
       "n_days": 499,
-      "rank": 126
+      "rank": 129
     },
     {
       "ticker": "NLY",
@@ -5738,7 +5789,7 @@
       "on_mom": 1.7557,
       "tug": 0.4551,
       "n_days": 499,
-      "rank": 127
+      "rank": 130
     },
     {
       "ticker": "MCK",
@@ -5755,7 +5806,7 @@
       "on_mom": 1.7529,
       "tug": -0.1499,
       "n_days": 499,
-      "rank": 128
+      "rank": 131
     },
     {
       "ticker": "FAST",
@@ -5772,7 +5823,7 @@
       "on_mom": 1.747,
       "tug": 0.2575,
       "n_days": 499,
-      "rank": 129
+      "rank": 132
     },
     {
       "ticker": "SAIA",
@@ -5789,24 +5840,7 @@
       "on_mom": 1.7462,
       "tug": 0.5236,
       "n_days": 499,
-      "rank": 130
-    },
-    {
-      "ticker": "CPRT",
-      "name": "Copart Inc.",
-      "sector": "Industrials",
-      "cum_overnight": 0.0779,
-      "cum_intraday": -0.5145,
-      "cum_total": -0.4767,
-      "share_overnight": 0.1314,
-      "overnight_avg_bp": 1.87,
-      "intraday_avg_bp": -13.4,
-      "overnight_t": 0.49,
-      "intraday_t": -2.05,
-      "on_mom": 1.7393,
-      "tug": 0.5923,
-      "n_days": 499,
-      "rank": 131
+      "rank": 133
     },
     {
       "ticker": "CINF",
@@ -5823,7 +5857,7 @@
       "on_mom": 1.7391,
       "tug": 0.1446,
       "n_days": 499,
-      "rank": 132
+      "rank": 134
     },
     {
       "ticker": "NDAQ",
@@ -5840,24 +5874,7 @@
       "on_mom": 1.7385,
       "tug": 0.348,
       "n_days": 499,
-      "rank": 133
-    },
-    {
-      "ticker": "NTRS",
-      "name": "Northern Trust Corp.",
-      "sector": "Financials",
-      "cum_overnight": 0.4244,
-      "cum_intraday": 0.5521,
-      "cum_total": 1.2108,
-      "share_overnight": 0.4346,
-      "overnight_avg_bp": 7.62,
-      "intraday_avg_bp": 9.89,
-      "overnight_t": 1.65,
-      "intraday_t": 1.5,
-      "on_mom": 1.7382,
-      "tug": -0.1277,
-      "n_days": 499,
-      "rank": 134
+      "rank": 135
     },
     {
       "ticker": "PRI",
@@ -5874,7 +5891,7 @@
       "on_mom": 1.7338,
       "tug": 0.4876,
       "n_days": 499,
-      "rank": 135
+      "rank": 136
     },
     {
       "ticker": "DTM",
@@ -5891,7 +5908,7 @@
       "on_mom": 1.7301,
       "tug": 0.1294,
       "n_days": 499,
-      "rank": 136
+      "rank": 137
     },
     {
       "ticker": "NOC",
@@ -5908,7 +5925,7 @@
       "on_mom": 1.7286,
       "tug": 0.3857,
       "n_days": 499,
-      "rank": 137
+      "rank": 138
     },
     {
       "ticker": "UNH",
@@ -5925,7 +5942,7 @@
       "on_mom": 1.7272,
       "tug": -0.1749,
       "n_days": 499,
-      "rank": 138
+      "rank": 139
     },
     {
       "ticker": "CHTR",
@@ -5942,7 +5959,7 @@
       "on_mom": 1.7261,
       "tug": 1.1565,
       "n_days": 499,
-      "rank": 139
+      "rank": 140
     },
     {
       "ticker": "PFE",
@@ -5959,7 +5976,7 @@
       "on_mom": 1.7256,
       "tug": 0.5253,
       "n_days": 499,
-      "rank": 140
+      "rank": 141
     },
     {
       "ticker": "SPGI",
@@ -5976,7 +5993,24 @@
       "on_mom": 1.7252,
       "tug": 0.2335,
       "n_days": 499,
-      "rank": 141
+      "rank": 142
+    },
+    {
+      "ticker": "DOC",
+      "name": "Healthpeak Properties Inc.",
+      "sector": "Real Estate",
+      "cum_overnight": 0.1077,
+      "cum_intraday": 0.0947,
+      "cum_total": 0.2126,
+      "share_overnight": 0.532,
+      "overnight_avg_bp": 2.29,
+      "intraday_avg_bp": 2.95,
+      "overnight_t": 0.73,
+      "intraday_t": 0.43,
+      "on_mom": 1.7177,
+      "tug": 0.013,
+      "n_days": 499,
+      "rank": 143
     },
     {
       "ticker": "MMM",
@@ -5993,24 +6027,7 @@
       "on_mom": 1.715,
       "tug": -0.3873,
       "n_days": 499,
-      "rank": 142
-    },
-    {
-      "ticker": "GH",
-      "name": "Guardant Health Inc.",
-      "sector": "",
-      "cum_overnight": 1.294,
-      "cum_intraday": 1.0171,
-      "cum_total": 3.6272,
-      "share_overnight": 0.5599,
-      "overnight_avg_bp": 19.83,
-      "intraday_avg_bp": 19.89,
-      "overnight_t": 1.7,
-      "intraday_t": 1.29,
-      "on_mom": 1.7121,
-      "tug": 0.277,
-      "n_days": 499,
-      "rank": 143
+      "rank": 144
     },
     {
       "ticker": "TROW",
@@ -6026,23 +6043,6 @@
       "intraday_t": -0.7,
       "on_mom": 1.7004,
       "tug": 0.7162,
-      "n_days": 499,
-      "rank": 144
-    },
-    {
-      "ticker": "VTRS",
-      "name": "Viatris Inc.",
-      "sector": "Health Care",
-      "cum_overnight": -0.0263,
-      "cum_intraday": 0.6276,
-      "cum_total": 0.5847,
-      "share_overnight": -0.0403,
-      "overnight_avg_bp": 0.15,
-      "intraday_avg_bp": 11.44,
-      "overnight_t": 0.03,
-      "intraday_t": 1.39,
-      "on_mom": 1.6944,
-      "tug": -0.6539,
       "n_days": 499,
       "rank": 145
     },
@@ -6120,7 +6120,7 @@
       "sector": "Consumer Staples",
       "cum_overnight": -0.1007,
       "cum_intraday": 0.2894,
-      "cum_total": 0.1596,
+      "cum_total": 0.1595,
       "share_overnight": -0.2582,
       "overnight_avg_bp": -1.87,
       "intraday_avg_bp": 5.9,
@@ -6187,15 +6187,15 @@
       "name": "Liberty Global Ltd.",
       "sector": "Communication Services",
       "cum_overnight": -0.126,
-      "cum_intraday": 0.1341,
-      "cum_total": -0.0088,
-      "share_overnight": -0.4845,
+      "cum_intraday": 0.1346,
+      "cum_total": -0.0083,
+      "share_overnight": -0.4834,
       "overnight_avg_bp": -1.95,
-      "intraday_avg_bp": 4.34,
+      "intraday_avg_bp": 4.35,
       "overnight_t": -0.37,
-      "intraday_t": 0.5,
+      "intraday_t": 0.51,
       "on_mom": 1.6748,
-      "tug": -0.26,
+      "tug": -0.2606,
       "n_days": 499,
       "rank": 154
     },
@@ -6268,6 +6268,23 @@
       "rank": 158
     },
     {
+      "ticker": "VTRS",
+      "name": "Viatris Inc.",
+      "sector": "Health Care",
+      "cum_overnight": -0.028,
+      "cum_intraday": 0.6304,
+      "cum_total": 0.5847,
+      "share_overnight": -0.0425,
+      "overnight_avg_bp": 0.11,
+      "intraday_avg_bp": 11.47,
+      "overnight_t": 0.02,
+      "intraday_t": 1.39,
+      "on_mom": 1.6562,
+      "tug": -0.6584,
+      "n_days": 499,
+      "rank": 159
+    },
+    {
       "ticker": "KKR",
       "name": "KKR & Co. Inc. Class A",
       "sector": "Financials",
@@ -6282,7 +6299,7 @@
       "on_mom": 1.654,
       "tug": 0.9567,
       "n_days": 499,
-      "rank": 159
+      "rank": 160
     },
     {
       "ticker": "RYN",
@@ -6299,7 +6316,7 @@
       "on_mom": 1.6496,
       "tug": 0.631,
       "n_days": 499,
-      "rank": 160
+      "rank": 161
     },
     {
       "ticker": "EIX",
@@ -6316,7 +6333,7 @@
       "on_mom": 1.6485,
       "tug": 0.9832,
       "n_days": 499,
-      "rank": 161
+      "rank": 162
     },
     {
       "ticker": "RS",
@@ -6333,7 +6350,7 @@
       "on_mom": 1.6456,
       "tug": -0.0083,
       "n_days": 499,
-      "rank": 162
+      "rank": 163
     },
     {
       "ticker": "VOYA",
@@ -6350,7 +6367,7 @@
       "on_mom": 1.6439,
       "tug": -0.0513,
       "n_days": 499,
-      "rank": 163
+      "rank": 164
     },
     {
       "ticker": "MPT",
@@ -6367,7 +6384,7 @@
       "on_mom": 1.6435,
       "tug": 0.0319,
       "n_days": 499,
-      "rank": 164
+      "rank": 165
     },
     {
       "ticker": "CFR",
@@ -6384,7 +6401,7 @@
       "on_mom": 1.6432,
       "tug": 0.6159,
       "n_days": 499,
-      "rank": 165
+      "rank": 166
     },
     {
       "ticker": "DTE",
@@ -6401,7 +6418,7 @@
       "on_mom": 1.6429,
       "tug": 0.5217,
       "n_days": 499,
-      "rank": 166
+      "rank": 167
     },
     {
       "ticker": "KO",
@@ -6418,7 +6435,7 @@
       "on_mom": 1.6355,
       "tug": 0.1249,
       "n_days": 499,
-      "rank": 167
+      "rank": 168
     },
     {
       "ticker": "AXP",
@@ -6435,7 +6452,7 @@
       "on_mom": 1.6329,
       "tug": 0.2719,
       "n_days": 499,
-      "rank": 168
+      "rank": 169
     },
     {
       "ticker": "LSTR",
@@ -6452,7 +6469,7 @@
       "on_mom": 1.6294,
       "tug": -0.3267,
       "n_days": 499,
-      "rank": 169
+      "rank": 170
     },
     {
       "ticker": "BALL",
@@ -6469,7 +6486,7 @@
       "on_mom": 1.6288,
       "tug": 0.4341,
       "n_days": 499,
-      "rank": 170
+      "rank": 171
     },
     {
       "ticker": "NEE",
@@ -6486,7 +6503,7 @@
       "on_mom": 1.6148,
       "tug": 0.2468,
       "n_days": 499,
-      "rank": 171
+      "rank": 172
     },
     {
       "ticker": "SPG",
@@ -6503,7 +6520,7 @@
       "on_mom": 1.6147,
       "tug": -0.1005,
       "n_days": 499,
-      "rank": 172
+      "rank": 173
     },
     {
       "ticker": "CB",
@@ -6520,7 +6537,7 @@
       "on_mom": 1.6132,
       "tug": 0.0006,
       "n_days": 499,
-      "rank": 173
+      "rank": 174
     },
     {
       "ticker": "CFG",
@@ -6537,7 +6554,7 @@
       "on_mom": 1.6027,
       "tug": 0.1898,
       "n_days": 499,
-      "rank": 174
+      "rank": 175
     },
     {
       "ticker": "HIG",
@@ -6553,23 +6570,6 @@
       "intraday_t": 0.96,
       "on_mom": 1.5899,
       "tug": -0.0839,
-      "n_days": 499,
-      "rank": 175
-    },
-    {
-      "ticker": "DOC",
-      "name": "Healthpeak Properties Inc.",
-      "sector": "Real Estate",
-      "cum_overnight": 0.1027,
-      "cum_intraday": 0.0947,
-      "cum_total": 0.2072,
-      "share_overnight": 0.5201,
-      "overnight_avg_bp": 2.2,
-      "intraday_avg_bp": 2.95,
-      "overnight_t": 0.7,
-      "intraday_t": 0.43,
-      "on_mom": 1.5702,
-      "tug": 0.008,
       "n_days": 499,
       "rank": 176
     },
@@ -6687,7 +6687,7 @@
       "intraday_avg_bp": -4.35,
       "overnight_t": 0.51,
       "intraday_t": -0.6,
-      "on_mom": 1.5487,
+      "on_mom": 1.5488,
       "tug": 0.3325,
       "n_days": 499,
       "rank": 183
@@ -6713,16 +6713,16 @@
       "ticker": "AVAV",
       "name": "AeroVironment Inc.",
       "sector": "Industrials",
-      "cum_overnight": 2.7878,
-      "cum_intraday": -0.7765,
+      "cum_overnight": 2.7851,
+      "cum_intraday": -0.7763,
       "cum_total": -0.1533,
-      "share_overnight": 0.7821,
-      "overnight_avg_bp": 30.29,
-      "intraday_avg_bp": -23.4,
+      "share_overnight": 0.782,
+      "overnight_avg_bp": 30.28,
+      "intraday_avg_bp": -23.38,
       "overnight_t": 2.51,
       "intraday_t": -1.45,
-      "on_mom": 1.5382,
-      "tug": 3.5642,
+      "on_mom": 1.5344,
+      "tug": 3.5614,
       "n_days": 499,
       "rank": 185
     },
@@ -6965,19 +6965,19 @@
       "rank": 199
     },
     {
-      "ticker": "BRK-B",
-      "name": "Berkshire Hathaway Inc. Class B",
+      "ticker": "TW",
+      "name": "Tradeweb Markets Inc. Class A",
       "sector": "Financials",
-      "cum_overnight": 0.2175,
-      "cum_intraday": -0.0745,
-      "cum_total": 0.1268,
-      "share_overnight": 0.7448,
-      "overnight_avg_bp": 4.11,
-      "intraday_avg_bp": -1.1,
-      "overnight_t": 1.6,
-      "intraday_t": -0.26,
-      "on_mom": 1.4533,
-      "tug": 0.2921,
+      "cum_overnight": 0.0526,
+      "cum_intraday": -0.124,
+      "cum_total": -0.0779,
+      "share_overnight": 0.298,
+      "overnight_avg_bp": 1.28,
+      "intraday_avg_bp": -1.23,
+      "overnight_t": 0.4,
+      "intraday_t": -0.16,
+      "on_mom": 1.4636,
+      "tug": 0.1767,
       "n_days": 499,
       "rank": 200
     }
