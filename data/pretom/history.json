@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-07-30",
+  "as_of": "2026-07-31",
   "survivorship_note": "Backfilled months use CURRENT Russell 1000 membership; delisted losers are absent, which flatters loser recovery.",
   "disclaimer": "PRETOM is auto-generated from free/best-effort data (Vanguard VONE holdings, yfinance). Short side: Nathan, Suominen & Tasa (2026), 'The Intramonth Momentum Cycle'. TOM long window: Lakonishok & Smidt (1988); Xu & McConnell (2008). Backfilled months use current index membership (survivorship bias). Shorting carries unlimited-loss risk. Decision-support, not investment advice.",
   "rows": [
@@ -1231,15 +1231,27 @@
       },
       "post": {
         "n_priced": 101,
-        "ew_ret": 0.011909,
-        "cw_ret": 0.015261,
-        "spy_ret": 0.003518,
-        "ew_excess": 0.008391,
-        "cw_excess": 0.011743,
-        "reversal_ratio": -0.5602
+        "ew_ret": 0.003008,
+        "cw_ret": 0.009008,
+        "spy_ret": 0.010743,
+        "ew_excess": -0.007735,
+        "cw_excess": -0.001735,
+        "reversal_ratio": 0.5164
       },
-      "tom_market": {},
-      "tom_basket": {}
+      "tom_market": {
+        "n_days": 1,
+        "spy_ret": 0.0072
+      },
+      "tom_basket": {
+        "n_priced": 101,
+        "ew_ret": -0.009059,
+        "cw_ret": -0.006526,
+        "spy_ret": 0.0072,
+        "ew_excess": -0.016259,
+        "cw_excess": -0.013725,
+        "pct_negative_end": 0.5347,
+        "pct_negative_any": 0.5347
+      }
     }
   ]
 }
