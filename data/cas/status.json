@@ -1,6 +1,6 @@
 {
   "date": "2026-08-01",
-  "cadence": "weekly",
+  "cadence": "monthly",
   "n_signals": 10878,
   "n_assets": 592,
   "regime": "risk-on",
@@ -66,6 +66,18 @@
       "segment": "flows",
       "ok": true,
       "n": 614
+    },
+    {
+      "segment": "edgar13f",
+      "ok": true,
+      "n": 5,
+      "source": "edgar",
+      "error": ""
+    },
+    {
+      "segment": "backtest",
+      "ok": true,
+      "n": 42
     },
     {
       "segment": "history+hitrate",
