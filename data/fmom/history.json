@@ -304929,8 +304929,25 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": 0.1076,
+        "long_ret": 0.0537,
+        "short_ret": -0.0539,
+        "hit": true,
+        "per_factor": {
+          "LTR": 0.0433,
+          "SMB": 0.0855,
+          "ASSETG": 0.0754,
+          "STR": -0.0006,
+          "GRPROF": -0.0793,
+          "IVOL": -0.0801,
+          "EP": 0.0737,
+          "DP": 0.0396,
+          "CP": 0.0481
+        },
+        "eval_date": "2026-08-04"
+      }
     },
     {
       "month": "2026-05",
@@ -304979,8 +304996,25 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": 0.0511,
+        "long_ret": 0.0433,
+        "short_ret": -0.0078,
+        "hit": true,
+        "per_factor": {
+          "LTR": 0.0433,
+          "IVOL": -0.0801,
+          "GRPROF": -0.0793,
+          "STR": -0.0006,
+          "EP": 0.0737,
+          "CP": 0.0481,
+          "DP": 0.0396,
+          "ASSETG": 0.0754,
+          "SMB": 0.0855
+        },
+        "eval_date": "2026-08-04"
+      }
     },
     {
       "month": "2026-05",
@@ -305045,8 +305079,29 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": 0.027,
+        "long_ret": 0.0242,
+        "short_ret": -0.0028,
+        "hit": true,
+        "per_factor": {
+          "LTR": 0.0433,
+          "MOM": 0.0476,
+          "ACC": -0.0436,
+          "IVOL": -0.0801,
+          "GRPROF": -0.0793,
+          "STR": -0.0006,
+          "EP": 0.0737,
+          "CP": 0.0481,
+          "DP": 0.0396,
+          "ASSETG": 0.0754,
+          "BM": 0.0868,
+          "ISSUE12": -0.0077,
+          "SMB": 0.0855
+        },
+        "eval_date": "2026-08-04"
+      }
     },
     {
       "month": "2026-05",
@@ -305599,6 +305654,240 @@
         },
         "eval_date": "2026-07-20"
       }
+    },
+    {
+      "month": "2026-06",
+      "model": "aqr_csfm",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "BM",
+            "w": 0.1761
+          },
+          {
+            "factor": "ASSETG",
+            "w": 0.1669
+          },
+          {
+            "factor": "SMB",
+            "w": 0.1663
+          },
+          {
+            "factor": "EP",
+            "w": 0.1299
+          },
+          {
+            "factor": "LTR",
+            "w": 0.127
+          },
+          {
+            "factor": "MOM",
+            "w": 0.1077
+          },
+          {
+            "factor": "CP",
+            "w": 0.075
+          },
+          {
+            "factor": "DP",
+            "w": 0.0511
+          }
+        ],
+        "short": [
+          {
+            "factor": "GRPROF",
+            "w": -0.2147
+          },
+          {
+            "factor": "QMJ",
+            "w": -0.2037
+          },
+          {
+            "factor": "BAB",
+            "w": -0.1987
+          },
+          {
+            "factor": "HMLDEV",
+            "w": -0.1444
+          },
+          {
+            "factor": "ACC",
+            "w": -0.1189
+          },
+          {
+            "factor": "IVOL",
+            "w": -0.0784
+          },
+          {
+            "factor": "ISSUE12",
+            "w": -0.0241
+          },
+          {
+            "factor": "STR",
+            "w": -0.017
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-06",
+      "model": "aqr_tsfm",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "BM",
+            "w": 0.1704
+          },
+          {
+            "factor": "ASSETG",
+            "w": 0.1635
+          },
+          {
+            "factor": "SMB",
+            "w": 0.1611
+          },
+          {
+            "factor": "LTR",
+            "w": 0.1337
+          },
+          {
+            "factor": "EP",
+            "w": 0.1275
+          },
+          {
+            "factor": "MOM",
+            "w": 0.1116
+          },
+          {
+            "factor": "CP",
+            "w": 0.0776
+          },
+          {
+            "factor": "DP",
+            "w": 0.0547
+          }
+        ],
+        "short": [
+          {
+            "factor": "GRPROF",
+            "w": -0.2246
+          },
+          {
+            "factor": "QMJ",
+            "w": -0.2124
+          },
+          {
+            "factor": "BAB",
+            "w": -0.2014
+          },
+          {
+            "factor": "HMLDEV",
+            "w": -0.146
+          },
+          {
+            "factor": "ACC",
+            "w": -0.1171
+          },
+          {
+            "factor": "IVOL",
+            "w": -0.0821
+          },
+          {
+            "factor": "ISSUE12",
+            "w": -0.0148
+          },
+          {
+            "factor": "STR",
+            "w": -0.0016
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-06",
+      "model": "aqr_tsfm_vs",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "BM",
+            "w": 0.1336
+          },
+          {
+            "factor": "ASSETG",
+            "w": 0.1282
+          },
+          {
+            "factor": "SMB",
+            "w": 0.1264
+          },
+          {
+            "factor": "LTR",
+            "w": 0.1049
+          },
+          {
+            "factor": "EP",
+            "w": 0.1
+          },
+          {
+            "factor": "MOM",
+            "w": 0.0875
+          },
+          {
+            "factor": "CP",
+            "w": 0.0609
+          },
+          {
+            "factor": "DP",
+            "w": 0.0429
+          }
+        ],
+        "short": [
+          {
+            "factor": "GRPROF",
+            "w": -0.1762
+          },
+          {
+            "factor": "QMJ",
+            "w": -0.1666
+          },
+          {
+            "factor": "BAB",
+            "w": -0.158
+          },
+          {
+            "factor": "HMLDEV",
+            "w": -0.1145
+          },
+          {
+            "factor": "ACC",
+            "w": -0.0918
+          },
+          {
+            "factor": "IVOL",
+            "w": -0.0644
+          },
+          {
+            "factor": "ISSUE12",
+            "w": -0.0116
+          },
+          {
+            "factor": "STR",
+            "w": -0.0013
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
     },
     {
       "month": "2026-06",
@@ -306573,6 +306862,6 @@
       "realized": {}
     }
   ],
-  "as_of": "2026-08-03",
+  "as_of": "2026-08-04",
   "disclaimer": "FMOM is auto-generated from free/best-effort data (yfinance ETF prices, Ken French Data Library, AQR datasets). Based on Gupta & Kelly (2019), 'Factor Momentum Everywhere'. Long-short model returns ignore trading costs, borrow and slippage; ETF backtests start at fund inception. Decision-support, not investment advice."
 }
