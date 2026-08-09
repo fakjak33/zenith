@@ -455,6 +455,80 @@ def screen_nightday() -> None:
     print(f"       panel={len(panel)} screen={screen.get('n', 0)} history={len(hrows)}")
 
 
+def screen_holdings() -> None:
+    print("[holdings]")
+    import zenith.holdings as hold
+    from zenith.holdings import normalize
+
+    reg = (hold.load_funds() or {}).get("funds", [])
+    if not reg:
+        warn(True, "holdings not yet run (no registry) — skipping")
+        return
+
+    for f in reg:
+        if not f.get("enabled"):
+            continue
+        key, tick = f["key"], f["ticker"]
+        status = hold.load(key, "status", {})
+        if not status:
+            warn(True, f"holdings {tick}: not yet run (no status) — skipping")
+            continue
+        check(_days_old(status.get("date", "")) <= 5,
+              f"holdings {tick}: status fresh ({status.get('date')})")
+
+        latest = hold.load(key, "latest", {})
+        hist = hold.load(key, "history", {})
+        changes = hold.load(key, "changes", {})
+        days = hold.archive_days(key)
+
+        check(bool(latest.get("as_of")), f"holdings {tick}: latest has a value date")
+        check(bool(days), f"holdings {tick}: snapshots archived")
+        if days:
+            check(latest.get("as_of") == max(days),
+                  f"holdings {tick}: latest matches the newest archive day")
+        check(hist.get("dates") == sorted(days),
+              f"holdings {tick}: history dates match the archive exactly")
+        check(hist.get("dates", []) == sorted(set(hist.get("dates", []))),
+              f"holdings {tick}: history dates strictly increasing, no repeats")
+
+        pos = latest.get("positions", [])
+        ids = [p["id"] for p in pos]
+        check(len(ids) == len(set(ids)), f"holdings {tick}: no duplicate positions")
+        check(all(abs(p["weight"]) <= 5.0 for p in pos),
+              f"holdings {tick}: no single position above 500% of NAV")
+        check(all(p["asset_class"] in normalize.ASSET_CLASSES for p in pos),
+              f"holdings {tick}: every position has a known asset class")
+        warn(any(p["asset_class"] == "unclassified" for p in pos),
+             f"holdings {tick}: unclassified position(s) — add the root to "
+             f"normalize.ROOTS")
+
+        s = latest.get("summary", {})
+        gross = s.get("gross", 0.0)
+        check(0.2 <= gross <= 8.0,
+              f"holdings {tick}: gross exposure sane ({gross:.2f}x NAV)")
+        check(abs(s.get("net", 0.0) - (s.get("long", 0.0) + s.get("short", 0.0)))
+              < 1e-6, f"holdings {tick}: net equals long plus short")
+        check((latest.get("nav") or 0) > 0, f"holdings {tick}: NAV positive")
+
+        q = latest.get("quality", {})
+        check(bool(q.get("ok")), f"holdings {tick}: latest snapshot passed validation")
+        warn(bool(q.get("warnings")),
+             f"holdings {tick}: quality warnings {q.get('warnings')}")
+
+        if len(days) > 1:
+            check(bool(changes.get("rankings")),
+                  f"holdings {tick}: change rankings built")
+            caps = changes.get("caps", {})
+            check((caps.get("d_weight") or 0) > 0,
+                  f"holdings {tick}: heatmap colour cap is positive")
+        warn(bool(latest.get("gaps")),
+             f"holdings {tick}: {len(latest.get('gaps', []))} missing recent "
+             f"trading day(s)")
+        print(f"       {tick}: {len(days)} snapshots {min(days) if days else '-'}"
+              f"..{max(days) if days else '-'} · {len(pos)} positions · "
+              f"gross {gross:.2f}x · {changes.get('n_events', 0)} change events")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -463,6 +537,7 @@ def main() -> None:
     screen_pead()
     screen_edge()
     screen_nightday()
+    screen_holdings()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")

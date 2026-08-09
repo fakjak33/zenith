@@ -56,6 +56,39 @@ def test_nightday_view_renders():
     assert "overnight" in text.lower()
 
 
+def test_holdings_view_renders():
+    # renders with or without committed data — no data shows the state banner
+    at, text = _render("from zenith.holdings import view\nview.render()\n")
+    low = text.lower()
+    assert "evidence strength" in low or "no funds registered" in low
+    if (config.HOLDINGS_DIR / "funds.json").exists():
+        assert "positioning" in low
+        assert "what changed" in low
+        assert "position explorer" in low
+        # the interpretation caveats must be on the page, not buried
+        assert "notional" in low
+
+
+def test_holdings_heatmap_lenses_all_render():
+    if not (config.HOLDINGS_DIR / "funds.json").exists():
+        pytest.skip("no committed holdings data")
+    for lens in ("Δ Exposure", "New / Closed", "Long / Short"):
+        at = AppTest.from_string(
+            "from zenith.holdings import view\nview.render()\n",
+            default_timeout=120)
+        at.run()
+        assert not at.exception, [e.value for e in at.exception]
+        picked = False
+        for r in at.radio:
+            if lens in [str(o) for o in r.options]:
+                r.set_value(lens)
+                picked = True
+                break
+        assert picked, f"lens {lens} not offered"
+        at.run()
+        assert not at.exception, [e.value for e in at.exception]
+
+
 def test_fmom_view_has_vol_scaled_lens():
     if not config.FMOM_FILES["signals"].exists():
         pytest.skip("no committed fmom data")
