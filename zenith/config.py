@@ -100,9 +100,43 @@ NIGHTDAY_FILES = {
     "status": NIGHTDAY_DIR / "status.json",
 }
 
+# --- HOLDINGS (fund position intelligence — DBMF first) ---------------------
+# One sub-directory per tracked fund so a second fund is a registry entry, not
+# a schema change: data/holdings/<fund>/{latest,history,changes,status}.json
+# plus data/holdings/<fund>/archive/YYYY-MM-DD.json (the source of truth).
+HOLDINGS_DIR = DATA_DIR / "holdings"
+HOLDINGS_FUNDS_JSON = HOLDINGS_DIR / "funds.json"   # registry snapshot for the app
+HOLDINGS_ARTEFACTS = ("latest", "history", "changes", "status")
+
+
+def holdings_dir(fund: str) -> Path:
+    """Per-fund artefact directory (created on demand)."""
+    d = HOLDINGS_DIR / fund
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def holdings_archive_dir(fund: str) -> Path:
+    """Per-fund daily snapshot directory (created on demand)."""
+    d = HOLDINGS_DIR / fund / "archive"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def holdings_files(fund: str) -> dict:
+    """Named artefact paths for one fund, mirroring the *_FILES convention."""
+    d = holdings_dir(fund)
+    return {
+        "latest": d / "latest.json",      # current snapshot + summary + 1-day changes
+        "history": d / "history.json",    # date-indexed per-position weight/notional series
+        "changes": d / "changes.json",    # change events + precomputed window rankings
+        "status": d / "status.json",      # run health + source freshness + quality flags
+    }
+
+
 for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR,
            PRETOM_DIR, PRETOM_ARCHIVE_DIR, PEAD_DIR, PEAD_ARCHIVE_DIR,
-           FMOM_DIR, FMOM_ARCHIVE_DIR, EDGE_DIR, NIGHTDAY_DIR):
+           FMOM_DIR, FMOM_ARCHIVE_DIR, EDGE_DIR, NIGHTDAY_DIR, HOLDINGS_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping

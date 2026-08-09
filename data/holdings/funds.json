@@ -1,0 +1,27 @@
+{
+  "funds": [
+    {
+      "key": "dbmf",
+      "ticker": "DBMF",
+      "name": "iMGP DBi Managed Futures Strategy ETF",
+      "adviser": "iM Global Partner",
+      "subadviser": "Dynamic Beta investments",
+      "adapter": "imgp",
+      "source_url": "https://www.imgp.com/us/fund/US53700T8273-imgp-dbi-managed-futures-strategy-etf/",
+      "source_label": "iM Global Partner — fund page, daily holdings (SEC Rule 6c-11)",
+      "strategy": "DBi's Dynamic Beta Engine regresses the trailing 60-day returns of the largest managed-futures hedge funds against a basket of liquid futures, then holds the best-fit portfolio. It replicates the target group's performance — explicitly not its positions — at an 0.85% flat fee.",
+      "reads_as": "Every futures row's market value is signed NOTIONAL exposure and its weight is that notional as a fraction of NAV. A weight of -0.96 means the fund is short 96% of NAV in notional terms. Treasury bills are margin collateral, not a directional view.",
+      "caveats": [
+        "These are DBMF's own positions, which estimate — but are not — the positions of the CTA funds it tracks.",
+        "Notional exposure is not risk-equivalent across asset classes: a large 2-year note position carries far less risk than a smaller 10-year one.",
+        "Treasury bills are collateral for futures margin and are excluded from the long/short exposure figures.",
+        "Futures roll quarterly. Positions are tracked by contract root, so a Sep-to-Dec roll is one continuous position, not a close plus an open."
+      ],
+      "legacy_urls": [
+        "https://imgpfunds.com/im-dbi-managed-futures-strategy-etf/"
+      ],
+      "enabled": true
+    }
+  ],
+  "default": "dbmf"
+}

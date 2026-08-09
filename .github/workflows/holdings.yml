@@ -1,0 +1,54 @@
+name: HOLDINGS compute
+
+on:
+  schedule:
+    - cron: "0 2 * * 2-6"       # after the other daily jobs (pretom 22:45,
+                                # pead 23:15, edge 01:00, nightday 01:30 UTC).
+                                # No trading-day gate: the script no-ops when
+                                # the fund has not published a new value date.
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | backfill | rebuild"
+        default: "auto"
+      days:
+        description: "backfill look-back in calendar days"
+        default: "365"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: holdings
+  cancel-in-progress: false
+
+jobs:
+  holdings:
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ github.event.inputs.action == 'backfill' && 90 || 20 }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run HOLDINGS compute
+        run: >
+          python -m zenith.holdings.compute
+          --action ${{ github.event.inputs.action || 'auto' }}
+          --days ${{ github.event.inputs.days || '365' }}
+
+      - name: Commit HOLDINGS data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/holdings/
+          if git diff --cached --quiet; then
+            echo "No HOLDINGS changes."
+          else
+            git commit -m "holdings: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi

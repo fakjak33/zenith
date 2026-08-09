@@ -44,7 +44,11 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "evidence tier and long/short ranked ideas.\n"
         "7. **NIGHT & DAY** — *overnight vs intraday* return decomposition: where the return is "
         "really made, plus an overnight-momentum screen (Lou-Polk-Skouras).\n"
-        "8. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "8. **HOLDINGS** — *fund position intelligence*: a systematic fund's own daily portfolio "
+        "disclosure, stored as dated snapshots so you can see what it holds today, what changed "
+        "since yesterday, and how the whole book has evolved. First fund: **DBMF**, the managed-"
+        "futures replicator.\n"
+        "9. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -106,16 +110,18 @@ def insights_research_news(items, key_prefix):
 
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
- tab_nightday, tab_archive, tab_sources) = st.tabs(
+ tab_nightday, tab_holdings, tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
-     "EDGE SCREENS", "NIGHT & DAY", "ARCHIVE", "SOURCES"])
+     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
     from zenith.pretom.view import today_badge
     from zenith.pead.view import today_badge as pead_today_badge
     from zenith.edge.view import today_badge as edge_today_badge
-    for _b in (today_badge(), pead_today_badge(), edge_today_badge()):
+    from zenith.holdings.view import today_badge as holdings_today_badge
+    for _b in (today_badge(), pead_today_badge(), edge_today_badge(),
+               holdings_today_badge()):
         if _b:
             st.markdown(_b, unsafe_allow_html=True)
     latest = store.load_latest()
@@ -165,6 +171,12 @@ with tab_nightday:
                 unsafe_allow_html=True)
     from zenith.nightday import view as nightday_view
     nightday_view.render()
+
+with tab_holdings:
+    st.markdown(section("HOLDINGS — fund position intelligence", 5),
+                unsafe_allow_html=True)
+    from zenith.holdings import view as holdings_view
+    holdings_view.render()
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)
