@@ -1,9 +1,9 @@
 {
   "date": "2026-08-08",
-  "ran_at": "2026-08-09T05:01:30Z",
-  "action": "rebuild",
+  "ran_at": "2026-08-09T05:10:31Z",
+  "action": "auto",
   "fund": "dbmf",
-  "state": "rebuilt",
+  "state": "unchanged",
   "as_of": "2026-08-07",
   "n_snapshots": 24,
   "n_positions": 11,
@@ -34,9 +34,23 @@
   "error": "",
   "segments": [
     {
-      "segment": "rebuild(dbmf)",
+      "segment": "fetch(dbmf)",
       "ok": true,
-      "n": 24
+      "n": 19,
+      "via": "cache:direct",
+      "error": ""
+    },
+    {
+      "segment": "validate(dbmf)",
+      "ok": true,
+      "n": 11,
+      "warnings": []
+    },
+    {
+      "segment": "publish(dbmf)",
+      "ok": true,
+      "note": "no new value date",
+      "as_of": "2026-08-07"
     }
   ]
 }
