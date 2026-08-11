@@ -1,11 +1,11 @@
 {
-  "date": "2026-08-07",
+  "date": "2026-08-10",
   "is_trading_day": true,
   "reaction_days_processed": [
-    "2026-08-07"
+    "2026-08-10"
   ],
-  "n_history_rows": 4500,
-  "n_active": 414,
+  "n_history_rows": 4501,
+  "n_active": 412,
   "universe": {
     "n": 1024,
     "source": "vanguard_vone"
@@ -20,54 +20,76 @@
       "weights_source": "vone"
     },
     {
-      "segment": "nasdaq(2026-08-06)",
-      "ok": true,
-      "n": 586
-    },
-    {
       "segment": "nasdaq(2026-08-07)",
       "ok": true,
-      "n": 41
+      "n": 103
+    },
+    {
+      "segment": "nasdaq(2026-08-08)",
+      "ok": true,
+      "n": 2
+    },
+    {
+      "segment": "nasdaq(2026-08-09)",
+      "ok": true,
+      "n": 1
+    },
+    {
+      "segment": "nasdaq(2026-08-10)",
+      "ok": true,
+      "n": 202
     },
     {
       "segment": "upcoming_calendar",
       "ok": true,
-      "n": 49
+      "n": 48
     },
     {
       "segment": "prices",
       "ok": true,
-      "n": 448,
-      "requested": 452,
+      "n": 425,
+      "requested": 428,
       "error": ""
     },
     {
-      "segment": "sheet(2026-08-07)",
+      "segment": "sheet(2026-08-10)",
       "ok": true,
-      "n": 51,
-      "eligible": 23,
-      "picks_added": 23
+      "n": 3,
+      "eligible": 1,
+      "picks_added": 1
     },
     {
       "segment": "evaluate",
       "ok": true,
-      "n": 34
+      "n": 5
     },
     {
       "segment": "eap_evaluate",
       "ok": true,
-      "n": 45
+      "n": 4
     },
     {
       "segment": "next_earn_refresh",
       "ok": true,
-      "n": 25
+      "n": 1
+    },
+    {
+      "segment": "prices(drift)",
+      "ok": true,
+      "n": 998,
+      "requested": 1000,
+      "error": ""
+    },
+    {
+      "segment": "drift_curve",
+      "ok": true,
+      "n": 60
     },
     {
       "segment": "eap_refresh",
       "ok": true,
-      "n": 49,
-      "tracked": 8814
+      "n": 48,
+      "tracked": 8817
     }
   ]
 }

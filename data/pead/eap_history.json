@@ -198493,10 +198493,16 @@
       "backfilled": true,
       "gate": null,
       "pre": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": 0.068174,
+        "spy_ret": -0.019805,
+        "excess": 0.087979
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.141296,
+        "spy_ret": -0.020259,
+        "excess": -0.121037
       }
     },
     {
@@ -220211,9 +220217,84 @@
         "spy_ret": 0.035112,
         "excess": -0.086398
       }
+    },
+    {
+      "ticker": "BRK-B",
+      "name": "Berkshire Hathaway Inc.",
+      "report_date": "2026-08-08",
+      "reaction_day": "2026-08-10",
+      "entry_date": "2026-08-03",
+      "pre_exit_date": "2026-08-07",
+      "through_exit_date": "2026-08-10",
+      "cap_tier": "large",
+      "mktcap": 1121860355520.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": 0.016876,
+        "spy_ret": 0.020576,
+        "excess": -0.0037
+      },
+      "through": {
+        "evaluated": true,
+        "ret": 0.031726,
+        "spy_ret": 0.020273,
+        "excess": 0.011453
+      }
+    },
+    {
+      "ticker": "AXSM",
+      "name": "Axsome Therapeutics, Inc.",
+      "report_date": "2026-08-10",
+      "reaction_day": "2026-08-10",
+      "entry_date": "2026-08-03",
+      "pre_exit_date": "2026-08-07",
+      "through_exit_date": "2026-08-10",
+      "cap_tier": "mid",
+      "mktcap": 10947550619.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": 0.008055,
+        "spy_ret": 0.020576,
+        "excess": -0.012521
+      },
+      "through": {
+        "evaluated": true,
+        "ret": 0.046674,
+        "spy_ret": 0.020273,
+        "excess": 0.026401
+      }
+    },
+    {
+      "ticker": "MPT",
+      "name": "Medical Properties Trust, Inc.",
+      "report_date": "2026-08-10",
+      "reaction_day": "2026-08-10",
+      "entry_date": "2026-08-03",
+      "pre_exit_date": "2026-08-07",
+      "through_exit_date": "2026-08-10",
+      "cap_tier": "small",
+      "mktcap": 2811070000.0,
+      "backfilled": false,
+      "gate": "penny",
+      "pre": {
+        "evaluated": true,
+        "ret": 0.023965,
+        "spy_ret": 0.020576,
+        "excess": 0.003389
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.095861,
+        "spy_ret": 0.020273,
+        "excess": -0.116133
+      }
     }
   ],
-  "as_of": "2026-08-07",
+  "as_of": "2026-08-10",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence."
 }
