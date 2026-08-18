@@ -1,11 +1,11 @@
 {
-  "date": "2026-08-17",
-  "state": "LOCKED",
+  "date": "2026-08-18",
+  "state": "WINDOW_OPEN",
   "month": "2026-08",
-  "tau_offset": -10,
-  "days_to_open": 1,
-  "days_to_close_classic": 6,
-  "days_to_close_t1": 7,
+  "tau_offset": -9,
+  "days_to_open": 0,
+  "days_to_close_classic": 5,
+  "days_to_close_t1": 6,
   "schedule": {
     "tau": "2026-08-31",
     "lock_by": "2026-08-17",
@@ -24,22 +24,8 @@
       "segment": "universe",
       "ok": true,
       "source": "vanguard_vone",
-      "n": 1024,
+      "n": 1023,
       "weights_source": "vone"
-    },
-    {
-      "segment": "prices(lock)",
-      "ok": true,
-      "n": 1017,
-      "requested": 1025,
-      "error": ""
-    },
-    {
-      "segment": "lock",
-      "ok": true,
-      "n": 101,
-      "month": "2026-08",
-      "late": false
     },
     {
       "segment": "prices(2026-08)",
@@ -51,7 +37,7 @@
     {
       "segment": "reconcile(2026-08)",
       "ok": true,
-      "state": "locked"
+      "state": "window"
     },
     {
       "segment": "prices(spy-max)",
