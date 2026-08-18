@@ -221242,9 +221242,103 @@
         "spy_ret": 0.012127,
         "excess": -0.135681
       }
+    },
+    {
+      "ticker": "FN",
+      "name": "Fabrinet",
+      "report_date": "2026-08-17",
+      "reaction_day": "2026-08-18",
+      "entry_date": "2026-08-11",
+      "pre_exit_date": "2026-08-17",
+      "through_exit_date": "2026-08-18",
+      "cap_tier": "mid",
+      "mktcap": 21446965769.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": 0.138244,
+        "spy_ret": 0.002738,
+        "excess": 0.135506
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.082319,
+        "spy_ret": -0.004036,
+        "excess": -0.078283
+      }
+    },
+    {
+      "ticker": "XP",
+      "name": "XP Inc.",
+      "report_date": "2026-08-17",
+      "reaction_day": "2026-08-18",
+      "entry_date": "2026-08-11",
+      "pre_exit_date": "2026-08-17",
+      "through_exit_date": "2026-08-18",
+      "cap_tier": "mid",
+      "mktcap": 8137497442.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": false
+      },
+      "through": {
+        "evaluated": false
+      }
+    },
+    {
+      "ticker": "AS",
+      "name": "Amer Sports, Inc.",
+      "report_date": "2026-08-18",
+      "reaction_day": "2026-08-18",
+      "entry_date": "2026-08-11",
+      "pre_exit_date": "2026-08-17",
+      "through_exit_date": "2026-08-18",
+      "cap_tier": "mid",
+      "mktcap": 18163226795.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.037814,
+        "spy_ret": 0.002738,
+        "excess": -0.040552
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.006795,
+        "spy_ret": -0.004036,
+        "excess": -0.002759
+      }
+    },
+    {
+      "ticker": "HD",
+      "name": "Home Depot, Inc. (The)",
+      "report_date": "2026-08-18",
+      "reaction_day": "2026-08-18",
+      "entry_date": "2026-08-11",
+      "pre_exit_date": "2026-08-17",
+      "through_exit_date": "2026-08-18",
+      "cap_tier": "large",
+      "mktcap": 336905784514.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.046829,
+        "spy_ret": 0.002738,
+        "excess": -0.049567
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.047929,
+        "spy_ret": -0.004036,
+        "excess": -0.043893
+      }
     }
   ],
-  "as_of": "2026-08-17",
+  "as_of": "2026-08-18",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence."
 }
