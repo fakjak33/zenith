@@ -1,47 +1,47 @@
 {
-  "date": "2026-08-18",
+  "date": "2026-08-19",
   "is_trading_day": true,
   "disclaimer": "EDGE screens are auto-generated from free/best-effort data (yfinance option chains + .info short-interest/estimate fields, Vanguard VONE holdings). Each screen shows its evidence tier: several are attenuated post-publication or (IV spread, short interest) partly a borrow-fee proxy that is hard to trade net of costs (Muravyev et al.). Ranked ideas, not investment advice.",
-  "universe_n": 1023,
+  "universe_n": 1024,
   "segments": [
     {
       "segment": "universe",
       "ok": true,
       "source": "vanguard_vone",
-      "n": 1023,
+      "n": 1024,
       "weights_source": "vone"
     },
     {
       "segment": "prices",
       "ok": true,
-      "n": 1001,
-      "requested": 1024
+      "n": 1018,
+      "requested": 1025
     },
     {
       "segment": "shortint",
       "ok": true,
-      "n": 686
+      "n": 699
     },
     {
       "segment": "ivspread",
       "ok": true,
-      "n": 189
+      "n": 193
     },
     {
       "segment": "revisions",
       "ok": true,
-      "n": 243
+      "n": 248
     },
     {
       "segment": "lottery",
       "ok": true,
-      "n": 1000
+      "n": 1017
     },
     {
       "segment": "history",
       "ok": true,
-      "added": 424,
-      "evaluated": 521
+      "added": 432,
+      "evaluated": 437
     }
   ]
 }
