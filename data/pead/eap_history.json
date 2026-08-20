@@ -221438,6 +221438,31 @@
       }
     },
     {
+      "ticker": "BILL",
+      "name": "BILL Holdings, Inc.",
+      "report_date": "2026-08-19",
+      "reaction_day": "2026-08-20",
+      "entry_date": "2026-08-13",
+      "pre_exit_date": "2026-08-19",
+      "through_exit_date": "2026-08-20",
+      "cap_tier": "small",
+      "mktcap": 4751759845.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.070162,
+        "spy_ret": -0.011339,
+        "excess": -0.058823
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.076203,
+        "spy_ret": -0.019643,
+        "excess": -0.05656
+      }
+    },
+    {
       "ticker": "EL",
       "name": "Estee Lauder Companies, Inc. (The)",
       "report_date": "2026-08-19",
@@ -221485,6 +221510,31 @@
         "ret": 0.01866,
         "spy_ret": -0.00444,
         "excess": 0.0231
+      }
+    },
+    {
+      "ticker": "NDSN",
+      "name": "Nordson Corporation",
+      "report_date": "2026-08-19",
+      "reaction_day": "2026-08-20",
+      "entry_date": "2026-08-13",
+      "pre_exit_date": "2026-08-19",
+      "through_exit_date": "2026-08-20",
+      "cap_tier": "mid",
+      "mktcap": 17268106444.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.000226,
+        "spy_ret": -0.011339,
+        "excess": 0.011113
+      },
+      "through": {
+        "evaluated": true,
+        "ret": 0.079712,
+        "spy_ret": -0.019643,
+        "excess": 0.099355
       }
     },
     {
@@ -221561,9 +221611,34 @@
         "spy_ret": -0.00444,
         "excess": -0.124363
       }
+    },
+    {
+      "ticker": "WMT",
+      "name": "Walmart Inc.",
+      "report_date": "2026-08-20",
+      "reaction_day": "2026-08-20",
+      "entry_date": "2026-08-13",
+      "pre_exit_date": "2026-08-19",
+      "through_exit_date": "2026-08-20",
+      "cap_tier": "large",
+      "mktcap": 909608447417.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.012271,
+        "spy_ret": -0.011339,
+        "excess": -0.000932
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.102662,
+        "spy_ret": -0.019643,
+        "excess": -0.083018
+      }
     }
   ],
-  "as_of": "2026-08-19",
+  "as_of": "2026-08-20",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence."
 }
