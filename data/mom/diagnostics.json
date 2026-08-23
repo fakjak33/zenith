@@ -1,0 +1,95 @@
+{
+  "as_of": "2026-08-23",
+  "disclaimer": "MOMENTUM scores every current Russell 1000 constituent on five documented momentum dimensions (time-series, breakout, cross-sectional, trend speed, momentum strength) and blends them into a transparent -20..+20 composite. Momentum is well-replicated academically but crashes hard in panic states and is most crowded in large caps (this universe). Decision-support and a research monitor, not investment advice.",
+  "correlation": {
+    "n": 985,
+    "matrix": {
+      "ts": {
+        "ts": 1.0,
+        "breakout": 0.642,
+        "xsec": 0.997,
+        "speed": 0.702,
+        "strength": 0.728
+      },
+      "breakout": {
+        "ts": 0.642,
+        "breakout": 1.0,
+        "xsec": 0.666,
+        "speed": 0.848,
+        "strength": 0.857
+      },
+      "xsec": {
+        "ts": 0.997,
+        "breakout": 0.666,
+        "xsec": 1.0,
+        "speed": 0.712,
+        "strength": 0.749
+      },
+      "speed": {
+        "ts": 0.702,
+        "breakout": 0.848,
+        "xsec": 0.712,
+        "speed": 1.0,
+        "strength": 0.818
+      },
+      "strength": {
+        "ts": 0.728,
+        "breakout": 0.857,
+        "xsec": 0.749,
+        "speed": 0.818,
+        "strength": 1.0
+      }
+    },
+    "flagged_pairs": [
+      {
+        "a": "ts",
+        "b": "xsec",
+        "corr": 0.997
+      },
+      {
+        "a": "breakout",
+        "b": "strength",
+        "corr": 0.857
+      }
+    ]
+  },
+  "distribution": {
+    "n": 985,
+    "mean": 2.175,
+    "median": 2.585,
+    "std": 5.426,
+    "pct_bullish": 0.3198,
+    "pct_bearish": 0.1036,
+    "n_extreme_bullish": 1,
+    "n_extreme_bearish": 0
+  },
+  "ic_by_horizon": {
+    "20": null,
+    "60": null,
+    "126": null
+  },
+  "factor_ic_by_horizon": {
+    "20": {
+      "ts": null,
+      "breakout": null,
+      "xsec": null,
+      "speed": null,
+      "strength": null
+    },
+    "60": {
+      "ts": null,
+      "breakout": null,
+      "xsec": null,
+      "speed": null,
+      "strength": null
+    },
+    "126": {
+      "ts": null,
+      "breakout": null,
+      "xsec": null,
+      "speed": null,
+      "strength": null
+    }
+  },
+  "hit_rate": {}
+}

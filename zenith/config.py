@@ -100,6 +100,73 @@ NIGHTDAY_FILES = {
     "status": NIGHTDAY_DIR / "status.json",
 }
 
+# --- MOMENTUM (Russell 1000 multi-factor stock momentum engine) ------------
+# Five factors (time-series, breakout, cross-sectional, trend speed / GMMA,
+# momentum strength) blended into a transparent -20..+20 composite. Big
+# per-day artefacts are written COMPACT (indent=None) — see mom/__init__.py
+# _write(); at ~1000 rows/day, pretty-printing would add ~300MB/yr to git.
+MOM_DIR = DATA_DIR / "mom"
+MOM_HISTORY_DIR = MOM_DIR / "history"        # sharded data/mom/history/<YYYY>.json
+MOM_FILES = {
+    "scores": MOM_DIR / "scores_latest.json",       # full R1000 ranked composite + factors
+    "detail": MOM_DIR / "detail_latest.json",       # per-stock factor internals (MAs, slopes, …)
+    "sectors": MOM_DIR / "sectors.json",            # sector/industry aggregates
+    "diagnostics": MOM_DIR / "diagnostics.json",    # factor correlation matrix, IC, hit rates
+    "meta": MOM_DIR / "meta.json",                  # ticker -> name/sector/industry/mktcap cache
+    "membership": MOM_DIR / "membership.json",      # append-only point-in-time constituents
+    "picks": MOM_DIR / "picks.json",                # append-only decile pick tracker + eval
+    "status": MOM_DIR / "status.json",
+}
+
+# Horizon weights shared by the time-series, breakout and cross-sectional
+# factors. Tilted toward the slower legs (12-1, 6M) per the "medium/long-term,
+# not day-trading" brief; the 1M leg is kept small because short-horizon
+# returns are known to reverse (Jegadeesh 1990), not disappear.
+MOM_HORIZON_WEIGHTS = {
+    "12_1": 0.30,   # 12-month return excluding the most recent month (classic UMD spec)
+    "12m": 0.15,
+    "9m": 0.15,
+    "6m": 0.20,
+    "3m": 0.15,
+    "1m": 0.05,
+}
+
+# Composite factor weights. Not equal: TS and cross-sectional momentum carry
+# the most independent information (MOP 2012 decompose the premium into
+# distinct auto-covariance vs cross-serial components); breakout is a
+# non-linear read of the same path as TS so it is downweighted; speed and
+# strength are both MA-derived (the likeliest redundant pair) and split
+# .15/.20, with strength weighted higher because its acceleration/quality
+# terms carry information neither TS nor speed contains. Configurable without
+# touching code; the app also renders an equal-weight composite for
+# comparison and flags factor-pair correlations above 0.85.
+MOM_WEIGHTS = {
+    "ts": 0.25,
+    "xsec": 0.25,
+    "breakout": 0.15,
+    "speed": 0.15,
+    "strength": 0.20,
+}
+
+# Moving averages for the trend-speed / GMMA factor and chart (trading days).
+MOM_MA_PERIODS = (9, 21, 50, 100, 200, 250, 400)
+
+# Signal-state bands on the -20..+20 composite (threshold, label), descending.
+MOM_STATES = (
+    (15.0, "EXTREME BULLISH"),
+    (10.0, "STRONG BULLISH"),
+    (5.0, "BULLISH"),
+    (-5.0, "NEUTRAL"),
+    (-10.0, "BEARISH"),
+    (-15.0, "STRONG BEARISH"),
+    (-20.0, "EXTREME BEARISH"),
+)
+
+# The point at which point-in-time R1000 membership tracking began (PRETOM's
+# universe.json first commit). Historical MOMENTUM scores before this date use
+# TODAY's constituents and are survivorship-biased; the UI marks the boundary.
+MOM_MEMBERSHIP_START = "2026-07-15"
+
 # --- HOLDINGS (fund position intelligence — DBMF first) ---------------------
 # One sub-directory per tracked fund so a second fund is a registry entry, not
 # a schema change: data/holdings/<fund>/{latest,history,changes,status}.json
@@ -136,7 +203,8 @@ def holdings_files(fund: str) -> dict:
 
 for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR,
            PRETOM_DIR, PRETOM_ARCHIVE_DIR, PEAD_DIR, PEAD_ARCHIVE_DIR,
-           FMOM_DIR, FMOM_ARCHIVE_DIR, EDGE_DIR, NIGHTDAY_DIR, HOLDINGS_DIR):
+           FMOM_DIR, FMOM_ARCHIVE_DIR, EDGE_DIR, NIGHTDAY_DIR, HOLDINGS_DIR,
+           MOM_DIR, MOM_HISTORY_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping
