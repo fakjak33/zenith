@@ -1,0 +1,54 @@
+name: MOMENTUM compute
+
+on:
+  schedule:
+    - cron: "0 3 * * 2-6"       # after the other daily jobs (pretom 22:45,
+                                # pead 23:15, edge 01:00, nightday 01:30,
+                                # holdings 02:00 UTC). Self-gates on the
+                                # trading calendar like every other job.
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | backfill | meta | rebuild"
+        default: "auto"
+      weeks:
+        description: "backfill look-back in weeks (only used by --action backfill)"
+        default: "156"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mom
+  cancel-in-progress: false
+
+jobs:
+  mom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run MOMENTUM compute
+        run: >
+          python -m zenith.mom.compute
+          --action ${{ github.event.inputs.action || 'auto' }}
+          --weeks ${{ github.event.inputs.weeks || '156' }}
+
+      - name: Commit MOMENTUM data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/mom/
+          if git diff --cached --quiet; then
+            echo "No MOMENTUM changes."
+          else
+            git commit -m "mom: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi

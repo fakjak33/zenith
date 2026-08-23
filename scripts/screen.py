@@ -529,6 +529,58 @@ def screen_holdings() -> None:
               f"gross {gross:.2f}x · {changes.get('n_events', 0)} change events")
 
 
+def screen_mom() -> None:
+    print("[mom]")
+    from zenith.mom import load as mom_load
+
+    status = mom_load("status", {})
+    if not status:
+        warn(True, "mom not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("date", "")) <= 5, f"mom status fresh ({status.get('date')})")
+    coverage_seg = next((s for s in status.get("segments", []) if s.get("segment") == "coverage"), {})
+    check((coverage_seg.get("coverage") or 0) >= 0.85,
+         f"mom coverage >= 0.85 ({coverage_seg.get('coverage')})")
+
+    scores = mom_load("scores", {})
+    rows = [r for r in scores.get("rows", []) if not r.get("excluded")]
+    if not rows:
+        warn(True, "mom: no scored rows yet")
+    else:
+        tks = [r["ticker"] for r in rows]
+        check(len(tks) == len(set(tks)), "mom scores: no duplicate tickers")
+        ranks = sorted(r["rank"] for r in rows)
+        check(ranks == list(range(1, len(rows) + 1)), "mom scores: ranks contiguous")
+        check(all(0 <= (r.get("pctile") or 0) <= 100 for r in rows),
+             "mom scores: pctiles within [0,100]")
+        check(all(-20.0 <= r["composite"] <= 20.0 for r in rows),
+             "mom scores: composite within [-20,+20]")
+        bad = [r["ticker"] for r in rows
+              if abs(max(-20.0, min(20.0, sum((r.get("contributions") or {}).values())))
+                     - r["composite"]) > 1e-4]
+        check(not bad, f"mom scores: contributions sum to composite ({bad[:5] if bad else 'ok'})")
+        lt = {r["ticker"] for r in rows if r.get("side") == "long"}
+        sh = {r["ticker"] for r in rows if r.get("side") == "short"}
+        check(not (lt & sh), "mom scores: long/short disjoint")
+        print(f"       universe={scores.get('n', 0)} scored={len(rows)} "
+              f"coverage={coverage_seg.get('coverage')}")
+
+    from zenith.config import MOM_HISTORY_DIR
+    if MOM_HISTORY_DIR.exists():
+        years = sorted(int(p.stem) for p in MOM_HISTORY_DIR.glob("*.json") if p.stem.isdigit())
+        for y in years:
+            import json as _json
+            doc = _json.loads((MOM_HISTORY_DIR / f"{y}.json").read_text(encoding="utf-8"))
+            dates_seen = sorted({r["date"] for r in doc.get("rows", [])})
+            check(dates_seen == sorted(dates_seen), f"mom history {y}: dates monotonic")
+
+    picks = mom_load("picks", {}).get("rows", [])
+    exs = [cell["excess"] for r in picks for cell in r.get("eval", {}).values()
+          if cell.get("evaluated") and cell.get("excess") is not None]
+    check(all(-5.0 <= v <= 5.0 for v in exs), "mom picks: evaluated excess sane")
+    print(f"       picks={len(picks)} evaluated_cells={len(exs)}")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -538,6 +590,7 @@ def main() -> None:
     screen_edge()
     screen_nightday()
     screen_holdings()
+    screen_mom()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")

@@ -48,7 +48,12 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "disclosure, stored as dated snapshots so you can see what it holds today, what changed "
         "since yesterday, and how the whole book has evolved. First fund: **DBMF**, the managed-"
         "futures replicator.\n"
-        "9. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "9. **MOMENTUM** — a Russell 1000 *multi-factor stock momentum engine*: five documented "
+        "momentum dimensions (time-series, breakout, cross-sectional, trend speed / GMMA, momentum "
+        "strength) blended into a transparent -20..+20 composite, with a full-index heatmap, "
+        "sortable rankings, sector breadth, and a per-stock drill-down explaining exactly why each "
+        "score landed where it did.\n"
+        "10. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -110,9 +115,9 @@ def insights_research_news(items, key_prefix):
 
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
- tab_nightday, tab_holdings, tab_archive, tab_sources) = st.tabs(
+ tab_nightday, tab_holdings, tab_mom, tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
-     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "ARCHIVE", "SOURCES"])
+     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -120,8 +125,9 @@ with tab_today:
     from zenith.pead.view import today_badge as pead_today_badge
     from zenith.edge.view import today_badge as edge_today_badge
     from zenith.holdings.view import today_badge as holdings_today_badge
+    from zenith.mom.view import today_badge as mom_today_badge
     for _b in (today_badge(), pead_today_badge(), edge_today_badge(),
-               holdings_today_badge()):
+               holdings_today_badge(), mom_today_badge()):
         if _b:
             st.markdown(_b, unsafe_allow_html=True)
     latest = store.load_latest()
@@ -177,6 +183,12 @@ with tab_holdings:
                 unsafe_allow_html=True)
     from zenith.holdings import view as holdings_view
     holdings_view.render()
+
+with tab_mom:
+    st.markdown(section("MOMENTUM — Russell 1000 stock momentum engine", 4),
+                unsafe_allow_html=True)
+    from zenith.mom import view as mom_view
+    mom_view.render()
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)

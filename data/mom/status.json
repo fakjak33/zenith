@@ -1,0 +1,57 @@
+{
+  "date": "2026-08-23",
+  "is_trading_day": true,
+  "disclaimer": "MOMENTUM scores every current Russell 1000 constituent on five documented momentum dimensions (time-series, breakout, cross-sectional, trend speed, momentum strength) and blends them into a transparent -20..+20 composite. Momentum is well-replicated academically but crashes hard in panic states and is most crowded in large caps (this universe). Decision-support and a research monitor, not investment advice.",
+  "segments": [
+    {
+      "segment": "universe",
+      "ok": true,
+      "source": "vanguard_vone",
+      "n": 1024,
+      "weights_source": "vone"
+    },
+    {
+      "segment": "prices",
+      "ok": true,
+      "n": 1019,
+      "requested": 1025,
+      "error": ""
+    },
+    {
+      "segment": "coverage",
+      "ok": true,
+      "n": 1018,
+      "requested": 1024,
+      "coverage": 0.9941
+    },
+    {
+      "segment": "metadata",
+      "ok": true,
+      "checked": 1024,
+      "stale": 1024,
+      "refreshed": 150
+    },
+    {
+      "segment": "factors",
+      "ok": true,
+      "n": 985
+    },
+    {
+      "segment": "artifacts",
+      "ok": true,
+      "n": 985
+    },
+    {
+      "segment": "history",
+      "ok": true,
+      "history_added": 985,
+      "picks_added": 196,
+      "evaluated": 0
+    },
+    {
+      "segment": "diagnostics",
+      "ok": true,
+      "flagged_pairs": 2
+    }
+  ]
+}
