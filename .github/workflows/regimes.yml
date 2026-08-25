@@ -1,0 +1,53 @@
+name: REGIMES compute
+
+on:
+  schedule:
+    - cron: "0 5 * * 1-6"        # after ideas.yml (03:30 UTC); daily Mon-Sat, NOT
+                                 # trading-day-gated (macro releases land on
+                                 # weekends/holidays too, and the classifier is
+                                 # monthly-cadence regardless of when it runs)
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | force"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: regimes
+  cancel-in-progress: false
+
+jobs:
+  regimes:
+    runs-on: ubuntu-latest
+    # ~45 FRED series, throttled (0.2s between requests) to avoid the rate
+    # limiting verified during development (a tight loop of ~90 requests got
+    # the dev IP blocked for >60s); the committed macro_raw.json warm-start
+    # cache means most runs only re-fetch the handful of series past their
+    # TTL (1d for daily/weekly series, 5d for monthly/quarterly)
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run REGIMES compute
+        run: python -m zenith.regimes.compute --action ${{ github.event.inputs.action || 'auto' }}
+
+      - name: Commit REGIMES data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/regimes/
+          if git diff --cached --quiet; then
+            echo "No REGIMES changes."
+          else
+            git commit -m "regimes: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi

@@ -79,6 +79,17 @@ def test_ideas_view_renders():
         assert "ideas" in low
 
 
+def test_regimes_view_renders():
+    # renders with zero committed data -- the day-one condition -- showing the
+    # rating badge, key findings, and an info prompt rather than a crash.
+    at, text = _render("from zenith.regimes import view\nview.render()\n")
+    low = text.lower()
+    assert "evidence strength" in low
+    assert "key findings" in low
+    if config.REGIMES_FILES["current"].exists():
+        assert "regime" in low
+
+
 def test_holdings_view_renders():
     # renders with or without committed data — no data shows the state banner
     at, text = _render("from zenith.holdings import view\nview.render()\n")

@@ -1,0 +1,263 @@
+{
+  "as_of": "2026-08-25",
+  "dimensions": {
+    "monetary": {
+      "composite_z": -0.29,
+      "coverage_n": 3,
+      "min_coverage": 3,
+      "state": "Neutral",
+      "indicators": [
+        {
+          "id": "DFF",
+          "label": "Effective Fed Funds Rate",
+          "raw_value": 3.63,
+          "z": -0.647,
+          "direction": -1,
+          "rising": true,
+          "lag_days": 0,
+          "freq": "D"
+        },
+        {
+          "id": "REAL_FFR",
+          "label": "Real Fed Funds Rate (DFF - core PCE YoY)",
+          "raw_value": 0.8268,
+          "z": -0.633,
+          "direction": -1,
+          "rising": false,
+          "lag_days": 30,
+          "freq": "M"
+        },
+        {
+          "id": "T10Y3M",
+          "label": "10y-3m Curve",
+          "raw_value": 0.78,
+          "z": 0.409,
+          "direction": 1,
+          "rising": true,
+          "lag_days": 0,
+          "freq": "D"
+        }
+      ]
+    },
+    "liquidity": {
+      "composite_z": -0.237,
+      "coverage_n": 2,
+      "min_coverage": 3,
+      "state": "Insufficient coverage",
+      "indicators": [
+        {
+          "id": "NET_LIQ",
+          "label": "Fed Net Liquidity (WALCL - RRP - TGA)",
+          "raw_value": -70.728,
+          "z": -0.308,
+          "direction": 1,
+          "rising": false,
+          "lag_days": 0,
+          "freq": "W"
+        },
+        {
+          "id": "M2SL",
+          "label": "M2 Money Supply",
+          "raw_value": 5.094,
+          "z": -0.167,
+          "direction": 1,
+          "rising": false,
+          "lag_days": 25,
+          "freq": "M"
+        }
+      ]
+    },
+    "credit": {
+      "composite_z": 0.518,
+      "coverage_n": 5,
+      "min_coverage": 3,
+      "state": "Easy / Expansionary",
+      "indicators": [
+        {
+          "id": "BAA10Y",
+          "label": "Baa Corporate - 10y Treasury Spread",
+          "raw_value": 1.63,
+          "z": 0.976,
+          "direction": -1,
+          "rising": false,
+          "lag_days": 0,
+          "freq": "D"
+        },
+        {
+          "id": "AAA10Y",
+          "label": "Aaa Corporate - 10y Treasury Spread",
+          "raw_value": 1.19,
+          "z": -0.066,
+          "direction": -1,
+          "rising": false,
+          "lag_days": 0,
+          "freq": "D"
+        },
+        {
+          "id": "TOTCI",
+          "label": "Commercial & Industrial Loans",
+          "raw_value": 9.4779,
+          "z": 0.739,
+          "direction": 1,
+          "rising": true,
+          "lag_days": 10,
+          "freq": "W"
+        },
+        {
+          "id": "DRTSCILM",
+          "label": "% Banks Tightening C&I Loan Standards (SLOOS)",
+          "raw_value": 0.0,
+          "z": 0.382,
+          "direction": -1,
+          "rising": true,
+          "lag_days": 30,
+          "freq": "Q"
+        },
+        {
+          "id": "BUSLOANS",
+          "label": "Commercial & Industrial Loans (H.8)",
+          "raw_value": 8.0748,
+          "z": 0.558,
+          "direction": 1,
+          "rising": true,
+          "lag_days": 20,
+          "freq": "M"
+        }
+      ]
+    },
+    "financial_conditions": {
+      "composite_z": 0.591,
+      "coverage_n": 4,
+      "min_coverage": 3,
+      "state": "Loose",
+      "indicators": [
+        {
+          "id": "NFCI",
+          "label": "Chicago Fed Financial Conditions Index",
+          "raw_value": -0.559,
+          "z": 0.619,
+          "direction": -1,
+          "rising": true,
+          "lag_days": 5,
+          "freq": "W"
+        },
+        {
+          "id": "ANFCI",
+          "label": "Adjusted Financial Conditions Index",
+          "raw_value": -0.587,
+          "z": 0.637,
+          "direction": -1,
+          "rising": true,
+          "lag_days": 5,
+          "freq": "W"
+        },
+        {
+          "id": "STLFSI4",
+          "label": "St. Louis Fed Financial Stress Index",
+          "raw_value": -0.8285,
+          "z": 0.705,
+          "direction": -1,
+          "rising": true,
+          "lag_days": 5,
+          "freq": "W"
+        },
+        {
+          "id": "VIXCLS",
+          "label": "VIX",
+          "raw_value": 15.85,
+          "z": 0.404,
+          "direction": -1,
+          "rising": false,
+          "lag_days": 0,
+          "freq": "D"
+        }
+      ]
+    },
+    "dollar": {
+      "composite_z": 0.246,
+      "coverage_n": 4,
+      "min_coverage": 3,
+      "state": "Neutral",
+      "indicators": [
+        {
+          "id": "DTWEXBGS",
+          "label": "Broad Trade-Weighted Dollar",
+          "raw_value": 118.0628,
+          "z": 0.095,
+          "direction": 1,
+          "rising": false,
+          "lag_days": 0,
+          "freq": "D"
+        },
+        {
+          "id": "DTWEXAFEGS",
+          "label": "Advanced Foreign Economies Dollar",
+          "raw_value": 111.3552,
+          "z": 0.05,
+          "direction": 1,
+          "rising": false,
+          "lag_days": 0,
+          "freq": "D"
+        },
+        {
+          "id": "DEXUSEU",
+          "label": "USD per EUR",
+          "raw_value": 1.1684,
+          "z": -0.796,
+          "direction": -1,
+          "rising": true,
+          "lag_days": 0,
+          "freq": "D"
+        },
+        {
+          "id": "DEXJPUS",
+          "label": "JPY per USD",
+          "raw_value": 158.91,
+          "z": 1.636,
+          "direction": 1,
+          "rising": false,
+          "lag_days": 0,
+          "freq": "D"
+        }
+      ]
+    },
+    "volatility": {
+      "composite_z": 0.732,
+      "coverage_n": 3,
+      "min_coverage": 3,
+      "state": "Elevated / Expansion",
+      "indicators": [
+        {
+          "id": "OVXCLS",
+          "label": "Oil Volatility (OVX)",
+          "raw_value": 46.74,
+          "z": 0.333,
+          "direction": 1,
+          "rising": false,
+          "lag_days": 0,
+          "freq": "D"
+        },
+        {
+          "id": "GVZCLS",
+          "label": "Gold Volatility (GVZ)",
+          "raw_value": 28.28,
+          "z": 2.028,
+          "direction": 1,
+          "rising": true,
+          "lag_days": 0,
+          "freq": "D"
+        },
+        {
+          "id": "TLT_RVOL",
+          "label": "TLT Realized Volatility (MOVE proxy)",
+          "raw_value": 12.4132,
+          "z": -0.166,
+          "direction": 1,
+          "rising": true,
+          "lag_days": 0,
+          "freq": "D"
+        }
+      ]
+    }
+  }
+}

@@ -628,6 +628,53 @@ def screen_ideas() -> None:
               f"regime={doc.get('regime', {}).get('label')} thin_day={doc.get('thin_day')}")
 
 
+def screen_regimes() -> None:
+    print("[regimes]")
+    from zenith.regimes import load as regimes_load, REGIME_LABELS
+
+    status = regimes_load("status", {})
+    if not status:
+        warn(True, "regimes not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("date", "")) <= 3, f"regimes status fresh ({status.get('date')})")
+
+    current = regimes_load("current", {})
+    regime = current.get("regime")
+    if not regime:
+        warn(True, "regimes: no regime classified yet")
+    else:
+        check(regime in REGIME_LABELS.values(), f"regimes: regime is a registered label ({regime})")
+        conf = current.get("confidence")
+        check(conf is None or 0 <= conf <= 100, f"regimes: confidence within [0,100] ({conf})")
+        for axis_name in ("growth", "inflation"):
+            axis = current.get(axis_name, {})
+            n_r, n_t = axis.get("n_rising"), axis.get("n_total")
+            if n_r is not None and n_t is not None:
+                check(0 <= n_r <= n_t, f"regimes: {axis_name} n_rising <= n_total ({n_r}/{n_t})")
+            breadth = axis.get("breadth")
+            check(breadth is None or 0.0 <= breadth <= 1.0,
+                 f"regimes: {axis_name} breadth within [0,1] ({breadth})")
+        print(f"       regime={regime} confidence={conf} transitioning={current.get('transitioning')} "
+             f"streak={current.get('streak_months')}mo")
+
+    dims = regimes_load("dimensions", {}).get("dimensions", {})
+    for dim, d in dims.items():
+        n = d.get("coverage_n", 0)
+        n_ind = len(d.get("indicators", []))
+        check(n <= n_ind, f"regimes: {dim} coverage_n <= indicator rows listed ({n}/{n_ind})")
+
+    timeline = regimes_load("timeline", {})
+    months = timeline.get("months", [])
+    if months:
+        m_dates = [m["month"] for m in months]
+        check(m_dates == sorted(m_dates), "regimes: timeline months monotonic")
+        check(len(m_dates) == len(set(m_dates)), "regimes: timeline months unique")
+        segs = timeline.get("segments", [])
+        bad_seg = [s for s in segs if s["regime"] not in REGIME_LABELS.values()]
+        check(not bad_seg, f"regimes: segment regimes all registered labels ({bad_seg[:3] if bad_seg else 'ok'})")
+        print(f"       months={len(months)} segments={len(segs)} transitions={len(timeline.get('transitions', []))}")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -639,6 +686,7 @@ def main() -> None:
     screen_holdings()
     screen_mom()
     screen_ideas()
+    screen_regimes()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")
