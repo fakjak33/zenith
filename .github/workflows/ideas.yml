@@ -1,0 +1,50 @@
+name: IDEAS compute
+
+on:
+  schedule:
+    - cron: "30 3 * * 2-6"       # after mom.yml (03:00 UTC) so the checkout
+                                # already contains the day's MOMENTUM commit.
+                                # Self-gates on the trading calendar like
+                                # every other job.
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | fundamentals"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ideas
+  cancel-in-progress: false
+
+jobs:
+  ideas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run IDEAS compute
+        run: >
+          python -m zenith.ideas.compute
+          --action ${{ github.event.inputs.action || 'auto' }}
+
+      - name: Commit IDEAS data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/ideas/
+          if git diff --cached --quiet; then
+            echo "No IDEAS changes."
+          else
+            git commit -m "ideas: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi
