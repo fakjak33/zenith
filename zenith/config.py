@@ -167,6 +167,101 @@ MOM_STATES = (
 # TODAY's constituents and are survivorship-biased; the UI marks the boundary.
 MOM_MEMBERSHIP_START = "2026-07-15"
 
+# --- IDEAS (discretionary-systematic opportunity engine) --------------------
+# Fusion layer over MOMENTUM/EDGE/PEAD/FMOM/CAS — not a new data pipeline (see
+# zenith/ideas/__init__.py for the full architecture note). Its own committed
+# fundamentals cache follows mom.universe.refresh_metadata's proven pattern
+# (rolling TTL, capped per-run refresh, self-heals from cold) rather than
+# fmom's gitignored store_cas cache, because this package's nightly Action
+# needs the data warm on every CI run, not just locally.
+IDEAS_DIR = DATA_DIR / "ideas"
+IDEAS_ARCHIVE_DIR = IDEAS_DIR / "archive"
+IDEAS_FILES = {
+    "ideas": IDEAS_DIR / "ideas_latest.json",           # today's ranked BUY/SELL ideas, full payload
+    "candidates": IDEAS_DIR / "candidates.json",        # top/bottom ~150 by unusualness (pre-selection pool)
+    "universe_scores": IDEAS_DIR / "universe_scores.json",  # compact {ticker: conviction/unusual} for the whole scan universe
+    "fundamentals": IDEAS_DIR / "fundamentals.json",    # rolling .info cache (30d TTL, ~150/run)
+    "tracker": IDEAS_DIR / "tracker.json",              # append-only thesis-status history per idea
+    "performance": IDEAS_DIR / "performance.json",      # closed-idea returns vs benchmark
+    "diagnostics": IDEAS_DIR / "diagnostics.json",      # engine's own out-of-sample IC/hit-rate (accumulates)
+    "analog_bank": IDEAS_DIR / "analog_bank.json",      # historical setups for the analog engine (local backfill)
+    "status": IDEAS_DIR / "status.json",
+}
+
+# Scan universe: Russell 1000 (pretom.universe.russell1000) + the CAS tagged
+# ETF set (cas.universe.frm_universe, ~335 names). Written as a flag so a
+# future Russell 3000 pass is a config change, not a rewrite — see
+# ideas/__init__.py's note on why R1000 was chosen for the MVP (every existing
+# Zenith signal is already computed on exactly this universe).
+IDEAS_UNIVERSE_SCOPE = "r1000_etf"    # r1000_etf | r3000_etf (not yet implemented)
+
+# Eight signal groups, each scored in [-1, +1] with an explicit coverage flag
+# (a stock missing options data is renormalized over what IS available, never
+# silently scored neutral — see mom.engine._weighted, reused here). Weights
+# are set A PRIORI from each input's own documented evidence tier (EDGE
+# screens already carry A/B/C ratings) and are NEVER fitted to historical
+# returns — there is no optimization loop anywhere in this package (see
+# ideas/__init__.py's anti-overfitting note, spec §21). Rationale per weight:
+#   technicals   .20 — MOMENTUM's 5-factor composite is this repo's most
+#                       validated single input (B+, its own IC diagnostic).
+#   sentiment    .15 — analyst revisions (EDGE B) + IV spread (EDGE C+,
+#                       partly a borrow-fee proxy) blended, revisions-led.
+#   positioning  .15 — short interest / crowding (EDGE B gross, C net of
+#                       borrow fees) + institutional ownership level.
+#   valuation    .15 — cross-sectional lens is real today; the two historical
+#                       lenses are weaker (see ideas/valuation.py) so this
+#                       group's OWN internal weighting already discounts them.
+#   fundamentals .10 — quality/growth/leverage overlay from .info fields, no
+#                       in-repo replication study behind it, kept modest.
+#   catalyst     .10 — PEAD's post-earnings-drift composite (B) + the
+#                       announcement-premium calendar (B).
+#   risk_reward  .10 — structural score (stop distance vs target distance,
+#                       ATR-based) plus the MAXβ lottery penalty (EDGE B+,
+#                       Bali-Ince-Ozsoylev 2026) — a risk filter, not itself
+#                       a return-predicting signal.
+#   macro        .05 — regime conditioning (cas.signals.regime), deliberately
+#                       small: it moves every stock the same direction by
+#                       default and mainly acts as a tilt/gate, not a scorer.
+IDEAS_WEIGHTS = {
+    "technicals": 0.20, "sentiment": 0.15, "positioning": 0.15, "valuation": 0.15,
+    "fundamentals": 0.10, "catalyst": 0.10, "risk_reward": 0.10, "macro": 0.05,
+}
+
+# Quality gates for the daily BUY/SELL selection (spec §1: never pad to a
+# quota). Both floors must clear; a thin day shows fewer than 5 ideas and says
+# so via a state banner rather than lowering the bar.
+IDEAS_GATES = {
+    "min_conviction": 62.0,        # 0-100
+    "min_unusual": 55.0,           # 0-100
+    "min_coverage_n": 3,           # minimum covered signal groups (of 8) to be eligible at all --
+                                    # a security scored on 1-2 groups can look artificially extreme
+                                    # (its whole conviction/unusual read rides on that one group), so
+                                    # thin coverage is excluded rather than mathematically dampened
+                                    # (spec section 29's "never silently fabricate" principle applied
+                                    # to breadth, not just to individual missing fields).
+    "min_adv_usd": 5_000_000.0,    # 63d avg-dollar-volume liquidity floor
+    "target_n_per_side": 5,        # soft target, never forced
+    "max_n_per_side": 10,
+    "max_etf_slots_per_side": 2,   # ETFs cannot crowd out stock-picking (spec §2)
+}
+
+# Broad-beta instruments that carry a hard unusualness discount (spec §2: "do
+# not repeatedly generate Buy SPY unless genuinely unusual"). Extend over time.
+IDEAS_OBVIOUS_TICKERS = {
+    "SPY", "VOO", "IVV", "VTI", "QQQ", "IWM", "IWB", "VONE", "DIA",
+    "EFA", "VEA", "VWO", "EEM", "AGG", "BND", "IEI", "IEF", "TLT", "GOVT",
+    "LQD", "HYG", "GLD", "SLV",
+}
+
+# Deterministic-narrative & selection weights conditioned by market regime
+# (spec §23): coarse 3-state, never a fitted model — "risk-off" tilts weight
+# toward quality/valuation and away from momentum/lottery-style names.
+IDEAS_REGIME_TILTS = {
+    "risk-on": {"technicals": 1.10, "risk_reward": 0.90},
+    "neutral / transition": {},
+    "risk-off": {"technicals": 0.85, "valuation": 1.15, "fundamentals": 1.10},
+}
+
 # --- HOLDINGS (fund position intelligence — DBMF first) ---------------------
 # One sub-directory per tracked fund so a second fund is a registry entry, not
 # a schema change: data/holdings/<fund>/{latest,history,changes,status}.json
@@ -204,7 +299,7 @@ def holdings_files(fund: str) -> dict:
 for _d in (DATA_DIR, ARCHIVE_DIR, CAS_DIR, CAS_ARCHIVE_DIR, CAS_CACHE_DIR, BRIEF_DIR,
            PRETOM_DIR, PRETOM_ARCHIVE_DIR, PEAD_DIR, PEAD_ARCHIVE_DIR,
            FMOM_DIR, FMOM_ARCHIVE_DIR, EDGE_DIR, NIGHTDAY_DIR, HOLDINGS_DIR,
-           MOM_DIR, MOM_HISTORY_DIR):
+           MOM_DIR, MOM_HISTORY_DIR, IDEAS_DIR, IDEAS_ARCHIVE_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # polite scraping

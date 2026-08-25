@@ -581,6 +581,53 @@ def screen_mom() -> None:
     print(f"       picks={len(picks)} evaluated_cells={len(exs)}")
 
 
+def screen_ideas() -> None:
+    print("[ideas]")
+    from zenith.ideas import load as ideas_load
+
+    status = ideas_load("status", {})
+    if not status:
+        warn(True, "ideas not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("date", "")) <= 5, f"ideas status fresh ({status.get('date')})")
+
+    doc = ideas_load("ideas", {})
+    all_ideas = doc.get("buy", []) + doc.get("sell", [])
+    if not all_ideas:
+        warn(True, "ideas: no ideas generated yet")
+    else:
+        tks = [i["ticker"] for i in all_ideas]
+        check(len(tks) == len(set(tks)), "ideas: no duplicate tickers across buy+sell")
+        buy_tks = {i["ticker"] for i in doc.get("buy", [])}
+        sell_tks = {i["ticker"] for i in doc.get("sell", [])}
+        check(not (buy_tks & sell_tks), "ideas: buy/sell disjoint")
+        check(all(0 <= i.get("conviction", -1) <= 100 for i in all_ideas),
+             "ideas: conviction within [0,100]")
+        check(all(0 <= i.get("unusual", -1) <= 100 for i in all_ideas),
+             "ideas: unusual within [0,100]")
+        check(all(i.get("side") == ("long" if i in doc.get("buy", []) else "short")
+                  for i in all_ideas),
+             "ideas: side matches buy/sell bucket")
+        from zenith.ideas import OPPORTUNITY_TYPES
+        bad_opp = [i["ticker"] for i in all_ideas if i.get("opportunity_type") not in OPPORTUNITY_TYPES]
+        check(not bad_opp, f"ideas: opportunity_type registered ({bad_opp[:5] if bad_opp else 'ok'})")
+        bad_rr = [i["ticker"] for i in all_ideas
+                 if (i.get("riskreward") or {}).get("rr_ratio") is not None
+                 and not (0.5 <= i["riskreward"]["rr_ratio"] <= 20.0)]
+        check(not bad_rr, f"ideas: R/R ratio within a sane band ({bad_rr[:5] if bad_rr else 'ok'})")
+        # every narrative sentence must trace to a payload field, never invent a metric:
+        # spot-check that any explicitly-cited price level appears in that idea's own riskreward
+        bad_stop = []
+        for i in all_ideas:
+            rr = i.get("riskreward") or {}
+            cmm = " ".join(i.get("narrative", {}).get("change_my_mind", []))
+            if rr.get("stop") is not None and f"{rr['stop']:.2f}" not in cmm and "stop" in cmm.lower():
+                bad_stop.append(i["ticker"])
+        check(not bad_stop, f"ideas: cited stop levels match riskreward payload ({bad_stop[:5] if bad_stop else 'ok'})")
+        print(f"       buy={len(doc.get('buy', []))} sell={len(doc.get('sell', []))} "
+              f"regime={doc.get('regime', {}).get('label')} thin_day={doc.get('thin_day')}")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -591,6 +638,7 @@ def main() -> None:
     screen_nightday()
     screen_holdings()
     screen_mom()
+    screen_ideas()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")

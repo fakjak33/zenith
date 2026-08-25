@@ -53,7 +53,11 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "strength) blended into a transparent -20..+20 composite, with a full-index heatmap, "
         "sortable rankings, sector breadth, and a per-stock drill-down explaining exactly why each "
         "score landed where it did.\n"
-        "10. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "10. **IDEAS** — a *discretionary-systematic opportunity engine*: fuses MOMENTUM/EDGE/PEAD/"
+        "CAS/valuation signals into a daily ranked BUY/SELL idea list, scoring conviction and "
+        "unusualness SEPARATELY so genuinely idiosyncratic setups outrank merely-popular ones, with "
+        "a deterministic thesis (bull/bear case, idiosyncratic risk, invalidation) for every idea.\n"
+        "11. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -115,9 +119,9 @@ def insights_research_news(items, key_prefix):
 
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
- tab_nightday, tab_holdings, tab_mom, tab_archive, tab_sources) = st.tabs(
+ tab_nightday, tab_holdings, tab_mom, tab_ideas, tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
-     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ARCHIVE", "SOURCES"])
+     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "IDEAS", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -126,8 +130,9 @@ with tab_today:
     from zenith.edge.view import today_badge as edge_today_badge
     from zenith.holdings.view import today_badge as holdings_today_badge
     from zenith.mom.view import today_badge as mom_today_badge
+    from zenith.ideas.view import today_badge as ideas_today_badge
     for _b in (today_badge(), pead_today_badge(), edge_today_badge(),
-               holdings_today_badge(), mom_today_badge()):
+               holdings_today_badge(), mom_today_badge(), ideas_today_badge()):
         if _b:
             st.markdown(_b, unsafe_allow_html=True)
     latest = store.load_latest()
@@ -189,6 +194,12 @@ with tab_mom:
                 unsafe_allow_html=True)
     from zenith.mom import view as mom_view
     mom_view.render()
+
+with tab_ideas:
+    st.markdown(section("IDEAS — discretionary-systematic opportunity engine", 3),
+                unsafe_allow_html=True)
+    from zenith.ideas import view as ideas_view
+    ideas_view.render()
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)
