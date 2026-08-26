@@ -1,0 +1,566 @@
+{
+  "as_of": "2026-08-25",
+  "quadrant_scenarios": [
+    {
+      "id": "inflation_accelerates",
+      "name": "Inflation Accelerates",
+      "description": "Inflation indicators broadly turn higher — a resurgence in prints, wage growth, or breakevens.",
+      "axis": "inflation",
+      "flip_to": true,
+      "implied_regime": "Overheating",
+      "historical_beneficiaries": [
+        {
+          "ticker": "BTC-USD",
+          "label": "Bitcoin",
+          "n_months": 53,
+          "avg_return": 0.0309,
+          "median_return": 0.0069,
+          "win_rate": 0.5094,
+          "volatility_ann": 0.7383,
+          "max_drawdown": -0.8849,
+          "sharpe_like": 0.503
+        },
+        {
+          "ticker": "USO",
+          "label": "Crude Oil",
+          "n_months": 90,
+          "avg_return": 0.0115,
+          "median_return": 0.0201,
+          "win_rate": 0.5556,
+          "volatility_ann": 0.2953,
+          "max_drawdown": -0.5565,
+          "sharpe_like": 0.467
+        },
+        {
+          "ticker": "QQQ",
+          "label": "Nasdaq 100",
+          "n_months": 120,
+          "avg_return": 0.0095,
+          "median_return": 0.0104,
+          "win_rate": 0.5917,
+          "volatility_ann": 0.2287,
+          "max_drawdown": -0.5223,
+          "sharpe_like": 0.497
+        },
+        {
+          "ticker": "IWM",
+          "label": "US Small Cap",
+          "n_months": 109,
+          "avg_return": 0.0084,
+          "median_return": 0.0107,
+          "win_rate": 0.6422,
+          "volatility_ann": 0.179,
+          "max_drawdown": -0.3796,
+          "sharpe_like": 0.565
+        },
+        {
+          "ticker": "DBC",
+          "label": "Broad Commodities",
+          "n_months": 90,
+          "avg_return": 0.008,
+          "median_return": 0.0112,
+          "win_rate": 0.5778,
+          "volatility_ann": 0.1711,
+          "max_drawdown": -0.4159,
+          "sharpe_like": 0.558
+        }
+      ],
+      "historical_losers": [
+        {
+          "ticker": "TLT",
+          "label": "Long Treasuries (20y+)",
+          "n_months": 103,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "win_rate": 0.5049,
+          "volatility_ann": 0.1259,
+          "max_drawdown": -0.4649,
+          "sharpe_like": 0.002
+        },
+        {
+          "ticker": "LQD",
+          "label": "IG Corporate Credit",
+          "n_months": 103,
+          "avg_return": 0.0003,
+          "median_return": 0.0015,
+          "win_rate": 0.5437,
+          "volatility_ann": 0.0627,
+          "max_drawdown": -0.2433,
+          "sharpe_like": 0.065
+        },
+        {
+          "ticker": "IEF",
+          "label": "7-10y Treasuries",
+          "n_months": 103,
+          "avg_return": 0.001,
+          "median_return": 0.002,
+          "win_rate": 0.534,
+          "volatility_ann": 0.0607,
+          "max_drawdown": -0.2327,
+          "sharpe_like": 0.207
+        },
+        {
+          "ticker": "HYG",
+          "label": "High Yield Credit",
+          "n_months": 89,
+          "avg_return": 0.0025,
+          "median_return": 0.004,
+          "win_rate": 0.6517,
+          "volatility_ann": 0.0715,
+          "max_drawdown": -0.1444,
+          "sharpe_like": 0.42
+        },
+        {
+          "ticker": "UUP",
+          "label": "US Dollar Index",
+          "n_months": 90,
+          "avg_return": 0.0036,
+          "median_return": 0.0011,
+          "win_rate": 0.5222,
+          "volatility_ann": 0.072,
+          "max_drawdown": -0.0715,
+          "sharpe_like": 0.607
+        }
+      ],
+      "grounded": true
+    },
+    {
+      "id": "inflation_decelerates",
+      "name": "Inflation Decelerates",
+      "description": "Inflation indicators broadly cool — disinflation across CPI/PCE, breakevens, wage growth.",
+      "axis": "inflation",
+      "flip_to": false,
+      "implied_regime": "Goldilocks / Reflation",
+      "historical_beneficiaries": [
+        {
+          "ticker": "BTC-USD",
+          "label": "Bitcoin",
+          "n_months": 20,
+          "avg_return": 0.1531,
+          "median_return": 0.1179,
+          "win_rate": 0.85,
+          "volatility_ann": 0.7778,
+          "max_drawdown": -0.1479,
+          "sharpe_like": 2.362
+        },
+        {
+          "ticker": "EEM",
+          "label": "Emerging Markets",
+          "n_months": 46,
+          "avg_return": 0.0177,
+          "median_return": 0.0137,
+          "win_rate": 0.6304,
+          "volatility_ann": 0.1933,
+          "max_drawdown": -0.3378,
+          "sharpe_like": 1.101
+        },
+        {
+          "ticker": "QQQ",
+          "label": "Nasdaq 100",
+          "n_months": 54,
+          "avg_return": 0.016,
+          "median_return": 0.0208,
+          "win_rate": 0.6481,
+          "volatility_ann": 0.2065,
+          "max_drawdown": -0.3015,
+          "sharpe_like": 0.93
+        },
+        {
+          "ticker": "SPY",
+          "label": "US Large Cap Equities",
+          "n_months": 75,
+          "avg_return": 0.0127,
+          "median_return": 0.0172,
+          "win_rate": 0.72,
+          "volatility_ann": 0.1325,
+          "max_drawdown": -0.2181,
+          "sharpe_like": 1.151
+        },
+        {
+          "ticker": "EFA",
+          "label": "International Developed Equities",
+          "n_months": 54,
+          "avg_return": 0.0114,
+          "median_return": 0.0206,
+          "win_rate": 0.6296,
+          "volatility_ann": 0.1477,
+          "max_drawdown": -0.197,
+          "sharpe_like": 0.926
+        }
+      ],
+      "historical_losers": [
+        {
+          "ticker": "SLV",
+          "label": "Silver",
+          "n_months": 34,
+          "avg_return": -0.0103,
+          "median_return": -0.0188,
+          "win_rate": 0.4118,
+          "volatility_ann": 0.2968,
+          "max_drawdown": -0.5621,
+          "sharpe_like": -0.415
+        },
+        {
+          "ticker": "UUP",
+          "label": "US Dollar Index",
+          "n_months": 34,
+          "avg_return": -0.0017,
+          "median_return": -0.0024,
+          "win_rate": 0.4412,
+          "volatility_ann": 0.0732,
+          "max_drawdown": -0.1068,
+          "sharpe_like": -0.284
+        },
+        {
+          "ticker": "TLT",
+          "label": "Long Treasuries (20y+)",
+          "n_months": 51,
+          "avg_return": 0.0,
+          "median_return": -0.0084,
+          "win_rate": 0.451,
+          "volatility_ann": 0.1196,
+          "max_drawdown": -0.2357,
+          "sharpe_like": 0.001
+        },
+        {
+          "ticker": "DBC",
+          "label": "Broad Commodities",
+          "n_months": 36,
+          "avg_return": 0.0009,
+          "median_return": -0.0058,
+          "win_rate": 0.4722,
+          "volatility_ann": 0.1753,
+          "max_drawdown": -0.4141,
+          "sharpe_like": 0.06
+        },
+        {
+          "ticker": "IEF",
+          "label": "7-10y Treasuries",
+          "n_months": 51,
+          "avg_return": 0.0014,
+          "median_return": -0.001,
+          "win_rate": 0.4902,
+          "volatility_ann": 0.0648,
+          "max_drawdown": -0.0998,
+          "sharpe_like": 0.256
+        }
+      ],
+      "grounded": true
+    },
+    {
+      "id": "growth_accelerates",
+      "name": "Growth Accelerates",
+      "description": "Growth indicators broadly strengthen — payrolls, industrial production, retail sales all firm up.",
+      "axis": "growth",
+      "flip_to": true,
+      "implied_regime": "Goldilocks / Reflation",
+      "historical_beneficiaries": [
+        {
+          "ticker": "BTC-USD",
+          "label": "Bitcoin",
+          "n_months": 20,
+          "avg_return": 0.1531,
+          "median_return": 0.1179,
+          "win_rate": 0.85,
+          "volatility_ann": 0.7778,
+          "max_drawdown": -0.1479,
+          "sharpe_like": 2.362
+        },
+        {
+          "ticker": "EEM",
+          "label": "Emerging Markets",
+          "n_months": 46,
+          "avg_return": 0.0177,
+          "median_return": 0.0137,
+          "win_rate": 0.6304,
+          "volatility_ann": 0.1933,
+          "max_drawdown": -0.3378,
+          "sharpe_like": 1.101
+        },
+        {
+          "ticker": "QQQ",
+          "label": "Nasdaq 100",
+          "n_months": 54,
+          "avg_return": 0.016,
+          "median_return": 0.0208,
+          "win_rate": 0.6481,
+          "volatility_ann": 0.2065,
+          "max_drawdown": -0.3015,
+          "sharpe_like": 0.93
+        },
+        {
+          "ticker": "SPY",
+          "label": "US Large Cap Equities",
+          "n_months": 75,
+          "avg_return": 0.0127,
+          "median_return": 0.0172,
+          "win_rate": 0.72,
+          "volatility_ann": 0.1325,
+          "max_drawdown": -0.2181,
+          "sharpe_like": 1.151
+        },
+        {
+          "ticker": "EFA",
+          "label": "International Developed Equities",
+          "n_months": 54,
+          "avg_return": 0.0114,
+          "median_return": 0.0206,
+          "win_rate": 0.6296,
+          "volatility_ann": 0.1477,
+          "max_drawdown": -0.197,
+          "sharpe_like": 0.926
+        }
+      ],
+      "historical_losers": [
+        {
+          "ticker": "SLV",
+          "label": "Silver",
+          "n_months": 34,
+          "avg_return": -0.0103,
+          "median_return": -0.0188,
+          "win_rate": 0.4118,
+          "volatility_ann": 0.2968,
+          "max_drawdown": -0.5621,
+          "sharpe_like": -0.415
+        },
+        {
+          "ticker": "UUP",
+          "label": "US Dollar Index",
+          "n_months": 34,
+          "avg_return": -0.0017,
+          "median_return": -0.0024,
+          "win_rate": 0.4412,
+          "volatility_ann": 0.0732,
+          "max_drawdown": -0.1068,
+          "sharpe_like": -0.284
+        },
+        {
+          "ticker": "TLT",
+          "label": "Long Treasuries (20y+)",
+          "n_months": 51,
+          "avg_return": 0.0,
+          "median_return": -0.0084,
+          "win_rate": 0.451,
+          "volatility_ann": 0.1196,
+          "max_drawdown": -0.2357,
+          "sharpe_like": 0.001
+        },
+        {
+          "ticker": "DBC",
+          "label": "Broad Commodities",
+          "n_months": 36,
+          "avg_return": 0.0009,
+          "median_return": -0.0058,
+          "win_rate": 0.4722,
+          "volatility_ann": 0.1753,
+          "max_drawdown": -0.4141,
+          "sharpe_like": 0.06
+        },
+        {
+          "ticker": "IEF",
+          "label": "7-10y Treasuries",
+          "n_months": 51,
+          "avg_return": 0.0014,
+          "median_return": -0.001,
+          "win_rate": 0.4902,
+          "volatility_ann": 0.0648,
+          "max_drawdown": -0.0998,
+          "sharpe_like": 0.256
+        }
+      ],
+      "grounded": true
+    },
+    {
+      "id": "growth_decelerates_sharply",
+      "name": "Growth Decelerates Sharply",
+      "description": "Unemployment rises sharply, claims spike, growth indicators broadly roll over — a recession-risk scenario.",
+      "axis": "growth",
+      "flip_to": false,
+      "implied_regime": "Deflation / Slowdown",
+      "historical_beneficiaries": [
+        {
+          "ticker": "BTC-USD",
+          "label": "Bitcoin",
+          "n_months": 54,
+          "avg_return": 0.0405,
+          "median_return": 0.0141,
+          "win_rate": 0.5185,
+          "volatility_ann": 0.6453,
+          "max_drawdown": -0.6065,
+          "sharpe_like": 0.753
+        },
+        {
+          "ticker": "SLV",
+          "label": "Silver",
+          "n_months": 86,
+          "avg_return": 0.0264,
+          "median_return": 0.0263,
+          "win_rate": 0.593,
+          "volatility_ann": 0.3136,
+          "max_drawdown": -0.3147,
+          "sharpe_like": 1.011
+        },
+        {
+          "ticker": "QQQ",
+          "label": "Nasdaq 100",
+          "n_months": 92,
+          "avg_return": 0.0196,
+          "median_return": 0.0272,
+          "win_rate": 0.6413,
+          "volatility_ann": 0.2344,
+          "max_drawdown": -0.2914,
+          "sharpe_like": 1.003
+        },
+        {
+          "ticker": "GLD",
+          "label": "Gold",
+          "n_months": 86,
+          "avg_return": 0.0181,
+          "median_return": 0.0192,
+          "win_rate": 0.6512,
+          "volatility_ann": 0.1634,
+          "max_drawdown": -0.2375,
+          "sharpe_like": 1.332
+        },
+        {
+          "ticker": "EEM",
+          "label": "Emerging Markets",
+          "n_months": 86,
+          "avg_return": 0.0134,
+          "median_return": 0.0091,
+          "win_rate": 0.5465,
+          "volatility_ann": 0.2448,
+          "max_drawdown": -0.3783,
+          "sharpe_like": 0.658
+        }
+      ],
+      "historical_losers": [
+        {
+          "ticker": "USO",
+          "label": "Crude Oil",
+          "n_months": 86,
+          "avg_return": -0.0151,
+          "median_return": -0.0109,
+          "win_rate": 0.4302,
+          "volatility_ann": 0.4567,
+          "max_drawdown": -0.9341,
+          "sharpe_like": -0.397
+        },
+        {
+          "ticker": "DBC",
+          "label": "Broad Commodities",
+          "n_months": 86,
+          "avg_return": -0.002,
+          "median_return": -0.0033,
+          "win_rate": 0.4419,
+          "volatility_ann": 0.2076,
+          "max_drawdown": -0.5126,
+          "sharpe_like": -0.118
+        },
+        {
+          "ticker": "UUP",
+          "label": "US Dollar Index",
+          "n_months": 81,
+          "avg_return": 0.0008,
+          "median_return": 0.0029,
+          "win_rate": 0.5309,
+          "volatility_ann": 0.0885,
+          "max_drawdown": -0.1702,
+          "sharpe_like": 0.114
+        },
+        {
+          "ticker": "IEF",
+          "label": "7-10y Treasuries",
+          "n_months": 86,
+          "avg_return": 0.0053,
+          "median_return": 0.0023,
+          "win_rate": 0.5698,
+          "volatility_ann": 0.0809,
+          "max_drawdown": -0.1199,
+          "sharpe_like": 0.792
+        },
+        {
+          "ticker": "TLT",
+          "label": "Long Treasuries (20y+)",
+          "n_months": 86,
+          "avg_return": 0.0069,
+          "median_return": 0.0036,
+          "win_rate": 0.5581,
+          "volatility_ann": 0.1723,
+          "max_drawdown": -0.2608,
+          "sharpe_like": 0.484
+        }
+      ],
+      "grounded": true
+    }
+  ],
+  "dimension_scenarios": [
+    {
+      "id": "dollar_falls_10pct",
+      "name": "Dollar Falls 10%",
+      "dimension": "dollar",
+      "flip_to": false,
+      "relevant_tickers": {
+        "UUP": "US Dollar (inverse exposure)",
+        "GLD": "Gold",
+        "EEM": "Emerging Markets",
+        "EFA": "International Developed"
+      },
+      "grounded": false,
+      "caveat": "Qualitative — no regime-conditional historical backtest exists for this secondary dimension yet. Relevant tickers are listed for context, not backed by a performance table the way quadrant scenarios are."
+    },
+    {
+      "id": "credit_spreads_widen",
+      "name": "Credit Spreads Widen Dramatically",
+      "dimension": "credit",
+      "flip_to": false,
+      "relevant_tickers": {
+        "HYG": "High Yield Credit",
+        "LQD": "IG Credit",
+        "TLT": "Long Treasuries (flight to quality)"
+      },
+      "grounded": false,
+      "caveat": "Qualitative — no regime-conditional historical backtest exists for this secondary dimension yet. Relevant tickers are listed for context, not backed by a performance table the way quadrant scenarios are."
+    },
+    {
+      "id": "fed_restarts_qe",
+      "name": "Fed Restarts QE",
+      "dimension": "liquidity",
+      "flip_to": true,
+      "relevant_tickers": {
+        "TLT": "Long Treasuries",
+        "GLD": "Gold",
+        "QQQ": "Nasdaq 100 (duration-sensitive)"
+      },
+      "grounded": false,
+      "caveat": "Qualitative — no regime-conditional historical backtest exists for this secondary dimension yet. Relevant tickers are listed for context, not backed by a performance table the way quadrant scenarios are."
+    },
+    {
+      "id": "oil_rises_50pct",
+      "name": "Oil Rises 50%",
+      "dimension": "inflation",
+      "flip_to": true,
+      "relevant_tickers": {
+        "USO": "Crude Oil",
+        "XLE": "Energy Sector",
+        "DBC": "Broad Commodities"
+      },
+      "note": "Modeled as an inflation-axis shock (a large oil move is a classic inflation-side catalyst) rather than a distinct dimension — see the Inflation Accelerates scenario for the grounded quadrant-level read; this entry adds the energy-specific tickers.",
+      "grounded": false,
+      "caveat": "Qualitative — no regime-conditional historical backtest exists for this secondary dimension yet. Relevant tickers are listed for context, not backed by a performance table the way quadrant scenarios are."
+    },
+    {
+      "id": "ten_year_yield_to_6pct",
+      "name": "10-Year Yield Rises to 6%",
+      "dimension": "monetary",
+      "flip_to": false,
+      "relevant_tickers": {
+        "TLT": "Long Treasuries",
+        "XLF": "Financials",
+        "XLRE": "Real Estate (rate-sensitive)"
+      },
+      "grounded": false,
+      "caveat": "Qualitative — no regime-conditional historical backtest exists for this secondary dimension yet. Relevant tickers are listed for context, not backed by a performance table the way quadrant scenarios are."
+    }
+  ]
+}

@@ -49,3 +49,32 @@ def regime_momentum(growth_composite: pd.Series, infl_composite: pd.Series,
                 f"(trend R²={i_r2:.2f}).")
     return {"score": score, "growth_slope": round(g_slope, 4), "growth_r2": round(g_r2, 3),
            "infl_slope": round(i_slope, 4), "infl_r2": round(i_r2, 3), "narrative": narrative}
+
+
+def momentum_series(growth_composite: pd.Series, infl_composite: pd.Series,
+                    regime_series: pd.Series) -> pd.Series:
+    """The regime-momentum SCORE for every historical month, not just the
+    latest — needed to condition transition.py's empirical base rates on
+    "was momentum improving or deteriorating at the start month" (spec
+    section 8's worked example: "with growth momentum in the bottom
+    tercile..."). Uses only data available UP TO each month (a trailing
+    window ending at that month), so this is itself walk-forward-consistent
+    with the rest of the package — no different from how each month's
+    z-score already only looks backward.
+
+    Cost: one `ols_slope_r2` call per month on a length-6 window — a few
+    hundred iterations, trivially cheap."""
+    out = []
+    for i in range(len(growth_composite)):
+        if i < TREND_WINDOW_MONTHS:
+            out.append(None)
+            continue
+        g_win = growth_composite.iloc[max(0, i - TREND_WINDOW_MONTHS + 1):i + 1]
+        i_win = infl_composite.iloc[max(0, i - TREND_WINDOW_MONTHS + 1):i + 1]
+        reg = regime_series.iloc[i]
+        if reg is None:
+            out.append(None)
+            continue
+        r = regime_momentum(g_win, i_win, reg)
+        out.append(r.get("score"))
+    return pd.Series(out, index=growth_composite.index, dtype=float)

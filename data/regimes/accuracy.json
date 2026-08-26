@@ -1,0 +1,36 @@
+{
+  "as_of": "2026-08-25",
+  "available": true,
+  "lead_lag": {
+    "n_nber_recessions": 4,
+    "n_matched": 3,
+    "n_false_negatives": 1,
+    "n_our_signal_episodes": 14,
+    "n_false_positives": 10,
+    "avg_lead_months": 6.3,
+    "matches": [
+      {
+        "nber_start": "2001-04-30",
+        "our_first_signal": "2001-09-30",
+        "lead_months": -5
+      },
+      {
+        "nber_start": "2008-01-31",
+        "our_first_signal": "2007-01-31",
+        "lead_months": 12
+      },
+      {
+        "nber_start": "2020-03-31",
+        "our_first_signal": "2019-03-31",
+        "lead_months": 12
+      }
+    ]
+  },
+  "brier": {
+    "n": 393,
+    "brier": 0.176,
+    "in_sample": true,
+    "horizon_months": 6,
+    "note": "IN-SAMPLE: evaluated against the same historical months that generated the probability table. A lower score is better (0=perfect, 0.25=no-skill coin-flip baseline at p=0.5, higher=worse than that). Not a held-out/walk-forward test."
+  }
+}

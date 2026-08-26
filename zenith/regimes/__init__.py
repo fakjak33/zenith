@@ -73,10 +73,12 @@ import json
 from ..config import REGIMES_FILES
 
 DISCLAIMER = ("REGIMES classifies growth/inflation and six secondary macro dimensions from "
-              "free FRED data (no API key). This is a NOVEL composite with no out-of-sample "
-              "track record yet — see its evidence-strength badge and (Phase 2) the "
-              "accumulating calibration-vs-NBER tracker. A regime call is a probabilistic read "
-              "of many indicators, never a certainty, and never investment advice.")
+              "free FRED data (no API key), plus empirical transition probabilities, "
+              "regime-conditional asset/factor performance, historical analogs and calibration "
+              "vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample "
+              "track record — see its evidence-strength badge and the Accuracy tab. A regime "
+              "call is a probabilistic read of many indicators, never a certainty, and never "
+              "investment advice.")
 
 # The four top-level quadrants, in the exact growth/inflation combination the
 # spec's own table specifies (section 2).

@@ -136,7 +136,15 @@ def current(z_df: pd.DataFrame, raw_df: pd.DataFrame) -> dict:
         return None if v is None or pd.isna(v) else int(v)
 
     return {
-        "as_of": timeline.index[-1].date().isoformat(),
+        # NOTE: named "latest_month", not "as_of" -- compute.py's caller does
+        # {"as_of": today.isoformat(), **current}, and a same-named key here
+        # would silently win the dict-literal merge, replacing the actual
+        # compute-run date with this timeline month-end label (which can be
+        # a few days into the FUTURE relative to today, since the monthly
+        # grid labels the in-progress current month by its eventual
+        # month-end). A real bug, caught live: the app showed "DATA AS OF
+        # 2026-08-31" while the actual run date was 2026-08-25.
+        "latest_month": timeline.index[-1].date().isoformat(),
         "regime": last["declared_regime"],
         "raw_regime": last["raw_regime"],
         "transitioning": bool(last["transitioning"]),

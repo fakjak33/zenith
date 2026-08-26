@@ -288,6 +288,17 @@ REGIMES_FILES = {
     "dimensions": REGIMES_DIR / "dimensions.json",     # latest reading, all 8 dimensions
     "status": REGIMES_DIR / "status.json",
     "vintage_audit": REGIMES_DIR / "vintage_audit.json",  # optional, local-only (see regimes/vintage.py)
+    # --- Phase 2 ---
+    "transitions": REGIMES_DIR / "transitions.json",   # empirical base-rate transition probability tables
+    "changes": REGIMES_DIR / "changes.json",           # "what is changing" deltas + Regime Change Score
+    "crossasset": REGIMES_DIR / "crossasset.json",     # cross-asset confirmation checks + divergence flags
+    "performance": REGIMES_DIR / "performance.json",   # asset-class/factor performance by historical regime
+    "analogs": REGIMES_DIR / "analogs.json",           # nearest historical months + forward SPY outcomes
+    "accuracy": REGIMES_DIR / "accuracy.json",         # calibration vs NBER USREC (lead/lag + in-sample Brier)
+    # --- Phase 3 ---
+    "themes": REGIMES_DIR / "themes.json",             # quant-scored + evidence-board theme monitors
+    "scenarios": REGIMES_DIR / "scenarios.json",       # "What If?" contingency scenarios
+    "alerts": REGIMES_DIR / "alerts.json",             # currently-active regime alerts
 }
 
 # Historical reconstruction starts here, not at each series' own inception:

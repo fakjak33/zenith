@@ -26,8 +26,11 @@ jobs:
     # limiting verified during development (a tight loop of ~90 requests got
     # the dev IP blocked for >60s); the committed macro_raw.json warm-start
     # cache means most runs only re-fetch the handful of series past their
-    # TTL (1d for daily/weekly series, 5d for monthly/quarterly)
-    timeout-minutes: 30
+    # TTL (1d for daily/weekly series, 5d for monthly/quarterly). Phase 2/3
+    # add ~20 asset/factor ticker price pulls (performance.py), a handful
+    # more FRED series (themes.py) and a USREC fetch (accuracy.py) — same
+    # 45min budget mom.yml/ideas.yml use for their own price-heavy runs.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
