@@ -628,6 +628,113 @@ def screen_ideas() -> None:
               f"regime={doc.get('regime', {}).get('label')} thin_day={doc.get('thin_day')}")
 
 
+def screen_regimes() -> None:
+    print("[regimes]")
+    from zenith.regimes import load as regimes_load, REGIME_LABELS
+
+    status = regimes_load("status", {})
+    if not status:
+        warn(True, "regimes not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("date", "")) <= 3, f"regimes status fresh ({status.get('date')})")
+
+    current = regimes_load("current", {})
+    regime = current.get("regime")
+    if not regime:
+        warn(True, "regimes: no regime classified yet")
+    else:
+        check(regime in REGIME_LABELS.values(), f"regimes: regime is a registered label ({regime})")
+        conf = current.get("confidence")
+        check(conf is None or 0 <= conf <= 100, f"regimes: confidence within [0,100] ({conf})")
+        for axis_name in ("growth", "inflation"):
+            axis = current.get(axis_name, {})
+            n_r, n_t = axis.get("n_rising"), axis.get("n_total")
+            if n_r is not None and n_t is not None:
+                check(0 <= n_r <= n_t, f"regimes: {axis_name} n_rising <= n_total ({n_r}/{n_t})")
+            breadth = axis.get("breadth")
+            check(breadth is None or 0.0 <= breadth <= 1.0,
+                 f"regimes: {axis_name} breadth within [0,1] ({breadth})")
+        print(f"       regime={regime} confidence={conf} transitioning={current.get('transitioning')} "
+             f"streak={current.get('streak_months')}mo")
+
+    dims = regimes_load("dimensions", {}).get("dimensions", {})
+    for dim, d in dims.items():
+        n = d.get("coverage_n", 0)
+        n_ind = len(d.get("indicators", []))
+        check(n <= n_ind, f"regimes: {dim} coverage_n <= indicator rows listed ({n}/{n_ind})")
+
+    timeline = regimes_load("timeline", {})
+    months = timeline.get("months", [])
+    if months:
+        m_dates = [m["month"] for m in months]
+        check(m_dates == sorted(m_dates), "regimes: timeline months monotonic")
+        check(len(m_dates) == len(set(m_dates)), "regimes: timeline months unique")
+        segs = timeline.get("segments", [])
+        bad_seg = [s for s in segs if s["regime"] not in REGIME_LABELS.values()]
+        check(not bad_seg, f"regimes: segment regimes all registered labels ({bad_seg[:3] if bad_seg else 'ok'})")
+        print(f"       months={len(months)} segments={len(segs)} transitions={len(timeline.get('transitions', []))}")
+
+    # --- Phase 2 ---
+    trans = regimes_load("transitions", {}).get("tables", {}).get("unconditional", {})
+    bad_prob = []
+    for start_regime, horizons in trans.items():
+        for h, cell in horizons.items():
+            probs = [d["p"] for d in cell["destinations"].values() if d["p"] is not None]
+            if probs and abs(sum(probs) - 1.0) > 0.01:
+                bad_prob.append((start_regime, h))
+            for d in cell["destinations"].values():
+                if d["p"] is None:
+                    check(d["n"] <= cell["n_start"], "regimes: transitions n never exceeds n_start")
+    check(not bad_prob, f"regimes: transition probabilities sum to ~1 per cell ({bad_prob[:3] if bad_prob else 'ok'})")
+
+    changes_doc = regimes_load("changes", {})
+    score = changes_doc.get("regime_change_score", {}).get("score")
+    check(score is None or 0 <= score <= 100, f"regimes: Regime Change Score within [0,100] ({score})")
+
+    perf = regimes_load("performance", {})
+    bad_dd = []
+    for universe in ("asset", "factor"):
+        for ticker, data in perf.get(universe, {}).items():
+            for regime_name, stats in (data.get("by_regime") or {}).items():
+                if stats and not (-1.0 <= stats.get("max_drawdown", 0) <= 0.0):
+                    bad_dd.append((ticker, regime_name))
+    check(not bad_dd, f"regimes: performance max_drawdown within [-1,0] ({bad_dd[:3] if bad_dd else 'ok'})")
+
+    analog_doc = regimes_load("analogs", {})
+    bad_analog = [a for a in analog_doc.get("analogs", []) if a.get("n_shared_dimensions", 0) < 5]
+    check(not bad_analog, f"regimes: analogs meet minimum shared-dimension threshold ({len(bad_analog)} below)")
+
+    acc = regimes_load("accuracy", {})
+    if acc.get("available"):
+        brier = acc.get("brier", {}).get("brier")
+        check(brier is None or 0.0 <= brier <= 1.0, f"regimes: Brier score within [0,1] ({brier})")
+        check(acc.get("brier", {}).get("in_sample") is True, "regimes: Brier score labelled in-sample")
+
+    # --- Phase 3 ---
+    themes_doc = regimes_load("themes", {}).get("themes", {})
+    for name, t in themes_doc.items():
+        theme_score = t.get("signal_score")
+        check(theme_score is None or 0 <= theme_score <= 100,
+             f"regimes: theme {name} signal_score within [0,100] ({theme_score})")
+        for ev in t.get("evidence", []):
+            check(ev.get("category") in ("Fact", "Interpretation", "Forecast", "Speculation"),
+                 f"regimes: theme {name} evidence category registered ({ev.get('category')})")
+
+    scen_doc = regimes_load("scenarios", {})
+    for s in scen_doc.get("dimension_scenarios", []):
+        check(s.get("grounded") is False, f"regimes: dimension scenario {s.get('id')} correctly labelled ungrounded")
+    for s in scen_doc.get("quadrant_scenarios", []):
+        if s.get("grounded"):
+            check(s.get("implied_regime") in REGIME_LABELS.values(),
+                 f"regimes: quadrant scenario {s.get('id')} implies a registered regime")
+
+    n_alerts = len(regimes_load("alerts", {}).get("alerts", []))
+    if trans or changes_doc or themes_doc:
+        print(f"       phase2/3: change_score={score} n_asset_perf={len(perf.get('asset', {}))} "
+             f"n_analogs={len(analog_doc.get('analogs', []))} accuracy_available={acc.get('available')} "
+             f"n_themes={len(themes_doc)} n_alerts={n_alerts}")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -639,6 +746,7 @@ def main() -> None:
     screen_holdings()
     screen_mom()
     screen_ideas()
+    screen_regimes()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")

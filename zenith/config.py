@@ -262,6 +262,78 @@ IDEAS_REGIME_TILTS = {
     "risk-off": {"technicals": 0.85, "valuation": 1.15, "fundamentals": 1.10},
 }
 
+# --- REGIMES (macro regime intelligence & early-warning system) ------------
+# Growth/inflation four-quadrant classifier (S&P-style: two dimensions, many
+# indicators each, a persistence requirement before a quadrant is "declared")
+# PLUS six secondary dimensions (monetary, liquidity, credit, financial
+# conditions, dollar, volatility) that run alongside it — see
+# regimes/series.py for the indicator registry and regimes/classify.py for
+# the methodology. Historical reconstruction runs on a MONTHLY grid (matches
+# the cadence of the headline indicators themselves; daily series are
+# resampled to month-end) using POINT-IN-TIME values only — every series is
+# shifted by its own real publication lag (registry field) before being
+# used, so no historical month's classification uses data that had not yet
+# been published as of that month (spec section 42's look-ahead-bias rule).
+# This eliminates *timing* look-ahead but not *revision* look-ahead (FRED
+# revises payrolls/GDP for years); regimes/vintage.py is a separate, optional,
+# LOCAL-ONLY audit that measures the residual with true ALFRED vintages on a
+# handful of headline series and publishes it as a calibration caveat rather
+# than silently ignoring it.
+REGIMES_DIR = DATA_DIR / "regimes"
+REGIMES_JOURNAL_DIR = REGIMES_DIR / "journal"        # sharded data/regimes/journal/<YYYY>.json
+REGIMES_FILES = {
+    "macro_raw": REGIMES_DIR / "macro_raw.json",       # committed raw per-series points (warm-start cache)
+    "current": REGIMES_DIR / "current.json",           # today's classification + full explainability
+    "timeline": REGIMES_DIR / "timeline.json",         # full monthly reconstruction + transition boundaries
+    "dimensions": REGIMES_DIR / "dimensions.json",     # latest reading, all 8 dimensions
+    "status": REGIMES_DIR / "status.json",
+    "vintage_audit": REGIMES_DIR / "vintage_audit.json",  # optional, local-only (see regimes/vintage.py)
+    # --- Phase 2 ---
+    "transitions": REGIMES_DIR / "transitions.json",   # empirical base-rate transition probability tables
+    "changes": REGIMES_DIR / "changes.json",           # "what is changing" deltas + Regime Change Score
+    "crossasset": REGIMES_DIR / "crossasset.json",     # cross-asset confirmation checks + divergence flags
+    "performance": REGIMES_DIR / "performance.json",   # asset-class/factor performance by historical regime
+    "analogs": REGIMES_DIR / "analogs.json",           # nearest historical months + forward SPY outcomes
+    "accuracy": REGIMES_DIR / "accuracy.json",         # calibration vs NBER USREC (lead/lag + in-sample Brier)
+    # --- Phase 3 ---
+    "themes": REGIMES_DIR / "themes.json",             # quant-scored + evidence-board theme monitors
+    "scenarios": REGIMES_DIR / "scenarios.json",       # "What If?" contingency scenarios
+    "alerts": REGIMES_DIR / "alerts.json",             # currently-active regime alerts
+}
+
+# Historical reconstruction starts here, not at each series' own inception:
+# several inflation-expectation/credit-spread series (breakevens, AAA10Y)
+# only begin in the 1980s-2000s, and the coverage-aware composite already
+# down-weights thin coverage — but bounding the START keeps every
+# reconstructed month at a reasonable breadth AND keeps the timeline anchored
+# to canonical, checkable regimes (1990-92 slowdown, 1994-95 tightening,
+# 1998 LTCM, 2000-02 dotcom, 2008-09 GFC, 2020 COVID shock, 2021-22
+# inflation) — the exact validation set in the plan's verification section.
+REGIMES_HISTORY_START = "1990-01-01"
+
+# A quadrant must hold for this many CONSECUTIVE monthly readings before it
+# is "declared" the current regime; short of that it renders as "emerging /
+# transition underway" rather than a flip (spec section 44: communicate
+# uncertainty, not false precision). Two months, not one, so a single noisy
+# release cannot flip the headline.
+REGIMES_PERSISTENCE_MONTHS = 2
+
+# Rolling window (months) for z-scoring each indicator against its OWN
+# history before combining into a dimension composite — trailing, not
+# expanding-from-inception, so a composite from 2024 isn't implicitly graded
+# against 1990s levels of a structurally different economy. min 24mo so no
+# indicator is z-scored against fewer than 2 years of its own history.
+REGIMES_ZSCORE_WINDOW_MONTHS = 120
+REGIMES_ZSCORE_MIN_MONTHS = 24
+
+# Minimum covered indicators for a dimension composite to be shown as "real"
+# rather than "insufficient coverage" (spec section 29 applied to breadth,
+# exactly IDEAS_GATES["min_coverage_n"]'s reasoning reused here).
+REGIMES_MIN_COVERAGE = 3
+
+for _d in (REGIMES_DIR, REGIMES_JOURNAL_DIR):
+    _d.mkdir(parents=True, exist_ok=True)
+
 # --- HOLDINGS (fund position intelligence — DBMF first) ---------------------
 # One sub-directory per tracked fund so a second fund is a registry entry, not
 # a schema change: data/holdings/<fund>/{latest,history,changes,status}.json

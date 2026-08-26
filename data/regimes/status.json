@@ -1,0 +1,66 @@
+{
+  "date": "2026-08-25",
+  "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
+  "segments": [
+    {
+      "segment": "fetch",
+      "requested": 44,
+      "fetched": 0,
+      "reused": 44,
+      "coverage": 44,
+      "fetch_ok": true
+    },
+    {
+      "segment": "classify",
+      "ok": true,
+      "n_months": 440
+    },
+    {
+      "segment": "transitions",
+      "ok": true
+    },
+    {
+      "segment": "changes",
+      "ok": true,
+      "score": 29.7
+    },
+    {
+      "segment": "crossasset",
+      "ok": true,
+      "n_divergences": 2
+    },
+    {
+      "segment": "performance",
+      "ok": true,
+      "n_asset": 15,
+      "n_factor": 6
+    },
+    {
+      "segment": "analogs",
+      "ok": true,
+      "n": 5
+    },
+    {
+      "segment": "accuracy",
+      "ok": true
+    },
+    {
+      "segment": "themes",
+      "ok": true
+    },
+    {
+      "segment": "scenarios",
+      "ok": true
+    },
+    {
+      "segment": "journal",
+      "ok": true,
+      "n_rows_this_year": 1
+    },
+    {
+      "segment": "alerts",
+      "ok": true,
+      "n_triggered": 0
+    }
+  ]
+}

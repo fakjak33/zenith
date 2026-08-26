@@ -57,7 +57,13 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "CAS/valuation signals into a daily ranked BUY/SELL idea list, scoring conviction and "
         "unusualness SEPARATELY so genuinely idiosyncratic setups outrank merely-popular ones, with "
         "a deterministic thesis (bull/bear case, idiosyncratic risk, invalidation) for every idea.\n"
-        "11. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "11. **REGIMES** — a *macro regime intelligence & early-warning system*: classifies the "
+        "current growth/inflation quadrant from ~45 point-in-time FRED indicators (with a "
+        "persistence requirement so one noisy release can't flip the headline), scores six "
+        "secondary regimes (monetary, liquidity, credit, financial conditions, dollar, "
+        "volatility) alongside it, and reconstructs the full historical regime timeline back "
+        "to 1990.\n"
+        "12. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -119,9 +125,10 @@ def insights_research_news(items, key_prefix):
 
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
- tab_nightday, tab_holdings, tab_mom, tab_ideas, tab_archive, tab_sources) = st.tabs(
+ tab_nightday, tab_holdings, tab_mom, tab_ideas, tab_regimes, tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
-     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "IDEAS", "ARCHIVE", "SOURCES"])
+     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "IDEAS", "REGIMES",
+     "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -131,8 +138,10 @@ with tab_today:
     from zenith.holdings.view import today_badge as holdings_today_badge
     from zenith.mom.view import today_badge as mom_today_badge
     from zenith.ideas.view import today_badge as ideas_today_badge
+    from zenith.regimes.view import today_badge as regimes_today_badge
     for _b in (today_badge(), pead_today_badge(), edge_today_badge(),
-               holdings_today_badge(), mom_today_badge(), ideas_today_badge()):
+               holdings_today_badge(), mom_today_badge(), ideas_today_badge(),
+               regimes_today_badge()):
         if _b:
             st.markdown(_b, unsafe_allow_html=True)
     latest = store.load_latest()
@@ -200,6 +209,12 @@ with tab_ideas:
                 unsafe_allow_html=True)
     from zenith.ideas import view as ideas_view
     ideas_view.render()
+
+with tab_regimes:
+    st.markdown(section("REGIMES — macro regime intelligence & early-warning system", 2),
+                unsafe_allow_html=True)
+    from zenith.regimes import view as regimes_view
+    regimes_view.render()
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)

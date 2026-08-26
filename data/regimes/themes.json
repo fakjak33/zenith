@@ -1,0 +1,241 @@
+{
+  "as_of": "2026-08-25",
+  "themes": {
+    "dollar": {
+      "signal_score": 53.1,
+      "composite_z": 0.246,
+      "real_yield_z": 1.523,
+      "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
+    },
+    "fiscal": {
+      "signal_score": 72.5,
+      "components": {
+        "DGS30": 1.739,
+        "THREEFYTP10": 2.036,
+        "GFDEBTN": 1.632
+      },
+      "context": "This theme distinguishes two DIFFERENT things that both increase Treasury buyback activity: (1) LIQUIDITY OPERATIONS — the Treasury smoothing the maturity profile of outstanding debt, which is routine market-structure management and not obviously yield-suppressive; versus (2) actual FINANCIAL REPRESSION — policy that holds real yields below their market-clearing level to erode the real value of debt. The August 2026 increase in long-duration buybacks (to at least $4bn, following the 30y yield reaching a multi-year high) has been read both ways by market participants; this score does not adjudicate which interpretation is correct, it tracks the term premium and long-yield trend components that either interpretation would move."
+    },
+    "yen": {
+      "intervention_risk": "Low",
+      "usdjpy_z": 1.636,
+      "usdjpy_pct_move_3m": -0.002,
+      "us_real_yield_z": 1.523,
+      "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
+    },
+    "ai": {
+      "semis_relative_strength_3m": -0.0898,
+      "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
+      "evidence": [
+        {
+          "title": "Relative Performance of Hyperscalers to S&P 500",
+          "source": "ISABELNET (bank chart-of-the-day mirror)",
+          "link": "https://www.isabelnet.com/msci-emerging-market-equities-vs-sp-500-relative-performance/",
+          "published": "Wed, 12 Aug 2026 08:30:58 +0000",
+          "archive_date": "2026-08-13",
+          "summary": "Relative Performance of Hyperscalers to S&P 500 Hyperscalers have been trapped in a two-year range versus the S&P 500. Now the question is whether they can break out while AI capex returns remain in doubt. Image: Deutsche Bank Asset Allocation",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Wednesday assorted links",
+          "source": "Marginal Revolution",
+          "link": "https://marginalrevolution.com/marginalrevolution/2026/08/wednesday-assorted-links-565.html?utm_source=rss&utm_medium=rss&utm_campaign=wednesday-assorted-links-565",
+          "published": "Wed, 05 Aug 2026 15:35:40 +0000",
+          "archive_date": "2026-08-06",
+          "summary": "1. A catalog of past AI predictions. 2. Jasmine Sun on why people do not want data centers. And Jasmine Sun on Ezra Klein, on data centers (NYT). 3. A bot running an SF retail boutique? (NYT) 4. Elise Cawley, RIP. 5. On the NYC grocery store plan. 6. New credit card gives you tokens […] The post Wednesday assorted link…",
+          "category": "Fact"
+        },
+        {
+          "title": "Consensus Hyperscaler Capex Estimates",
+          "source": "ISABELNET (bank chart-of-the-day mirror)",
+          "link": "https://www.isabelnet.com/global-nonfinancial-equities-earnings-per-share-growth-and-capex-growth/",
+          "published": "Tue, 11 Aug 2026 08:30:46 +0000",
+          "archive_date": "2026-08-12",
+          "summary": "Consensus Hyperscaler Capex Estimates Capex estimates keep surprising to the upside as earnings season rolls on. Hyperscaler spending is now on track to hit over $1 trillion in 2027. That looks less like a cycle and more like a regime change. Image: Goldman Sachs Global Investment Research",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Environmental and Economic Implications of Artificial Intelligence Data Centers in the United States",
+          "source": "arXiv q-fin (Quant Finance)",
+          "link": "https://arxiv.org/abs/2608.09882",
+          "published": "Tue, 11 Aug 2026 00:00:00 -0400",
+          "archive_date": "2026-08-11",
+          "summary": "arXiv:2608.09882v1 Announce Type: new Abstract: In this study, we use electricity demand growth, cooling requirements, and backup system operation to evaluate the environmental and economic implications of artificial intelligence data centers in the United States. Our results indicate that impacts are not determined so…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "The AI Boom and the Future of Finance",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/onpoint/the-ai-boom-and-the-future-of-finance",
+          "published": "Thu, 30 Jul 2026 09:49:51 GMT",
+          "archive_date": "2026-07-31",
+          "summary": "Amid reports of mass layoffs, large-scale destruction of books, sweeping copyright violations, and severe environmental damage caused by AI data centers, an increasingly popular refrain is that the AI bubble cannot burst soon enough. AI-related companies have gained some $27 trillion in market value since November 2022…",
+          "category": "Fact"
+        },
+        {
+          "title": "Data Center Spending in US",
+          "source": "Conversable Economist",
+          "link": "https://conversableeconomist.com/2026/08/20/__trashed-8/",
+          "published": "Thu, 20 Aug 2026 16:36:29 +0000",
+          "archive_date": "2026-08-21",
+          "summary": "The good folks at “Our World in Data” have been putting together a data series which shows monthly spending on the “on-site work to build data centers each month, including materials and construction labor. It excludes the cost of IT hardware like servers and storage, which can account for a large share of total invest…",
+          "category": "Fact"
+        },
+        {
+          "title": "FTAV’s further reading",
+          "source": "FT Alphaville",
+          "link": "https://www.ft.com/content/32f71c02-9abd-4c5b-8f74-9b31303bf386",
+          "published": "Thu, 20 Aug 2026 05:30:09 GMT",
+          "archive_date": "2026-08-21",
+          "summary": "Hyperscaler toast; Niklas Sule; the parenthesis; the stocks market; categories of contempt",
+          "category": "Fact"
+        },
+        {
+          "title": "The hyperscalers’ exploding ‘purchase commitments’ reach $1.5tn",
+          "source": "FT Alphaville",
+          "link": "https://www.ft.com/content/1fbe47a6-bbf1-4de1-973b-8ce5baea591d",
+          "published": "Thu, 13 Aug 2026 05:00:02 GMT",
+          "archive_date": "2026-08-14",
+          "summary": "Spend now, spend more later",
+          "category": "Fact"
+        },
+        {
+          "title": "Pecking Order and AI Capex Spending",
+          "source": "Econbrowser",
+          "link": "https://econbrowser.com/archives/2026/08/pecking-order-and-ai-capex-spending",
+          "published": "Sun, 02 Aug 2026 02:34:58 +0000",
+          "archive_date": "2026-08-02",
+          "summary": "I think of this graph as the most important graph for thinking about sustained AI related Capex spending: Source: Fazzari et al. (1988) as modified by Chinn. The lowest flat portion represents financing cost out of cash flow. Until now, the demand curve intersected on this portion of the financing supply curve. Startin…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "The Closer – EUV vs. DUV, Data Center in Durables, Positioning – 7/27/26",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/the-closer/the-closer-euv-vs-duv-data-center-in-durables-positioning-7-27-26/",
+          "published": "Mon, 27 Jul 2026 21:33:25 +0000",
+          "archive_date": "2026-07-28",
+          "summary": "",
+          "category": "Interpretation"
+        }
+      ]
+    },
+    "crypto": {
+      "btc_trend_3m": 0.2853,
+      "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
+      "evidence": []
+    },
+    "geopolitical": {
+      "evidence": [
+        {
+          "title": "Tariff Effects on Inflation Stabilize in Recent Months",
+          "source": "St. Louis Fed (On the Economy)",
+          "link": "https://www.stlouisfed.org/on-the-economy/2026/aug/tariff-effects-inflation-stabilize-recent-months",
+          "published": "Tue, 18 Aug 2026 04:30:00 -0500",
+          "archive_date": "2026-08-19",
+          "summary": "The upward pressure that tariffs exert on U.S. inflation appears to have moderated in the first half of 2026, according to new estimates of effective tariffs and pass-through.",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Rocks in the Harbor: Beveridge and Robinson",
+          "source": "Conversable Economist",
+          "link": "https://conversableeconomist.com/2026/08/11/rocks-in-the-harbor-beveridge-and-robinson/",
+          "published": "Tue, 11 Aug 2026 15:00:07 +0000",
+          "archive_date": "2026-08-12",
+          "summary": "For teachers of economics, one familiar metaphor about tariffs is “rocks in the harbor.” Companies and countries go to considerable trouble and expense to build docks and interconnected transportation structure, and even dredge the harbor to assure smooth transit for vessels. Having done all that, it would seem peculia…",
+          "category": "Fact"
+        },
+        {
+          "title": "Trump’s New Tariffs Are an Opportunity to Fight Back",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/commentary/trump-tariffs-unserious-rationale-calls-for-serious-retaliation-by-joseph-e-stiglitz-2026-07",
+          "published": "Thu, 30 Jul 2026 11:47:20 GMT",
+          "archive_date": "2026-07-31",
+          "summary": "Once again, President Donald Trump is subverting domestic and international law in an effort to seize a larger fraction of global value and supply chains, and harming the US economy in the process. The longer that businesses and other governments avoid standing up to him, the greater the disaster that awaits us all.",
+          "category": "Fact"
+        },
+        {
+          "title": "Wisconsin Goods Exports by Destination, 2025",
+          "source": "Econbrowser",
+          "link": "https://econbrowser.com/archives/2026/08/wisconsin-goods-exports-by-destination-2025",
+          "published": "Mon, 24 Aug 2026 17:46:23 +0000",
+          "archive_date": "2026-08-25",
+          "summary": "As we lumber into an expanded trade war with Canada: Source: Census via ITA, and author’s calculations. To date (1pm CT), gubernatorial candidate Tom Tiffany has not made a comment on the original Section 338 tariffs to be levied against Canada, nor this mornings threat to increase tariff rates on automobiles.",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Paper (Diaper) Tiger? “Trump Vows to Double Tariffs on Canadian Autos, Escalating Fight”",
+          "source": "Econbrowser",
+          "link": "https://econbrowser.com/archives/2026/08/paper-diaper-tiger-trump-vows-to-double-tariffs-on-canadian-autos-escalating-fight",
+          "published": "Mon, 24 Aug 2026 14:15:14 +0000",
+          "archive_date": "2026-08-25",
+          "summary": "Who could’a thunk it? From Bloomberg: US President Donald Trump pledged to double the auto tariff on Canadian vehicles and parts starting next year, escalating the spiraling trade fight between the two economies. Trump posted on Monday that “Tariffs on all Cars, Trucks, both large and small, Automotive Parts, and Steel…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "European Country ETFs vs. the U.S.",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/think-big-blog/european-country-etfs-vs-the-u-s/",
+          "published": "Mon, 17 Aug 2026 14:10:59 +0000",
+          "archive_date": "2026-08-18",
+          "summary": "US stocks crushed the rest of the world for a 15-year period coming out of the Financial Crisis, but we’ve seen the rest of the world actually outperform the US over the last 18+ months. A lot of the outperformance for international equities has come since the Tariff Tantrum in early 2025. Below is a […] The post Europ…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "The Tech Tide Turns",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/think-big-blog/the-tech-tide-turns/",
+          "published": "Fri, 31 Jul 2026 19:50:04 +0000",
+          "archive_date": "2026-08-01",
+          "summary": "Technology rallied 5.24% yesterday for its best day since April 9, 2025, when the sector surged 14.15% after the Tariff Tantrum. Tech had fallen 5.41% over the prior four trading days, and yesterday’s rebound recovered more than 90% of that decline. By comparison, the sector tumbled 14.37% from April 2 through April 8,…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Energy Market and Carbon Emission Spillovers in Critical Minerals Investment: A Dynamic Connectedness Approach",
+          "source": "arXiv q-fin (Quant Finance)",
+          "link": "https://arxiv.org/abs/2607.27485",
+          "published": "Fri, 31 Jul 2026 00:00:00 -0400",
+          "archive_date": "2026-07-31",
+          "summary": "arXiv:2607.27485v1 Announce Type: cross Abstract: Design/methodology/approach A time-varying parameter vector autoregression (TVP-VAR) model is employed to quantify dynamic connectedness and directional volatility spillovers using daily data from May 1, 2013, to May 2, 2023. The study isolates the impact of extreme eve…",
+          "category": "Forecast"
+        },
+        {
+          "title": "Mr. Trump, tear down this (hamburger tariff) wall!",
+          "source": "Econbrowser",
+          "link": "https://econbrowser.com/archives/2026/08/mr-trump-tear-down-this-hamburger-tariff-wall",
+          "published": "Fri, 21 Aug 2026 16:36:40 +0000",
+          "archive_date": "2026-08-22",
+          "summary": "From Bloomberg: President Donald Trump said he would allow tariff relief for some ground beef imports in a bid to lower prices for American consumers, a key concern ahead of November midterm elections. “Today, I concluded a deal to substantially lower the price of ground beef for working American families,” Trump said …",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Beef and Eggs Back Under $10",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/think-big-blog/beef-and-eggs-back-under-10/",
+          "published": "Fri, 21 Aug 2026 15:53:06 +0000",
+          "archive_date": "2026-08-22",
+          "summary": "Beef prices are back in the news today after President Trump announced a plan to import 300,000 tons of ground beef over the next three months exempt from tariffs and at 25% below market prices. Earlier this year, it was looking like ground beef prices would eclipse $7/lb by the summer, but as shown below, […] The post…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Only Protectionism Can Safeguard European Industry",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/commentary/tariffs-are-needed-to-protect-eu-manufacturing-from-china-by-desmond-lachman-2026-08",
+          "published": "Fri, 21 Aug 2026 10:48:38 GMT",
+          "archive_date": "2026-08-22",
+          "summary": "While economic rebalancing by China would be good for everyone, Chinese leaders have given little indication that they are moving decisively in this direction. With China's ever-increasing exports threatening to decimate European manufacturing, the EU has little choice but to embrace tariffs.",
+          "category": "Fact"
+        },
+        {
+          "title": "More evidence on the effects of recent tariffs",
+          "source": "Marginal Revolution",
+          "link": "https://marginalrevolution.com/marginalrevolution/2026/08/more-evidence-on-the-effects-of-recent-tariffs.html?utm_source=rss&utm_medium=rss&utm_campaign=more-evidence-on-the-effects-of-recent-tariffs",
+          "published": "Fri, 21 Aug 2026 04:41:32 +0000",
+          "archive_date": "2026-08-22",
+          "summary": "Trump is giving economists something to write papers about: U.S. tariff rates in 2025 rose to levels not seen since the Great Depression, yet imports increased. To account for the missing trade collapse, we develop an open-economy New Keynesian model with tariff heterogeneity, inventories, and shocks to investment that…",
+          "category": "Fact"
+        }
+      ],
+      "framework_note": "Every item below is EVIDENCE (an observable fact or a source's reported claim), not a conclusion. Where an item implies a strategic motive (for example, characterizations of US interest in Greenland as partly resource-driven), treat that as one HYPOTHESIS among several plausible explanations (which can include, and are not limited to, security policy, territorial claims context, or Arctic shipping-route strategy) — this board deliberately does not pick a winner among competing explanations for a geopolitical development; it surfaces the sourced claims so the reader can weigh them."
+    }
+  }
+}
