@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-08-25",
+  "as_of": "2026-08-26",
   "disclaimer": "IDEAS fuses MOMENTUM/EDGE/PEAD/FMOM/CAS signals (free/best-effort data) into a daily BUY/SELL idea list with conviction, unusualness and confluence scores. This composite is novel and carries NO out-of-sample track record yet — see its evidence-strength badge and the accumulating diagnostics on the Diagnostics tab. Decision-support and a research prompt, not investment advice, and not a promise of forward returns.",
   "regime": {
     "label": "risk-on",
@@ -14,191 +14,8 @@
     "short": false
   },
   "n_buy": 10,
-  "n_sell": 6,
+  "n_sell": 8,
   "buy": [
-    {
-      "ticker": "LEN",
-      "meta": {
-        "ticker": "LEN",
-        "name": "Lennar Corp. Class A",
-        "sector": "",
-        "security_type": "stock",
-        "weight_pct": 0.02,
-        "mktcap": null
-      },
-      "side": "long",
-      "net_score": 0.3237,
-      "conviction": 66.19,
-      "unusual": 68.14,
-      "coverage_n": 4,
-      "group_scores": {
-        "technicals": {
-          "score": -0.3071,
-          "coverage": true,
-          "explain": {
-            "composite": -6.1421,
-            "state": "BEARISH",
-            "pctile": 6.8,
-            "source": "mom"
-          }
-        },
-        "sentiment": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "positioning": {
-          "score": 0.916,
-          "coverage": true,
-          "explain": {
-            "si_float": 0.28,
-            "dtc": 0.2,
-            "si_pctile": 4.2,
-            "squeeze_risk": false,
-            "held_pct_institutions": null
-          }
-        },
-        "valuation": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "fundamentals": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "catalyst": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "risk_reward": {
-          "score": 0.5025,
-          "coverage": true,
-          "explain": {
-            "coverage": true,
-            "parts": {
-              "structural_rr": 0.969987932829472,
-              "lottery_penalty": 0.035
-            }
-          }
-        },
-        "macro": {
-          "score": 1.0,
-          "coverage": true,
-          "explain": {
-            "regime_label": "risk-on",
-            "risk_score": 0.963,
-            "beta_used": 1.228,
-            "beta_multiplier": 1.23
-          }
-        }
-      },
-      "conviction_detail": {
-        "net_score": 0.3237,
-        "coverage_n": 4,
-        "components": {
-          "technicals": {
-            "score": -0.3071,
-            "weight": 0.22,
-            "contribution": -0.0676
-          },
-          "positioning": {
-            "score": 0.916,
-            "weight": 0.15,
-            "contribution": 0.1374
-          },
-          "risk_reward": {
-            "score": 0.5025,
-            "weight": 0.09,
-            "contribution": 0.0452
-          },
-          "macro": {
-            "score": 1.0,
-            "weight": 0.05,
-            "contribution": 0.05
-          }
-        }
-      },
-      "unusual_detail": {
-        "unusual": 68.14,
-        "extremity": 0.6814,
-        "n_groups": 4,
-        "obvious_discount": false
-      },
-      "divergence": {
-        "flags": [],
-        "has_divergence": false,
-        "n_flags": 0
-      },
-      "confluence": {
-        "direction": "bullish",
-        "agree": 3,
-        "disagree": 1,
-        "neutral": 0,
-        "no_data": 4,
-        "n_covered": 4,
-        "n_total": 8,
-        "per_group": {
-          "technicals": "bearish",
-          "sentiment": "no_data",
-          "positioning": "bullish",
-          "valuation": "no_data",
-          "fundamentals": "no_data",
-          "catalyst": "no_data",
-          "risk_reward": "bullish",
-          "macro": "bullish"
-        },
-        "label": "3/8 signals bullish"
-      },
-      "riskreward": {
-        "available": true,
-        "side": "long",
-        "last_close": 87.68,
-        "atr14": 2.75,
-        "entry_zone": [
-          86.36,
-          88.56
-        ],
-        "stop": 80.81,
-        "target": 139.59,
-        "risk_per_share": 6.87,
-        "reward_per_share": 51.91,
-        "rr_ratio": 7.55,
-        "max_drawdown_pct": 0.0784,
-        "scale_in": {
-          "style": "scaled",
-          "note": "Standard scale-in given moderate signal strength.",
-          "tranches": [
-            {
-              "pct": 50,
-              "when": "initial"
-            },
-            {
-              "pct": 50,
-              "when": "on confirmation or a pullback"
-            }
-          ]
-        },
-        "invalidation": "Thesis invalidated if price closes below 80.81 on a daily-close basis, or if the technical state reverses to the opposite extreme."
-      },
-      "opportunity_type": "Relative Value",
-      "horizon": "months",
-      "security_type": "stock",
-      "narrative": {
-        "thesis": "LEN is a Relative Value BUY idea: a bearish technical read (composite -6.1421).",
-        "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
-        "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
-        "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (3/8 signals bullish).",
-        "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
-        "bull_case": "Supportive signal groups: positioning, risk_reward, macro.",
-        "bear_case": "Opposing signal groups: technicals.",
-        "change_my_mind": [
-          "A daily close through 80.81 (below the current level) invalidates the setup."
-        ]
-      }
-    },
     {
       "ticker": "SMTC",
       "meta": {
@@ -210,26 +27,26 @@
         "mktcap": null
       },
       "side": "long",
-      "net_score": 0.2913,
-      "conviction": 64.56,
-      "unusual": 69.61,
+      "net_score": 0.2835,
+      "conviction": 64.17,
+      "unusual": 71.19,
       "coverage_n": 6,
       "group_scores": {
         "technicals": {
-          "score": 0.2632,
+          "score": 0.2778,
           "coverage": true,
           "explain": {
-            "composite": 5.2648,
+            "composite": 5.5566,
             "state": "BULLISH",
-            "pctile": 69.5,
+            "pctile": 73.1,
             "source": "mom"
           }
         },
         "sentiment": {
-          "score": 0.928,
+          "score": 0.92,
           "coverage": true,
           "explain": {
-            "revisions_pctile": 96.4,
+            "revisions_pctile": 96.0,
             "est_rev_pct": 0.30719,
             "up_frac": 1.0
           }
@@ -241,7 +58,7 @@
             "si_float": 9.13,
             "dtc": 2.84,
             "si_pctile": 80.8,
-            "squeeze_risk": false,
+            "squeeze_risk": true,
             "held_pct_institutions": null
           }
         },
@@ -265,13 +82,13 @@
           }
         },
         "risk_reward": {
-          "score": -0.37,
+          "score": -0.4578,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": -0.2769098639659444,
-              "lottery_penalty": -0.46299999999999997
+              "structural_rr": -0.44860016690106214,
+              "lottery_penalty": -0.467
             }
           }
         },
@@ -281,24 +98,24 @@
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 3.969,
+            "beta_used": 3.981,
             "beta_multiplier": 2.0
           }
         }
       },
       "conviction_detail": {
-        "net_score": 0.2913,
+        "net_score": 0.2835,
         "coverage_n": 6,
         "components": {
           "technicals": {
-            "score": 0.2632,
+            "score": 0.2778,
             "weight": 0.22,
-            "contribution": 0.0579
+            "contribution": 0.0611
           },
           "sentiment": {
-            "score": 0.928,
+            "score": 0.92,
             "weight": 0.15,
-            "contribution": 0.1392
+            "contribution": 0.138
           },
           "positioning": {
             "score": -0.616,
@@ -311,9 +128,9 @@
             "contribution": 0.1
           },
           "risk_reward": {
-            "score": -0.37,
+            "score": -0.4578,
             "weight": 0.09,
-            "contribution": -0.0333
+            "contribution": -0.0412
           },
           "macro": {
             "score": 1.0,
@@ -323,8 +140,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 69.61,
-        "extremity": 0.6961,
+        "unusual": 71.19,
+        "extremity": 0.7119,
         "n_groups": 6,
         "obvious_discount": false
       },
@@ -393,8 +210,8 @@
       "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "SMTC is a Sentiment Reversal BUY idea: a bullish technical read (composite 5.2648); analyst EPS estimates moving +30.7% over the trailing quarter.",
-        "why_now": "Catalyst: a scheduled announcement on 2026-08-25.",
+        "thesis": "SMTC is a Sentiment Reversal BUY idea: a bullish technical read (composite 5.5566); analyst EPS estimates moving +30.7% over the trailing quarter.",
+        "why_now": "Catalyst: a scheduled announcement on 2026-08-25; a heavily-shorted position now showing rising price momentum (squeeze risk).",
         "idiosyncratic_risk": "Heavily shorted while price momentum turns positive -- a short-squeeze setup, not necessarily a fundamentals-driven move. this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
         "market_view": "The market's current pricing is consistent with the negative/positive signal that created this divergence in the first place.",
         "zenith_view": "Heavily shorted while price momentum turns positive -- a short-squeeze setup, not necessarily a fundamentals-driven move.",
@@ -407,28 +224,28 @@
       }
     },
     {
-      "ticker": "WSO",
+      "ticker": "LEN",
       "meta": {
-        "ticker": "WSO",
-        "name": "Watsco Inc.",
+        "ticker": "LEN",
+        "name": "Lennar Corp. Class A",
         "sector": "",
         "security_type": "stock",
         "weight_pct": 0.02,
         "mktcap": null
       },
       "side": "long",
-      "net_score": 0.2733,
-      "conviction": 63.66,
-      "unusual": 67.64,
+      "net_score": 0.3121,
+      "conviction": 65.61,
+      "unusual": 68.44,
       "coverage_n": 4,
       "group_scores": {
         "technicals": {
-          "score": -0.4322,
+          "score": -0.3295,
           "coverage": true,
           "explain": {
-            "composite": -8.6439,
+            "composite": -6.5907,
             "state": "BEARISH",
-            "pctile": 2.9,
+            "pctile": 6.2,
             "source": "mom"
           }
         },
@@ -438,12 +255,12 @@
           "explain": {}
         },
         "positioning": {
-          "score": 0.978,
+          "score": 0.916,
           "coverage": true,
           "explain": {
-            "si_float": 0.0,
-            "dtc": 0.0,
-            "si_pctile": 1.1,
+            "si_float": 0.28,
+            "dtc": 0.2,
+            "si_pctile": 4.2,
             "squeeze_risk": false,
             "held_pct_institutions": null
           }
@@ -464,56 +281,56 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": 0.5749,
+          "score": 0.4919,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": 0.9997773778888039,
-              "lottery_penalty": 0.15
+              "structural_rr": 0.9747661942044038,
+              "lottery_penalty": 0.008999999999999985
             }
           }
         },
         "macro": {
-          "score": 0.7203,
+          "score": 1.0,
           "coverage": true,
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 0.748,
-            "beta_multiplier": 0.75
+            "beta_used": 1.22,
+            "beta_multiplier": 1.22
           }
         }
       },
       "conviction_detail": {
-        "net_score": 0.2733,
+        "net_score": 0.3121,
         "coverage_n": 4,
         "components": {
           "technicals": {
-            "score": -0.4322,
+            "score": -0.3295,
             "weight": 0.22,
-            "contribution": -0.0951
+            "contribution": -0.0725
           },
           "positioning": {
-            "score": 0.978,
+            "score": 0.916,
             "weight": 0.15,
-            "contribution": 0.1467
+            "contribution": 0.1374
           },
           "risk_reward": {
-            "score": 0.5749,
+            "score": 0.4919,
             "weight": 0.09,
-            "contribution": 0.0517
+            "contribution": 0.0443
           },
           "macro": {
-            "score": 0.7203,
+            "score": 1.0,
             "weight": 0.05,
-            "contribution": 0.036
+            "contribution": 0.05
           }
         }
       },
       "unusual_detail": {
-        "unusual": 67.64,
-        "extremity": 0.6764,
+        "unusual": 68.44,
+        "extremity": 0.6844,
         "n_groups": 4,
         "obvious_discount": false
       },
@@ -545,18 +362,18 @@
       "riskreward": {
         "available": true,
         "side": "long",
-        "last_close": 302.29,
-        "atr14": 9.55,
+        "last_close": 87.68,
+        "atr14": 2.76,
         "entry_zone": [
-          297.76,
-          305.31
+          86.36,
+          88.56
         ],
-        "stop": 278.42,
-        "target": 452.97,
-        "risk_per_share": 23.87,
-        "reward_per_share": 150.68,
-        "rr_ratio": 6.31,
-        "max_drawdown_pct": 0.079,
+        "stop": 80.79,
+        "target": 139.59,
+        "risk_per_share": 6.89,
+        "reward_per_share": 51.91,
+        "rr_ratio": 7.54,
+        "max_drawdown_pct": 0.0786,
         "scale_in": {
           "style": "scaled",
           "note": "Standard scale-in given moderate signal strength.",
@@ -571,13 +388,13 @@
             }
           ]
         },
-        "invalidation": "Thesis invalidated if price closes below 278.42 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+        "invalidation": "Thesis invalidated if price closes below 80.79 on a daily-close basis, or if the technical state reverses to the opposite extreme."
       },
       "opportunity_type": "Relative Value",
       "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "WSO is a Relative Value BUY idea: a bearish technical read (composite -8.6439).",
+        "thesis": "LEN is a Relative Value BUY idea: a bearish technical read (composite -6.5907).",
         "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
         "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
         "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (3/8 signals bullish).",
@@ -585,7 +402,479 @@
         "bull_case": "Supportive signal groups: positioning, risk_reward, macro.",
         "bear_case": "Opposing signal groups: technicals.",
         "change_my_mind": [
-          "A daily close through 278.42 (below the current level) invalidates the setup."
+          "A daily close through 80.79 (below the current level) invalidates the setup."
+        ]
+      }
+    },
+    {
+      "ticker": "AVGO",
+      "meta": {
+        "ticker": "AVGO",
+        "name": "Broadcom Inc.",
+        "sector": "",
+        "security_type": "stock",
+        "weight_pct": 2.62,
+        "mktcap": 1752930451456
+      },
+      "side": "long",
+      "net_score": 0.3231,
+      "conviction": 66.16,
+      "unusual": 65.15,
+      "coverage_n": 7,
+      "group_scores": {
+        "technicals": {
+          "score": -0.019,
+          "coverage": true,
+          "explain": {
+            "composite": -0.3791,
+            "state": "NEUTRAL",
+            "pctile": 32.6,
+            "source": "mom"
+          }
+        },
+        "sentiment": {
+          "score": 0.648,
+          "coverage": true,
+          "explain": {
+            "revisions_pctile": 82.4,
+            "est_rev_pct": 0.07059,
+            "up_frac": 1.0
+          }
+        },
+        "positioning": {
+          "score": 0.842,
+          "coverage": true,
+          "explain": {
+            "si_float": 1.31,
+            "dtc": 2.87,
+            "si_pctile": 7.9,
+            "squeeze_risk": false,
+            "held_pct_institutions": 0.80134004
+          }
+        },
+        "valuation": {
+          "score": -0.704,
+          "coverage": true,
+          "explain": {
+            "cross_sectional": {
+              "universe_pctile": 14.8,
+              "n_universe": 450,
+              "sector_pctile": 14.8,
+              "n_sector": 450,
+              "multiples": {
+                "ep": 0.01690306733201647,
+                "book_yield": 0.05166227769786484,
+                "sales_yield": 0.04446391173308812,
+                "fcf_yield": 0.016033433361619196
+              }
+            },
+            "own_history": {
+              "pctile": null,
+              "n": 1,
+              "state": "building"
+            },
+            "blend": {
+              "coverage": true,
+              "parts": {
+                "cross_sectional": -0.7040000000000001,
+                "sector": -0.7040000000000001
+              },
+              "weights": {
+                "cross_sectional": 0.65,
+                "sector": 0.35
+              }
+            }
+          }
+        },
+        "fundamentals": {
+          "score": 0.9041,
+          "coverage": true,
+          "explain": {
+            "returnOnEquity": 0.37280998,
+            "profitMargins": 0.38848,
+            "revenueGrowth": 0.479,
+            "earningsGrowth": 0.854,
+            "debtToEquity": 74.018,
+            "currentRatio": 2.238,
+            "fcf_yield": 0.016
+          }
+        },
+        "catalyst": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "risk_reward": {
+          "score": 0.4433,
+          "coverage": true,
+          "explain": {
+            "coverage": true,
+            "parts": {
+              "structural_rr": 0.5705395269846996,
+              "lottery_penalty": 0.316
+            }
+          }
+        },
+        "macro": {
+          "score": 1.0,
+          "coverage": true,
+          "explain": {
+            "regime_label": "risk-on",
+            "risk_score": 0.963,
+            "beta_used": 1.473,
+            "beta_multiplier": 1.47
+          }
+        }
+      },
+      "conviction_detail": {
+        "net_score": 0.3231,
+        "coverage_n": 7,
+        "components": {
+          "technicals": {
+            "score": -0.019,
+            "weight": 0.22,
+            "contribution": -0.0042
+          },
+          "sentiment": {
+            "score": 0.648,
+            "weight": 0.15,
+            "contribution": 0.0972
+          },
+          "positioning": {
+            "score": 0.842,
+            "weight": 0.15,
+            "contribution": 0.1263
+          },
+          "valuation": {
+            "score": -0.704,
+            "weight": 0.15,
+            "contribution": -0.1056
+          },
+          "fundamentals": {
+            "score": 0.9041,
+            "weight": 0.1,
+            "contribution": 0.0904
+          },
+          "risk_reward": {
+            "score": 0.4433,
+            "weight": 0.09,
+            "contribution": 0.0399
+          },
+          "macro": {
+            "score": 1.0,
+            "weight": 0.05,
+            "contribution": 0.05
+          }
+        }
+      },
+      "unusual_detail": {
+        "unusual": 65.15,
+        "extremity": 0.6515,
+        "n_groups": 7,
+        "obvious_discount": false
+      },
+      "divergence": {
+        "flags": [],
+        "has_divergence": false,
+        "n_flags": 0
+      },
+      "confluence": {
+        "direction": "bullish",
+        "agree": 5,
+        "disagree": 1,
+        "neutral": 1,
+        "no_data": 1,
+        "n_covered": 7,
+        "n_total": 8,
+        "per_group": {
+          "technicals": "neutral",
+          "sentiment": "bullish",
+          "positioning": "bullish",
+          "valuation": "bearish",
+          "fundamentals": "bullish",
+          "catalyst": "no_data",
+          "risk_reward": "bullish",
+          "macro": "bullish"
+        },
+        "label": "5/8 signals bullish"
+      },
+      "riskreward": {
+        "available": true,
+        "side": "long",
+        "last_close": 356.74,
+        "atr14": 13.4,
+        "entry_zone": [
+          351.39,
+          360.31
+        ],
+        "stop": 323.24,
+        "target": 480.81,
+        "risk_per_share": 33.5,
+        "reward_per_share": 124.07,
+        "rr_ratio": 3.7,
+        "max_drawdown_pct": 0.0939,
+        "scale_in": {
+          "style": "immediate",
+          "note": "Breakout already confirmed on the daily close -- full position size is reasonable at the current entry zone."
+        },
+        "invalidation": "Thesis invalidated if price closes below 323.24 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+      },
+      "opportunity_type": "Macro Opportunity",
+      "horizon": "months",
+      "security_type": "stock",
+      "narrative": {
+        "thesis": "AVGO is a Macro Opportunity BUY idea: a neutral technical read (composite -0.3791); valuation in the 15th percentile of the scan universe; analyst EPS estimates moving +7.1% over the trailing quarter.",
+        "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
+        "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
+        "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (5/8 signals bullish).",
+        "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
+        "bull_case": "Supportive signal groups: sentiment, positioning, fundamentals, risk_reward, macro.",
+        "bear_case": "Opposing signal groups: valuation.",
+        "change_my_mind": [
+          "A daily close through 323.24 (below the current level) invalidates the setup.",
+          "A material re-rating in valuation percentile (up or down) would change the valuation group's contribution meaningfully."
+        ]
+      }
+    },
+    {
+      "ticker": "HWM",
+      "meta": {
+        "ticker": "HWM",
+        "name": "Howmet Aerospace Inc.",
+        "sector": "",
+        "security_type": "stock",
+        "weight_pct": 0.16,
+        "mktcap": 108346359808
+      },
+      "side": "long",
+      "net_score": 0.3297,
+      "conviction": 66.48,
+      "unusual": 64.81,
+      "coverage_n": 7,
+      "group_scores": {
+        "technicals": {
+          "score": 0.3394,
+          "coverage": true,
+          "explain": {
+            "composite": 6.7882,
+            "state": "BULLISH",
+            "pctile": 80.2,
+            "source": "mom"
+          }
+        },
+        "sentiment": {
+          "score": 0.7207,
+          "coverage": true,
+          "explain": {
+            "revisions_pctile": 81.8,
+            "est_rev_pct": 0.0696,
+            "up_frac": 1.0,
+            "iv_spread_bp": 551.4,
+            "borrow_flag": false
+          }
+        },
+        "positioning": {
+          "score": 0.752,
+          "coverage": true,
+          "explain": {
+            "si_float": 1.74,
+            "dtc": 3.27,
+            "si_pctile": 12.4,
+            "squeeze_risk": false,
+            "held_pct_institutions": 0.93358004
+          }
+        },
+        "valuation": {
+          "score": -0.684,
+          "coverage": true,
+          "explain": {
+            "cross_sectional": {
+              "universe_pctile": 15.8,
+              "n_universe": 450,
+              "sector_pctile": 15.8,
+              "n_sector": 450,
+              "multiples": {
+                "ep": 0.017535221245393497,
+                "book_yield": 0.054272081138932185,
+                "sales_yield": 0.08658158582832604,
+                "fcf_yield": 0.01129990792321673
+              }
+            },
+            "own_history": {
+              "pctile": null,
+              "n": 1,
+              "state": "building"
+            },
+            "blend": {
+              "coverage": true,
+              "parts": {
+                "cross_sectional": -0.684,
+                "sector": -0.684
+              },
+              "weights": {
+                "cross_sectional": 0.65,
+                "sector": 0.35
+              }
+            }
+          }
+        },
+        "fundamentals": {
+          "score": 0.7932,
+          "coverage": true,
+          "explain": {
+            "returnOnEquity": 0.34732,
+            "profitMargins": 0.20522,
+            "revenueGrowth": 0.241,
+            "earningsGrowth": 0.33,
+            "debtToEquity": 81.368,
+            "currentRatio": 1.818,
+            "fcf_yield": 0.0113
+          }
+        },
+        "catalyst": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "risk_reward": {
+          "score": -0.2472,
+          "coverage": true,
+          "explain": {
+            "coverage": true,
+            "parts": {
+              "structural_rr": -0.8284219057563517,
+              "lottery_penalty": 0.33399999999999996
+            }
+          }
+        },
+        "macro": {
+          "score": 1.0,
+          "coverage": true,
+          "explain": {
+            "regime_label": "risk-on",
+            "risk_score": 0.963,
+            "beta_used": 1.212,
+            "beta_multiplier": 1.21
+          }
+        }
+      },
+      "conviction_detail": {
+        "net_score": 0.3297,
+        "coverage_n": 7,
+        "components": {
+          "technicals": {
+            "score": 0.3394,
+            "weight": 0.22,
+            "contribution": 0.0747
+          },
+          "sentiment": {
+            "score": 0.7207,
+            "weight": 0.15,
+            "contribution": 0.1081
+          },
+          "positioning": {
+            "score": 0.752,
+            "weight": 0.15,
+            "contribution": 0.1128
+          },
+          "valuation": {
+            "score": -0.684,
+            "weight": 0.15,
+            "contribution": -0.1026
+          },
+          "fundamentals": {
+            "score": 0.7932,
+            "weight": 0.1,
+            "contribution": 0.0793
+          },
+          "risk_reward": {
+            "score": -0.2472,
+            "weight": 0.09,
+            "contribution": -0.0222
+          },
+          "macro": {
+            "score": 1.0,
+            "weight": 0.05,
+            "contribution": 0.05
+          }
+        }
+      },
+      "unusual_detail": {
+        "unusual": 64.81,
+        "extremity": 0.6481,
+        "n_groups": 7,
+        "obvious_discount": false
+      },
+      "divergence": {
+        "flags": [],
+        "has_divergence": false,
+        "n_flags": 0
+      },
+      "confluence": {
+        "direction": "bullish",
+        "agree": 5,
+        "disagree": 2,
+        "neutral": 0,
+        "no_data": 1,
+        "n_covered": 7,
+        "n_total": 8,
+        "per_group": {
+          "technicals": "bullish",
+          "sentiment": "bullish",
+          "positioning": "bullish",
+          "valuation": "bearish",
+          "fundamentals": "bullish",
+          "catalyst": "no_data",
+          "risk_reward": "bearish",
+          "macro": "bullish"
+        },
+        "label": "5/8 signals bullish"
+      },
+      "riskreward": {
+        "available": true,
+        "side": "long",
+        "last_close": 264.04,
+        "atr14": 9.15,
+        "entry_zone": [
+          260.08,
+          266.68
+        ],
+        "stop": 241.17,
+        "target": 292.65,
+        "risk_per_share": 22.87,
+        "reward_per_share": 28.61,
+        "rr_ratio": 1.25,
+        "max_drawdown_pct": 0.0866,
+        "scale_in": {
+          "style": "scaled",
+          "note": "Standard scale-in given moderate signal strength.",
+          "tranches": [
+            {
+              "pct": 50,
+              "when": "initial"
+            },
+            {
+              "pct": 50,
+              "when": "on confirmation or a pullback"
+            }
+          ]
+        },
+        "invalidation": "Thesis invalidated if price closes below 241.17 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+      },
+      "opportunity_type": "Momentum",
+      "horizon": "months",
+      "security_type": "stock",
+      "narrative": {
+        "thesis": "HWM is a Momentum BUY idea: a bullish technical read (composite 6.7882); valuation in the 16th percentile of the scan universe; analyst EPS estimates moving +7.0% over the trailing quarter.",
+        "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
+        "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
+        "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (5/8 signals bullish).",
+        "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
+        "bull_case": "Supportive signal groups: technicals, sentiment, positioning, fundamentals, macro.",
+        "bear_case": "Opposing signal groups: valuation, risk_reward.",
+        "change_my_mind": [
+          "A daily close through 241.17 (below the current level) invalidates the setup.",
+          "A material re-rating in valuation percentile (up or down) would change the valuation group's contribution meaningfully."
         ]
       }
     },
@@ -600,18 +889,18 @@
         "mktcap": null
       },
       "side": "long",
-      "net_score": 0.3472,
-      "conviction": 67.36,
-      "unusual": 63.76,
+      "net_score": 0.3167,
+      "conviction": 65.83,
+      "unusual": 63.53,
       "coverage_n": 3,
       "group_scores": {
         "technicals": {
-          "score": 0.5069,
+          "score": 0.4695,
           "coverage": true,
           "explain": {
-            "composite": 10.1384,
-            "state": "STRONG BULLISH",
-            "pctile": 93.7,
+            "composite": 9.3892,
+            "state": "BULLISH",
+            "pctile": 91.4,
             "source": "mom"
           }
         },
@@ -641,13 +930,13 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": -0.4058,
+          "score": -0.4364,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": -0.8446049278381249,
-              "lottery_penalty": 0.032999999999999974
+              "structural_rr": -0.8807806068581729,
+              "lottery_penalty": 0.007999999999999972
             }
           }
         },
@@ -657,24 +946,24 @@
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 1.536,
-            "beta_multiplier": 1.54
+            "beta_used": 1.547,
+            "beta_multiplier": 1.55
           }
         }
       },
       "conviction_detail": {
-        "net_score": 0.3472,
+        "net_score": 0.3167,
         "coverage_n": 3,
         "components": {
           "technicals": {
-            "score": 0.5069,
+            "score": 0.4695,
             "weight": 0.22,
-            "contribution": 0.1115
+            "contribution": 0.1033
           },
           "risk_reward": {
-            "score": -0.4058,
+            "score": -0.4364,
             "weight": 0.09,
-            "contribution": -0.0365
+            "contribution": -0.0393
           },
           "macro": {
             "score": 1.0,
@@ -684,8 +973,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 63.76,
-        "extremity": 0.6376,
+        "unusual": 63.53,
+        "extremity": 0.6353,
         "n_groups": 3,
         "obvious_discount": false
       },
@@ -749,7 +1038,7 @@
       "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "AVT is a Relative Value BUY idea: a strong bullish technical read (composite 10.1384).",
+        "thesis": "AVT is a Relative Value BUY idea: a bullish technical read (composite 9.3892).",
         "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
         "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
         "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (2/8 signals bullish).",
@@ -762,77 +1051,73 @@
       }
     },
     {
-      "ticker": "AVGO",
+      "ticker": "KEY",
       "meta": {
-        "ticker": "AVGO",
-        "name": "Broadcom Inc.",
+        "ticker": "KEY",
+        "name": "KeyCorp",
         "sector": "",
         "security_type": "stock",
-        "weight_pct": 2.62,
-        "mktcap": 1752930451456
+        "weight_pct": 0.03,
+        "mktcap": 23359442944
       },
       "side": "long",
-      "net_score": 0.3258,
-      "conviction": 66.29,
-      "unusual": 64.37,
-      "coverage_n": 7,
+      "net_score": 0.471,
+      "conviction": 73.55,
+      "unusual": 55.73,
+      "coverage_n": 6,
       "group_scores": {
         "technicals": {
-          "score": -0.0162,
+          "score": 0.1752,
           "coverage": true,
           "explain": {
-            "composite": -0.3234,
+            "composite": 3.5047,
             "state": "NEUTRAL",
-            "pctile": 32.8,
+            "pctile": 58.1,
             "source": "mom"
           }
         },
         "sentiment": {
-          "score": 0.652,
-          "coverage": true,
-          "explain": {
-            "revisions_pctile": 82.6,
-            "est_rev_pct": 0.07059,
-            "up_frac": 1.0
-          }
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
         },
         "positioning": {
-          "score": 0.842,
+          "score": 0.944,
           "coverage": true,
           "explain": {
-            "si_float": 1.31,
-            "dtc": 2.87,
-            "si_pctile": 7.9,
+            "si_float": 0.01,
+            "dtc": 0.0,
+            "si_pctile": 2.8,
             "squeeze_risk": false,
-            "held_pct_institutions": 0.80134004
+            "held_pct_institutions": 0.90269
           }
         },
         "valuation": {
-          "score": -0.678,
+          "score": 0.654,
           "coverage": true,
           "explain": {
             "cross_sectional": {
-              "universe_pctile": 16.1,
-              "n_universe": 300,
-              "sector_pctile": 16.1,
-              "n_sector": 300,
+              "universe_pctile": 82.7,
+              "n_universe": 450,
+              "sector_pctile": 82.7,
+              "n_sector": 450,
               "multiples": {
-                "ep": 0.01690306733201647,
-                "book_yield": 0.05166227769786484,
-                "sales_yield": 0.04446391173308812,
-                "fcf_yield": 0.016033433361619196
+                "ep": 0.07811786564180194,
+                "book_yield": 0.7371402202869833,
+                "sales_yield": 0.31554690115587986,
+                "fcf_yield": null
               }
             },
             "own_history": {
               "pctile": null,
-              "n": 1,
+              "n": 0,
               "state": "building"
             },
             "blend": {
               "coverage": true,
               "parts": {
-                "cross_sectional": -0.6779999999999999,
-                "sector": -0.6779999999999999
+                "cross_sectional": 0.654,
+                "sector": 0.654
               },
               "weights": {
                 "cross_sectional": 0.65,
@@ -842,16 +1127,13 @@
           }
         },
         "fundamentals": {
-          "score": 0.9041,
+          "score": 0.4313,
           "coverage": true,
           "explain": {
-            "returnOnEquity": 0.37280998,
-            "profitMargins": 0.38848,
-            "revenueGrowth": 0.479,
-            "earningsGrowth": 0.854,
-            "debtToEquity": 74.018,
-            "currentRatio": 2.238,
-            "fcf_yield": 0.016
+            "returnOnEquity": 0.1033,
+            "profitMargins": 0.2754,
+            "revenueGrowth": 0.101,
+            "earningsGrowth": 0.253
           }
         },
         "catalyst": {
@@ -860,72 +1142,67 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": 0.4137,
+          "score": -0.1454,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": 0.4914698439648728,
-              "lottery_penalty": 0.336
+              "structural_rr": -0.7548563169047855,
+              "lottery_penalty": 0.46399999999999997
             }
           }
         },
         "macro": {
-          "score": 1.0,
+          "score": 0.9938,
           "coverage": true,
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 1.473,
-            "beta_multiplier": 1.47
+            "beta_used": 1.032,
+            "beta_multiplier": 1.03
           }
         }
       },
       "conviction_detail": {
-        "net_score": 0.3258,
-        "coverage_n": 7,
+        "net_score": 0.471,
+        "coverage_n": 6,
         "components": {
           "technicals": {
-            "score": -0.0162,
+            "score": 0.1752,
             "weight": 0.22,
-            "contribution": -0.0036
-          },
-          "sentiment": {
-            "score": 0.652,
-            "weight": 0.15,
-            "contribution": 0.0978
+            "contribution": 0.0385
           },
           "positioning": {
-            "score": 0.842,
+            "score": 0.944,
             "weight": 0.15,
-            "contribution": 0.1263
+            "contribution": 0.1416
           },
           "valuation": {
-            "score": -0.678,
+            "score": 0.654,
             "weight": 0.15,
-            "contribution": -0.1017
+            "contribution": 0.0981
           },
           "fundamentals": {
-            "score": 0.9041,
+            "score": 0.4313,
             "weight": 0.1,
-            "contribution": 0.0904
+            "contribution": 0.0431
           },
           "risk_reward": {
-            "score": 0.4137,
+            "score": -0.1454,
             "weight": 0.09,
-            "contribution": 0.0372
+            "contribution": -0.0131
           },
           "macro": {
-            "score": 1.0,
+            "score": 0.9938,
             "weight": 0.05,
-            "contribution": 0.05
+            "contribution": 0.0497
           }
         }
       },
       "unusual_detail": {
-        "unusual": 64.37,
-        "extremity": 0.6437,
-        "n_groups": 7,
+        "unusual": 55.73,
+        "extremity": 0.5573,
+        "n_groups": 6,
         "obvious_discount": false
       },
       "divergence": {
@@ -937,18 +1214,18 @@
         "direction": "bullish",
         "agree": 5,
         "disagree": 1,
-        "neutral": 1,
-        "no_data": 1,
-        "n_covered": 7,
+        "neutral": 0,
+        "no_data": 2,
+        "n_covered": 6,
         "n_total": 8,
         "per_group": {
-          "technicals": "neutral",
-          "sentiment": "bullish",
+          "technicals": "bullish",
+          "sentiment": "no_data",
           "positioning": "bullish",
-          "valuation": "bearish",
+          "valuation": "bullish",
           "fundamentals": "bullish",
           "catalyst": "no_data",
-          "risk_reward": "bullish",
+          "risk_reward": "bearish",
           "macro": "bullish"
         },
         "label": "5/8 signals bullish"
@@ -956,18 +1233,18 @@
       "riskreward": {
         "available": true,
         "side": "long",
-        "last_close": 356.74,
-        "atr14": 13.4,
+        "last_close": 21.89,
+        "atr14": 0.41,
         "entry_zone": [
-          351.39,
-          360.31
+          21.56,
+          22.11
         ],
-        "stop": 323.24,
-        "target": 480.81,
-        "risk_per_share": 33.5,
-        "reward_per_share": 124.07,
-        "rr_ratio": 3.7,
-        "max_drawdown_pct": 0.0939,
+        "stop": 20.49,
+        "target": 23.99,
+        "risk_per_share": 1.4,
+        "reward_per_share": 2.1,
+        "rr_ratio": 1.5,
+        "max_drawdown_pct": 0.064,
         "scale_in": {
           "style": "scaled",
           "note": "Signal is not yet decisive -- scale in.",
@@ -990,453 +1267,87 @@
             }
           ]
         },
-        "invalidation": "Thesis invalidated if price closes below 323.24 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+        "invalidation": "Thesis invalidated if price closes below 20.49 on a daily-close basis, or if the technical state reverses to the opposite extreme."
       },
-      "opportunity_type": "Macro Opportunity",
-      "horizon": "months",
+      "opportunity_type": "Quality",
+      "horizon": "6_18m",
       "security_type": "stock",
       "narrative": {
-        "thesis": "AVGO is a Macro Opportunity BUY idea: a neutral technical read (composite -0.3234); valuation in the 16th percentile of the scan universe; analyst EPS estimates moving +7.1% over the trailing quarter.",
+        "thesis": "KEY is a Quality BUY idea: a neutral technical read (composite 3.5047); valuation in the 83th percentile of the scan universe.",
         "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
         "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
         "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (5/8 signals bullish).",
         "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
-        "bull_case": "Supportive signal groups: sentiment, positioning, fundamentals, risk_reward, macro.",
-        "bear_case": "Opposing signal groups: valuation.",
+        "bull_case": "Supportive signal groups: technicals, positioning, valuation, fundamentals, macro.",
+        "bear_case": "Opposing signal groups: risk_reward.",
         "change_my_mind": [
-          "A daily close through 323.24 (below the current level) invalidates the setup.",
+          "A daily close through 20.49 (below the current level) invalidates the setup.",
           "A material re-rating in valuation percentile (up or down) would change the valuation group's contribution meaningfully."
         ]
       }
     },
     {
-      "ticker": "NVT",
+      "ticker": "MU",
       "meta": {
-        "ticker": "NVT",
-        "name": "nVent Electric plc",
+        "ticker": "MU",
+        "name": "Micron Technology Inc.",
         "sector": "",
         "security_type": "stock",
-        "weight_pct": 0.04,
+        "weight_pct": 1.34,
         "mktcap": null
       },
       "side": "long",
-      "net_score": 0.3582,
-      "conviction": 67.91,
-      "unusual": 61.14,
-      "coverage_n": 4,
-      "group_scores": {
-        "technicals": {
-          "score": 0.2949,
-          "coverage": true,
-          "explain": {
-            "composite": 5.8987,
-            "state": "BULLISH",
-            "pctile": 73.3,
-            "source": "mom"
-          }
-        },
-        "sentiment": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "positioning": {
-          "score": 0.714,
-          "coverage": true,
-          "explain": {
-            "si_float": 1.92,
-            "dtc": 1.23,
-            "si_pctile": 14.3,
-            "squeeze_risk": false,
-            "held_pct_institutions": null
-          }
-        },
-        "valuation": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "fundamentals": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "catalyst": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "risk_reward": {
-          "score": -0.4368,
-          "coverage": true,
-          "explain": {
-            "coverage": true,
-            "parts": {
-              "structural_rr": -0.6426079006994827,
-              "lottery_penalty": -0.23099999999999996
-            }
-          }
-        },
-        "macro": {
-          "score": 1.0,
-          "coverage": true,
-          "explain": {
-            "regime_label": "risk-on",
-            "risk_score": 0.963,
-            "beta_used": 2.253,
-            "beta_multiplier": 2.0
-          }
-        }
-      },
-      "conviction_detail": {
-        "net_score": 0.3582,
-        "coverage_n": 4,
-        "components": {
-          "technicals": {
-            "score": 0.2949,
-            "weight": 0.22,
-            "contribution": 0.0649
-          },
-          "positioning": {
-            "score": 0.714,
-            "weight": 0.15,
-            "contribution": 0.1071
-          },
-          "risk_reward": {
-            "score": -0.4368,
-            "weight": 0.09,
-            "contribution": -0.0393
-          },
-          "macro": {
-            "score": 1.0,
-            "weight": 0.05,
-            "contribution": 0.05
-          }
-        }
-      },
-      "unusual_detail": {
-        "unusual": 61.14,
-        "extremity": 0.6114,
-        "n_groups": 4,
-        "obvious_discount": false
-      },
-      "divergence": {
-        "flags": [],
-        "has_divergence": false,
-        "n_flags": 0
-      },
-      "confluence": {
-        "direction": "bullish",
-        "agree": 3,
-        "disagree": 1,
-        "neutral": 0,
-        "no_data": 4,
-        "n_covered": 4,
-        "n_total": 8,
-        "per_group": {
-          "technicals": "bullish",
-          "sentiment": "no_data",
-          "positioning": "bullish",
-          "valuation": "no_data",
-          "fundamentals": "no_data",
-          "catalyst": "no_data",
-          "risk_reward": "bearish",
-          "macro": "bullish"
-        },
-        "label": "3/8 signals bullish"
-      },
-      "riskreward": {
-        "available": true,
-        "side": "long",
-        "last_close": 151.48,
-        "atr14": 7.52,
-        "entry_zone": [
-          149.21,
-          152.99
-        ],
-        "stop": 132.27,
-        "target": 184.1,
-        "risk_per_share": 19.21,
-        "reward_per_share": 32.62,
-        "rr_ratio": 1.7,
-        "max_drawdown_pct": 0.1268,
-        "scale_in": {
-          "style": "scaled",
-          "note": "Standard scale-in given moderate signal strength.",
-          "tranches": [
-            {
-              "pct": 50,
-              "when": "initial"
-            },
-            {
-              "pct": 50,
-              "when": "on confirmation or a pullback"
-            }
-          ]
-        },
-        "invalidation": "Thesis invalidated if price closes below 132.27 on a daily-close basis, or if the technical state reverses to the opposite extreme."
-      },
-      "opportunity_type": "Relative Value",
-      "horizon": "months",
-      "security_type": "stock",
-      "narrative": {
-        "thesis": "NVT is a Relative Value BUY idea: a bullish technical read (composite 5.8987).",
-        "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
-        "idiosyncratic_risk": "this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
-        "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (3/8 signals bullish).",
-        "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
-        "bull_case": "Supportive signal groups: technicals, positioning, macro.",
-        "bear_case": "Opposing signal groups: risk_reward.",
-        "change_my_mind": [
-          "A daily close through 132.27 (below the current level) invalidates the setup."
-        ]
-      }
-    },
-    {
-      "ticker": "CMS",
-      "meta": {
-        "ticker": "CMS",
-        "name": "CMS Energy Corp.",
-        "sector": "",
-        "security_type": "stock",
-        "weight_pct": 0.03,
-        "mktcap": null
-      },
-      "side": "long",
-      "net_score": 0.3419,
-      "conviction": 67.09,
-      "unusual": 61.79,
-      "coverage_n": 4,
-      "group_scores": {
-        "technicals": {
-          "score": -0.2823,
-          "coverage": true,
-          "explain": {
-            "composite": -5.6452,
-            "state": "BEARISH",
-            "pctile": 7.6,
-            "source": "mom"
-          }
-        },
-        "sentiment": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "positioning": {
-          "score": 0.978,
-          "coverage": true,
-          "explain": {
-            "si_float": 0.0,
-            "dtc": 0.0,
-            "si_pctile": 1.1,
-            "squeeze_risk": false,
-            "held_pct_institutions": null
-          }
-        },
-        "valuation": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "fundamentals": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "catalyst": {
-          "score": 0.0,
-          "coverage": false,
-          "explain": {}
-        },
-        "risk_reward": {
-          "score": 0.7299,
-          "coverage": true,
-          "explain": {
-            "coverage": true,
-            "parts": {
-              "structural_rr": 0.9867595967112199,
-              "lottery_penalty": 0.473
-            }
-          }
-        },
-        "macro": {
-          "score": 0.4815,
-          "coverage": true,
-          "explain": {
-            "regime_label": "risk-on",
-            "risk_score": 0.963,
-            "beta_used": -0.483,
-            "beta_multiplier": 0.5
-          }
-        }
-      },
-      "conviction_detail": {
-        "net_score": 0.3419,
-        "coverage_n": 4,
-        "components": {
-          "technicals": {
-            "score": -0.2823,
-            "weight": 0.22,
-            "contribution": -0.0621
-          },
-          "positioning": {
-            "score": 0.978,
-            "weight": 0.15,
-            "contribution": 0.1467
-          },
-          "risk_reward": {
-            "score": 0.7299,
-            "weight": 0.09,
-            "contribution": 0.0657
-          },
-          "macro": {
-            "score": 0.4815,
-            "weight": 0.05,
-            "contribution": 0.0241
-          }
-        }
-      },
-      "unusual_detail": {
-        "unusual": 61.79,
-        "extremity": 0.6179,
-        "n_groups": 4,
-        "obvious_discount": false
-      },
-      "divergence": {
-        "flags": [],
-        "has_divergence": false,
-        "n_flags": 0
-      },
-      "confluence": {
-        "direction": "bullish",
-        "agree": 3,
-        "disagree": 1,
-        "neutral": 0,
-        "no_data": 4,
-        "n_covered": 4,
-        "n_total": 8,
-        "per_group": {
-          "technicals": "bearish",
-          "sentiment": "no_data",
-          "positioning": "bullish",
-          "valuation": "no_data",
-          "fundamentals": "no_data",
-          "catalyst": "no_data",
-          "risk_reward": "bullish",
-          "macro": "bullish"
-        },
-        "label": "3/8 signals bullish"
-      },
-      "riskreward": {
-        "available": true,
-        "side": "long",
-        "last_close": 68.74,
-        "atr14": 1.2,
-        "entry_zone": [
-          67.71,
-          69.43
-        ],
-        "stop": 65.75,
-        "target": 78.69,
-        "risk_per_share": 2.99,
-        "reward_per_share": 9.95,
-        "rr_ratio": 3.33,
-        "max_drawdown_pct": 0.0435,
-        "scale_in": {
-          "style": "scaled",
-          "note": "Standard scale-in given moderate signal strength.",
-          "tranches": [
-            {
-              "pct": 50,
-              "when": "initial"
-            },
-            {
-              "pct": 50,
-              "when": "on confirmation or a pullback"
-            }
-          ]
-        },
-        "invalidation": "Thesis invalidated if price closes below 65.75 on a daily-close basis, or if the technical state reverses to the opposite extreme."
-      },
-      "opportunity_type": "Relative Value",
-      "horizon": "months",
-      "security_type": "stock",
-      "narrative": {
-        "thesis": "CMS is a Relative Value BUY idea: a bearish technical read (composite -5.6452).",
-        "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
-        "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
-        "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (3/8 signals bullish).",
-        "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
-        "bull_case": "Supportive signal groups: positioning, risk_reward, macro.",
-        "bear_case": "Opposing signal groups: technicals.",
-        "change_my_mind": [
-          "A daily close through 65.75 (below the current level) invalidates the setup."
-        ]
-      }
-    },
-    {
-      "ticker": "HWM",
-      "meta": {
-        "ticker": "HWM",
-        "name": "Howmet Aerospace Inc.",
-        "sector": "",
-        "security_type": "stock",
-        "weight_pct": 0.16,
-        "mktcap": 108346359808
-      },
-      "side": "long",
-      "net_score": 0.3215,
-      "conviction": 66.08,
-      "unusual": 62.73,
+      "net_score": 0.3883,
+      "conviction": 69.41,
+      "unusual": 59.4,
       "coverage_n": 7,
       "group_scores": {
         "technicals": {
-          "score": 0.337,
+          "score": 0.4751,
           "coverage": true,
           "explain": {
-            "composite": 6.741,
+            "composite": 9.5013,
             "state": "BULLISH",
-            "pctile": 78.6,
+            "pctile": 91.9,
             "source": "mom"
           }
         },
         "sentiment": {
-          "score": 0.629,
+          "score": 0.6066,
           "coverage": true,
           "explain": {
-            "revisions_pctile": 81.8,
-            "est_rev_pct": 0.0696,
-            "up_frac": 1.0,
-            "iv_spread_bp": 404.9,
+            "revisions_pctile": 97.2,
+            "est_rev_pct": 0.50917,
+            "up_frac": 0.8333,
+            "iv_spread_bp": 157.4,
             "borrow_flag": false
           }
         },
         "positioning": {
-          "score": 0.752,
+          "score": 0.458,
           "coverage": true,
           "explain": {
-            "si_float": 1.74,
-            "dtc": 3.27,
-            "si_pctile": 12.4,
+            "si_float": 2.65,
+            "dtc": 0.63,
+            "si_pctile": 27.1,
             "squeeze_risk": false,
-            "held_pct_institutions": 0.93358004
+            "held_pct_institutions": 0.79981005
           }
         },
         "valuation": {
-          "score": -0.648,
+          "score": -0.03,
           "coverage": true,
           "explain": {
             "cross_sectional": {
-              "universe_pctile": 17.6,
-              "n_universe": 300,
-              "sector_pctile": 17.6,
-              "n_sector": 300,
+              "universe_pctile": 48.5,
+              "n_universe": 450,
+              "sector_pctile": 48.5,
+              "n_sector": 450,
               "multiples": {
-                "ep": 0.017535221245393497,
-                "book_yield": 0.054272081138932185,
-                "sales_yield": 0.08658158582832604,
-                "fcf_yield": 0.01129990792321673
+                "ep": 0.04742918182859037,
+                "book_yield": 0.09562472878436298,
+                "sales_yield": null,
+                "fcf_yield": null
               }
             },
             "own_history": {
@@ -1447,8 +1358,8 @@
             "blend": {
               "coverage": true,
               "parts": {
-                "cross_sectional": -0.648,
-                "sector": -0.648
+                "cross_sectional": -0.03,
+                "sector": -0.03
               },
               "weights": {
                 "cross_sectional": 0.65,
@@ -1458,16 +1369,15 @@
           }
         },
         "fundamentals": {
-          "score": 0.7932,
+          "score": 0.9819,
           "coverage": true,
           "explain": {
-            "returnOnEquity": 0.34732,
-            "profitMargins": 0.20522,
-            "revenueGrowth": 0.241,
-            "earningsGrowth": 0.33,
-            "debtToEquity": 81.368,
-            "currentRatio": 1.818,
-            "fcf_yield": 0.0113
+            "returnOnEquity": 0.66638,
+            "profitMargins": 0.55906,
+            "revenueGrowth": 3.457,
+            "earningsGrowth": 13.685,
+            "debtToEquity": 6.33,
+            "currentRatio": 3.425
           }
         },
         "catalyst": {
@@ -1476,13 +1386,13 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": -0.2317,
+          "score": -0.6061,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": -0.817470788004873,
-              "lottery_penalty": 0.354
+              "structural_rr": -0.7891170524071138,
+              "lottery_penalty": -0.423
             }
           }
         },
@@ -1492,44 +1402,44 @@
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 1.212,
-            "beta_multiplier": 1.21
+            "beta_used": 2.213,
+            "beta_multiplier": 2.0
           }
         }
       },
       "conviction_detail": {
-        "net_score": 0.3215,
+        "net_score": 0.3883,
         "coverage_n": 7,
         "components": {
           "technicals": {
-            "score": 0.337,
+            "score": 0.4751,
             "weight": 0.22,
-            "contribution": 0.0741
+            "contribution": 0.1045
           },
           "sentiment": {
-            "score": 0.629,
+            "score": 0.6066,
             "weight": 0.15,
-            "contribution": 0.0944
+            "contribution": 0.091
           },
           "positioning": {
-            "score": 0.752,
+            "score": 0.458,
             "weight": 0.15,
-            "contribution": 0.1128
+            "contribution": 0.0687
           },
           "valuation": {
-            "score": -0.648,
+            "score": -0.03,
             "weight": 0.15,
-            "contribution": -0.0972
+            "contribution": -0.0045
           },
           "fundamentals": {
-            "score": 0.7932,
+            "score": 0.9819,
             "weight": 0.1,
-            "contribution": 0.0793
+            "contribution": 0.0982
           },
           "risk_reward": {
-            "score": -0.2317,
+            "score": -0.6061,
             "weight": 0.09,
-            "contribution": -0.0209
+            "contribution": -0.0545
           },
           "macro": {
             "score": 1.0,
@@ -1539,8 +1449,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 62.73,
-        "extremity": 0.6273,
+        "unusual": 59.4,
+        "extremity": 0.594,
         "n_groups": 7,
         "obvious_discount": false
       },
@@ -1552,8 +1462,8 @@
       "confluence": {
         "direction": "bullish",
         "agree": 5,
-        "disagree": 2,
-        "neutral": 0,
+        "disagree": 1,
+        "neutral": 1,
         "no_data": 1,
         "n_covered": 7,
         "n_total": 8,
@@ -1561,7 +1471,7 @@
           "technicals": "bullish",
           "sentiment": "bullish",
           "positioning": "bullish",
-          "valuation": "bearish",
+          "valuation": "neutral",
           "fundamentals": "bullish",
           "catalyst": "no_data",
           "risk_reward": "bearish",
@@ -1572,37 +1482,47 @@
       "riskreward": {
         "available": true,
         "side": "long",
-        "last_close": 264.04,
-        "atr14": 9.15,
+        "last_close": 932.97,
+        "atr14": 55.84,
         "entry_zone": [
-          260.08,
-          266.68
+          918.98,
+          942.3
         ],
-        "stop": 241.17,
-        "target": 292.65,
-        "risk_per_share": 22.87,
-        "reward_per_share": 28.61,
-        "rr_ratio": 1.25,
-        "max_drawdown_pct": 0.0866,
+        "stop": 731.61,
+        "target": 1213.37,
+        "risk_per_share": 201.36,
+        "reward_per_share": 280.4,
+        "rr_ratio": 1.39,
+        "max_drawdown_pct": 0.2158,
         "scale_in": {
-          "style": "immediate",
-          "note": "Breakout already confirmed on the daily close -- full position size is reasonable at the current entry zone."
+          "style": "scaled",
+          "note": "Standard scale-in given moderate signal strength.",
+          "tranches": [
+            {
+              "pct": 50,
+              "when": "initial"
+            },
+            {
+              "pct": 50,
+              "when": "on confirmation or a pullback"
+            }
+          ]
         },
-        "invalidation": "Thesis invalidated if price closes below 241.17 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+        "invalidation": "Thesis invalidated if price closes below 731.61 on a daily-close basis, or if the technical state reverses to the opposite extreme."
       },
-      "opportunity_type": "Momentum",
+      "opportunity_type": "Relative Value",
       "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "HWM is a Momentum BUY idea: a bullish technical read (composite 6.741); valuation in the 18th percentile of the scan universe; analyst EPS estimates moving +7.0% over the trailing quarter.",
+        "thesis": "MU is a Relative Value BUY idea: a bullish technical read (composite 9.5013); valuation in the 48th percentile of the scan universe; analyst EPS estimates moving +50.9% over the trailing quarter.",
         "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
-        "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
+        "idiosyncratic_risk": "this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
         "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (5/8 signals bullish).",
         "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
         "bull_case": "Supportive signal groups: technicals, sentiment, positioning, fundamentals, macro.",
-        "bear_case": "Opposing signal groups: valuation, risk_reward.",
+        "bear_case": "Opposing signal groups: risk_reward.",
         "change_my_mind": [
-          "A daily close through 241.17 (below the current level) invalidates the setup.",
+          "A daily close through 731.61 (below the current level) invalidates the setup.",
           "A material re-rating in valuation percentile (up or down) would change the valuation group's contribution meaningfully."
         ]
       }
@@ -1618,26 +1538,26 @@
         "mktcap": 52905398272
       },
       "side": "long",
-      "net_score": 0.3856,
-      "conviction": 69.28,
-      "unusual": 59.2,
+      "net_score": 0.3584,
+      "conviction": 67.92,
+      "unusual": 60.86,
       "coverage_n": 7,
       "group_scores": {
         "technicals": {
-          "score": 0.3009,
+          "score": 0.2748,
           "coverage": true,
           "explain": {
-            "composite": 6.0175,
+            "composite": 5.496,
             "state": "BULLISH",
-            "pctile": 74.0,
+            "pctile": 72.7,
             "source": "mom"
           }
         },
         "sentiment": {
-          "score": 0.846,
+          "score": 0.838,
           "coverage": true,
           "explain": {
-            "revisions_pctile": 92.3,
+            "revisions_pctile": 91.9,
             "est_rev_pct": 0.15001,
             "up_frac": 1.0
           }
@@ -1654,14 +1574,14 @@
           }
         },
         "valuation": {
-          "score": -0.258,
+          "score": -0.33,
           "coverage": true,
           "explain": {
             "cross_sectional": {
-              "universe_pctile": 37.1,
-              "n_universe": 300,
-              "sector_pctile": 37.1,
-              "n_sector": 300,
+              "universe_pctile": 33.5,
+              "n_universe": 450,
+              "sector_pctile": 33.5,
+              "n_sector": 450,
               "multiples": {
                 "ep": 0.02308509324657832,
                 "book_yield": 0.11581907947922182,
@@ -1671,14 +1591,14 @@
             },
             "own_history": {
               "pctile": null,
-              "n": 0,
+              "n": 1,
               "state": "building"
             },
             "blend": {
               "coverage": true,
               "parts": {
-                "cross_sectional": -0.25799999999999995,
-                "sector": -0.25799999999999995
+                "cross_sectional": -0.33,
+                "sector": -0.33
               },
               "weights": {
                 "cross_sectional": 0.65,
@@ -1706,13 +1626,13 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": -0.3133,
+          "score": -0.3911,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": -0.7066009856160886,
-              "lottery_penalty": 0.08
+              "structural_rr": -0.802169957872165,
+              "lottery_penalty": 0.02
             }
           }
         },
@@ -1728,18 +1648,18 @@
         }
       },
       "conviction_detail": {
-        "net_score": 0.3856,
+        "net_score": 0.3584,
         "coverage_n": 7,
         "components": {
           "technicals": {
-            "score": 0.3009,
+            "score": 0.2748,
             "weight": 0.22,
-            "contribution": 0.0662
+            "contribution": 0.0605
           },
           "sentiment": {
-            "score": 0.846,
+            "score": 0.838,
             "weight": 0.15,
-            "contribution": 0.1269
+            "contribution": 0.1257
           },
           "positioning": {
             "score": 0.642,
@@ -1747,9 +1667,9 @@
             "contribution": 0.0963
           },
           "valuation": {
-            "score": -0.258,
+            "score": -0.33,
             "weight": 0.15,
-            "contribution": -0.0387
+            "contribution": -0.0495
           },
           "fundamentals": {
             "score": 0.784,
@@ -1757,9 +1677,9 @@
             "contribution": 0.0784
           },
           "risk_reward": {
-            "score": -0.3133,
+            "score": -0.3911,
             "weight": 0.09,
-            "contribution": -0.0282
+            "contribution": -0.0352
           },
           "macro": {
             "score": 1.0,
@@ -1769,8 +1689,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 59.2,
-        "extremity": 0.592,
+        "unusual": 60.86,
+        "extremity": 0.6086,
         "n_groups": 7,
         "obvious_discount": false
       },
@@ -1834,7 +1754,7 @@
       "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "KEYS is a Momentum BUY idea: a bullish technical read (composite 6.0175); valuation in the 37th percentile of the scan universe; analyst EPS estimates moving +15.0% over the trailing quarter.",
+        "thesis": "KEYS is a Momentum BUY idea: a bullish technical read (composite 5.496); valuation in the 34th percentile of the scan universe; analyst EPS estimates moving +15.0% over the trailing quarter.",
         "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
         "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
         "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (5/8 signals bullish).",
@@ -1848,67 +1768,67 @@
       }
     },
     {
-      "ticker": "MU",
+      "ticker": "AMAT",
       "meta": {
-        "ticker": "MU",
-        "name": "Micron Technology Inc.",
+        "ticker": "AMAT",
+        "name": "Applied Materials Inc.",
         "sector": "",
         "security_type": "stock",
-        "weight_pct": 1.34,
-        "mktcap": null
+        "weight_pct": 0.58,
+        "mktcap": 390882099200
       },
       "side": "long",
-      "net_score": 0.3934,
-      "conviction": 69.67,
-      "unusual": 58.4,
+      "net_score": 0.295,
+      "conviction": 64.75,
+      "unusual": 63.28,
       "coverage_n": 7,
       "group_scores": {
         "technicals": {
-          "score": 0.4818,
+          "score": 0.3121,
           "coverage": true,
           "explain": {
-            "composite": 9.6353,
+            "composite": 6.242,
             "state": "BULLISH",
-            "pctile": 92.2,
+            "pctile": 76.7,
             "source": "mom"
           }
         },
         "sentiment": {
-          "score": 0.5499,
+          "score": 0.4934,
           "coverage": true,
           "explain": {
-            "revisions_pctile": 97.2,
-            "est_rev_pct": 0.50917,
-            "up_frac": 0.8333,
-            "iv_spread_bp": 128.5,
+            "revisions_pctile": 90.7,
+            "est_rev_pct": 0.13825,
+            "up_frac": 1.0,
+            "iv_spread_bp": 109.8,
             "borrow_flag": false
           }
         },
         "positioning": {
-          "score": 0.458,
+          "score": 0.734,
           "coverage": true,
           "explain": {
-            "si_float": 2.65,
-            "dtc": 0.63,
-            "si_pctile": 27.1,
+            "si_float": 1.8,
+            "dtc": 1.51,
+            "si_pctile": 13.3,
             "squeeze_risk": false,
-            "held_pct_institutions": 0.79981005
+            "held_pct_institutions": 0.86283
           }
         },
         "valuation": {
-          "score": 0.034,
+          "score": -0.646,
           "coverage": true,
           "explain": {
             "cross_sectional": {
-              "universe_pctile": 51.7,
-              "n_universe": 300,
-              "sector_pctile": 51.7,
-              "n_sector": 300,
+              "universe_pctile": 17.7,
+              "n_universe": 450,
+              "sector_pctile": 17.7,
+              "n_sector": 450,
               "multiples": {
-                "ep": 0.04742918182859037,
-                "book_yield": 0.09562472878436298,
-                "sales_yield": null,
-                "fcf_yield": null
+                "ep": 0.024102156701955358,
+                "book_yield": 0.06726730993049808,
+                "sales_yield": 0.08094582279890905,
+                "fcf_yield": 0.008072729831271146
               }
             },
             "own_history": {
@@ -1919,8 +1839,8 @@
             "blend": {
               "coverage": true,
               "parts": {
-                "cross_sectional": 0.03400000000000006,
-                "sector": 0.03400000000000006
+                "cross_sectional": -0.6459999999999999,
+                "sector": -0.6459999999999999
               },
               "weights": {
                 "cross_sectional": 0.65,
@@ -1930,15 +1850,16 @@
           }
         },
         "fundamentals": {
-          "score": 0.9819,
+          "score": 0.9183,
           "coverage": true,
           "explain": {
-            "returnOnEquity": 0.66638,
-            "profitMargins": 0.55906,
-            "revenueGrowth": 3.457,
-            "earningsGrowth": 13.685,
-            "debtToEquity": 6.33,
-            "currentRatio": 3.425
+            "returnOnEquity": 0.41068,
+            "profitMargins": 0.30052,
+            "revenueGrowth": 0.248,
+            "earningsGrowth": 0.428,
+            "debtToEquity": 28.666,
+            "currentRatio": 2.423,
+            "fcf_yield": 0.0081
           }
         },
         "catalyst": {
@@ -1947,13 +1868,13 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": -0.5827,
+          "score": -0.3255,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": -0.7463113182060106,
-              "lottery_penalty": -0.41900000000000004
+              "structural_rr": -0.2849239541456402,
+              "lottery_penalty": -0.36599999999999994
             }
           }
         },
@@ -1963,44 +1884,44 @@
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 2.213,
-            "beta_multiplier": 2.0
+            "beta_used": 1.618,
+            "beta_multiplier": 1.62
           }
         }
       },
       "conviction_detail": {
-        "net_score": 0.3934,
+        "net_score": 0.295,
         "coverage_n": 7,
         "components": {
           "technicals": {
-            "score": 0.4818,
+            "score": 0.3121,
             "weight": 0.22,
-            "contribution": 0.106
-          },
-          "sentiment": {
-            "score": 0.5499,
-            "weight": 0.15,
-            "contribution": 0.0825
-          },
-          "positioning": {
-            "score": 0.458,
-            "weight": 0.15,
             "contribution": 0.0687
           },
-          "valuation": {
-            "score": 0.034,
+          "sentiment": {
+            "score": 0.4934,
             "weight": 0.15,
-            "contribution": 0.0051
+            "contribution": 0.074
+          },
+          "positioning": {
+            "score": 0.734,
+            "weight": 0.15,
+            "contribution": 0.1101
+          },
+          "valuation": {
+            "score": -0.646,
+            "weight": 0.15,
+            "contribution": -0.0969
           },
           "fundamentals": {
-            "score": 0.9819,
+            "score": 0.9183,
             "weight": 0.1,
-            "contribution": 0.0982
+            "contribution": 0.0918
           },
           "risk_reward": {
-            "score": -0.5827,
+            "score": -0.3255,
             "weight": 0.09,
-            "contribution": -0.0524
+            "contribution": -0.0293
           },
           "macro": {
             "score": 1.0,
@@ -2010,8 +1931,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 58.4,
-        "extremity": 0.584,
+        "unusual": 63.28,
+        "extremity": 0.6328,
         "n_groups": 7,
         "obvious_discount": false
       },
@@ -2023,8 +1944,8 @@
       "confluence": {
         "direction": "bullish",
         "agree": 5,
-        "disagree": 1,
-        "neutral": 1,
+        "disagree": 2,
+        "neutral": 0,
         "no_data": 1,
         "n_covered": 7,
         "n_total": 8,
@@ -2032,7 +1953,7 @@
           "technicals": "bullish",
           "sentiment": "bullish",
           "positioning": "bullish",
-          "valuation": "neutral",
+          "valuation": "bearish",
           "fundamentals": "bullish",
           "catalyst": "no_data",
           "risk_reward": "bearish",
@@ -2043,18 +1964,18 @@
       "riskreward": {
         "available": true,
         "side": "long",
-        "last_close": 932.97,
-        "atr14": 55.84,
+        "last_close": 480.04,
+        "atr14": 25.69,
         "entry_zone": [
-          918.98,
-          942.3
+          472.84,
+          484.84
         ],
-        "stop": 731.61,
-        "target": 1213.37,
-        "risk_per_share": 201.36,
-        "reward_per_share": 280.4,
-        "rr_ratio": 1.39,
-        "max_drawdown_pct": 0.2158,
+        "stop": 415.82,
+        "target": 722.23,
+        "risk_per_share": 64.22,
+        "reward_per_share": 242.19,
+        "rr_ratio": 3.77,
+        "max_drawdown_pct": 0.1338,
         "scale_in": {
           "style": "scaled",
           "note": "Standard scale-in given moderate signal strength.",
@@ -2069,27 +1990,381 @@
             }
           ]
         },
-        "invalidation": "Thesis invalidated if price closes below 731.61 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+        "invalidation": "Thesis invalidated if price closes below 415.82 on a daily-close basis, or if the technical state reverses to the opposite extreme."
       },
-      "opportunity_type": "Quality",
-      "horizon": "6_18m",
+      "opportunity_type": "Momentum",
+      "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "MU is a Quality BUY idea: a bullish technical read (composite 9.6353); valuation in the 52th percentile of the scan universe; analyst EPS estimates moving +50.9% over the trailing quarter.",
+        "thesis": "AMAT is a Momentum BUY idea: a bullish technical read (composite 6.242); valuation in the 18th percentile of the scan universe; analyst EPS estimates moving +13.8% over the trailing quarter.",
         "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
         "idiosyncratic_risk": "this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
         "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (5/8 signals bullish).",
         "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
         "bull_case": "Supportive signal groups: technicals, sentiment, positioning, fundamentals, macro.",
+        "bear_case": "Opposing signal groups: valuation, risk_reward.",
+        "change_my_mind": [
+          "A daily close through 415.82 (below the current level) invalidates the setup.",
+          "A material re-rating in valuation percentile (up or down) would change the valuation group's contribution meaningfully."
+        ]
+      }
+    },
+    {
+      "ticker": "IRDM",
+      "meta": {
+        "ticker": "IRDM",
+        "name": "Iridium Communications Inc.",
+        "sector": "",
+        "security_type": "stock",
+        "weight_pct": 0.01,
+        "mktcap": null
+      },
+      "side": "long",
+      "net_score": 0.3063,
+      "conviction": 65.31,
+      "unusual": 57.54,
+      "coverage_n": 3,
+      "group_scores": {
+        "technicals": {
+          "score": 0.4053,
+          "coverage": true,
+          "explain": {
+            "composite": 8.1063,
+            "state": "BULLISH",
+            "pctile": 86.5,
+            "source": "mom"
+          }
+        },
+        "sentiment": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "positioning": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "valuation": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "fundamentals": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "catalyst": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "risk_reward": {
+          "score": -0.321,
+          "coverage": true,
+          "explain": {
+            "coverage": true,
+            "parts": {
+              "structural_rr": -0.860920712690916,
+              "lottery_penalty": 0.21899999999999997
+            }
+          }
+        },
+        "macro": {
+          "score": 1.0,
+          "coverage": true,
+          "explain": {
+            "regime_label": "risk-on",
+            "risk_score": 0.963,
+            "beta_used": 2.384,
+            "beta_multiplier": 2.0
+          }
+        }
+      },
+      "conviction_detail": {
+        "net_score": 0.3063,
+        "coverage_n": 3,
+        "components": {
+          "technicals": {
+            "score": 0.4053,
+            "weight": 0.22,
+            "contribution": 0.0892
+          },
+          "risk_reward": {
+            "score": -0.321,
+            "weight": 0.09,
+            "contribution": -0.0289
+          },
+          "macro": {
+            "score": 1.0,
+            "weight": 0.05,
+            "contribution": 0.05
+          }
+        }
+      },
+      "unusual_detail": {
+        "unusual": 57.54,
+        "extremity": 0.5754,
+        "n_groups": 3,
+        "obvious_discount": false
+      },
+      "divergence": {
+        "flags": [],
+        "has_divergence": false,
+        "n_flags": 0
+      },
+      "confluence": {
+        "direction": "bullish",
+        "agree": 2,
+        "disagree": 1,
+        "neutral": 0,
+        "no_data": 5,
+        "n_covered": 3,
+        "n_total": 8,
+        "per_group": {
+          "technicals": "bullish",
+          "sentiment": "no_data",
+          "positioning": "no_data",
+          "valuation": "no_data",
+          "fundamentals": "no_data",
+          "catalyst": "no_data",
+          "risk_reward": "bearish",
+          "macro": "bullish"
+        },
+        "label": "2/8 signals bullish"
+      },
+      "riskreward": {
+        "available": true,
+        "side": "long",
+        "last_close": 47.1,
+        "atr14": 1.29,
+        "entry_zone": [
+          46.39,
+          47.57
+        ],
+        "stop": 41.42,
+        "target": 55.72,
+        "risk_per_share": 5.68,
+        "reward_per_share": 8.62,
+        "rr_ratio": 1.52,
+        "max_drawdown_pct": 0.1206,
+        "scale_in": {
+          "style": "scaled",
+          "note": "Standard scale-in given moderate signal strength.",
+          "tranches": [
+            {
+              "pct": 50,
+              "when": "initial"
+            },
+            {
+              "pct": 50,
+              "when": "on confirmation or a pullback"
+            }
+          ]
+        },
+        "invalidation": "Thesis invalidated if price closes below 41.42 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+      },
+      "opportunity_type": "Relative Value",
+      "horizon": "months",
+      "security_type": "stock",
+      "narrative": {
+        "thesis": "IRDM is a Relative Value BUY idea: a bullish technical read (composite 8.1063).",
+        "why_now": "No scheduled near-term catalyst identified -- this is a signal-confluence setup, not an event-driven one.",
+        "idiosyncratic_risk": "no specific disagreement between price, fundamentals and sentiment was detected -- the main risk is that the composite signal itself proves wrong, not a known structural conflict.",
+        "market_view": "Consensus pricing appears broadly aligned with the bullish read across this idea's covered signal groups (2/8 signals bullish).",
+        "zenith_view": "Zenith's fused read agrees with the bullish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
+        "bull_case": "Supportive signal groups: technicals, macro.",
         "bear_case": "Opposing signal groups: risk_reward.",
         "change_my_mind": [
-          "A daily close through 731.61 (below the current level) invalidates the setup.",
-          "A material re-rating in valuation percentile (up or down) would change the valuation group's contribution meaningfully."
+          "A daily close through 41.42 (below the current level) invalidates the setup."
         ]
       }
     }
   ],
   "sell": [
+    {
+      "ticker": "BMNR",
+      "meta": {
+        "ticker": "BMNR",
+        "name": "BitMine Immersion Technologies Inc.",
+        "sector": "",
+        "security_type": "stock",
+        "weight_pct": 0.01
+      },
+      "side": "short",
+      "net_score": -0.4028,
+      "conviction": 70.14,
+      "unusual": 67.36,
+      "coverage_n": 4,
+      "group_scores": {
+        "technicals": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "sentiment": {
+          "score": -0.7956,
+          "coverage": true,
+          "explain": {
+            "revisions_pctile": 2.8,
+            "est_rev_pct": -0.48529,
+            "up_frac": 0.0,
+            "iv_spread_bp": -69.4,
+            "borrow_flag": false
+          }
+        },
+        "positioning": {
+          "score": -0.45,
+          "coverage": true,
+          "explain": {
+            "si_float": 7.1,
+            "dtc": 1.17,
+            "si_pctile": 72.5,
+            "squeeze_risk": true,
+            "held_pct_institutions": null
+          }
+        },
+        "valuation": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "fundamentals": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "catalyst": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "risk_reward": {
+          "score": -0.449,
+          "coverage": true,
+          "explain": {
+            "coverage": true,
+            "parts": {
+              "lottery_penalty": -0.44900000000000007
+            }
+          }
+        },
+        "macro": {
+          "score": 1.0,
+          "coverage": true,
+          "explain": {
+            "regime_label": "risk-on",
+            "risk_score": 0.963,
+            "beta_used": 3.049,
+            "beta_multiplier": 2.0
+          }
+        }
+      },
+      "conviction_detail": {
+        "net_score": -0.4028,
+        "coverage_n": 4,
+        "components": {
+          "sentiment": {
+            "score": -0.7956,
+            "weight": 0.15,
+            "contribution": -0.1193
+          },
+          "positioning": {
+            "score": -0.45,
+            "weight": 0.15,
+            "contribution": -0.0675
+          },
+          "risk_reward": {
+            "score": -0.449,
+            "weight": 0.09,
+            "contribution": -0.0404
+          },
+          "macro": {
+            "score": 1.0,
+            "weight": 0.05,
+            "contribution": 0.05
+          }
+        }
+      },
+      "unusual_detail": {
+        "unusual": 67.36,
+        "extremity": 0.6736,
+        "n_groups": 4,
+        "obvious_discount": false
+      },
+      "divergence": {
+        "flags": [],
+        "has_divergence": false,
+        "n_flags": 0
+      },
+      "confluence": {
+        "direction": "bearish",
+        "agree": 3,
+        "disagree": 1,
+        "neutral": 0,
+        "no_data": 4,
+        "n_covered": 4,
+        "n_total": 8,
+        "per_group": {
+          "technicals": "no_data",
+          "sentiment": "bearish",
+          "positioning": "bearish",
+          "valuation": "no_data",
+          "fundamentals": "no_data",
+          "catalyst": "no_data",
+          "risk_reward": "bearish",
+          "macro": "bullish"
+        },
+        "label": "3/8 signals bearish"
+      },
+      "riskreward": {
+        "available": true,
+        "side": "short",
+        "last_close": 24.82,
+        "atr14": 1.27,
+        "entry_zone": [
+          24.57,
+          25.19
+        ],
+        "stop": 28.0,
+        "target": 13.31,
+        "risk_per_share": 3.18,
+        "reward_per_share": 11.51,
+        "rr_ratio": 3.62,
+        "max_drawdown_pct": 0.128,
+        "scale_in": {
+          "style": "scaled",
+          "note": "Standard scale-in given moderate signal strength.",
+          "tranches": [
+            {
+              "pct": 50,
+              "when": "initial"
+            },
+            {
+              "pct": 50,
+              "when": "on confirmation or a pullback"
+            }
+          ]
+        },
+        "invalidation": "Thesis invalidated if price closes above 28.00 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+      },
+      "opportunity_type": "Short Thesis",
+      "horizon": "months",
+      "security_type": "stock",
+      "narrative": {
+        "thesis": "BMNR is a Short Thesis SELL/SHORT idea: analyst EPS estimates moving -48.5% over the trailing quarter.",
+        "why_now": "Catalyst: a heavily-shorted position now showing rising price momentum (squeeze risk).",
+        "idiosyncratic_risk": "this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
+        "market_view": "Consensus pricing appears broadly aligned with the bearish read across this idea's covered signal groups (3/8 signals bearish).",
+        "zenith_view": "Zenith's fused read agrees with the bearish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
+        "bull_case": "Supportive signal groups: macro.",
+        "bear_case": "Opposing signal groups: sentiment, positioning, risk_reward.",
+        "change_my_mind": [
+          "A daily close through 28.00 (above the current level) invalidates the setup."
+        ]
+      }
+    },
     {
       "ticker": "CBRS",
       "meta": {
@@ -2100,9 +2375,9 @@
         "weight_pct": 0.0
       },
       "side": "short",
-      "net_score": -0.4588,
-      "conviction": 72.94,
-      "unusual": 71.9,
+      "net_score": -0.3893,
+      "conviction": 69.47,
+      "unusual": 66.8,
       "coverage_n": 4,
       "group_scores": {
         "technicals": {
@@ -2111,20 +2386,20 @@
           "explain": {}
         },
         "sentiment": {
-          "score": -0.534,
+          "score": -0.326,
           "coverage": true,
           "explain": {
-            "iv_spread_bp": -47.8,
+            "iv_spread_bp": 48.4,
             "borrow_flag": false
           }
         },
         "positioning": {
-          "score": -0.85,
+          "score": -0.854,
           "coverage": true,
           "explain": {
             "si_float": 14.0,
             "dtc": 2.26,
-            "si_pctile": 92.5,
+            "si_pctile": 92.7,
             "squeeze_risk": false,
             "held_pct_institutions": null
           }
@@ -2160,24 +2435,24 @@
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 1.827,
-            "beta_multiplier": 1.83
+            "beta_used": 1.822,
+            "beta_multiplier": 1.82
           }
         }
       },
       "conviction_detail": {
-        "net_score": -0.4588,
+        "net_score": -0.3893,
         "coverage_n": 4,
         "components": {
           "sentiment": {
-            "score": -0.534,
+            "score": -0.326,
             "weight": 0.15,
-            "contribution": -0.0801
+            "contribution": -0.0489
           },
           "positioning": {
-            "score": -0.85,
+            "score": -0.854,
             "weight": 0.15,
-            "contribution": -0.1275
+            "contribution": -0.1281
           },
           "risk_reward": {
             "score": -0.492,
@@ -2192,8 +2467,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 71.9,
-        "extremity": 0.719,
+        "unusual": 66.8,
+        "extremity": 0.668,
         "n_groups": 4,
         "obvious_discount": false
       },
@@ -2225,14 +2500,14 @@
       "riskreward": {
         "available": true,
         "side": "short",
-        "last_close": 183.91,
-        "atr14": 21.64,
+        "last_close": 183.92,
+        "atr14": 21.63,
         "entry_zone": [
           182.08,
-          186.67
+          186.68
         ],
         "stop": 269.57,
-        "target": 97.37,
+        "target": 97.38,
         "risk_per_share": 85.65,
         "reward_per_share": 86.54,
         "rr_ratio": 1.01,
@@ -2279,9 +2554,9 @@
         "weight_pct": 0.02
       },
       "side": "short",
-      "net_score": -0.3896,
-      "conviction": 69.48,
-      "unusual": 66.34,
+      "net_score": -0.3607,
+      "conviction": 68.03,
+      "unusual": 64.16,
       "coverage_n": 4,
       "group_scores": {
         "technicals": {
@@ -2290,13 +2565,13 @@
           "explain": {}
         },
         "sentiment": {
-          "score": -0.5057,
+          "score": -0.4245,
           "coverage": true,
           "explain": {
             "revisions_pctile": 14.6,
             "est_rev_pct": -0.17065,
             "up_frac": 0.0833,
-            "iv_spread_bp": 137.7,
+            "iv_spread_bp": 191.9,
             "borrow_flag": false
           }
         },
@@ -2327,12 +2602,12 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": -0.444,
+          "score": -0.438,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "lottery_penalty": -0.44400000000000006
+              "lottery_penalty": -0.43799999999999994
             }
           }
         },
@@ -2342,19 +2617,19 @@
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 2.417,
+            "beta_used": 2.414,
             "beta_multiplier": 2.0
           }
         }
       },
       "conviction_detail": {
-        "net_score": -0.3896,
+        "net_score": -0.3607,
         "coverage_n": 4,
         "components": {
           "sentiment": {
-            "score": -0.5057,
+            "score": -0.4245,
             "weight": 0.15,
-            "contribution": -0.0759
+            "contribution": -0.0637
           },
           "positioning": {
             "score": -0.704,
@@ -2362,9 +2637,9 @@
             "contribution": -0.1056
           },
           "risk_reward": {
-            "score": -0.444,
+            "score": -0.438,
             "weight": 0.09,
-            "contribution": -0.04
+            "contribution": -0.0394
           },
           "macro": {
             "score": 1.0,
@@ -2374,8 +2649,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 66.34,
-        "extremity": 0.6634,
+        "unusual": 64.16,
+        "extremity": 0.6416,
         "n_groups": 4,
         "obvious_discount": false
       },
@@ -2461,9 +2736,9 @@
         "weight_pct": 0.01
       },
       "side": "short",
-      "net_score": -0.2536,
-      "conviction": 62.68,
-      "unusual": 67.0,
+      "net_score": -0.2523,
+      "conviction": 62.62,
+      "unusual": 66.87,
       "coverage_n": 3,
       "group_scores": {
         "technicals": {
@@ -2503,12 +2778,12 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": -0.466,
+          "score": -0.462,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "lottery_penalty": -0.46599999999999997
+              "lottery_penalty": -0.462
             }
           }
         },
@@ -2518,13 +2793,13 @@
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 1.9,
-            "beta_multiplier": 1.9
+            "beta_used": 1.892,
+            "beta_multiplier": 1.89
           }
         }
       },
       "conviction_detail": {
-        "net_score": -0.2536,
+        "net_score": -0.2523,
         "coverage_n": 3,
         "components": {
           "positioning": {
@@ -2533,9 +2808,9 @@
             "contribution": -0.0816
           },
           "risk_reward": {
-            "score": -0.466,
+            "score": -0.462,
             "weight": 0.09,
-            "contribution": -0.0419
+            "contribution": -0.0416
           },
           "macro": {
             "score": 1.0,
@@ -2545,8 +2820,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 67.0,
-        "extremity": 0.67,
+        "unusual": 66.87,
+        "extremity": 0.6687,
         "n_groups": 3,
         "obvious_discount": false
       },
@@ -2623,6 +2898,260 @@
       }
     },
     {
+      "ticker": "MRNA",
+      "meta": {
+        "ticker": "MRNA",
+        "name": "Moderna Inc.",
+        "sector": "",
+        "security_type": "stock",
+        "weight_pct": 0.03,
+        "mktcap": 63410638848
+      },
+      "side": "short",
+      "net_score": -0.2524,
+      "conviction": 62.62,
+      "unusual": 63.82,
+      "coverage_n": 7,
+      "group_scores": {
+        "technicals": {
+          "score": 0.5524,
+          "coverage": true,
+          "explain": {
+            "composite": 11.049,
+            "state": "STRONG BULLISH",
+            "pctile": 96.3,
+            "source": "mom"
+          }
+        },
+        "sentiment": {
+          "score": -0.3883,
+          "coverage": true,
+          "explain": {
+            "revisions_pctile": 34.4,
+            "est_rev_pct": -0.0298,
+            "up_frac": 0.7059,
+            "iv_spread_bp": -78.9,
+            "borrow_flag": false
+          }
+        },
+        "positioning": {
+          "score": -0.884,
+          "coverage": true,
+          "explain": {
+            "si_float": 15.23,
+            "dtc": 7.21,
+            "si_pctile": 94.2,
+            "squeeze_risk": true,
+            "held_pct_institutions": 0.80456
+          }
+        },
+        "valuation": {
+          "score": -0.666,
+          "coverage": true,
+          "explain": {
+            "cross_sectional": {
+              "universe_pctile": 16.7,
+              "n_universe": 450,
+              "sector_pctile": 16.7,
+              "n_sector": 450,
+              "multiples": {
+                "ep": null,
+                "book_yield": 0.10668638800110997,
+                "sales_yield": 0.03513606035307033,
+                "fcf_yield": 0.004719239380592339
+              }
+            },
+            "own_history": {
+              "pctile": null,
+              "n": 0,
+              "state": "building"
+            },
+            "blend": {
+              "coverage": true,
+              "parts": {
+                "cross_sectional": -0.6659999999999999,
+                "sector": -0.6659999999999999
+              },
+              "weights": {
+                "cross_sectional": 0.65,
+                "sector": 0.35
+              }
+            }
+          }
+        },
+        "fundamentals": {
+          "score": -0.3741,
+          "coverage": true,
+          "explain": {
+            "returnOnEquity": -0.38998002,
+            "profitMargins": -1.41427,
+            "revenueGrowth": 0.021,
+            "debtToEquity": 19.036,
+            "currentRatio": 2.295,
+            "fcf_yield": 0.0047
+          }
+        },
+        "catalyst": {
+          "score": 0.0,
+          "coverage": false,
+          "explain": {}
+        },
+        "risk_reward": {
+          "score": -0.7372,
+          "coverage": true,
+          "explain": {
+            "coverage": true,
+            "parts": {
+              "structural_rr": -0.9743661252818256,
+              "lottery_penalty": -0.5
+            }
+          }
+        },
+        "macro": {
+          "score": 0.8657,
+          "coverage": true,
+          "explain": {
+            "regime_label": "risk-on",
+            "risk_score": 0.963,
+            "beta_used": 0.899,
+            "beta_multiplier": 0.9
+          }
+        }
+      },
+      "conviction_detail": {
+        "net_score": -0.2524,
+        "coverage_n": 7,
+        "components": {
+          "technicals": {
+            "score": 0.5524,
+            "weight": 0.22,
+            "contribution": 0.1215
+          },
+          "sentiment": {
+            "score": -0.3883,
+            "weight": 0.15,
+            "contribution": -0.0582
+          },
+          "positioning": {
+            "score": -0.884,
+            "weight": 0.15,
+            "contribution": -0.1326
+          },
+          "valuation": {
+            "score": -0.666,
+            "weight": 0.15,
+            "contribution": -0.0999
+          },
+          "fundamentals": {
+            "score": -0.3741,
+            "weight": 0.1,
+            "contribution": -0.0374
+          },
+          "risk_reward": {
+            "score": -0.7372,
+            "weight": 0.09,
+            "contribution": -0.0663
+          },
+          "macro": {
+            "score": 0.8657,
+            "weight": 0.05,
+            "contribution": 0.0433
+          }
+        }
+      },
+      "unusual_detail": {
+        "unusual": 63.82,
+        "extremity": 0.6382,
+        "n_groups": 7,
+        "obvious_discount": false
+      },
+      "divergence": {
+        "flags": [
+          {
+            "type": "price_above_fundamentals",
+            "detail": "Price momentum is positive while fundamentals are deteriorating -- possible momentum without underlying support."
+          },
+          {
+            "type": "price_vs_sentiment",
+            "detail": "Price momentum and analyst/options sentiment point in opposite directions."
+          },
+          {
+            "type": "crowded_short_vs_rising_price",
+            "detail": "Heavily shorted while price momentum turns positive -- a short-squeeze setup, not necessarily a fundamentals-driven move."
+          }
+        ],
+        "has_divergence": true,
+        "n_flags": 3
+      },
+      "confluence": {
+        "direction": "bearish",
+        "agree": 5,
+        "disagree": 2,
+        "neutral": 0,
+        "no_data": 1,
+        "n_covered": 7,
+        "n_total": 8,
+        "per_group": {
+          "technicals": "bullish",
+          "sentiment": "bearish",
+          "positioning": "bearish",
+          "valuation": "bearish",
+          "fundamentals": "bearish",
+          "catalyst": "no_data",
+          "risk_reward": "bearish",
+          "macro": "bullish"
+        },
+        "label": "5/8 signals bearish"
+      },
+      "riskreward": {
+        "available": true,
+        "side": "short",
+        "last_close": 158.83,
+        "atr14": 18.31,
+        "entry_zone": [
+          157.24,
+          161.21
+        ],
+        "stop": 204.61,
+        "target": 22.36,
+        "risk_per_share": 45.78,
+        "reward_per_share": 136.47,
+        "rr_ratio": 2.98,
+        "max_drawdown_pct": 0.2882,
+        "scale_in": {
+          "style": "scaled",
+          "note": "Standard scale-in given moderate signal strength.",
+          "tranches": [
+            {
+              "pct": 50,
+              "when": "initial"
+            },
+            {
+              "pct": 50,
+              "when": "on confirmation or a pullback"
+            }
+          ]
+        },
+        "invalidation": "Thesis invalidated if price closes above 204.61 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+      },
+      "opportunity_type": "Fundamental/Technical Divergence",
+      "horizon": "months",
+      "security_type": "stock",
+      "narrative": {
+        "thesis": "MRNA is a Fundamental/Technical Divergence SELL/SHORT idea: a strong bullish technical read (composite 11.049); valuation in the 17th percentile of the scan universe; analyst EPS estimates moving -3.0% over the trailing quarter.",
+        "why_now": "Catalyst: a heavily-shorted position now showing rising price momentum (squeeze risk).",
+        "idiosyncratic_risk": "Price momentum is positive while fundamentals are deteriorating -- possible momentum without underlying support. this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
+        "market_view": "The market's current pricing is consistent with the negative/positive signal that created this divergence in the first place.",
+        "zenith_view": "Price momentum is positive while fundamentals are deteriorating -- possible momentum without underlying support.",
+        "bull_case": "Supportive signal groups: technicals, macro.",
+        "bear_case": "Opposing signal groups: sentiment, positioning, valuation, fundamentals, risk_reward.",
+        "change_my_mind": [
+          "A daily close through 204.61 (above the current level) invalidates the setup.",
+          "A material re-rating in valuation percentile (up or down) would change the valuation group's contribution meaningfully."
+        ]
+      }
+    },
+    {
       "ticker": "TEAM",
       "meta": {
         "ticker": "TEAM",
@@ -2633,18 +3162,18 @@
         "mktcap": null
       },
       "side": "short",
-      "net_score": -0.3047,
-      "conviction": 65.23,
-      "unusual": 60.06,
+      "net_score": -0.3058,
+      "conviction": 65.29,
+      "unusual": 59.62,
       "coverage_n": 5,
       "group_scores": {
         "technicals": {
-          "score": 0.2938,
+          "score": 0.285,
           "coverage": true,
           "explain": {
-            "composite": 5.8766,
+            "composite": 5.7005,
             "state": "BULLISH",
-            "pctile": 73.1,
+            "pctile": 73.9,
             "source": "mom"
           }
         },
@@ -2684,13 +3213,13 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": -0.7398,
+          "score": -0.7264,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": -0.9815087258169545,
-              "lottery_penalty": -0.498
+              "structural_rr": -0.9587360003510268,
+              "lottery_penalty": -0.49400000000000005
             }
           }
         },
@@ -2700,19 +3229,19 @@
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 0.13,
+            "beta_used": 0.119,
             "beta_multiplier": 0.5
           }
         }
       },
       "conviction_detail": {
-        "net_score": -0.3047,
+        "net_score": -0.3058,
         "coverage_n": 5,
         "components": {
           "technicals": {
-            "score": 0.2938,
+            "score": 0.285,
             "weight": 0.22,
-            "contribution": 0.0646
+            "contribution": 0.0627
           },
           "sentiment": {
             "score": -0.83,
@@ -2725,9 +3254,9 @@
             "contribution": -0.0987
           },
           "risk_reward": {
-            "score": -0.7398,
+            "score": -0.7264,
             "weight": 0.09,
-            "contribution": -0.0666
+            "contribution": -0.0654
           },
           "macro": {
             "score": 0.4815,
@@ -2737,8 +3266,8 @@
         }
       },
       "unusual_detail": {
-        "unusual": 60.06,
-        "extremity": 0.6006,
+        "unusual": 59.62,
+        "extremity": 0.5962,
         "n_groups": 5,
         "obvious_discount": false
       },
@@ -2790,7 +3319,7 @@
         "risk_per_share": 26.03,
         "reward_per_share": 109.34,
         "rr_ratio": 4.2,
-        "max_drawdown_pct": 0.1563,
+        "max_drawdown_pct": 0.1564,
         "scale_in": {
           "style": "scaled",
           "note": "Standard scale-in given moderate signal strength.",
@@ -2811,7 +3340,7 @@
       "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "TEAM is a Short Thesis SELL/SHORT idea: a bullish technical read (composite 5.8766); analyst EPS estimates moving -8.0% over the trailing quarter.",
+        "thesis": "TEAM is a Short Thesis SELL/SHORT idea: a bullish technical read (composite 5.7005); analyst EPS estimates moving -8.0% over the trailing quarter.",
         "why_now": "Catalyst: a heavily-shorted position now showing rising price momentum (squeeze risk).",
         "idiosyncratic_risk": "Price momentum and analyst/options sentiment point in opposite directions. this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
         "market_view": "The market's current pricing is consistent with the negative/positive signal that created this divergence in the first place.",
@@ -2824,43 +3353,43 @@
       }
     },
     {
-      "ticker": "BMNR",
+      "ticker": "OLLI",
       "meta": {
-        "ticker": "BMNR",
-        "name": "BitMine Immersion Technologies Inc.",
+        "ticker": "OLLI",
+        "name": "Ollie's Bargain Outlet Holdings Inc.",
         "sector": "",
         "security_type": "stock",
-        "weight_pct": 0.01
+        "weight_pct": 0.01,
+        "mktcap": null
       },
       "side": "short",
-      "net_score": -0.2883,
-      "conviction": 64.41,
-      "unusual": 59.24,
+      "net_score": -0.2424,
+      "conviction": 62.12,
+      "unusual": 58.76,
       "coverage_n": 4,
       "group_scores": {
         "technicals": {
+          "score": -0.3507,
+          "coverage": true,
+          "explain": {
+            "composite": -7.0148,
+            "state": "BEARISH",
+            "pctile": 5.7,
+            "source": "mom"
+          }
+        },
+        "sentiment": {
           "score": 0.0,
           "coverage": false,
           "explain": {}
         },
-        "sentiment": {
-          "score": -0.4414,
-          "coverage": true,
-          "explain": {
-            "revisions_pctile": 2.8,
-            "est_rev_pct": -0.48529,
-            "up_frac": 0.0,
-            "iv_spread_bp": 371.0,
-            "borrow_flag": false
-          }
-        },
         "positioning": {
-          "score": -0.452,
+          "score": -0.802,
           "coverage": true,
           "explain": {
-            "si_float": 7.1,
-            "dtc": 1.17,
-            "si_pctile": 72.6,
+            "si_float": 12.51,
+            "dtc": 2.98,
+            "si_pctile": 90.1,
             "squeeze_risk": true,
             "held_pct_institutions": null
           }
@@ -2881,55 +3410,56 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": -0.476,
+          "score": 0.3491,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "lottery_penalty": -0.4759999999999999
+              "structural_rr": 0.9231929965572236,
+              "lottery_penalty": -0.225
             }
           }
         },
         "macro": {
-          "score": 1.0,
+          "score": 0.8484,
           "coverage": true,
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 3.073,
-            "beta_multiplier": 2.0
+            "beta_used": 0.881,
+            "beta_multiplier": 0.88
           }
         }
       },
       "conviction_detail": {
-        "net_score": -0.2883,
+        "net_score": -0.2424,
         "coverage_n": 4,
         "components": {
-          "sentiment": {
-            "score": -0.4414,
-            "weight": 0.15,
-            "contribution": -0.0662
+          "technicals": {
+            "score": -0.3507,
+            "weight": 0.22,
+            "contribution": -0.0772
           },
           "positioning": {
-            "score": -0.452,
+            "score": -0.802,
             "weight": 0.15,
-            "contribution": -0.0678
+            "contribution": -0.1203
           },
           "risk_reward": {
-            "score": -0.476,
+            "score": 0.3491,
             "weight": 0.09,
-            "contribution": -0.0428
+            "contribution": 0.0314
           },
           "macro": {
-            "score": 1.0,
+            "score": 0.8484,
             "weight": 0.05,
-            "contribution": 0.05
+            "contribution": 0.0424
           }
         }
       },
       "unusual_detail": {
-        "unusual": 59.24,
-        "extremity": 0.5924,
+        "unusual": 58.76,
+        "extremity": 0.5876,
         "n_groups": 4,
         "obvious_discount": false
       },
@@ -2940,39 +3470,39 @@
       },
       "confluence": {
         "direction": "bearish",
-        "agree": 3,
-        "disagree": 1,
+        "agree": 2,
+        "disagree": 2,
         "neutral": 0,
         "no_data": 4,
         "n_covered": 4,
         "n_total": 8,
         "per_group": {
-          "technicals": "no_data",
-          "sentiment": "bearish",
+          "technicals": "bearish",
+          "sentiment": "no_data",
           "positioning": "bearish",
           "valuation": "no_data",
           "fundamentals": "no_data",
           "catalyst": "no_data",
-          "risk_reward": "bearish",
+          "risk_reward": "bullish",
           "macro": "bullish"
         },
-        "label": "3/8 signals bearish"
+        "label": "2/8 signals bearish"
       },
       "riskreward": {
         "available": true,
         "side": "short",
-        "last_close": 24.82,
-        "atr14": 1.27,
+        "last_close": 74.61,
+        "atr14": 3.01,
         "entry_zone": [
-          24.57,
-          25.19
+          73.86,
+          75.73
         ],
-        "stop": 28.0,
-        "target": 13.31,
-        "risk_per_share": 3.18,
-        "reward_per_share": 11.51,
-        "rr_ratio": 3.62,
-        "max_drawdown_pct": 0.128,
+        "stop": 85.85,
+        "target": 61.88,
+        "risk_per_share": 11.24,
+        "reward_per_share": 12.73,
+        "rr_ratio": 1.13,
+        "max_drawdown_pct": 0.1507,
         "scale_in": {
           "style": "scaled",
           "note": "Standard scale-in given moderate signal strength.",
@@ -2987,68 +3517,68 @@
             }
           ]
         },
-        "invalidation": "Thesis invalidated if price closes above 28.00 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+        "invalidation": "Thesis invalidated if price closes above 85.85 on a daily-close basis, or if the technical state reverses to the opposite extreme."
       },
       "opportunity_type": "Short Thesis",
       "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "BMNR is a Short Thesis SELL/SHORT idea: analyst EPS estimates moving -48.5% over the trailing quarter.",
+        "thesis": "OLLI is a Short Thesis SELL/SHORT idea: a bearish technical read (composite -7.0148).",
         "why_now": "Catalyst: a heavily-shorted position now showing rising price momentum (squeeze risk).",
         "idiosyncratic_risk": "this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
-        "market_view": "Consensus pricing appears broadly aligned with the bearish read across this idea's covered signal groups (3/8 signals bearish).",
+        "market_view": "Consensus pricing appears broadly aligned with the bearish read across this idea's covered signal groups (2/8 signals bearish).",
         "zenith_view": "Zenith's fused read agrees with the bearish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
-        "bull_case": "Supportive signal groups: macro.",
-        "bear_case": "Opposing signal groups: sentiment, positioning, risk_reward.",
+        "bull_case": "Supportive signal groups: risk_reward, macro.",
+        "bear_case": "Opposing signal groups: technicals, positioning.",
         "change_my_mind": [
-          "A daily close through 28.00 (above the current level) invalidates the setup."
+          "A daily close through 85.85 (above the current level) invalidates the setup."
         ]
       }
     },
     {
-      "ticker": "COIN",
+      "ticker": "PATH",
       "meta": {
-        "ticker": "COIN",
-        "name": "Coinbase Global Inc. Class A",
+        "ticker": "PATH",
+        "name": "UiPath Inc. Class A",
         "sector": "",
         "security_type": "stock",
-        "weight_pct": 0.05,
+        "weight_pct": 0.01,
         "mktcap": null
       },
       "side": "short",
-      "net_score": -0.2637,
-      "conviction": 63.19,
-      "unusual": 55.63,
+      "net_score": -0.2547,
+      "conviction": 62.73,
+      "unusual": 56.45,
       "coverage_n": 5,
       "group_scores": {
         "technicals": {
-          "score": -0.2109,
+          "score": 0.3165,
           "coverage": true,
           "explain": {
-            "composite": -4.2183,
-            "state": "NEUTRAL",
-            "pctile": 12.6,
+            "composite": 6.3291,
+            "state": "BULLISH",
+            "pctile": 77.5,
             "source": "mom"
           }
         },
         "sentiment": {
-          "score": -0.6713,
+          "score": -0.4108,
           "coverage": true,
           "explain": {
-            "revisions_pctile": 2.4,
-            "est_rev_pct": -0.41148,
+            "revisions_pctile": 24.7,
+            "est_rev_pct": 0.00743,
             "up_frac": 0.0,
-            "iv_spread_bp": 135.1,
+            "iv_spread_bp": 76.6,
             "borrow_flag": false
           }
         },
         "positioning": {
-          "score": -0.658,
+          "score": -0.986,
           "coverage": true,
           "explain": {
-            "si_float": 9.91,
-            "dtc": 2.86,
-            "si_pctile": 82.9,
+            "si_float": 30.25,
+            "dtc": 1.47,
+            "si_pctile": 99.3,
             "squeeze_risk": true,
             "held_pct_institutions": null
           }
@@ -3069,68 +3599,77 @@
           "explain": {}
         },
         "risk_reward": {
-          "score": 0.2415,
+          "score": -0.5976,
           "coverage": true,
           "explain": {
             "coverage": true,
             "parts": {
-              "structural_rr": 0.9339853783338,
-              "lottery_penalty": -0.45099999999999996
+              "structural_rr": -0.7691105471047384,
+              "lottery_penalty": -0.42599999999999993
             }
           }
         },
         "macro": {
-          "score": 1.0,
+          "score": 0.5114,
           "coverage": true,
           "explain": {
             "regime_label": "risk-on",
             "risk_score": 0.963,
-            "beta_used": 2.099,
-            "beta_multiplier": 2.0
+            "beta_used": 0.531,
+            "beta_multiplier": 0.53
           }
         }
       },
       "conviction_detail": {
-        "net_score": -0.2637,
+        "net_score": -0.2547,
         "coverage_n": 5,
         "components": {
           "technicals": {
-            "score": -0.2109,
+            "score": 0.3165,
             "weight": 0.22,
-            "contribution": -0.0464
+            "contribution": 0.0696
           },
           "sentiment": {
-            "score": -0.6713,
+            "score": -0.4108,
             "weight": 0.15,
-            "contribution": -0.1007
+            "contribution": -0.0616
           },
           "positioning": {
-            "score": -0.658,
+            "score": -0.986,
             "weight": 0.15,
-            "contribution": -0.0987
+            "contribution": -0.1479
           },
           "risk_reward": {
-            "score": 0.2415,
+            "score": -0.5976,
             "weight": 0.09,
-            "contribution": 0.0217
+            "contribution": -0.0538
           },
           "macro": {
-            "score": 1.0,
+            "score": 0.5114,
             "weight": 0.05,
-            "contribution": 0.05
+            "contribution": 0.0256
           }
         }
       },
       "unusual_detail": {
-        "unusual": 55.63,
-        "extremity": 0.5563,
+        "unusual": 56.45,
+        "extremity": 0.5645,
         "n_groups": 5,
         "obvious_discount": false
       },
       "divergence": {
-        "flags": [],
-        "has_divergence": false,
-        "n_flags": 0
+        "flags": [
+          {
+            "type": "price_vs_sentiment",
+            "detail": "Price momentum and analyst/options sentiment point in opposite directions."
+          },
+          {
+            "type": "crowded_short_vs_rising_price",
+            "detail": "Heavily shorted while price momentum turns positive -- a short-squeeze setup, not necessarily a fundamentals-driven move."
+          }
+        ],
+        "has_divergence": true,
+        "n_flags": 2
       },
       "confluence": {
         "direction": "bearish",
@@ -3141,13 +3680,13 @@
         "n_covered": 5,
         "n_total": 8,
         "per_group": {
-          "technicals": "bearish",
+          "technicals": "bullish",
           "sentiment": "bearish",
           "positioning": "bearish",
           "valuation": "no_data",
           "fundamentals": "no_data",
           "catalyst": "no_data",
-          "risk_reward": "bullish",
+          "risk_reward": "bearish",
           "macro": "bullish"
         },
         "label": "3/8 signals bearish"
@@ -3155,55 +3694,47 @@
       "riskreward": {
         "available": true,
         "side": "short",
-        "last_close": 187.16,
-        "atr14": 9.71,
+        "last_close": 16.66,
+        "atr14": 0.85,
         "entry_zone": [
-          185.29,
-          189.97
+          16.49,
+          16.91
         ],
-        "stop": 211.45,
-        "target": 141.09,
-        "risk_per_share": 24.29,
-        "reward_per_share": 46.07,
-        "rr_ratio": 1.9,
-        "max_drawdown_pct": 0.1298,
+        "stop": 18.78,
+        "target": 9.38,
+        "risk_per_share": 2.12,
+        "reward_per_share": 7.28,
+        "rr_ratio": 3.44,
+        "max_drawdown_pct": 0.127,
         "scale_in": {
           "style": "scaled",
-          "note": "Signal is not yet decisive -- scale in.",
+          "note": "Standard scale-in given moderate signal strength.",
           "tranches": [
             {
-              "pct": 25,
+              "pct": 50,
               "when": "initial"
             },
             {
-              "pct": 25,
-              "when": "on confirmation"
-            },
-            {
-              "pct": 25,
-              "when": "on a favorable pullback"
-            },
-            {
-              "pct": 25,
-              "when": "after the catalyst/technical confirms"
+              "pct": 50,
+              "when": "on confirmation or a pullback"
             }
           ]
         },
-        "invalidation": "Thesis invalidated if price closes above 211.45 on a daily-close basis, or if the technical state reverses to the opposite extreme."
+        "invalidation": "Thesis invalidated if price closes above 18.78 on a daily-close basis, or if the technical state reverses to the opposite extreme."
       },
       "opportunity_type": "Short Thesis",
       "horizon": "months",
       "security_type": "stock",
       "narrative": {
-        "thesis": "COIN is a Short Thesis SELL/SHORT idea: a neutral technical read (composite -4.2183); analyst EPS estimates moving -41.1% over the trailing quarter.",
+        "thesis": "PATH is a Short Thesis SELL/SHORT idea: a bullish technical read (composite 6.3291); analyst EPS estimates moving +0.7% over the trailing quarter.",
         "why_now": "Catalyst: a heavily-shorted position now showing rising price momentum (squeeze risk).",
-        "idiosyncratic_risk": "this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
-        "market_view": "Consensus pricing appears broadly aligned with the bearish read across this idea's covered signal groups (3/8 signals bearish).",
-        "zenith_view": "Zenith's fused read agrees with the bearish direction and ranks it by how unusual/extreme the configuration is, not just how positive it looks.",
-        "bull_case": "Supportive signal groups: risk_reward, macro.",
-        "bear_case": "Opposing signal groups: technicals, sentiment, positioning.",
+        "idiosyncratic_risk": "Price momentum and analyst/options sentiment point in opposite directions. this name also carries an elevated idiosyncratic-volatility (lottery/MAXbeta) profile, which historically predicts underperformance independent of direction.",
+        "market_view": "The market's current pricing is consistent with the negative/positive signal that created this divergence in the first place.",
+        "zenith_view": "Price momentum and analyst/options sentiment point in opposite directions.",
+        "bull_case": "Supportive signal groups: technicals, macro.",
+        "bear_case": "Opposing signal groups: sentiment, positioning, risk_reward.",
         "change_my_mind": [
-          "A daily close through 211.45 (above the current level) invalidates the setup."
+          "A daily close through 18.78 (above the current level) invalidates the setup."
         ]
       }
     }
@@ -3211,6 +3742,6 @@
   "coverage": {
     "n_universe": 1621,
     "n_panel": 1621,
-    "n_candidates": 57
+    "n_candidates": 59
   }
 }
