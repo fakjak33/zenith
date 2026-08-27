@@ -1,0 +1,117 @@
+{
+  "date": "2026-08-26",
+  "disclaimer": "Multivariate Trend scores every instrument against ALL of its peers (not just its own history) across six horizons, using both a raw vol-normalized spread and a residual spread with common market/sector factors removed. The residual score is genuinely less redundant with cross-sectional momentum than the raw one (measured, not assumed) and is what feeds the Momentum composite. New, unproven signal (evidence tier C+) -- decision-support and a research monitor, not investment advice.",
+  "segments": [
+    {
+      "segment": "mvt_equities",
+      "ok": true,
+      "n": 990,
+      "history_added": 990,
+      "universe": "equities",
+      "n_priced": 1016,
+      "panel": {
+        "n_in": 1016,
+        "n_kept": 999,
+        "dropped": {
+          "BLSH": "insufficient_history(<280d)",
+          "CBC": "insufficient_history(<280d)",
+          "CBRS": "insufficient_history(<280d)",
+          "FDXF": "insufficient_history(<280d)",
+          "FIG": "insufficient_history(<280d)",
+          "FIGR": "insufficient_history(<280d)",
+          "FPS": "insufficient_history(<280d)",
+          "FRMI": "insufficient_history(<280d)",
+          "JAN": "insufficient_history(<280d)",
+          "MDLN": "insufficient_history(<280d)",
+          "MWH": "insufficient_history(<280d)",
+          "NIQ": "insufficient_history(<280d)",
+          "Q": "insufficient_history(<280d)",
+          "SOLS": "insufficient_history(<280d)",
+          "SUNB": "insufficient_history(<280d)",
+          "VSNT": "insufficient_history(<280d)",
+          "XE": "insufficient_history(<280d)"
+        },
+        "n_days": 1254
+      },
+      "empirical_excluded": 3,
+      "n_scored": 990,
+      "k_factors": 15,
+      "explained_variance_ratio": 0.5348,
+      "effective_factor_count": 73.557,
+      "erc_horizon_weights": {
+        "12_1": 0.185,
+        "12m": 0.1495,
+        "9m": 0.1497,
+        "6m": 0.1551,
+        "3m": 0.1613,
+        "1m": 0.1995
+      }
+    },
+    {
+      "segment": "mvt_etf_universe",
+      "n_raw": 935,
+      "meta_refresh": {
+        "checked": 935,
+        "stale": 61,
+        "refreshed": 61
+      },
+      "n_excluded_by_name": 23
+    },
+    {
+      "segment": "mvt_etf_prices",
+      "ok": true,
+      "n": 888,
+      "requested": 912,
+      "source": "yfinance",
+      "error": ""
+    },
+    {
+      "segment": "mvt_etfs",
+      "ok": true,
+      "n": 760,
+      "history_added": 760,
+      "universe": "etfs",
+      "n_priced": 888,
+      "panel": {
+        "n_in": 888,
+        "n_kept": 868,
+        "dropped": {
+          "AOTS": "insufficient_history(<280d)",
+          "DVIN": "insufficient_history(<280d)",
+          "DVRE": "insufficient_history(<280d)",
+          "DVXB": "insufficient_history(<280d)",
+          "DVXC": "insufficient_history(<280d)",
+          "DVXF": "insufficient_history(<280d)",
+          "DVXK": "insufficient_history(<280d)",
+          "INDQ": "insufficient_history(<280d)",
+          "KPHO": "insufficient_history(<280d)",
+          "MFIG": "insufficient_history(<280d)",
+          "MFMO": "insufficient_history(<280d)",
+          "MFVL": "insufficient_history(<280d)",
+          "QEW": "insufficient_history(<280d)",
+          "RKSG": "insufficient_history(<280d)",
+          "SCOW": "insufficient_history(<280d)",
+          "SPXD": "insufficient_history(<280d)",
+          "SQLT": "insufficient_history(<280d)",
+          "TSIC": "insufficient_history(<280d)",
+          "VDG": "insufficient_history(<280d)",
+          "VDV": "insufficient_history(<280d)"
+        },
+        "n_days": 752
+      },
+      "empirical_excluded": 102,
+      "n_scored": 760,
+      "k_factors": 3,
+      "explained_variance_ratio": 0.6589,
+      "effective_factor_count": 11.752,
+      "erc_horizon_weights": {
+        "12_1": 0.1744,
+        "12m": 0.1533,
+        "9m": 0.1537,
+        "6m": 0.1564,
+        "3m": 0.1823,
+        "1m": 0.1799
+      }
+    }
+  ]
+}

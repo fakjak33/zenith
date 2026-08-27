@@ -25,7 +25,9 @@ concurrency:
 jobs:
   mom:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 45 -> 60 when Multivariate Trend (mvt) was added: it pulls a second,
+    # separate ~900-ticker ETF price history on top of the R1000 pull below.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

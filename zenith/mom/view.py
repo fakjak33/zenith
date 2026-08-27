@@ -22,8 +22,10 @@ from ..config import THEME, MOM_MEMBERSHIP_START, MOM_WEIGHTS, MOM_HORIZON_WEIGH
 from ..ui_theme import evidence_rating, key_findings, section, stamp
 from . import DISCLAIMER, SURVIVORSHIP_NOTE, FACTORS, FACTOR_LABELS, HORIZONS, HORIZON_LABELS, load
 from . import history as mom_history
+from .mvt import view as mvt_view
+from .mvt import load as mvt_load
 
-SUBVIEWS = ["Overview", "Rankings", "Factors", "Sectors", "Stock"]
+SUBVIEWS = ["Overview", "Rankings", "Factors", "Sectors", "Stock", "Multivariate Trend"]
 
 COLS = {
     "Rank": "Position in the priced Russell 1000, ranked by composite momentum score.",
@@ -68,7 +70,7 @@ def _artefacts(cache_bust: str = "") -> dict:
     return {
         "scores": load("scores", {}), "detail": load("detail", {}),
         "sectors": load("sectors", {}), "diagnostics": load("diagnostics", {}),
-        "status": load("status", {}),
+        "status": load("status", {}), "weighting": mvt_load("weighting", {}),
     }
 
 
@@ -161,9 +163,11 @@ def render() -> None:
     elif sub == "Rankings":
         _rankings(scores)
     elif sub == "Factors":
-        _factors(scores, art["diagnostics"])
+        _factors(scores, art["diagnostics"], art["weighting"])
     elif sub == "Sectors":
         _sectors(art["sectors"])
+    elif sub == "Multivariate Trend":
+        mvt_view.render()
     else:
         _stock(scores, art["detail"])
 
@@ -328,7 +332,7 @@ def _rankings(scores: dict) -> None:
 
 
 # ----------------------------------------------------------------- factors --
-def _factors(scores: dict, diagnostics: dict) -> None:
+def _factors(scores: dict, diagnostics: dict, weighting: dict) -> None:
     df = _priced_df(scores)
     if df.empty:
         st.info("No scored names yet.")
@@ -401,6 +405,38 @@ def _factors(scores: dict, diagnostics: dict) -> None:
             st.caption("No factor pair currently exceeds the 0.85 redundancy threshold.")
     else:
         st.caption("Correlation matrix not yet available (needs at least 10 scored names).")
+
+    st.markdown(section("Weighting comparison — declared vs equal vs equal-risk-contribution", 3,
+                        help="Equal-risk-contribution (ERC) weights each factor so it contributes an "
+                             "EQUAL SHARE of composite variance, computed from the correlation matrix "
+                             "above (shrunk 50% toward equal weight -- pure risk-parity has no notion "
+                             "of signal quality, only correlation, and can overweight a noisy-but-"
+                             "uncorrelated factor). This does not change today's composite (declared "
+                             "weights are the live default, config.MOM_WEIGHT_MODE) -- it is a "
+                             "transparent research lens, per the plan's explicit weighting-evaluation "
+                             "ask."), unsafe_allow_html=True)
+    if weighting.get("factors"):
+        wdf = pd.DataFrame({
+            "Factor": [FACTOR_LABELS[k] for k in weighting["factors"]],
+            "Declared weight": [weighting["declared_weights"].get(k) for k in weighting["factors"]],
+            "Equal weight": [weighting["equal_weights"].get(k) for k in weighting["factors"]],
+            "ERC weight (shrunk)": [weighting["factor_erc_weights_shrunk"].get(k) for k in weighting["factors"]],
+            "Mean |contribution| — declared": [weighting["avg_contribution_declared"].get(k) for k in weighting["factors"]],
+            "Mean |contribution| — ERC": [weighting["avg_contribution_erc_shrunk"].get(k) for k in weighting["factors"]],
+        })
+        try:
+            sty = (wdf.style
+                  .map(lambda v: uc.grad_teal(v, 0.35), subset=["Declared weight", "Equal weight", "ERC weight (shrunk)"])
+                  .map(lambda v: uc.grad_teal(v, 5.0), subset=["Mean |contribution| — declared", "Mean |contribution| — ERC"])
+                  .format({"Declared weight": "{:.0%}", "Equal weight": "{:.0%}", "ERC weight (shrunk)": "{:.0%}",
+                           "Mean |contribution| — declared": "{:.2f}", "Mean |contribution| — ERC": "{:.2f}"}))
+            st.dataframe(sty, use_container_width=True, hide_index=True)
+        except Exception:
+            st.dataframe(wdf, use_container_width=True, hide_index=True)
+        st.caption(f"Active weighting mode: **{weighting.get('active_weight_mode', 'declared')}** · "
+                  f"ERC solver converged: {weighting.get('erc_converged')}")
+    else:
+        st.caption("Weighting comparison not yet available (needs at least 10 scored names).")
 
     st.markdown(section("Predictive diagnostics — information coefficient", 4,
                         help="Spearman rank correlation between the composite (and, once tagged "
@@ -535,7 +571,17 @@ def _stock(scores: dict, detail: dict) -> None:
                         "Contribution": [contrib.get(k, 0.0) for k in FACTORS]})
     uc.hbar(cdf, x="Contribution", y="Factor", cap=8.0, title="Contribution to composite", fmt="+.1f")
     fs = row.get("factor_scores") or {}
-    st.caption(" · ".join(f"{FACTOR_LABELS[k]}: {fs.get(k, 0):+.2f}" for k in FACTORS))
+    # mvt can be legitimately absent for a given row (see engine.composite's
+    # docstring) even when the other five factors scored fine -- show "n/a"
+    # rather than defaulting a missing factor to 0.00, which would read as a
+    # real neutral score rather than "no data this run".
+    st.caption(" · ".join(f"{FACTOR_LABELS[k]}: {fs[k]:+.2f}" if k in fs else f"{FACTOR_LABELS[k]}: n/a"
+                          for k in FACTORS))
+    if "mvt" in fs and st.button("View full Multivariate Trend detail →", key="mom_stock_to_mvt"):
+        st.session_state["mom_sub"] = "Multivariate Trend"
+        st.session_state["mvt_universe_sub"] = "Equities"
+        st.session_state["mvt_detail_ticker"] = ticker
+        st.rerun()
 
     st.markdown(section("Why this score", 1), unsafe_allow_html=True)
     for line in _explain(row):

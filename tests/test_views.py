@@ -68,6 +68,52 @@ def test_mom_view_renders():
         assert "composite" in low
 
 
+def test_mvt_view_renders():
+    # Multivariate Trend's own sub-view renders standalone (bypassing mom's
+    # outer scores.json gate, which is a separate artifact) -- the day-one
+    # condition with zero mvt data, and again with real data once a compute
+    # run has populated data/mom/mvt/*.json.
+    at, text = _render("from zenith.mom.mvt import view\nview.render()\n")
+    low = text.lower()
+    assert "evidence strength" in low
+    assert "key findings" in low
+    assert any("how is this calculated" in (e.label or "").lower() for e in at.expander)
+    if config.MOM_MVT_FILES["equities"].exists():
+        assert "names scored" in low or "no multivariate trend data" in low
+
+
+def test_mvt_cross_universe_view_renders():
+    at, text = _render(
+        "from zenith.mom.mvt import view\n"
+        "import streamlit as st\n"
+        "st.session_state['mvt_universe_sub'] = 'Cross-Universe'\n"
+        "view.render()\n"
+    )
+    low = text.lower()
+    assert "broad" in low and "idiosyncratic" in low
+    if config.MOM_MVT_FILES["crossuniverse"].exists():
+        assert "names compared" in low
+    else:
+        infos = " ".join(str(i.value) for i in at.info).lower()
+        assert "no cross-universe data yet" in infos
+
+
+def test_mvt_validation_view_renders():
+    at, text = _render(
+        "from zenith.mom.mvt import view\n"
+        "import streamlit as st\n"
+        "st.session_state['mvt_universe_sub'] = 'Validation'\n"
+        "view.render()\n"
+    )
+    low = text.lower()
+    assert "cross-instrument p&l correlation" in low
+    if config.MOM_MVT_FILES["validation"].exists():
+        assert "central hypothesis test" in low
+    else:
+        infos = " ".join(str(i.value) for i in at.info).lower()
+        assert "no validation backtest yet" in infos
+
+
 def test_ideas_view_renders():
     # renders with zero committed data -- the day-one condition -- showing the
     # rating badge, key findings, and an info prompt rather than a crash.
