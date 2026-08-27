@@ -1,8 +1,8 @@
 {
-  "as_of": "2026-08-26",
+  "as_of": "2026-08-27",
   "dimensions": {
     "monetary": {
-      "composite_z": -0.29,
+      "composite_z": -0.28,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Neutral",
@@ -30,8 +30,8 @@
         {
           "id": "T10Y3M",
           "label": "10y-3m Curve",
-          "raw_value": 0.78,
-          "z": 0.409,
+          "raw_value": 0.81,
+          "z": 0.44,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
@@ -40,7 +40,7 @@
       ]
     },
     "liquidity": {
-      "composite_z": -0.237,
+      "composite_z": -0.238,
       "coverage_n": 2,
       "min_coverage": 3,
       "state": "Insufficient coverage",
@@ -48,7 +48,7 @@
         {
           "id": "NET_LIQ",
           "label": "Fed Net Liquidity (WALCL - RRP - TGA)",
-          "raw_value": -70.728,
+          "raw_value": -71.025,
           "z": -0.308,
           "direction": 1,
           "rising": false,
@@ -68,7 +68,7 @@
       ]
     },
     "credit": {
-      "composite_z": 0.518,
+      "composite_z": 0.523,
       "coverage_n": 5,
       "min_coverage": 3,
       "state": "Easy / Expansionary",
@@ -76,8 +76,8 @@
         {
           "id": "BAA10Y",
           "label": "Baa Corporate - 10y Treasury Spread",
-          "raw_value": 1.63,
-          "z": 0.976,
+          "raw_value": 1.62,
+          "z": 1.001,
           "direction": -1,
           "rising": false,
           "lag_days": 0,
@@ -126,7 +126,7 @@
       ]
     },
     "financial_conditions": {
-      "composite_z": 0.591,
+      "composite_z": 0.639,
       "coverage_n": 4,
       "min_coverage": 3,
       "state": "Loose",
@@ -134,8 +134,8 @@
         {
           "id": "NFCI",
           "label": "Chicago Fed Financial Conditions Index",
-          "raw_value": -0.559,
-          "z": 0.619,
+          "raw_value": -0.566,
+          "z": 0.687,
           "direction": -1,
           "rising": true,
           "lag_days": 5,
@@ -144,8 +144,8 @@
         {
           "id": "ANFCI",
           "label": "Adjusted Financial Conditions Index",
-          "raw_value": -0.587,
-          "z": 0.637,
+          "raw_value": -0.576,
+          "z": 0.694,
           "direction": -1,
           "rising": true,
           "lag_days": 5,
@@ -154,8 +154,8 @@
         {
           "id": "STLFSI4",
           "label": "St. Louis Fed Financial Stress Index",
-          "raw_value": -0.8285,
-          "z": 0.705,
+          "raw_value": -0.8107,
+          "z": 0.68,
           "direction": -1,
           "rising": true,
           "lag_days": 5,
@@ -164,10 +164,10 @@
         {
           "id": "VIXCLS",
           "label": "VIX",
-          "raw_value": 15.85,
-          "z": 0.404,
+          "raw_value": 15.21,
+          "z": 0.495,
           "direction": -1,
-          "rising": false,
+          "rising": true,
           "lag_days": 0,
           "freq": "D"
         }
@@ -222,7 +222,7 @@
       ]
     },
     "volatility": {
-      "composite_z": 0.732,
+      "composite_z": 0.569,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Elevated / Expansion",
@@ -230,8 +230,8 @@
         {
           "id": "OVXCLS",
           "label": "Oil Volatility (OVX)",
-          "raw_value": 46.74,
-          "z": 0.333,
+          "raw_value": 46.83,
+          "z": 0.338,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -240,8 +240,8 @@
         {
           "id": "GVZCLS",
           "label": "Gold Volatility (GVZ)",
-          "raw_value": 28.28,
-          "z": 2.028,
+          "raw_value": 26.96,
+          "z": 1.803,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
@@ -250,8 +250,8 @@
         {
           "id": "TLT_RVOL",
           "label": "TLT Realized Volatility (MOVE proxy)",
-          "raw_value": 12.4132,
-          "z": -0.166,
+          "raw_value": 10.7556,
+          "z": -0.434,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
