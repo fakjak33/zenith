@@ -14,6 +14,7 @@ import zenith.mom as mom
 from zenith.mom import compute as mc
 from zenith.mom import engine, factors, history as mh, normalize as mn
 from zenith.mom import universe as mu
+from zenith.mom import mvt as mvt_pkg
 from zenith.config import MOM_WEIGHTS, MOM_HORIZON_WEIGHTS
 from zenith.pretom import calendar as cal
 
@@ -160,6 +161,13 @@ def tmp_mom_store(tmp_path, monkeypatch):
     monkeypatch.setattr(mom, "MOM_FILES", files)
     hist_dir = tmp_path / "history"
     monkeypatch.setattr(mh, "MOM_HISTORY_DIR", hist_dir)
+    # mvt writes its own artefacts (notably weighting.json, from
+    # mom.compute.run_auto's weighting-comparison step) even when _run_mvt
+    # itself is stubbed out -- redirect those too so a test run never
+    # touches the real committed data/mom/mvt/*.json files.
+    mvt_files = {k: tmp_path / f"mvt_{k}.json" for k in
+                ("equities", "etfs", "etf_meta", "weighting", "status")}
+    monkeypatch.setattr(mvt_pkg, "MOM_MVT_FILES", mvt_files)
     return tmp_path
 
 
@@ -250,6 +258,12 @@ def test_run_auto_end_to_end(tmp_mom_store, monkeypatch):
     monkeypatch.setattr(mc, "_fetch_prices", lambda *a, **kw: px)
     monkeypatch.setattr(mu, "refresh_metadata", lambda *a, **kw: {"checked": 17, "stale": 17, "refreshed": 0})
     monkeypatch.setattr(cal, "is_trading_day", lambda d: True)
+    # mvt is a real, separate network-heavy pipeline (its own ETF universe +
+    # price pull) -- stubbed here exactly like _fetch_prices above so this
+    # stays an offline, synthetic-data-only test (repo convention). mvt's
+    # OWN pipeline is exercised directly in test_mvt.py instead.
+    monkeypatch.setattr(mc, "_run_mvt", lambda px: {"equities": {"rows": [], "status": {}},
+                                                     "etfs": {"rows": [], "status": {}}})
 
     result = mc.run_auto(force=True)
     assert result["ok"] and result["scored"] == 16   # NEWCO excluded

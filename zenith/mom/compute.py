@@ -26,9 +26,23 @@ import pandas as pd
 from . import DISCLAIMER, FACTORS, save, load
 from . import engine, factors, history
 from . import universe as mom_universe
+from .mvt import compute as mvt_compute
+from .mvt import horizons as mvt_horizons
+from .mvt import save as mvt_save, load as mvt_load
 from ..pretom import calendar as cal
 from ..cas.sources import prices
 from ..edge.common import assemble
+from ..config import MOM_WEIGHTS, MOM_WEIGHT_MODE
+
+
+def _run_mvt(px: dict) -> dict:
+    """Thin, monkeypatchable seam around mvt_compute.run_auto() -- mirrors
+    `_fetch_prices` below exactly, for the same reason: mvt's OWN internal
+    ETF universe/price pull is real network I/O (yfinance metadata +
+    ~900-ticker OHLCV), and every offline test in this suite must be able to
+    stub it out the same way they already stub _fetch_prices, rather than
+    silently paying that cost (or requiring network) on every test run."""
+    return mvt_compute.run_auto(px)
 
 
 def _fetch_prices(tickers: list[str], period: str, status: list[dict], label: str):
@@ -112,6 +126,83 @@ def _spearman_ic(pairs: list[tuple]) -> float | None:
     df = pd.DataFrame(pairs, columns=["score", "excess"])
     ic = df["score"].corr(df["excess"], method="spearman")
     return None if pd.isna(ic) else round(float(ic), 4)
+
+
+def _weighting_comparison(rows: list[dict], corr_matrix: dict, active_weights: dict) -> dict:
+    """Declared vs equal vs equal-risk-contribution (ERC) factor weights,
+    for the Momentum tab's weighting-evaluation lens (the second explicit
+    ask alongside adding mvt: re-evaluate weighting by each input's actual
+    contribution, not by how much overlapping history it carries). This
+    does NOT change today's `composite` field (computed above with
+    `active_weights`, "declared" by default) -- it is a parallel, fully
+    transparent comparison, exactly like the existing `composite_equal_weight`
+    field already is.
+
+    ERC weights are shrunk 50% toward equal weight for the same reason
+    mvt/score.py shrinks its horizon-level ERC weights (see that module's
+    comment): pure risk-parity has no notion of signal quality, only of
+    correlation, and can overweight a noisy-but-uncorrelated input. This is
+    the repo's stated preference (spec section 33) for a transparent/simple
+    method over an unshrunk "optimal" one when the latter isn't clearly
+    statistically defensible on the available data."""
+    scored = [r for r in rows if r.get("factor_scores")]
+    n = len(scored)
+    if n < 10 or not corr_matrix:
+        return {"as_of": date.today().isoformat(), "n": n, "note": "insufficient data",
+                "declared_weights": MOM_WEIGHTS, "active_weights": active_weights}
+
+    factors_present = [f for f in FACTORS if f in corr_matrix]
+    eq_weights = {f: 1.0 / len(factors_present) for f in factors_present}
+
+    # None -> nan explicitly so the frame is float64, not object dtype
+    # (an object column full of None triggers a pandas fillna downcasting
+    # FutureWarning and is generally worth avoiding here regardless).
+    corr_df = pd.DataFrame({a: {b: (corr_matrix[a].get(b) if corr_matrix[a].get(b) is not None else float("nan"))
+                                for b in factors_present}
+                            for a in factors_present}).fillna(0.0)
+    erc = mvt_horizons.erc_weights(corr_df)
+    erc_shrunk = {f: round(0.5 * erc["weights"].get(f, 0.0) + 0.5 * eq_weights[f], 6) for f in factors_present}
+
+    # Mean ABSOLUTE per-factor contribution under each scheme -- "how much
+    # does this factor typically move a stock's composite" (section 32).
+    # Signed mean would be the wrong statistic here: xsec and mvt are both
+    # percentile-rank-based transforms, which are mean-ZERO across the
+    # universe by construction (half the names are above the median, half
+    # below) -- a plain average would make them look like they contribute
+    # "almost nothing" even when they swing individual stocks by +/-20,
+    # simply because their ups and downs cancel out across the cross-
+    # section. ts/breakout/speed/strength are NOT rank-based and can carry
+    # a genuine market-wide tilt (e.g. broad bull market -> mostly positive
+    # ts_score that day), so this asymmetry is a real, meaningful
+    # distinction the table should surface, not an artifact to average away.
+    def _avg_contribution(weights: dict) -> dict:
+        totals = {f: 0.0 for f in factors_present}
+        cnt = 0
+        for r in scored:
+            fs = r["factor_scores"]
+            if not all(f in fs for f in factors_present):
+                continue
+            for f in factors_present:
+                totals[f] += abs(20.0 * weights.get(f, 0.0) * fs[f])
+            cnt += 1
+        return {f: round(v / cnt, 4) for f, v in totals.items()} if cnt else totals
+
+    return {
+        "as_of": date.today().isoformat(),
+        "n": n,
+        "factors": factors_present,
+        "declared_weights": {f: MOM_WEIGHTS.get(f) for f in factors_present},
+        "equal_weights": eq_weights,
+        "factor_erc_weights": erc["weights"],
+        "factor_erc_weights_shrunk": erc_shrunk,
+        "erc_converged": erc["converged"],
+        "avg_contribution_declared": _avg_contribution(MOM_WEIGHTS),
+        "avg_contribution_equal": _avg_contribution(eq_weights),
+        "avg_contribution_erc_shrunk": _avg_contribution(erc_shrunk),
+        "active_weight_mode": MOM_WEIGHT_MODE,
+        "active_weights": active_weights,
+        "correlation_matrix": corr_matrix,
+    }
 
 
 def _diagnostics(scored: list[dict], picks_rows: list[dict]) -> dict:
@@ -224,7 +315,38 @@ def run_auto(force: bool = False) -> dict:
     status.append({"segment": "factors", "ok": n_scored_raw > 0, "n": n_scored_raw})
 
     engine.cross_sectional(rows)
-    engine.composite(rows)
+
+    # --- Multivariate Trend: the 6th factor. Computed as a separate,
+    # universe-wide pairwise pass (mvt/) and attached per-ticker BEFORE
+    # composite() runs, exactly like ts/xsec's cross-sectional scores above.
+    # Fail-soft: mvt_compute.run_auto() never raises (see its own module
+    # docstring) -- a bad mvt night simply leaves mvt_score unset on every
+    # row, and engine.composite() renormalizes the other five factors'
+    # weights for any row missing it, rather than letting a missing 6th
+    # factor drag every composite toward zero.
+    mvt_result = _run_mvt(px)
+    mvt_by_ticker = {r["ticker"]: r for r in mvt_result.get("equities", {}).get("rows", [])}
+    for r in rows:
+        mv = mvt_by_ticker.get(r["ticker"])
+        if mv and mv.get("normalized_score") is not None:
+            r["mvt_score"] = mv["normalized_score"]
+            r["mvt_raw_score"] = mv.get("raw_score")
+    status.append({"segment": "mvt", "ok": bool(mvt_by_ticker), "n": len(mvt_by_ticker),
+                   **mvt_result.get("equities", {}).get("status", {})})
+
+    # --- weighting mode: "declared" (default, always the headline) or "erc"
+    # (equal-risk-contribution, from the PRIOR run's persisted weighting.json
+    # so switching modes never uses same-day information -- no look-ahead).
+    # See config.MOM_WEIGHT_MODE's docstring: this flips only when the user
+    # reviews the comparison and decides to, never silently.
+    active_weights = MOM_WEIGHTS
+    if MOM_WEIGHT_MODE == "erc":
+        prior = mvt_load("weighting", {})
+        prior_erc = prior.get("factor_erc_weights_shrunk")
+        if prior_erc and abs(sum(prior_erc.values()) - 1.0) < 1e-6:
+            active_weights = prior_erc
+
+    engine.composite(rows, weights=active_weights)
 
     result = _write_artifacts(rows, today, {"n_universe": len(tickers), "n_priced": n_priced,
                                             "coverage": coverage})
@@ -239,6 +361,11 @@ def run_auto(force: bool = False) -> dict:
     diag = _diagnostics([r for r in rows if r.get("composite") is not None], result["picks_rows"])
     save("diagnostics", _scrub(diag))
     status.append({"segment": "diagnostics", "ok": True, "flagged_pairs": len(diag["correlation"].get("flagged_pairs", []))})
+
+    weighting_doc = _weighting_comparison(rows, diag["correlation"].get("matrix", {}), active_weights)
+    mvt_save("weighting", _scrub(weighting_doc))
+    status.append({"segment": "weighting", "ok": bool(weighting_doc.get("factor_erc_weights")),
+                   "mode": MOM_WEIGHT_MODE})
 
     save("status", {"date": today.isoformat(), "is_trading_day": True, "disclaimer": DISCLAIMER,
                     "segments": status})

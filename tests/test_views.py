@@ -68,6 +68,20 @@ def test_mom_view_renders():
         assert "composite" in low
 
 
+def test_mvt_view_renders():
+    # Multivariate Trend's own sub-view renders standalone (bypassing mom's
+    # outer scores.json gate, which is a separate artifact) -- the day-one
+    # condition with zero mvt data, and again with real data once a compute
+    # run has populated data/mom/mvt/*.json.
+    at, text = _render("from zenith.mom.mvt import view\nview.render()\n")
+    low = text.lower()
+    assert "evidence strength" in low
+    assert "key findings" in low
+    assert any("how is this calculated" in (e.label or "").lower() for e in at.expander)
+    if config.MOM_MVT_FILES["equities"].exists():
+        assert "names scored" in low or "no multivariate trend data" in low
+
+
 def test_ideas_view_renders():
     # renders with zero committed data -- the day-one condition -- showing the
     # rating badge, key findings, and an info prompt rather than a crash.

@@ -118,8 +118,20 @@ def composite(rows: list[dict], weights: dict = MOM_WEIGHTS) -> None:
     """Mutates `rows` in place. Requires `cross_sectional()` to have already
     run (for ts_score/xsec_score). Rows with raw=None are left unscored
     (composite=None) so callers can exclude them cleanly rather than treat a
-    missing score as a neutral one."""
-    eq_w = {k: 1.0 / len(weights) for k in weights}
+    missing score as a neutral one.
+
+    `mvt` (Multivariate Trend) is handled differently from every other
+    factor here: it is computed OUTSIDE this row-building pass (a separate
+    universe-wide pairwise engine, see mom/mvt/), attached as `r["mvt_score"]`
+    (already on the -20..+20 scale) by the caller before composite() runs,
+    and is the one factor that can be legitimately ABSENT for a specific row
+    even when every other factor scored fine (a name outside mvt's gates, or
+    a bad mvt night -- see mvt/compute.py's fail-soft design). When it's
+    absent, the row's weight is renormalized across whichever factors ARE
+    present for that row (mirroring `_weighted`'s per-horizon renormalization
+    above) rather than silently scoring it 0 and shrinking that row's
+    achievable range -- this is what keeps a bad/missing mvt night from
+    contaminating the other five factors' composites."""
     for r in rows:
         raw = r.get("raw")
         if raw is None:
@@ -127,8 +139,14 @@ def composite(rows: list[dict], weights: dict = MOM_WEIGHTS) -> None:
             r["state"] = None
             continue
         factor_scores = {}
+        row_weights = {}
         for k in weights:
-            if k in FACTOR_REGISTRY:
+            if k == "mvt":
+                mv = r.get("mvt_score")
+                if mv is None:
+                    continue   # absent this row -- excluded, weight renormalized below
+                factor_scores[k] = clip1(mv / 20.0)
+            elif k in FACTOR_REGISTRY:
                 factor_scores[k] = FACTOR_REGISTRY[k](raw)
             elif k == "ts":
                 factor_scores[k] = r.get("ts_score", 0.0)
@@ -136,13 +154,17 @@ def composite(rows: list[dict], weights: dict = MOM_WEIGHTS) -> None:
                 factor_scores[k] = r.get("xsec_score", 0.0)
             else:
                 factor_scores[k] = 0.0
+            row_weights[k] = weights[k]
         r["factor_scores"] = {k: round(v, 4) for k, v in factor_scores.items()}
-        contributions = {k: round(20.0 * weights[k] * v, 4) for k, v in factor_scores.items()}
+        total_w = sum(row_weights.values())
+        contributions = ({k: round(20.0 * (row_weights[k] / total_w) * v, 4)
+                          for k, v in factor_scores.items()} if total_w > 0 else {})
         r["contributions"] = contributions
         comp = max(-20.0, min(20.0, float(sum(contributions.values()))))
         r["composite"] = round(comp, 4)
         r["state"] = state_for(comp)
-        eq_comp = max(-20.0, min(20.0, sum(20.0 * eq_w[k] * v for k, v in factor_scores.items())))
+        eq_scores = [v for k, v in factor_scores.items()]
+        eq_comp = max(-20.0, min(20.0, 20.0 * sum(eq_scores) / len(eq_scores))) if eq_scores else 0.0
         r["composite_equal_weight"] = round(eq_comp, 4)
         r["breakout_grid"] = raw["breakout_raw"]["horizons"]
 
@@ -151,13 +173,23 @@ def correlations(rows: list[dict], factors: tuple = (), flag_threshold: float = 
     """Spearman correlation matrix of the factor scores across the priced
     universe, plus a plain list of pairs above `flag_threshold`. This is the
     CHECK on the factor-weight redundancy assumption, not an assertion of
-    it — the app renders it and flags any surprise."""
+    it — the app renders it and flags any surprise.
+
+    `mvt` (unlike the other five factors) can be legitimately ABSENT from
+    an individual row's factor_scores dict (see composite()'s docstring --
+    a name outside mvt's gates, or a bad mvt night) and, on a run where mvt
+    failed entirely, absent from EVERY row. `reindex` (rather than a plain
+    column select) tolerates both: a column pandas never saw at all becomes
+    all-NaN instead of raising a KeyError, and `.corr()` already handles
+    NaNs via pairwise deletion -- a factor with too little coverage simply
+    reports `None` correlations (via the pd.isna check below) rather than
+    crashing the whole diagnostics step."""
     from . import FACTORS
     factors = factors or FACTORS
     scored = [r["factor_scores"] for r in rows if r.get("factor_scores")]
     if len(scored) < 10:
         return {"n": len(scored), "matrix": {}, "flagged_pairs": []}
-    df = pd.DataFrame(scored)[list(factors)]
+    df = pd.DataFrame(scored).reindex(columns=list(factors))
     corr = df.corr(method="spearman")
     matrix = {a: {b: (None if pd.isna(corr.loc[a, b]) else round(float(corr.loc[a, b]), 3))
                   for b in factors} for a in factors}

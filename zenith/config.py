@@ -131,22 +131,40 @@ MOM_HORIZON_WEIGHTS = {
     "1m": 0.05,
 }
 
-# Composite factor weights. Not equal: TS and cross-sectional momentum carry
-# the most independent information (MOP 2012 decompose the premium into
-# distinct auto-covariance vs cross-serial components); breakout is a
-# non-linear read of the same path as TS so it is downweighted; speed and
-# strength are both MA-derived (the likeliest redundant pair) and split
-# .15/.20, with strength weighted higher because its acceleration/quality
-# terms carry information neither TS nor speed contains. Configurable without
-# touching code; the app also renders an equal-weight composite for
-# comparison and flags factor-pair correlations above 0.85.
+# Composite factor weights. Originally ts/xsec .25/.25, breakout .15,
+# speed/strength .15/.20 (see git history) -- rebalanced when Multivariate
+# Trend (mvt) was added, per a live measurement, not a guess: the engine's
+# own factor-correlation diagnostic already flagged ts/xsec at Spearman 0.997
+# (near-total redundancy -- both derive from the same vol-adjusted-return
+# grid via different monotonic transforms), while a synthetic-panel test of
+# mvt's residual (common-factor-removed) pairwise trend against xsec came in
+# at ~0.73-0.74 -- genuinely the least redundant addition available. ts/xsec
+# are trimmed .05 each (still tied for the largest single-factor weight) and
+# mvt enters at .20, matched to them, rather than starting small and having
+# to be "discovered" later. breakout/speed/strength take a small proportional
+# trim to fund it. This is still a documented judgment call, NOT a fitted
+# optimum -- see mvt.horizons.erc_weights() and data/mom/weighting.json for
+# the equal-risk-contribution lens computed nightly from the LIVE correlation
+# matrix, which is what should actually move this dict if the user adopts it
+# (config.MOM_WEIGHT_MODE). The app renders equal-weight AND erc composites
+# alongside the declared one for comparison, and flags factor-pair
+# correlations above 0.85.
 MOM_WEIGHTS = {
-    "ts": 0.25,
-    "xsec": 0.25,
-    "breakout": 0.15,
-    "speed": 0.15,
-    "strength": 0.20,
+    "ts": 0.20,
+    "xsec": 0.20,
+    "breakout": 0.12,
+    "speed": 0.13,
+    "strength": 0.15,
+    "mvt": 0.20,
 }
+
+# "declared" (MOM_WEIGHTS above, the live default) or "erc" (equal-risk-
+# contribution weights recomputed nightly from the live factor correlation
+# matrix -- see mvt/horizons.py:erc_weights). Flip only after reviewing
+# data/mom/weighting.json / the Momentum tab's weighting comparison; never
+# silently. "declared" until the user decides otherwise (see MOM §41 --
+# reproducibility of the existing scoring approach is the default posture).
+MOM_WEIGHT_MODE = "declared"
 
 # Moving averages for the trend-speed / GMMA factor and chart (trading days).
 MOM_MA_PERIODS = (9, 21, 50, 100, 200, 250, 400)
@@ -166,6 +184,80 @@ MOM_STATES = (
 # universe.json first commit). Historical MOMENTUM scores before this date use
 # TODAY's constituents and are survivorship-biased; the UI marks the boundary.
 MOM_MEMBERSHIP_START = "2026-07-15"
+
+# --- MOMENTUM > Multivariate Trend (pairwise relative-strength / residual
+# momentum sub-signal) ------------------------------------------------------
+# Lives under mom/ (it is MOMENTUM's 6th factor, not a new top-level feature).
+# Two universes: equities reuse mom.universe.constituents() (the R1000, no
+# second pipeline); ETFs union cas.universe.master_etfs() + frm_tickers() +
+# the Morningstar etf_catalog.json (~935 raw, gated down -- see
+# mvt/universe.py). The NxN pairwise matrix is NEVER committed (see
+# mvt/pairwise.py's storage-architecture note) -- only the per-horizon return
+# vectors + PCA loadings/eigenvalues/idio vols needed to reconstruct any pair
+# on demand are.
+MOM_MVT_DIR = MOM_DIR / "mvt"
+MOM_MVT_HISTORY_DIR = MOM_MVT_DIR / "history"     # sharded rank-evolution snapshots (Phase 3)
+MOM_MVT_FILES = {
+    "equities": MOM_MVT_DIR / "equities_latest.json",   # R1000 mvt scores + reconstruction inputs
+    "etfs": MOM_MVT_DIR / "etfs_latest.json",           # ETF universe mvt scores + reconstruction inputs
+    "etf_meta": MOM_MVT_DIR / "etf_meta.json",          # ticker -> name/category/asset-class tags cache
+    "weighting": MOM_DIR / "weighting.json",            # declared/equal/erc comparison, factors + horizons
+    "status": MOM_MVT_DIR / "status.json",
+}
+
+# Horizons the multivariate engine scores, as (lookback_days, skip_days) --
+# identical spec to mom.factors.HORIZON_SPEC so the two signals are directly
+# comparable on the methodology panel.
+MOM_MVT_HORIZON_SPEC = {
+    "12_1": (252, 21),
+    "12m": (252, 0),
+    "9m": (189, 0),
+    "6m": (126, 0),
+    "3m": (63, 0),
+    "1m": (21, 0),
+}
+
+# Minimum trading days of aligned history for a name to enter the mvt panel
+# at all (needs a real 12M return AND enough tail for a stable covariance
+# estimate over the trailing window used for the PCA factor model).
+MOM_MVT_MIN_BARS = 280
+# Trailing window for the covariance/PCA estimate AND the window residual
+# returns are computed over. Two independent constraints set the floor:
+#   (a) must exceed the longest horizon lookback (12M = 252 trading days)
+#       by at least one day -- the 9-12M disjoint increment needs a return
+#       252 days back, i.e. >=253 observations, or the longest horizons
+#       silently come back empty.
+#   (b) far more binding at R1000 scale: with N ~ 1000 instruments, a
+#       covariance/PCA estimate needs T well above N or the eigen-structure
+#       is dominated by sampling noise (classic N>>T random-matrix-theory
+#       distortion -- Marchenko-Pastur). VERIFIED while building this: on a
+#       synthetic 1000-name panel with a known ~11-factor structure, fitting
+#       PCA on only 273 observations picked up spurious factors and
+#       measurably degraded the residual signal (its correlation with total
+#       cross-sectional momentum dropped to ~0.20 instead of the ~0.73 a
+#       correctly-specified fit produces on the SAME data with a longer
+#       window). 504 trading days (~2y) is comfortably affordable -- MOMENTUM
+#       already pulls 5y of history for the whole Russell 1000 -- and keeps
+#       N/T close to 2 rather than 4, which is what actually fixed it.
+MOM_MVT_COV_WINDOW = 504
+
+# Explicit leveraged/inverse ETF exclusion (name regex in mvt/universe.py
+# catches most, but tickers whose fund name doesn't self-describe, or whose
+# metadata cache hasn't refreshed yet, need a hard list). Kept short and
+# reviewed, not exhaustive -- the empirical vol/correlation backstop in
+# mvt/universe.py is the real safety net.
+MOM_MVT_LEVERAGED_EXCLUDE = frozenset({
+    "SOXL", "SOXS", "TQQQ", "SQQQ", "SPXU", "SPXS", "UPRO", "SPXL", "TMF", "TMV",
+    "TBT", "TBF", "TTT", "UVXY", "SVXY", "VIXY", "VXX", "SH", "PSQ", "DOG", "RWM",
+    "DXD", "QID", "SDS", "SSO", "QLD", "DDM", "MVV", "TNA", "TZA", "FAS", "FAZ",
+    "LABU", "LABD", "YINN", "YANG", "NAIL", "DRN", "DRV", "ERX", "ERY", "NUGT",
+    "DUST", "JNUG", "JDST", "GUSH", "DRIP", "UCO", "SCO", "BOIL", "KOLD", "UGL",
+    "ZSL", "AGQ", "UWM", "TWM", "URTY", "SRTY", "UDOW", "SDOW", "TECL", "TECS",
+    "CURE", "PILL", "WEBL", "WEBS", "BNKU", "FNGU", "FNGD", "UMDD", "SMDD",
+})
+
+for _d in (MOM_MVT_DIR, MOM_MVT_HISTORY_DIR):
+    _d.mkdir(parents=True, exist_ok=True)
 
 # --- IDEAS (discretionary-systematic opportunity engine) --------------------
 # Fusion layer over MOMENTUM/EDGE/PEAD/FMOM/CAS — not a new data pipeline (see

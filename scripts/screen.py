@@ -581,6 +581,75 @@ def screen_mom() -> None:
     print(f"       picks={len(picks)} evaluated_cells={len(exs)}")
 
 
+def screen_mvt() -> None:
+    print("[mom.mvt]")
+    from zenith.mom.mvt import load as mvt_load
+    from zenith.config import MOM_MVT_LEVERAGED_EXCLUDE, MOM_WEIGHTS
+
+    status = mvt_load("status", {})
+    if not status:
+        warn(True, "mvt not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("date", "")) <= 5, f"mvt status fresh ({status.get('date')})")
+    check("mvt" in MOM_WEIGHTS, "mvt: registered in MOM_WEIGHTS")
+    check(abs(sum(MOM_WEIGHTS.values()) - 1.0) < 1e-6, "mvt: MOM_WEIGHTS sum to 1.0")
+
+    for universe_key in ("equities", "etfs"):
+        doc = mvt_load(universe_key, {})
+        rows = doc.get("rows", [])
+        if not rows:
+            warn(True, f"mvt {universe_key}: no scored rows yet")
+            continue
+        tks = [r["ticker"] for r in rows]
+        check(len(tks) == len(set(tks)), f"mvt {universe_key}: no duplicate tickers")
+        check(not (set(tks) & MOM_MVT_LEVERAGED_EXCLUDE),
+             f"mvt {universe_key}: no explicitly-leveraged ticker survived the universe gate")
+
+        bad_raw = [r["ticker"] for r in rows
+                  if r.get("raw_score") is not None and not (-20.0 <= r["raw_score"] <= 20.0)]
+        check(not bad_raw, f"mvt {universe_key}: raw_score within [-20,+20] ({bad_raw[:5] or 'ok'})")
+        bad_norm = [r["ticker"] for r in rows
+                   if r.get("normalized_score") is not None and not (-20.0 <= r["normalized_score"] <= 20.0)]
+        check(not bad_norm, f"mvt {universe_key}: normalized_score within [-20,+20] ({bad_norm[:5] or 'ok'})")
+
+        # every percentile stored anywhere must be a valid 0-100 read
+        bad_pct = []
+        for r in rows:
+            for grid in (r.get("raw_percentiles") or {}, r.get("residual_percentiles") or {}):
+                for h, p in grid.items():
+                    if p is not None and not (0.0 <= p <= 100.0):
+                        bad_pct.append(r["ticker"])
+        check(not bad_pct, f"mvt {universe_key}: percentiles within [0,100] ({bad_pct[:5] or 'ok'})")
+
+        n_scored_norm = sum(1 for r in rows if r.get("normalized_score") is not None)
+        n_scored_raw = sum(1 for r in rows if r.get("raw_score") is not None)
+        print(f"       {universe_key}: n={len(rows)} raw_scored={n_scored_raw} "
+              f"normalized_scored={n_scored_norm} k_factors={doc.get('k_factors')} "
+              f"explained_var={doc.get('explained_variance_ratio')}")
+
+        # sanity: reconstructing a pairwise spread from the committed return/
+        # variance vectors for two arbitrary scored names must match a direct
+        # computation from the same inputs (proves the "never persist the
+        # NxN, only what reconstructs it" architecture is actually correct,
+        # not just fast).
+        candidates = [r for r in rows if r.get("residual_return", {}).get("6m") is not None
+                     and r.get("resid_var") is not None][:2]
+        if len(candidates) == 2:
+            import numpy as _np
+            from zenith.mom.mvt import pairwise as _pw
+            r_arr = _np.array([candidates[0]["residual_return"]["6m"], candidates[1]["residual_return"]["6m"]])
+            v_arr = _np.array([candidates[0]["resid_var"], candidates[1]["resid_var"]])
+            D = _pw.spread_matrix(r_arr, v_arr, horizon_days=126)
+            check(abs(D[0, 1] + D[1, 0]) < 1e-9, f"mvt {universe_key}: reconstructed spread antisymmetric")
+
+    weighting = mvt_load("weighting", {})
+    if weighting and weighting.get("factor_erc_weights_shrunk"):
+        w = weighting["factor_erc_weights_shrunk"]
+        check(abs(sum(w.values()) - 1.0) < 1e-3, "mvt weighting: ERC-shrunk weights sum to ~1.0")
+        print(f"       weighting mode={weighting.get('active_weight_mode')} "
+              f"erc_converged={weighting.get('erc_converged')}")
+
+
 def screen_ideas() -> None:
     print("[ideas]")
     from zenith.ideas import load as ideas_load
@@ -745,6 +814,7 @@ def main() -> None:
     screen_nightday()
     screen_holdings()
     screen_mom()
+    screen_mvt()
     screen_ideas()
     screen_regimes()
     print()

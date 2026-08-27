@@ -1,6 +1,6 @@
 """MOMENTUM — a Russell 1000 multi-factor stock momentum engine for Zenith.
 
-Every trading day, every current Russell 1000 constituent is scored on five
+Every trading day, every current Russell 1000 constituent is scored on six
 distinct, individually-documented momentum dimensions and blended into one
 transparent composite in [-20, +20]:
 
@@ -20,10 +20,17 @@ transparent composite in [-20, +20]:
      falling, accelerating or decelerating, and is the trend statistically
      smooth (Da, Gurun & Warachka 2014, "Frog in the Pan: Continuous
      Information and Momentum") rather than one discrete jump.
+  6. Multivariate Trend     — is the stock outperforming its PEERS across a
+     broad pairwise relative-strength grid, and does that outperformance
+     survive once common market/sector factors are statistically removed
+     (Blitz, Huij & Martens 2011, "Residual Momentum"; see mom/mvt/ for the
+     full pairwise engine, its own Equities/ETFs sub-tab, and the honest
+     redundancy measurements that led to residualizing rather than using
+     the naive pairwise spread).
 
-The five factors are deliberately NOT equal-weighted (see config.MOM_WEIGHTS
+The six factors are deliberately NOT equal-weighted (see config.MOM_WEIGHTS
 and its inline rationale) and are NOT black-boxed: every score decomposes
-into its five named contributions, and the app renders the factor
+into its six named contributions, and the app renders the factor
 correlation matrix so redundancy claims are checked, not assumed.
 
 Evidence tier B+: momentum is one of the most replicated cross-sectional
@@ -48,12 +55,12 @@ import json
 
 from ..config import MOM_FILES
 
-DISCLAIMER = ("MOMENTUM scores every current Russell 1000 constituent on five documented "
+DISCLAIMER = ("MOMENTUM scores every current Russell 1000 constituent on six documented "
               "momentum dimensions (time-series, breakout, cross-sectional, trend speed, "
-              "momentum strength) and blends them into a transparent -20..+20 composite. "
-              "Momentum is well-replicated academically but crashes hard in panic states and "
-              "is most crowded in large caps (this universe). Decision-support and a research "
-              "monitor, not investment advice.")
+              "momentum strength, multivariate trend) and blends them into a transparent "
+              "-20..+20 composite. Momentum is well-replicated academically but crashes hard "
+              "in panic states and is most crowded in large caps (this universe). "
+              "Decision-support and a research monitor, not investment advice.")
 
 SURVIVORSHIP_NOTE = ("Scores from 2026-07-15 onward use the Russell 1000 as point-in-time "
                      "constituted (tracked via this app's own membership archive). Scores "
@@ -63,13 +70,14 @@ SURVIVORSHIP_NOTE = ("Scores from 2026-07-15 onward use the Russell 1000 as poin
 
 HORIZONS = ("12_1", "12m", "9m", "6m", "3m", "1m")
 HORIZON_LABELS = {"12_1": "12-1M", "12m": "12M", "9m": "9M", "6m": "6M", "3m": "3M", "1m": "1M"}
-FACTORS = ("ts", "breakout", "xsec", "speed", "strength")
+FACTORS = ("ts", "breakout", "xsec", "speed", "strength", "mvt")
 FACTOR_LABELS = {
     "ts": "Time-Series Momentum",
     "breakout": "Breakout Momentum",
     "xsec": "Cross-Sectional Momentum",
     "speed": "Trend Speed",
     "strength": "Momentum Strength",
+    "mvt": "Multivariate Trend",
 }
 
 
