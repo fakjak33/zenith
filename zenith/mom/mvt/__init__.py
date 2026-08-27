@@ -49,8 +49,21 @@ Evidence tier: C+ on day one, matching this repo's own anti-overfitting
 convention (see mom/__init__.py's DISCLAIMER). Residual momentum is a
 published, replicated anomaly; THIS composite -- this universe, this factor
 count, this horizon blend -- has no out-of-sample record of its own yet.
-Promotion comes only from this app's own accumulating validation diagnostics
-(Phase 2), never from a backtest tuned to look good.
+Promotion comes only from this app's own accumulating validation diagnostics,
+never from a backtest tuned to look good.
+
+Phase 2 (mvt/validate.py) ran that validation: a 38-usable-month, monthly-
+rebalanced backtest (see validate.py's own docstring for exactly what that
+does and doesn't cover) found Model C (this module, residual layer) with a
+LOWER average pairwise P&L correlation than Model A (plain time-series
+trend) -- 0.002 vs 0.019, an ~8x reduction -- alongside a HIGHER Sharpe
+(0.71 vs 0.66) over the same period. That is directional support for the
+central hypothesis, from ONE backtest window, not proof: regime-conditioned
+results in the same report show Model A actually outperforming Model C on
+Sharpe in two of three correlation-regime terciles, and the naive combined
+composite (Model D, all six factors at declared weight) underperforms
+BOTH single components on this window -- see the Validation sub-tab for the
+full, unedited breakdown, including where the hypothesis does NOT hold.
 """
 
 from __future__ import annotations

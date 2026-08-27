@@ -18,12 +18,14 @@ from datetime import date
 
 import math
 
-from ...config import MOM_MVT_COV_WINDOW, MOM_MVT_MIN_BARS
+from ...config import MOM_MVT_COV_WINDOW, MOM_MVT_MIN_BARS, MOM_MVT_VALIDATION_MONTHS
 from ...cas.sources import prices
 from . import DISCLAIMER, save
 from . import panel as mvt_panel
 from . import score as mvt_score
 from . import universe as mvt_universe
+from . import validate as mvt_validate
+from . import history as mvt_history
 
 
 def _scrub(obj):
@@ -109,11 +111,13 @@ def run_auto(px_equities: dict, meta_status_out: list | None = None) -> dict:
     by prices.get_history exactly like every other Zenith ETF pull)."""
     segs: list[dict] = meta_status_out if meta_status_out is not None else []
 
+    today = date.today()
     eq_px = {t: df for t, df in px_equities.items() if t != "SPY"}
     eq_result = run_universe("equities", eq_px)
     save("equities", _scrub(eq_result), indent=None)
+    added_h = mvt_history.append_history(eq_result["rows"], "equities", today)
     segs.append({"segment": "mvt_equities", "ok": bool(eq_result["rows"]),
-                "n": len(eq_result["rows"]), **eq_result.get("status", {})})
+                "n": len(eq_result["rows"]), "history_added": added_h, **eq_result.get("status", {})})
 
     etf_rows, etf_universe_status = mvt_universe.etf_universe(refresh_meta=True)
     etf_tickers = sorted({r["ticker"] for r in etf_rows if r["included"]} | {"SPY", "QQQ", "IWM", "TLT", "GLD"})
@@ -124,8 +128,61 @@ def run_auto(px_equities: dict, meta_status_out: list | None = None) -> dict:
 
     etf_result = run_universe("etfs", etf_px)
     save("etfs", _scrub(etf_result), indent=None)
+    added_h_etf = mvt_history.append_history(etf_result["rows"], "etfs", today)
     segs.append({"segment": "mvt_etfs", "ok": bool(etf_result["rows"]),
-                "n": len(etf_result["rows"]), **etf_result.get("status", {})})
+                "n": len(etf_result["rows"]), "history_added": added_h_etf, **etf_result.get("status", {})})
 
     save("status", _scrub({"date": date.today().isoformat(), "disclaimer": DISCLAIMER, "segments": segs}))
     return {"equities": eq_result, "etfs": etf_result}
+
+
+def run_validation(px_equities: dict, n_months: int = MOM_MVT_VALIDATION_MONTHS) -> dict:
+    """Phase 2 validation: Models A/B/C/D backtested with monthly
+    rebalancing over the cached equity price history (see validate.py's own
+    module docstring for the full honest scope-limitation writeup). This is
+    NOT part of the nightly `--action auto` run -- it takes tens of minutes
+    (each rebalance date re-fits the whole factor stack for ~1000 names)
+    and answers a standing research question, not something that needs a
+    fresh answer every night. Run it manually:
+      python -m zenith.mom.mvt.compute --action validate [--months N]
+    `px_equities` should include SPY (unlike run_auto's own `eq_px`, which
+    strips it for the universe result) -- validate.summarize() needs it for
+    the market-beta calculation.
+    """
+    backtest = mvt_validate.run_backtest(px_equities, n_months=n_months)
+    report = mvt_validate.summarize(backtest, px_equities)
+    save("validation", _scrub(report))
+    print(f"[mvt.validate] {report.get('as_of')} n_periods={report.get('n_periods')} "
+          f"central_test={report.get('central_hypothesis_test')}")
+    return report
+
+
+def main() -> None:
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--action", default="auto", choices=["auto", "validate"])
+    ap.add_argument("--months", type=int, default=MOM_MVT_VALIDATION_MONTHS)
+    args = ap.parse_args()
+
+    if args.action == "validate":
+        from ...cas.sources import prices as _prices
+        from .. import universe as mom_universe
+        universe, _ = mom_universe.constituents()
+        tickers = sorted(set(u["ticker"] for u in universe) | {"SPY"})
+        px, _ = _prices.get_history(tickers, period="5y")
+        run_validation(px, n_months=args.months)
+    else:
+        # Standalone `--action auto` (outside mom.compute's own run_auto)
+        # for ad-hoc runs -- pulls the R1000+SPY panel itself rather than
+        # reusing one already pulled by a caller.
+        from ...cas.sources import prices as _prices
+        from .. import universe as mom_universe
+        universe, _ = mom_universe.constituents()
+        tickers = sorted(set(u["ticker"] for u in universe) | {"SPY"})
+        px, _ = _prices.get_history(tickers, period="5y")
+        run_auto(px)
+
+
+if __name__ == "__main__":
+    main()

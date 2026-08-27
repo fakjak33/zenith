@@ -1,0 +1,403 @@
+{
+  "as_of": "2026-08-26",
+  "n_periods": 58,
+  "period_range": [
+    "2021-10-29T00:00:00",
+    "2026-07-31T00:00:00"
+  ],
+  "models": {
+    "A_timeseries": {
+      "n_periods": 38,
+      "cagr": 0.14001109593710548,
+      "sharpe": 0.6609762915942025,
+      "sortino": 0.6763634736540323,
+      "volatility": 0.24620594461480447,
+      "max_drawdown": -0.2898419802802701,
+      "hit_rate": 0.5526315789473685,
+      "mean_monthly_return": 0.013561357686661757,
+      "turnover": {
+        "avg_monthly_turnover": 0.312,
+        "avg_holding_period_months": 3.2
+      },
+      "market_beta": 0.4252303146453576,
+      "pnl_correlation": {
+        "n_instruments": 553,
+        "n_pairs": 152628,
+        "avg_pairwise_corr": 0.0192,
+        "median_pairwise_corr": 0.0012,
+        "tail_pairwise_corr_p90": 0.2453
+      }
+    },
+    "B_crosssectional": {
+      "n_periods": 38,
+      "cagr": 0.1493781947995365,
+      "sharpe": 0.6948370864944395,
+      "sortino": 0.7131143663799213,
+      "volatility": 0.24611674067453845,
+      "max_drawdown": -0.28899559479123416,
+      "hit_rate": 0.5526315789473685,
+      "mean_monthly_return": 0.014250919918983652,
+      "turnover": {
+        "avg_monthly_turnover": 0.2994,
+        "avg_holding_period_months": 3.34
+      },
+      "market_beta": 0.45771085969119,
+      "pnl_correlation": {
+        "n_instruments": 546,
+        "n_pairs": 148785,
+        "avg_pairwise_corr": 0.02,
+        "median_pairwise_corr": 0.0012,
+        "tail_pairwise_corr_p90": 0.2488
+      }
+    },
+    "C_multivariate": {
+      "n_periods": 38,
+      "cagr": 0.06546088540254691,
+      "sharpe": 0.706095247450039,
+      "sortino": 0.7288130299888033,
+      "volatility": 0.09640794842047334,
+      "max_drawdown": -0.10304852382769325,
+      "hit_rate": 0.631578947368421,
+      "mean_monthly_return": 0.005672766183008728,
+      "turnover": {
+        "avg_monthly_turnover": 0.4518,
+        "avg_holding_period_months": 2.21
+      },
+      "market_beta": 0.04473884348062318,
+      "pnl_correlation": {
+        "n_instruments": 530,
+        "n_pairs": 140185,
+        "avg_pairwise_corr": 0.0024,
+        "median_pairwise_corr": 0.0001,
+        "tail_pairwise_corr_p90": 0.2133
+      }
+    },
+    "D_combined": {
+      "n_periods": 38,
+      "cagr": 0.10725699729311788,
+      "sharpe": 0.5888163555870031,
+      "sortino": 0.5757195178873415,
+      "volatility": 0.21227797746522067,
+      "max_drawdown": -0.24489798561572917,
+      "hit_rate": 0.5789473684210527,
+      "mean_monthly_return": 0.010416062088537601,
+      "turnover": {
+        "avg_monthly_turnover": 0.4585,
+        "avg_holding_period_months": 2.18
+      },
+      "market_beta": 0.2882087236741782,
+      "pnl_correlation": {
+        "n_instruments": 599,
+        "n_pairs": 179101,
+        "avg_pairwise_corr": 0.0137,
+        "median_pairwise_corr": 0.0008,
+        "tail_pairwise_corr_p90": 0.2305
+      }
+    }
+  },
+  "central_hypothesis_test": {
+    "model_a_avg_pairwise_pnl_corr": 0.0192,
+    "model_c_avg_pairwise_pnl_corr": 0.0024,
+    "c_lower_than_a": true,
+    "difference": -0.0168,
+    "model_a_sharpe": 0.6609762915942025,
+    "model_c_sharpe": 0.706095247450039,
+    "sharpe_improved_alongside_lower_corr": true
+  },
+  "by_regime": {
+    "low_effective_factors_high_corr_regime": {
+      "A_timeseries": {
+        "n_periods": 8,
+        "cagr": 0.20617899449585142,
+        "sharpe": 1.1053565170009971,
+        "sortino": 1.3563418404050764,
+        "volatility": 0.18414786956046028,
+        "max_drawdown": -0.05807446536935712,
+        "hit_rate": 0.625,
+        "mean_monthly_return": 0.01696242064254203,
+        "turnover": {
+          "avg_monthly_turnover": 0.3064,
+          "avg_holding_period_months": 3.26
+        },
+        "market_beta": -0.012065804117250816,
+        "pnl_correlation": {
+          "n_instruments": 87,
+          "n_pairs": 3741,
+          "avg_pairwise_corr": 0.0658,
+          "median_pairwise_corr": 0.0696,
+          "tail_pairwise_corr_p90": 0.6878
+        }
+      },
+      "C_multivariate": {
+        "n_periods": 8,
+        "cagr": 0.16529968777388904,
+        "sharpe": 1.7410570024711445,
+        "sortino": 1.405313527089808,
+        "volatility": 0.09045663224108007,
+        "max_drawdown": 0.0,
+        "hit_rate": 0.875,
+        "mean_monthly_return": 0.01312417941527413,
+        "turnover": {
+          "avg_monthly_turnover": 0.4454,
+          "avg_holding_period_months": 2.25
+        },
+        "market_beta": -0.09045140522878681,
+        "pnl_correlation": {
+          "n_instruments": 52,
+          "n_pairs": 1326,
+          "avg_pairwise_corr": 0.0517,
+          "median_pairwise_corr": 0.0586,
+          "tail_pairwise_corr_p90": 0.6324
+        }
+      }
+    },
+    "mid_regime": {
+      "A_timeseries": {
+        "n_periods": 15,
+        "cagr": 0.12235131415581235,
+        "sharpe": 0.7387918534064061,
+        "sortino": 1.3857155558995065,
+        "volatility": 0.1753666172917046,
+        "max_drawdown": -0.08916677685897012,
+        "hit_rate": 0.5333333333333333,
+        "mean_monthly_return": 0.010796619017879197,
+        "turnover": {
+          "avg_monthly_turnover": 0.3553,
+          "avg_holding_period_months": 2.81
+        },
+        "market_beta": 0.03659296615487543,
+        "pnl_correlation": {
+          "n_instruments": 190,
+          "n_pairs": 17955,
+          "avg_pairwise_corr": 0.0224,
+          "median_pairwise_corr": 0.0038,
+          "tail_pairwise_corr_p90": 0.3931
+        }
+      },
+      "C_multivariate": {
+        "n_periods": 15,
+        "cagr": 0.04644601272648097,
+        "sharpe": 0.4931768072816589,
+        "sortino": 0.517264184099511,
+        "volatility": 0.10202607190755329,
+        "max_drawdown": -0.10304852382769336,
+        "hit_rate": 0.6,
+        "mean_monthly_return": 0.004193074366904675,
+        "turnover": {
+          "avg_monthly_turnover": 0.4818,
+          "avg_holding_period_months": 2.08
+        },
+        "market_beta": -0.28052530828213496,
+        "pnl_correlation": {
+          "n_instruments": 185,
+          "n_pairs": 17020,
+          "avg_pairwise_corr": 0.0025,
+          "median_pairwise_corr": -0.0025,
+          "tail_pairwise_corr_p90": 0.3584
+        }
+      }
+    },
+    "high_effective_factors_low_corr_regime": {
+      "A_timeseries": {
+        "n_periods": 15,
+        "cagr": 0.12362460318796753,
+        "sharpe": 0.5196543208429883,
+        "sortino": 0.4981756489778152,
+        "volatility": 0.33511961002305546,
+        "max_drawdown": -0.2898419802802702,
+        "hit_rate": 0.5333333333333333,
+        "mean_monthly_return": 0.014512196112308168,
+        "turnover": {
+          "avg_monthly_turnover": 0.3391,
+          "avg_holding_period_months": 2.95
+        },
+        "market_beta": 0.8737368186733444,
+        "pnl_correlation": {
+          "n_instruments": 192,
+          "n_pairs": 18336,
+          "avg_pairwise_corr": 0.0697,
+          "median_pairwise_corr": 0.0315,
+          "tail_pairwise_corr_p90": 0.4945
+        }
+      },
+      "C_multivariate": {
+        "n_periods": 15,
+        "cagr": 0.03421650340207871,
+        "sharpe": 0.38978504773145295,
+        "sortino": 0.4391406153111749,
+        "volatility": 0.09784995993261414,
+        "max_drawdown": -0.05898910555660564,
+        "hit_rate": 0.5333333333333333,
+        "mean_monthly_return": 0.003178370941904564,
+        "turnover": {
+          "avg_monthly_turnover": 0.4894,
+          "avg_holding_period_months": 2.04
+        },
+        "market_beta": 0.2355872149522526,
+        "pnl_correlation": {
+          "n_instruments": 198,
+          "n_pairs": 19503,
+          "avg_pairwise_corr": 0.0048,
+          "median_pairwise_corr": 0.0032,
+          "tail_pairwise_corr_p90": 0.3785
+        }
+      }
+    }
+  },
+  "by_stress_window": {
+    "2022_drawdown": {
+      "available": false,
+      "n_periods": 9,
+      "window": [
+        "2022-01-01",
+        "2022-10-15"
+      ],
+      "models": {
+        "A_timeseries": {
+          "n_periods": 0,
+          "note": "insufficient data (<6 periods)",
+          "turnover": {
+            "avg_monthly_turnover": null,
+            "avg_holding_period_months": null
+          },
+          "market_beta": null,
+          "pnl_correlation": {
+            "n_instruments": 0,
+            "n_pairs": 0,
+            "avg_pairwise_corr": null,
+            "median_pairwise_corr": null,
+            "tail_pairwise_corr_p90": null
+          }
+        },
+        "C_multivariate": {
+          "n_periods": 0,
+          "note": "insufficient data (<6 periods)",
+          "turnover": {
+            "avg_monthly_turnover": null,
+            "avg_holding_period_months": null
+          },
+          "market_beta": null,
+          "pnl_correlation": {
+            "n_instruments": 0,
+            "n_pairs": 0,
+            "avg_pairwise_corr": null,
+            "median_pairwise_corr": null,
+            "tail_pairwise_corr_p90": null
+          }
+        }
+      },
+      "note": "dates fall within the backtest's nominal range but before enough TRAILING history had accumulated for the factor computations to score anything -- see this module's docstring"
+    },
+    "2023_recovery": {
+      "available": true,
+      "n_periods": 12,
+      "window": [
+        "2023-01-01",
+        "2023-12-31"
+      ],
+      "models": {
+        "A_timeseries": {
+          "n_periods": 7,
+          "cagr": 0.049736029348377064,
+          "sharpe": 0.38482096878691546,
+          "sortino": 0.3908568748125504,
+          "volatility": 0.15242596122566102,
+          "max_drawdown": -0.05807446536935712,
+          "hit_rate": 0.5714285714285714,
+          "mean_monthly_return": 0.004888058838927975,
+          "turnover": {
+            "avg_monthly_turnover": 0.3031,
+            "avg_holding_period_months": 3.3
+          },
+          "market_beta": -0.2537778943037987,
+          "pnl_correlation": {
+            "n_instruments": 61,
+            "n_pairs": 1830,
+            "avg_pairwise_corr": 0.0735,
+            "median_pairwise_corr": 0.0898,
+            "tail_pairwise_corr_p90": 0.7514
+          }
+        },
+        "C_multivariate": {
+          "n_periods": 7,
+          "cagr": 0.12181888877349056,
+          "sharpe": 1.2991829918329396,
+          "sortino": 1.062301964446957,
+          "volatility": 0.09163425142931654,
+          "max_drawdown": 0.0,
+          "hit_rate": 0.8571428571428571,
+          "mean_monthly_return": 0.00992080507719261,
+          "turnover": {
+            "avg_monthly_turnover": 0.4425,
+            "avg_holding_period_months": 2.26
+          },
+          "market_beta": -0.16280631191938388,
+          "pnl_correlation": {
+            "n_instruments": 36,
+            "n_pairs": 630,
+            "avg_pairwise_corr": 0.077,
+            "median_pairwise_corr": 0.0745,
+            "tail_pairwise_corr_p90": 0.7226
+          }
+        }
+      },
+      "note": null
+    },
+    "2024_2025_bull": {
+      "available": true,
+      "n_periods": 31,
+      "window": [
+        "2024-01-01",
+        "2026-08-31"
+      ],
+      "models": {
+        "A_timeseries": {
+          "n_periods": 31,
+          "cagr": 0.16144725562940443,
+          "sharpe": 0.7046366595979576,
+          "sortino": 0.727860731697555,
+          "volatility": 0.26430378229997703,
+          "max_drawdown": -0.2898419802802702,
+          "hit_rate": 0.5483870967741935,
+          "mean_monthly_return": 0.015519844523246801,
+          "turnover": {
+            "avg_monthly_turnover": 0.3133,
+            "avg_holding_period_months": 3.19
+          },
+          "market_beta": 0.6672632228599296,
+          "pnl_correlation": {
+            "n_instruments": 479,
+            "n_pairs": 114481,
+            "avg_pairwise_corr": 0.024,
+            "median_pairwise_corr": 0.0026,
+            "tail_pairwise_corr_p90": 0.2783
+          }
+        },
+        "C_multivariate": {
+          "n_periods": 31,
+          "cagr": 0.05313192842580117,
+          "sharpe": 0.5736566638943005,
+          "sortino": 0.6160805861134535,
+          "volatility": 0.09859970726046592,
+          "max_drawdown": -0.10304852382769336,
+          "hit_rate": 0.5806451612903226,
+          "mean_monthly_return": 0.004713531593999461,
+          "turnover": {
+            "avg_monthly_turnover": 0.4533,
+            "avg_holding_period_months": 2.21
+          },
+          "market_beta": 0.1215830532172385,
+          "pnl_correlation": {
+            "n_instruments": 459,
+            "n_pairs": 105111,
+            "avg_pairwise_corr": 0.0031,
+            "median_pairwise_corr": 0.0003,
+            "tail_pairwise_corr_p90": 0.2425
+          }
+        }
+      },
+      "note": null
+    }
+  },
+  "methodology_note": "Monthly rebalancing over the cached equity price history only (see this module's docstring for exactly what that does and doesn't cover -- 2008 and 2020 are NOT reached, and today's Russell 1000 list is projected backward, which is survivorship-biased). Cross-instrument P&L is decile-position-sign x realized forward return, a signal-level proxy, not a costed trading simulation. Nothing here is tuned to produce a particular result."
+}

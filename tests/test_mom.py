@@ -166,7 +166,7 @@ def tmp_mom_store(tmp_path, monkeypatch):
     # itself is stubbed out -- redirect those too so a test run never
     # touches the real committed data/mom/mvt/*.json files.
     mvt_files = {k: tmp_path / f"mvt_{k}.json" for k in
-                ("equities", "etfs", "etf_meta", "weighting", "status")}
+                ("equities", "etfs", "etf_meta", "weighting", "status", "validation", "crossuniverse")}
     monkeypatch.setattr(mvt_pkg, "MOM_MVT_FILES", mvt_files)
     return tmp_path
 

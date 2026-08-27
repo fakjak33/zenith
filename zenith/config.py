@@ -203,6 +203,54 @@ MOM_MVT_FILES = {
     "etf_meta": MOM_MVT_DIR / "etf_meta.json",          # ticker -> name/category/asset-class tags cache
     "weighting": MOM_DIR / "weighting.json",            # declared/equal/erc comparison, factors + horizons
     "status": MOM_MVT_DIR / "status.json",
+    "validation": MOM_MVT_DIR / "validation.json",      # Phase 2: Models A/B/C/D backtest + correlation study
+    "crossuniverse": MOM_MVT_DIR / "crossuniverse.json",  # Phase 3: equity-vs-sector-ETF broad/idiosyncratic split
+}
+# Note: the relative-strength NETWORK (section 22) is deliberately NOT
+# precomputed/committed -- it's built live in the view from a user-chosen
+# subset (mvt/network.py), the same "reconstruct on demand from the
+# committed vectors, never persist a big derived artifact" pattern as the
+# interactive pairwise matrix itself.
+
+# --- Phase 2 validation (mvt/validate.py) -----------------------------------
+# Models A (pure time-series) / B (pure cross-sectional) / C (pure
+# multivariate trend) / D (full declared-weight composite) backtested with
+# monthly rebalancing over whatever price history is already cached (see
+# validate.py's own module docstring for why monthly, and the honest
+# survivorship/history-depth limitations -- this is NOT a claim of covering
+# 2008 or 2020, which would need a much deeper, slower repull AND would
+# carry much more severe survivorship bias from projecting today's R1000
+# list backward that many years).
+MOM_MVT_VALIDATION_MONTHS = 58          # ~the full depth of the cached 5y equity price pull
+MOM_MVT_VALIDATION_DECILE = 0.1         # top/bottom decile = the long/short bucket per model
+MOM_MVT_VALIDATION_MODELS = ("A_timeseries", "B_crosssectional", "C_multivariate", "D_combined")
+MOM_MVT_VALIDATION_MODEL_LABELS = {
+    "A_timeseries": "Model A -- Traditional (time-series) trend",
+    "B_crosssectional": "Model B -- Cross-sectional momentum",
+    "C_multivariate": "Model C -- Multivariate trend (residual pairwise)",
+    "D_combined": "Model D -- Combined (full declared-weight Momentum)",
+}
+# Stress windows identified EMPIRICALLY from the cached SPY series's own
+# drawdown history (not assumed from real-world calendar dates) -- see
+# validate.py's docstring. Only windows the cached history actually reaches
+# are populated; anything earlier is honestly reported as unavailable
+# rather than faked.
+#
+# "2022_drawdown" is INTENTIONALLY kept even though a live run shows it
+# unavailable: SPY's own PRICE history reaches back to 2021-08, but the
+# factor computations built on top of it (mom.factors.MIN_BARS=460,
+# mvt's own MOM_MVT_MIN_BARS + MOM_MVT_COV_WINDOW=504) need ~1.8-2 years of
+# TRAILING history before they can score anything at all -- so the first
+# ~20 of the nominal 58 backtest months (verified: a 58-month run actually
+# produced only 38 usable months) can't produce a single decile portfolio,
+# and 2022 falls entirely inside that dead zone. Leaving the window
+# DEFINED rather than deleting it means the validation report states this
+# limitation explicitly (validate.summarize's by_stress_window output)
+# instead of silently pretending the window was never asked for.
+MOM_MVT_STRESS_WINDOWS = {
+    "2022_drawdown": ("2022-01-01", "2022-10-15"),
+    "2023_recovery": ("2023-01-01", "2023-12-31"),
+    "2024_2025_bull": ("2024-01-01", "2026-08-31"),
 }
 
 # Horizons the multivariate engine scores, as (lookback_days, skip_days) --

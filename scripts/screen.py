@@ -649,6 +649,34 @@ def screen_mvt() -> None:
         print(f"       weighting mode={weighting.get('active_weight_mode')} "
               f"erc_converged={weighting.get('erc_converged')}")
 
+    cross = mvt_load("crossuniverse", {})
+    if cross and cross.get("rows"):
+        rows = cross["rows"]
+        bad_gap = [r["ticker"] for r in rows if abs(r.get("gap") or 0) > 40.0]
+        check(not bad_gap, f"mvt crossuniverse: gaps within a sane band ({bad_gap[:5] or 'ok'})")
+        bad_class = [r["ticker"] for r in rows
+                    if r.get("classification") not in ("idiosyncratic", "broad/systemic")]
+        check(not bad_class, f"mvt crossuniverse: classification is one of the two registered labels")
+        print(f"       crossuniverse: n={len(rows)} sectors={len(cross.get('by_sector', {}))}")
+    else:
+        warn(True, "mvt crossuniverse: no data yet")
+
+    validation = mvt_load("validation", {})
+    if validation and validation.get("models"):
+        models = validation["models"]
+        for m, s in models.items():
+            sh = s.get("sharpe")
+            check(sh is None or -10 < sh < 10, f"mvt validation {m}: Sharpe in a sane band ({sh})")
+            dd = s.get("max_drawdown")
+            check(dd is None or -1.0 <= dd <= 0.0, f"mvt validation {m}: max drawdown within [-1,0] ({dd})")
+        central = validation.get("central_hypothesis_test")
+        print(f"       validation: n_periods={validation.get('n_periods')} "
+              f"central_test={'c_lower_than_a=' + str(central.get('c_lower_than_a')) if central else 'n/a'}")
+        for name, w in validation.get("by_stress_window", {}).items():
+            print(f"       stress[{name}]: available={w.get('available')} n_periods={w.get('n_periods')}")
+    else:
+        warn(True, "mvt validation: no backtest yet (run --action validate)")
+
 
 def screen_ideas() -> None:
     print("[ideas]")

@@ -19,8 +19,10 @@ from ...config import THEME
 from ...ui_theme import evidence_rating, key_findings, section
 from . import DISCLAIMER, HORIZONS, HORIZON_LABELS, load
 from . import pairwise as pw
+from . import network as mvt_network
+from . import history as mvt_history
 
-SUB_UNIVERSES = ["Equities", "ETFs"]
+SUB_UNIVERSES = ["Equities", "ETFs", "Cross-Universe", "Validation"]
 _KEY = {"Equities": "equities", "ETFs": "etfs"}
 
 _EVIDENCE_NOTE = (
@@ -76,6 +78,18 @@ def render() -> None:
 
     sub = st.radio("Universe", SUB_UNIVERSES, horizontal=True, label_visibility="collapsed",
                    key="mvt_universe_sub")
+
+    if sub == "Cross-Universe":
+        with st.expander("How is this calculated?"):
+            _methodology({})
+        _cross_universe_view()
+        return
+    if sub == "Validation":
+        with st.expander("How is this calculated?"):
+            _methodology({})
+        _validation_view()
+        return
+
     doc = art[_KEY[sub]]
     df = _rows_df(doc)
 
@@ -103,8 +117,21 @@ def render() -> None:
                              "the committed return/variance vectors -- never a full NxN dump."),
                 unsafe_allow_html=True)
     _matrix(df)
+    st.markdown(section("Relative-strength network", 3,
+                        help="Each node's top few strongest pairwise relationships (positive or "
+                             "negative) as edges, laid out by a force simulation so tightly-related "
+                             "names cluster visually. Computed live for the subset shown -- never "
+                             "precomputed for the whole universe."),
+                unsafe_allow_html=True)
+    _network_section(df, sub)
     st.markdown(section("Instrument detail", 3), unsafe_allow_html=True)
     _instrument_detail(df)
+    st.markdown(section("Rank evolution", 3,
+                        help="This instrument's daily rank/score history, accumulating from the "
+                             "day this feature shipped -- a single point on day one, filling in "
+                             "one trading day at a time going forward."),
+                unsafe_allow_html=True)
+    _rank_evolution_section(sub)
 
 
 # --------------------------------------------------------------- breadth --
@@ -348,3 +375,248 @@ def _methodology(doc: dict) -> None:
         "- No look-ahead: the factor model and every horizon return use only trailing data as of "
         "the run date."
     )
+
+
+# -------------------------------------------------------------------- network --
+def _network_section(df: pd.DataFrame, universe_label: str) -> None:
+    c1, c2, c3 = st.columns([2, 1, 1])
+    q = c1.text_input("Search / pick tickers for the network (comma-separated, blank = top+bottom 15)",
+                      "", key=f"mvt_net_q_{universe_label}")
+    horizon = c2.selectbox("Horizon", HORIZONS, index=2, format_func=lambda h: HORIZON_LABELS[h],
+                           key=f"mvt_net_h_{universe_label}")
+    layer = c3.selectbox("Layer", ["residual", "raw"],
+                         format_func=lambda k: "Residual" if k == "residual" else "Raw / naive",
+                         key=f"mvt_net_layer_{universe_label}")
+
+    if q.strip():
+        picks = [t.strip().upper() for t in q.split(",") if t.strip()]
+        tickers = [t for t in picks if t in set(df["ticker"])]
+    else:
+        valid = df.dropna(subset=["normalized_score"])
+        combined = (valid.nlargest(15, "normalized_score")["ticker"].tolist()
+                   + valid.nsmallest(15, "normalized_score")["ticker"].tolist())
+        seen = set()
+        tickers = [t for t in combined if not (t in seen or seen.add(t))]
+
+    if len(tickers) < 3:
+        st.info("Pick at least 3 valid tickers to render the network.")
+        return
+
+    result = mvt_network.build_network(df, tickers, horizon=horizon, layer=layer)
+    if result is None:
+        st.info("Not enough data for that horizon/selection.")
+        return
+
+    nodes = pd.DataFrame(result["nodes"])
+    edge_rows = []
+    node_pos = {n["ticker"]: (n["x"], n["y"]) for n in result["nodes"]}
+    for i, e in enumerate(result["edges"]):
+        sx, sy = node_pos[e["source"]]
+        tx, ty = node_pos[e["target"]]
+        edge_rows.append({"edge_id": i, "x": sx, "y": sy, "weight": e["weight"]})
+        edge_rows.append({"edge_id": i, "x": tx, "y": ty, "weight": e["weight"]})
+    edges_df = pd.DataFrame(edge_rows)
+
+    def build(alt):
+        edge_layer = alt.Chart(edges_df).mark_line(color=THEME.muted, opacity=0.35).encode(
+            x=alt.X("x:Q", axis=None), y=alt.Y("y:Q", axis=None), detail="edge_id:N")
+        node_layer = alt.Chart(nodes).mark_circle(stroke=THEME.bg, strokeWidth=1).encode(
+            x=alt.X("x:Q", axis=None, title=None), y=alt.Y("y:Q", axis=None, title=None),
+            size=alt.Size("score:Q", scale=alt.Scale(range=[80, 500]), legend=None,
+                          title="|score|", sort="descending"),
+            color=alt.Color("score:Q", scale=uc.diverging_scale(20.0, alt), legend=None),
+            tooltip=["ticker", alt.Tooltip("score:Q", format="+.1f")],
+        )
+        text_layer = alt.Chart(nodes).mark_text(dy=-12, fontSize=10, color=THEME.text).encode(
+            x="x:Q", y="y:Q", text="ticker:N")
+        return (edge_layer + node_layer + text_layer).properties(height=460)
+
+    uc.render_chart(build, fallback=nodes[["ticker", "score"]])
+    st.caption(f"{result['n']} nodes · {len(result['edges'])} edges (top few strongest relationships "
+              "per node, positive or negative) · node size = |score|, color = sign.")
+
+
+# ------------------------------------------------------------ rank evolution --
+def _rank_evolution_section(universe_key: str) -> None:
+    ticker = st.session_state.get("mvt_detail_ticker")
+    if not ticker:
+        st.caption("Pick an instrument above (Instrument detail) to see its rank history here.")
+        return
+    series = mvt_history.series_for(ticker, _KEY[universe_key])
+    if not series:
+        st.info(f"No history yet for {ticker} -- this accumulates one point per trading day going "
+                "forward from when this feature shipped.")
+        return
+    sdf = pd.DataFrame(series)
+
+    def build(alt):
+        return alt.Chart(sdf).mark_line(point=True, color=THEME.teal).encode(
+            x=alt.X("date:T", title=None, axis=alt.Axis(labelLimit=0)),
+            y=alt.Y("normalized_score:Q", title="Normalized score", axis=alt.Axis(labelLimit=0)),
+            tooltip=["date", alt.Tooltip("normalized_score:Q", format="+.1f"), "rank", "pctile"],
+        ).properties(height=220, title=f"{ticker} -- normalized score over time ({len(sdf)} point(s))")
+    uc.render_chart(build, fallback=sdf)
+
+
+# ---------------------------------------------------------- cross-universe --
+def _cross_universe_view() -> None:
+    st.markdown(
+        "Is an equity's apparent trend **broad** (shared with its whole sector) or "
+        "**idiosyncratic** (particular to that name)? Compares each Russell 1000 stock's "
+        "normalized score against its own GICS sector's SPDR sector ETF, on the same -20..+20 scale."
+    )
+    doc = load("crossuniverse", {})
+    rows = doc.get("rows", [])
+    if not rows:
+        st.info("No cross-universe data yet. Run `python -m zenith.mom.compute --action auto` "
+                "to populate it.")
+        return
+    df = pd.DataFrame(rows)
+    st.caption(f"{len(df)} names compared · as of {doc.get('as_of', '—')}")
+
+    st.markdown(section("Sector breadth", 3,
+                        help="Per sector: how many names are trending WITH their sector ETF "
+                             "(broad/systemic) vs apart from it (idiosyncratic)."),
+                unsafe_allow_html=True)
+    breadth = doc.get("by_sector", {})
+    if breadth:
+        bdf = pd.DataFrame(breadth).T.reset_index().rename(columns={"index": "Sector"})
+        bdf = bdf.sort_values("sector_etf_score", ascending=False)
+        disp = pd.DataFrame({
+            "Sector": bdf["Sector"], "Sector ETF": bdf["sector_etf"],
+            "ETF Score": bdf["sector_etf_score"], "N": bdf["n"],
+            "% Idiosyncratic": bdf["pct_idiosyncratic"],
+        })
+        try:
+            sty = (disp.style.map(lambda v: uc.grad_diverging(v, 10.0), subset=["ETF Score"])
+                  .format({"ETF Score": "{:+.1f}", "% Idiosyncratic": "{:.0%}"}))
+            st.dataframe(sty, use_container_width=True, hide_index=True)
+        except Exception:
+            st.dataframe(disp, use_container_width=True, hide_index=True)
+
+    st.markdown(section("Most idiosyncratic movers", 3,
+                        help="Largest gap between an equity's own score and its sector ETF's score "
+                             "-- trending most independently of its sector."),
+                unsafe_allow_html=True)
+    top_gap = df.assign(abs_gap=df["gap"].abs()).nlargest(20, "abs_gap")
+    disp2 = pd.DataFrame({
+        "Ticker": top_gap["ticker"], "Sector": top_gap["sector"], "Equity Score": top_gap["equity_score"],
+        "Sector ETF": top_gap["sector_etf"], "ETF Score": top_gap["sector_etf_score"], "Gap": top_gap["gap"],
+    })
+    try:
+        sty2 = (disp2.style.map(lambda v: uc.grad_diverging(v, 20.0), subset=["Equity Score", "ETF Score", "Gap"])
+               .format({"Equity Score": "{:+.1f}", "ETF Score": "{:+.1f}", "Gap": "{:+.1f}"}))
+        st.dataframe(sty2, use_container_width=True, hide_index=True)
+    except Exception:
+        st.dataframe(disp2, use_container_width=True, hide_index=True)
+
+
+# -------------------------------------------------------------- validation --
+def _fmt_stat(v, fmt="{:+.2f}"):
+    return fmt.format(v) if v is not None else "—"
+
+
+def _model_stats_table(models: dict, model_keys) -> pd.DataFrame:
+    from ...config import MOM_MVT_VALIDATION_MODEL_LABELS as LABELS
+    rows = []
+    for k in model_keys:
+        s = models.get(k, {})
+        pnl = s.get("pnl_correlation", {})
+        turnover = s.get("turnover", {})
+        rows.append({
+            "Model": LABELS.get(k, k), "CAGR": s.get("cagr"), "Sharpe": s.get("sharpe"),
+            "Sortino": s.get("sortino"), "Max DD": s.get("max_drawdown"), "Vol": s.get("volatility"),
+            "Hit Rate": s.get("hit_rate"), "Beta": s.get("market_beta"),
+            "Avg Monthly Turnover": turnover.get("avg_monthly_turnover"),
+            "Avg Holding (mo)": turnover.get("avg_holding_period_months"),
+            "Avg Pairwise P&L Corr": pnl.get("avg_pairwise_corr"),
+            "Median Pairwise P&L Corr": pnl.get("median_pairwise_corr"),
+            "N Instruments": pnl.get("n_instruments"),
+        })
+    return pd.DataFrame(rows)
+
+
+def _validation_view() -> None:
+    st.markdown(
+        "**Phase 2 research question**: does Multivariate Trend (Model C) actually lower "
+        "cross-instrument P&L correlation vs traditional time-series trend (Model A), and does "
+        "that translate into better risk-adjusted portfolio performance? Tested empirically below "
+        "-- nothing here assumes the answer."
+    )
+    doc = load("validation", {})
+    if not doc or not doc.get("models"):
+        st.info("No validation backtest yet. Run "
+                "`python -m zenith.mom.mvt.compute --action validate` to populate it "
+                "(takes tens of minutes -- see validate.py's own module docstring for why).")
+        return
+
+    st.caption(f"{doc.get('n_periods')} monthly periods · {doc.get('period_range', ['—', '—'])[0]} "
+              f"to {doc.get('period_range', ['—', '—'])[1]} · as of {doc.get('as_of', '—')}")
+    st.markdown(uc.note_strip("Read this with the scope in mind", [
+        doc.get("methodology_note", ""),
+    ]), unsafe_allow_html=True)
+
+    central = doc.get("central_hypothesis_test")
+    if central:
+        c_lower = central.get("c_lower_than_a")
+        color = THEME.teal if c_lower else THEME.coral
+        verdict = ("Model C shows LOWER avg pairwise P&L correlation than Model A"
+                  if c_lower else "Model C does NOT show lower avg pairwise P&L correlation than Model A")
+        st.markdown(uc.state_banner(color, "CENTRAL HYPOTHESIS TEST", verdict), unsafe_allow_html=True)
+        st.markdown(uc.numeric_slab([
+            {"label": "Model A avg pairwise corr", "value": _fmt_stat(central.get("model_a_avg_pairwise_pnl_corr"), "{:.3f}")},
+            {"label": "Model C avg pairwise corr", "value": _fmt_stat(central.get("model_c_avg_pairwise_pnl_corr"), "{:.3f}")},
+            {"label": "Model A Sharpe", "value": _fmt_stat(central.get("model_a_sharpe"))},
+            {"label": "Model C Sharpe", "value": _fmt_stat(central.get("model_c_sharpe"))},
+        ]), unsafe_allow_html=True)
+        improved = central.get("sharpe_improved_alongside_lower_corr")
+        if improved is not None:
+            st.caption(("Lower correlation DID coincide with a higher Sharpe here."
+                       if improved else
+                       "Lower correlation did NOT coincide with a higher Sharpe here -- the "
+                       "correlation-reduction hypothesis and the performance-improvement "
+                       "hypothesis are separate claims, and this period only supports the former.")
+                      if c_lower else
+                      "Model C did not show lower correlation this period, so the "
+                      "performance-improvement question doesn't apply.")
+
+    st.markdown(section("All four models -- overall", 3), unsafe_allow_html=True)
+    from ...config import MOM_MVT_VALIDATION_MODELS
+    overall_tbl = _model_stats_table(doc["models"], MOM_MVT_VALIDATION_MODELS)
+    try:
+        sty = (overall_tbl.style
+              .map(lambda v: uc.grad_diverging(v, 1.0), subset=["Sharpe", "Sortino"])
+              .format({"CAGR": "{:+.1%}", "Sharpe": "{:+.2f}", "Sortino": "{:+.2f}",
+                       "Max DD": "{:.1%}", "Vol": "{:.1%}", "Hit Rate": "{:.0%}", "Beta": "{:+.2f}",
+                       "Avg Monthly Turnover": "{:.0%}", "Avg Pairwise P&L Corr": "{:+.3f}",
+                       "Median Pairwise P&L Corr": "{:+.3f}"}, na_rep="—"))
+        st.dataframe(sty, use_container_width=True, hide_index=True)
+    except Exception:
+        st.dataframe(overall_tbl, use_container_width=True, hide_index=True)
+
+    st.markdown(section("By correlation regime", 3,
+                        help="Terciles of the effective-factor-count diagnostic at each rebalance "
+                             "date: LOW = macro-dominated/high cross-instrument correlation, "
+                             "HIGH = idiosyncratic/low correlation. Does mvt behave differently?"),
+                unsafe_allow_html=True)
+    by_regime = doc.get("by_regime", {})
+    if by_regime:
+        for regime_name, regime_models in by_regime.items():
+            st.caption(regime_name.replace("_", " "))
+            rt = _model_stats_table(regime_models, list(regime_models.keys()))
+            st.dataframe(rt, use_container_width=True, hide_index=True)
+    else:
+        st.caption("Not enough periods to split into regime terciles yet.")
+
+    st.markdown(section("By stress window", 3,
+                        help="Empirically-identified windows from the cached SPY series's own "
+                             "drawdown history -- see validate.py for exactly how, and what this "
+                             "does NOT cover (2008, 2020)."),
+                unsafe_allow_html=True)
+    for name, w in doc.get("by_stress_window", {}).items():
+        st.caption(f"{name.replace('_', ' ')} — " + (
+            f"{w['window'][0]} to {w['window'][1]}, {w['n_periods']} periods"
+            if w.get("available") else f"unavailable ({w.get('note', '')})"))
+        if w.get("available") and w.get("models"):
+            st.dataframe(_model_stats_table(w["models"], list(w["models"].keys())),
+                        use_container_width=True, hide_index=True)

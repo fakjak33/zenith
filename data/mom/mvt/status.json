@@ -6,6 +6,7 @@
       "segment": "mvt_equities",
       "ok": true,
       "n": 990,
+      "history_added": 990,
       "universe": "equities",
       "n_priced": 1016,
       "panel": {
@@ -51,28 +52,29 @@
       "n_raw": 935,
       "meta_refresh": {
         "checked": 935,
-        "stale": 211,
-        "refreshed": 150
+        "stale": 61,
+        "refreshed": 61
       },
-      "n_excluded_by_name": 52
+      "n_excluded_by_name": 23
     },
     {
       "segment": "mvt_etf_prices",
       "ok": true,
-      "n": 859,
-      "requested": 883,
+      "n": 888,
+      "requested": 912,
       "source": "yfinance",
       "error": ""
     },
     {
       "segment": "mvt_etfs",
       "ok": true,
-      "n": 748,
+      "n": 760,
+      "history_added": 760,
       "universe": "etfs",
-      "n_priced": 859,
+      "n_priced": 888,
       "panel": {
-        "n_in": 859,
-        "n_kept": 839,
+        "n_in": 888,
+        "n_kept": 868,
         "dropped": {
           "AOTS": "insufficient_history(<280d)",
           "DVIN": "insufficient_history(<280d)",
@@ -97,18 +99,18 @@
         },
         "n_days": 752
       },
-      "empirical_excluded": 85,
-      "n_scored": 748,
+      "empirical_excluded": 102,
+      "n_scored": 760,
       "k_factors": 3,
-      "explained_variance_ratio": 0.6609,
-      "effective_factor_count": 11.653,
+      "explained_variance_ratio": 0.6589,
+      "effective_factor_count": 11.752,
       "erc_horizon_weights": {
-        "12_1": 0.1743,
-        "12m": 0.1531,
-        "9m": 0.1538,
-        "6m": 0.1565,
-        "3m": 0.1827,
-        "1m": 0.1796
+        "12_1": 0.1744,
+        "12m": 0.1533,
+        "9m": 0.1537,
+        "6m": 0.1564,
+        "3m": 0.1823,
+        "1m": 0.1799
       }
     }
   ]

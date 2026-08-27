@@ -29,6 +29,7 @@ from . import universe as mom_universe
 from .mvt import compute as mvt_compute
 from .mvt import horizons as mvt_horizons
 from .mvt import save as mvt_save, load as mvt_load
+from .mvt import crossuniverse as mvt_crossuniverse
 from ..pretom import calendar as cal
 from ..cas.sources import prices
 from ..edge.common import assemble
@@ -333,6 +334,20 @@ def run_auto(force: bool = False) -> dict:
             r["mvt_raw_score"] = mv.get("raw_score")
     status.append({"segment": "mvt", "ok": bool(mvt_by_ticker), "n": len(mvt_by_ticker),
                    **mvt_result.get("equities", {}).get("status", {})})
+
+    # --- Phase 3: cross-universe (equity vs its own sector ETF) -- reuses
+    # the SAME mvt equities/etfs rows just computed above and the metadata
+    # cache already loaded, no new data pull.
+    sector_by_ticker = {t: m.get("sector") for t, m in meta.items()}
+    cross = mvt_crossuniverse.build_comparison(
+        mvt_result.get("equities", {}).get("rows", []),
+        mvt_result.get("etfs", {}).get("rows", []),
+        sector_by_ticker,
+    )
+    breadth = mvt_crossuniverse.sector_breadth(cross)
+    mvt_save("crossuniverse", _scrub({"as_of": today.isoformat(), "n": len(cross),
+                                      "rows": cross, "by_sector": breadth}))
+    status.append({"segment": "mvt_crossuniverse", "ok": bool(cross), "n": len(cross)})
 
     # --- weighting mode: "declared" (default, always the headline) or "erc"
     # (equal-risk-contribution, from the PRIOR run's persisted weighting.json
