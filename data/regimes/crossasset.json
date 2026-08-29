@@ -1,28 +1,28 @@
 {
-  "as_of": "2026-08-28",
+  "as_of": "2026-08-29",
   "trends": {
     "SPY": {
-      "trend_3m": 0.0167,
+      "trend_3m": 0.022,
       "direction": "up"
     },
     "TLT": {
-      "trend_3m": -0.0225,
+      "trend_3m": -0.0193,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": -0.0012,
-      "direction": "down"
+      "trend_3m": 0.0131,
+      "direction": "up"
     },
     "DBC": {
-      "trend_3m": 0.0277,
+      "trend_3m": 0.0468,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.0149,
+      "trend_3m": 0.013,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": 0.0278,
+      "trend_3m": 0.0348,
       "direction": "up"
     }
   },
@@ -50,8 +50,8 @@
       {
         "check": "Gold trend (inflation-hedge proxy)",
         "expects": "falling",
-        "observed": "falling",
-        "confirms": true
+        "observed": "rising",
+        "confirms": false
       },
       {
         "check": "Long Treasuries (rate-expectation proxy)",
@@ -60,11 +60,17 @@
         "confirms": false
       }
     ],
-    "n_confirming": 3,
+    "n_confirming": 2,
     "n_total": 4,
-    "confirmation_ratio": 0.75
+    "confirmation_ratio": 0.5
   },
   "divergences": [
+    {
+      "flag": "Gold trend (inflation-hedge proxy)",
+      "classifier_expects": "falling",
+      "market_shows": "rising",
+      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
+    },
     {
       "flag": "Long Treasuries (rate-expectation proxy)",
       "classifier_expects": "rising (yields down)",
