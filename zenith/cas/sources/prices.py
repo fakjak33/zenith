@@ -67,7 +67,11 @@ def get_history(tickers: list[str], period: str = "2y",
                     else:
                         df = raw
                     df = df.rename(columns=str.lower)[["open", "high", "low", "close", "volume"]]
-                    df = df.dropna(how="all")
+                    # a row with a NaN close (seen from real yfinance data gaps,
+                    # esp. on the most recent bar) must never survive: every
+                    # downstream return/perf calc reads close.iloc[-1] and one
+                    # NaN there poisons last/w1/m1/.../ytd for that ticker.
+                    df = df.dropna(subset=["close"])
                     if len(df) >= 60:             # need enough history to be useful
                         data[t] = df
                 except Exception:
