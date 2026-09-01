@@ -832,6 +832,101 @@ def screen_regimes() -> None:
              f"n_themes={len(themes_doc)} n_alerts={n_alerts}")
 
 
+def screen_index() -> None:
+    """INDEX (Master List) — catalog integrity, taxonomy conformance, graph sanity.
+
+    A directory fails differently from a signal engine: the damage is silent
+    (a dropped row, a duplicate slug, an edge left dangling by an import, an
+    entry quietly claiming to be verified) rather than a wrong number on screen.
+    These checks target exactly those failure modes.
+    """
+    from zenith.index import load as index_load
+    from zenith.index import taxonomy as itx
+    from zenith.index import quality as iq
+
+    print("\n[INDEX]")
+    ents = index_load("entities", [])
+    rels = index_load("relationships", [])
+    status = index_load("status", {})
+    if not ents:
+        warn("index: no catalog yet (run `python -m zenith.index.compute --action seed`)")
+        return
+
+    check(len(ents) >= 100, f"index: catalog has {len(ents)} entries (expected >= 100)")
+
+    # --- identity integrity ------------------------------------------------
+    ids = [e.get("id") for e in ents]
+    slugs = [e.get("slug") for e in ents]
+    dup_ids = {i for i in ids if ids.count(i) > 1}
+    dup_slugs = {sl for sl in slugs if slugs.count(sl) > 1}
+    check(not dup_ids, f"index: no duplicate ids ({len(dup_ids)} found)")
+    check(not dup_slugs, f"index: no duplicate slugs ({sorted(dup_slugs)[:4]})")
+    check(all(e.get("name") for e in ents), "index: every entry has a name")
+    check(all(e.get("id") for e in ents), "index: every entry has an id")
+
+    # --- taxonomy conformance ---------------------------------------------
+    bad_cat = [e["name"] for e in ents
+               if e.get("primary_category") not in itx.PRIMARY_CATEGORIES]
+    bad_type = [e["name"] for e in ents if e.get("entity_type") not in itx.ENTITY_TYPES]
+    bad_state = [e["name"] for e in ents
+                 if e.get("lifecycle_state") not in itx.LIFECYCLE_STATES]
+    bad_conf = [e["name"] for e in ents
+                if e.get("confidence") not in itx.CONFIDENCE_LEVELS]
+    check(not bad_cat, f"index: every primary_category is declared ({bad_cat[:3]})")
+    check(not bad_type, f"index: every entity_type is declared ({bad_type[:3]})")
+    check(not bad_state, f"index: every lifecycle_state is declared ({bad_state[:3]})")
+    check(not bad_conf, f"index: every confidence level is declared ({bad_conf[:3]})")
+
+    # --- graph integrity ---------------------------------------------------
+    orphans = iq.orphan_edges(ents, rels)
+    check(not orphans, f"index: no orphan relationship edges ({len(orphans)} found)")
+    self_loops = [r for r in rels if r.get("source") == r.get("target")]
+    check(not self_loops, f"index: no self-referencing edges ({len(self_loops)} found)")
+    bad_rel = [r.get("type") for r in rels if r.get("type") not in itx.RELATIONSHIP_TYPES]
+    check(not bad_rel, f"index: every relationship type is declared ({sorted(set(bad_rel))[:3]})")
+
+    # --- honesty invariants (the ones this feature exists to uphold) -------
+    # An entry may only claim `verified` if a link check actually succeeded.
+    false_verified = [e["name"] for e in ents
+                      if e.get("lifecycle_state") == "verified" and e.get("link_status") != "ok"]
+    check(not false_verified,
+          f"index: nothing marked verified without a live link ({false_verified[:3]})")
+    # A low-confidence entry must not assert a URL that does not resolve.
+    unconfirmed_url = [e["name"] for e in ents
+                       if e.get("confidence") == "low" and e.get("url")
+                       and e.get("link_status") not in ("ok", "blocked")]
+    check(not unconfirmed_url,
+          f"index: low-confidence entries assert no unreachable URL ({unconfirmed_url[:3]})")
+    # NaN/None leakage into user-visible string fields.
+    leaked = [e["name"] for e in ents
+              for f in ("description", "url", "notes", "name")
+              if str(e.get(f, "")).strip().lower() in ("nan", "none", "null")]
+    check(not leaked, f"index: no NaN/None leaked into text fields ({leaked[:3]})")
+
+    # --- export round-trip -------------------------------------------------
+    try:
+        from zenith.index import export as iex
+        df = iex.to_dataframe(ents, rels)
+        check(len(df) == len(ents),
+              f"index: export row count matches catalog ({len(df)} vs {len(ents)})")
+        check("relationships" in df.columns and "url" in df.columns,
+              "index: export carries links and relationships")
+    except Exception as exc:
+        check(False, f"index: export failed — {type(exc).__name__}: {exc}")
+
+    # --- staleness ---------------------------------------------------------
+    if status.get("date"):
+        age = (date.today() - date.fromisoformat(status["date"])).days
+        if age > 30:
+            warn(f"index: status is {age} days old — re-run compute")
+
+    ls = status.get("links", {}) or {}
+    print(f"       {len(ents)} entries · {len(rels)} edges · "
+          f"{status.get('verified', 0)} verified · {status.get('needs_review', 0)} need review · "
+          f"links ok/blocked/error {ls.get('ok', 0)}/{ls.get('blocked', 0)}/{ls.get('error', 0)} · "
+          f"{status.get('zenith_sources_linked', 0)} linked to Zenith sources")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -845,6 +940,7 @@ def main() -> None:
     screen_mvt()
     screen_ideas()
     screen_regimes()
+    screen_index()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")
