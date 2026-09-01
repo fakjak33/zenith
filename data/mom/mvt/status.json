@@ -1,5 +1,5 @@
 {
-  "date": "2026-08-28",
+  "date": "2026-09-01",
   "disclaimer": "Multivariate Trend scores every instrument against ALL of its peers (not just its own history) across six horizons, using both a raw vol-normalized spread and a residual spread with common market/sector factors removed. The residual score is genuinely less redundant with cross-sectional momentum than the raw one (measured, not assumed) and is what feeds the Momentum composite. New, unproven signal (evidence tier C+) -- decision-support and a research monitor, not investment advice.",
   "segments": [
     {
@@ -8,10 +8,10 @@
       "n": 991,
       "history_added": 991,
       "universe": "equities",
-      "n_priced": 1016,
+      "n_priced": 1015,
       "panel": {
-        "n_in": 1016,
-        "n_kept": 999,
+        "n_in": 1015,
+        "n_kept": 998,
         "dropped": {
           "BLSH": "insufficient_history(<280d)",
           "CBC": "insufficient_history(<280d)",
@@ -31,20 +31,20 @@
           "VSNT": "insufficient_history(<280d)",
           "XE": "insufficient_history(<280d)"
         },
-        "n_days": 1255
+        "n_days": 1254
       },
       "empirical_excluded": 3,
       "n_scored": 991,
       "k_factors": 15,
-      "explained_variance_ratio": 0.5343,
-      "effective_factor_count": 73.908,
+      "explained_variance_ratio": 0.5339,
+      "effective_factor_count": 74.024,
       "erc_horizon_weights": {
-        "12_1": 0.1808,
-        "12m": 0.1494,
-        "9m": 0.1509,
-        "6m": 0.1564,
-        "3m": 0.1606,
-        "1m": 0.2019
+        "12_1": 0.1801,
+        "12m": 0.1496,
+        "9m": 0.1508,
+        "6m": 0.157,
+        "3m": 0.1615,
+        "1m": 0.2011
       }
     },
     {
@@ -60,7 +60,7 @@
     {
       "segment": "mvt_etf_prices",
       "ok": true,
-      "n": 887,
+      "n": 889,
       "requested": 912,
       "source": "yfinance",
       "error": ""
@@ -68,14 +68,15 @@
     {
       "segment": "mvt_etfs",
       "ok": true,
-      "n": 760,
-      "history_added": 760,
+      "n": 761,
+      "history_added": 761,
       "universe": "etfs",
-      "n_priced": 887,
+      "n_priced": 889,
       "panel": {
-        "n_in": 887,
-        "n_kept": 868,
+        "n_in": 889,
+        "n_kept": 869,
         "dropped": {
+          "AMJ": "insufficient_history(<280d)",
           "DVIN": "insufficient_history(<280d)",
           "DVRE": "insufficient_history(<280d)",
           "DVXB": "insufficient_history(<280d)",
@@ -96,20 +97,20 @@
           "VDG": "insufficient_history(<280d)",
           "VDV": "insufficient_history(<280d)"
         },
-        "n_days": 754
+        "n_days": 751
       },
-      "empirical_excluded": 102,
-      "n_scored": 760,
+      "empirical_excluded": 100,
+      "n_scored": 761,
       "k_factors": 3,
-      "explained_variance_ratio": 0.6575,
-      "effective_factor_count": 11.846,
+      "explained_variance_ratio": 0.6549,
+      "effective_factor_count": 11.892,
       "erc_horizon_weights": {
-        "12_1": 0.1725,
+        "12_1": 0.1726,
         "12m": 0.1517,
-        "9m": 0.1536,
-        "6m": 0.1581,
-        "3m": 0.1769,
-        "1m": 0.1872
+        "9m": 0.1518,
+        "6m": 0.1591,
+        "3m": 0.1789,
+        "1m": 0.1859
       }
     }
   ]
