@@ -1,14 +1,14 @@
 {
-  "date": "2026-08-29",
-  "cadence": "weekly",
-  "n_signals": 10851,
-  "n_assets": 593,
+  "date": "2026-09-01",
+  "cadence": "monthly",
+  "n_signals": 10879,
+  "n_assets": 594,
   "regime": "risk-on",
   "segments": [
     {
       "segment": "prices",
       "ok": true,
-      "n": 588,
+      "n": 590,
       "source": "yfinance",
       "error": ""
     },
@@ -20,8 +20,8 @@
     {
       "segment": "strategies151",
       "ok": true,
-      "n": 8232,
-      "universe": 588
+      "n": 8260,
+      "universe": 590
     },
     {
       "segment": "themes",
@@ -48,7 +48,7 @@
     {
       "segment": "rebalance",
       "ok": true,
-      "n": 4
+      "n": 3
     },
     {
       "segment": "fomc",
@@ -65,7 +65,19 @@
     {
       "segment": "flows",
       "ok": true,
-      "n": 612
+      "n": 613
+    },
+    {
+      "segment": "edgar13f",
+      "ok": true,
+      "n": 5,
+      "source": "edgar",
+      "error": ""
+    },
+    {
+      "segment": "backtest",
+      "ok": true,
+      "n": 42
     },
     {
       "segment": "history+hitrate",
