@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-08-31",
+  "as_of": "2026-09-01",
   "themes": {
     "dollar": {
-      "signal_score": 53.0,
-      "composite_z": 0.237,
-      "real_yield_z": 1.458,
+      "signal_score": 54.6,
+      "composite_z": 0.368,
+      "real_yield_z": 1.528,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 71.9,
+      "signal_score": 72.0,
       "components": {
-        "DGS30": 1.668,
+        "DGS30": 1.693,
         "THREEFYTP10": 1.983,
         "GFDEBTN": 1.603
       },
@@ -18,13 +18,13 @@
     },
     "yen": {
       "intervention_risk": "Low",
-      "usdjpy_z": 1.605,
-      "usdjpy_pct_move_3m": -0.0228,
-      "us_real_yield_z": 1.458,
+      "usdjpy_z": 1.655,
+      "usdjpy_pct_move_3m": -0.0162,
+      "us_real_yield_z": 1.528,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.1069,
+      "semis_relative_strength_3m": -0.132,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -120,7 +120,7 @@
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.3179,
+      "btc_trend_3m": 0.2985,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
@@ -161,6 +161,15 @@
           "archive_date": "2026-08-12",
           "summary": "For teachers of economics, one familiar metaphor about tariffs is “rocks in the harbor.” Companies and countries go to considerable trouble and expense to build docks and interconnected transportation structure, and even dredge the harbor to assure smooth transit for vessels. Having done all that, it would seem peculia…",
           "category": "Fact"
+        },
+        {
+          "title": "Tariff Threats, Macroeconomic Expectations, and Policy Communication Strategies: Experiments Based on a Multi-Agent System",
+          "source": "arXiv q-fin (Quant Finance)",
+          "link": "https://arxiv.org/abs/2608.30522",
+          "published": "Tue, 01 Sep 2026 00:00:00 -0400",
+          "archive_date": "2026-09-01",
+          "summary": "arXiv:2608.30522v1 Announce Type: new Abstract: Tariff threats can move household beliefs before policy is enacted, yet their rapidly changing language is difficult to study with conventional surveys. We build a multi-agent system that turns 300 households from the Michigan Surveys of Consumers into persistent large-la…",
+          "category": "Interpretation"
         },
         {
           "title": "10 Sunday Reads",
@@ -224,15 +233,6 @@
           "archive_date": "2026-08-22",
           "summary": "Beef prices are back in the news today after President Trump announced a plan to import 300,000 tons of ground beef over the next three months exempt from tariffs and at 25% below market prices. Earlier this year, it was looking like ground beef prices would eclipse $7/lb by the summer, but as shown below, […] The post…",
           "category": "Interpretation"
-        },
-        {
-          "title": "Only Protectionism Can Safeguard European Industry",
-          "source": "Project Syndicate (Economics)",
-          "link": "https://www.project-syndicate.org/commentary/tariffs-are-needed-to-protect-eu-manufacturing-from-china-by-desmond-lachman-2026-08",
-          "published": "Fri, 21 Aug 2026 10:48:38 GMT",
-          "archive_date": "2026-08-22",
-          "summary": "While economic rebalancing by China would be good for everyone, Chinese leaders have given little indication that they are moving decisively in this direction. With China's ever-increasing exports threatening to decimate European manufacturing, the EU has little choice but to embrace tariffs.",
-          "category": "Fact"
         }
       ],
       "framework_note": "Every item below is EVIDENCE (an observable fact or a source's reported claim), not a conclusion. Where an item implies a strategic motive (for example, characterizations of US interest in Greenland as partly resource-driven), treat that as one HYPOTHESIS among several plausible explanations (which can include, and are not limited to, security policy, territorial claims context, or Arctic shipping-route strategy) — this board deliberately does not pick a winner among competing explanations for a geopolitical development; it surfaces the sourced claims so the reader can weigh them."
