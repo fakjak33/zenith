@@ -251,6 +251,14 @@ def merge(existing: dict, incoming: dict, *, today: str | None = None) -> dict:
         out["historical_affiliations"] = hist
         out["current_affiliation"] = new_aff
         changed = True
+    elif new_aff and not old_aff:
+        # FIRST affiliation. This branch is not an afterthought: because
+        # `current_affiliation` is excluded from the general field loop below
+        # (its history handling has to happen here), omitting it meant a person
+        # recorded with no employer could never gain one — every later source
+        # naming their firm was silently discarded.
+        out["current_affiliation"] = new_aff
+        changed = True
 
     for key in FIELDS:
         if key in ("current_affiliation", "historical_affiliations",

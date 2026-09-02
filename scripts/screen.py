@@ -914,6 +914,82 @@ def screen_index() -> None:
     except Exception as exc:
         check(False, f"index: export failed — {type(exc).__name__}: {exc}")
 
+    # --- Phase 2: podcast intelligence -------------------------------------
+    pod = index_load("podcasts", {})
+    if pod.get("shows"):
+        from zenith.index import guests as ig
+        from zenith.index import podcasts as ipc
+
+        shows = pod["shows"]
+        check(len(shows) == len(ipc.PODCASTS),
+              f"index: all {len(ipc.PODCASTS)} registered podcasts harvested ({len(shows)})")
+        dead = [s["podcast"] for s in shows if not s.get("ok")]
+        if dead:
+            warn(f"index: podcast feed(s) returned nothing: {dead}")
+        thin = [s["podcast"] for s in shows if s.get("ok") and s["episodes"] < 50]
+        if thin:
+            warn(f"index: suspiciously shallow archive(s) — a site feed capped at "
+                 f"10 posts looks like this: {thin}")
+
+        # Every declared extraction pattern must actually exist, or the show
+        # silently degrades to the loose generic fallback (a real bug once).
+        phantom = [(p.name, s) for p in ipc.PODCASTS for s in p.patterns
+                   if s not in ig.STRATEGIES]
+        check(not phantom, f"index: every declared podcast pattern exists ({phantom[:3]})")
+
+        # Hosts must never be recorded as guests of their own show.
+        guests = pod.get("guests") or {}
+        host_leak = []
+        for p in ipc.PODCASTS:
+            hosts = {h.lower() for h in p.hosts}
+            for key, prof in guests.items():
+                if key in hosts and p.name in (prof.get("podcasts") or []):
+                    host_leak.append((p.name, prof.get("name")))
+        check(not host_leak, f"index: no host recorded as their own guest ({host_leak[:3]})")
+
+        # Nothing below the confidence bar may have become a directory entry.
+        # (Guests already in the catalog from the curated seed are exempt — they
+        # were verified by hand, not by the parser.)
+        harvest_names = {e["name"].lower() for e in ents
+                         if "harvest" in str(e.get("provenance", ""))
+                         and "seed list" not in str(e.get("provenance", ""))}
+        leaked = sorted(key for key, g in guests.items()
+                        if not ig.meets_threshold(g.get("confidence", "low"))
+                        and key in harvest_names)
+        check(not leaked,
+              f"index: no low-confidence guest reached the directory ({leaked[:4]})")
+
+        # Every guest name still has to look like a person.
+        malformed = [g.get("name") for g in guests.values()
+                     if ig.meets_threshold(g.get("confidence", "low"))
+                     and not ig.looks_like_person(g.get("name", ""))]
+        check(not malformed,
+              f"index: every promoted guest name parses as a person ({malformed[:4]})")
+
+        # Appearances must point at real episodes.
+        episodes = index_load("episodes", [])
+        check(len(episodes) >= 1000,
+              f"index: episode archive has {len(episodes)} episodes (expected 1000+)")
+        ep_ids = {e.get("id") for e in episodes}
+        dangling = sum(1 for g in guests.values() for a in (g.get("appearances") or [])
+                       if a.get("episode_id") and a["episode_id"] not in ep_ids)
+        check(not dangling, f"index: no appearance points at a missing episode ({dangling})")
+
+        # A person's affiliation must not itself be a person's name.
+        person_firms = [(e["name"], e["current_affiliation"]) for e in ents
+                        if e.get("entity_type") == "person" and e.get("current_affiliation")
+                        and e["current_affiliation"].lower() in
+                        {x["name"].lower() for x in ents if x.get("entity_type") == "person"}]
+        check(not person_firms,
+              f"index: no person recorded as another person's employer ({person_firms[:3]})")
+
+        cov = {s["podcast"]: s["coverage"] for s in shows}
+        print(f"       podcasts: {len(shows)} shows · {pod.get('episodes', 0)} episodes · "
+              f"{pod.get('guests_promoted', 0)}/{pod.get('guests_total', 0)} guests promoted · "
+              f"coverage {min(cov.values()):.0%}-{max(cov.values()):.0%}")
+    else:
+        warn("index: no podcast harvest yet (run `--action podcasts`)")
+
     # --- staleness ---------------------------------------------------------
     if status.get("date"):
         age = (date.today() - date.fromisoformat(status["date"])).days

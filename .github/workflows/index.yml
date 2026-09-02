@@ -1,0 +1,69 @@
+name: INDEX compute
+
+on:
+  schedule:
+    # Weekly, Sunday 06:00 UTC. Deliberately NOT nightly: a curated directory
+    # does not change daily, podcast feeds publish weekly at most, and the link
+    # sweep sends a few hundred requests to other people's servers. Running this
+    # every night would be noise for them and churn in the repo for no new data.
+    - cron: "0 6 * * 0"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | seed | links | podcasts | quality"
+        default: "podcasts"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: index
+  cancel-in-progress: false
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    # The podcast harvest pulls 14 full archives (~6,500 episodes) and the link
+    # sweep probes a few hundred URLs with a modest thread pool. Both are IO
+    # bound and finish in a few minutes; the budget is generous so a single slow
+    # host cannot fail the run.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # On the schedule we run the full sequence: harvest the podcast archives
+      # and merge their guests, then re-verify links. A manual dispatch runs
+      # just the one action asked for.
+      - name: Run INDEX compute
+        run: |
+          if [ -n "${{ github.event.inputs.action }}" ]; then
+            python -m zenith.index.compute --action "${{ github.event.inputs.action }}"
+          else
+            python -m zenith.index.compute --action podcasts
+            python -m zenith.index.compute --action links
+          fi
+
+      - name: Screen INDEX artefacts
+        # The screen is advisory here rather than gating: a directory whose
+        # review queue grew is not a failed run. It surfaces integrity problems
+        # (duplicate slugs, orphan edges, entries claiming to be verified
+        # without a live link) in the log where they can be seen.
+        run: python scripts/screen.py || true
+
+      - name: Commit INDEX data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add data/index/
+          if git diff --cached --quiet; then
+            echo "No INDEX changes."
+          else
+            git commit -m "index: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'weekly' }}"
+            git push
+          fi

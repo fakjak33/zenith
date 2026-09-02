@@ -28,10 +28,12 @@ from ..config import THEME
 from ..ui_theme import help_badge, key_findings, section, stamp
 from . import DISCLAIMER, load
 from . import export as idx_export
+from . import guests as idx_guests
 from . import quality as idx_quality
 from . import taxonomy as tx
 
-SUBVIEWS = ["Overview", "Directory", "Entity detail", "Taxonomy", "Data management"]
+SUBVIEWS = ["Overview", "Directory", "Entity detail", "Podcasts", "Guests",
+            "Taxonomy", "Data management"]
 
 _FINDINGS = [
     {"stat": "Every link is checked by an actual HTTP request, and a site that blocks "
@@ -52,8 +54,16 @@ _STATE_COLORS = {"verified": THEME.teal, "updated": THEME.navy, "new": THEME.min
 
 @st.cache_data(ttl=600, show_spinner=False)
 def _artefacts(cache_bust: str = "") -> dict:
+    # `episodes` is deliberately NOT loaded here: it is thousands of rows and
+    # only the Podcasts view needs it, so it gets its own cached loader.
     return {"entities": load("entities", []), "relationships": load("relationships", []),
-            "status": load("status", {}), "links": load("links", {})}
+            "status": load("status", {}), "links": load("links", {}),
+            "podcasts": load("podcasts", {})}
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def _episodes(cache_bust: str = "") -> list[dict]:
+    return load("episodes", [])
 
 
 def today_badge() -> str | None:
@@ -133,6 +143,32 @@ def _overview(art: dict) -> None:
          "color": THEME.navy, "sub": "since last verification"},
     ]), unsafe_allow_html=True)
 
+    # The catalog has two populations with very different verification stories,
+    # and reporting one number for both is misleading: the curated entries were
+    # hand-written with checked URLs, while the harvested ones are names parsed
+    # out of podcast metadata that nobody has verified yet. Showing "1,976 need
+    # review" without that split reads as decay when it is actually just the
+    # shape of a large automated import.
+    def _discovered(ent: dict) -> bool:
+        prov = str(ent.get("provenance", ""))
+        return ("harvest" in prov or "prior manual compilation" in prov) and \
+               "seed list" not in prov
+
+    harvested = [e for e in ents if _discovered(e)]
+    curated = [e for e in ents if not _discovered(e)]
+    if harvested:
+        cur_needs = sum(1 for e in curated if e.get("lifecycle_state") == "needs_review")
+        st.markdown(uc.note_strip("Two populations, verified differently", [
+            f"{len(curated):,} CURATED entries from the supplied resource list — "
+            f"hand-written, link-checked, {cur_needs} still needing review.",
+            f"{len(harvested):,} DISCOVERED entries from the podcast archives and the "
+            "prior compilation — real names parsed from publisher metadata, but no "
+            "website or biography verified, so all of them are flagged for review by "
+            "design rather than by failure.",
+            "Filter the Directory by Status or search by provenance to work with "
+            "either population on its own.",
+        ]), unsafe_allow_html=True)
+
     ls = status.get("links", {})
     if ls.get("checked"):
         # These count distinct URLs, whereas "Links live" above counts ENTRIES.
@@ -176,6 +212,25 @@ def _overview(art: dict) -> None:
         chips = [uc.chip(e["name"], color=THEME.teal, sub=e["zenith_source"])
                  for e in ents if e.get("zenith_source")]
         st.markdown("".join(chips), unsafe_allow_html=True)
+
+    pod = art.get("podcasts") or {}
+    if pod.get("shows"):
+        st.markdown(section("Podcast intelligence", 1,
+                            help="Full archives of the 14 monitored shows, with guests "
+                                 "parsed from episode titles and show notes."),
+                    unsafe_allow_html=True)
+        total_eps = sum(s["episodes"] for s in pod["shows"])
+        st.markdown(uc.numeric_slab([
+            {"label": "Shows monitored", "value": f"{len(pod['shows'])}", "color": THEME.text},
+            {"label": "Episodes", "value": f"{total_eps:,}", "color": THEME.teal,
+             "sub": "full archives, not recent items"},
+            {"label": "Guests in directory", "value": f"{pod.get('guests_promoted', 0):,}",
+             "color": THEME.mint, "sub": f"of {pod.get('guests_total', 0):,} parsed"},
+            {"label": "Appearances", "value": f"{pod.get('records', 0):,}",
+             "color": THEME.navy, "sub": "guest-episode links"},
+        ]), unsafe_allow_html=True)
+        st.caption("See the Podcasts and Guests views for per-show coverage, the guest "
+                   "database and newly detected episodes.")
 
     recent = sorted(ents, key=lambda e: str(e.get("date_added") or ""), reverse=True)[:12]
     if recent:
@@ -427,6 +482,227 @@ def _entity_detail(art: dict) -> None:
                     unsafe_allow_html=True)
 
 
+# ----------------------------------------------------------------- podcasts --
+def _podcasts(art: dict) -> None:
+    doc = art["podcasts"]
+    shows = doc.get("shows") or []
+    if not shows:
+        st.info("No podcast harvest yet. Run "
+                "`python -m zenith.index.compute --action podcasts` to pull the "
+                "monitored archives and extract their guests.")
+        return
+
+    total_eps = sum(s["episodes"] for s in shows)
+    ok_feeds = sum(1 for s in shows if s.get("ok"))
+    st.markdown(section("Monitored podcast archives", 0,
+                        help="Every feed was resolved through Apple's keyless iTunes "
+                             "Search API and then probed. These are full archives, not "
+                             "the latest few episodes."),
+                unsafe_allow_html=True)
+    st.markdown(uc.numeric_slab([
+        {"label": "Shows", "value": f"{len(shows)}", "color": THEME.text,
+         "sub": f"{ok_feeds} feeds healthy"},
+        {"label": "Episodes", "value": f"{total_eps:,}", "color": THEME.teal,
+         "sub": "harvested and stored"},
+        {"label": "Guests found", "value": f"{doc.get('guests_total', 0):,}",
+         "color": THEME.mint, "sub": f"{doc.get('guests_promoted', 0):,} confident enough "
+                                     "to enter the directory"},
+        {"label": "Appearances", "value": f"{doc.get('records', 0):,}",
+         "color": THEME.navy, "sub": "guest-episode links"},
+    ]), unsafe_allow_html=True)
+
+    st.markdown(uc.note_strip("How to read guest coverage", [
+        "Coverage is the share of a show's episodes where a guest could be parsed from "
+        "the title or notes. A low number means editorial titles, not a broken feed — "
+        "Odd Lots names its guest in the title far less often than Alpha Exchange does.",
+        "Only guests confident enough to clear the promotion bar become directory "
+        "entries. The rest stay recorded against their episode.",
+        "Cross-show guests are people who have appeared on more than one monitored "
+        "podcast — usually the most interesting names in the graph.",
+    ]), unsafe_allow_html=True)
+
+    df = pd.DataFrame([{
+        "Podcast": s["podcast"], "Episodes": s["episodes"],
+        "First": s.get("earliest", ""), "Latest": s.get("latest", ""),
+        "With a guest": s["episodes_with_guest"],
+        "Coverage": s["coverage"],
+        "Unique guests": s["unique_guests"],
+        "Cross-show": s["cross_show_guests"],
+        "Feed": "ok" if s.get("ok") else (s.get("error") or "failed"),
+    } for s in shows])
+    st.dataframe(
+        df.style.format({"Coverage": "{:.0%}"}).map(
+            lambda v: uc.grad_teal(v, 1.0), subset=["Coverage"]),
+        use_container_width=True, hide_index=True, height=min(620, 36 * len(df) + 40),
+        column_config=uc.colcfg(df.columns, {
+            "Episodes": "Episodes harvested from the show's full archive.",
+            "Coverage": "Share of episodes where a guest could be parsed.",
+            "Cross-show": "Guests who also appear on another monitored show.",
+            "Feed": "Health of the RSS feed on the last harvest.",
+        }))
+
+    st.markdown(section("Show detail", 3), unsafe_allow_html=True)
+    names = [s["podcast"] for s in shows]
+    picked = st.selectbox("Podcast", names, key="idx_pod_pick")
+    show = next(s for s in shows if s["podcast"] == picked)
+
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        if show.get("note"):
+            st.caption(show["note"])
+        st.markdown(f"**Feed:** `{show['feed_url']}`")
+        st.caption(f"{show['episodes']:,} episodes · {show.get('earliest', '?')} → "
+                   f"{show.get('latest', '?')} · {show['unique_guests']} unique guests "
+                   f"· {show['coverage']:.0%} guest coverage")
+        if show.get("hosts"):
+            st.markdown("**Hosts:** " + ", ".join(show["hosts"]))
+            st.caption("Hosts are excluded from guest extraction — they are the show's "
+                       "own voice, and are linked to it by a 'hosts' edge instead.")
+    with c2:
+        if not show.get("ok"):
+            st.markdown(uc.state_banner(THEME.coral, "FEED",
+                                        show.get("error") or "failed"),
+                        unsafe_allow_html=True)
+
+    guests = doc.get("guests") or {}
+    on_show = [g for g in guests.values() if picked in (g.get("podcasts") or [])]
+    on_show.sort(key=lambda g: (-g.get("n_appearances", 0), g.get("name", "")))
+    if on_show:
+        st.markdown(section(f"Guests on {picked} ({len(on_show)})", 4),
+                    unsafe_allow_html=True)
+        gdf = pd.DataFrame([{
+            "Guest": g["name"],
+            "Appearances": g.get("n_appearances", 0),
+            "Also on": ", ".join(p for p in g.get("podcasts", []) if p != picked),
+            "Affiliation": g.get("current_firm", ""),
+            "Role": g.get("role", ""),
+            "Most recent": (g.get("appearances") or [{}])[0].get("published", ""),
+            "Confidence": g.get("confidence", ""),
+        } for g in on_show[:400]])
+        st.dataframe(gdf, use_container_width=True, hide_index=True,
+                     height=min(560, 36 * len(gdf) + 40))
+        if len(on_show) > 400:
+            st.caption(f"Showing the 400 most frequent of {len(on_show)} guests.")
+
+    eps = [e for e in _episodes(str(doc.get("date", ""))) if e.get("podcast") == picked]
+    eps.sort(key=lambda e: e.get("published", ""), reverse=True)
+    if eps:
+        st.markdown(section("Most recent episodes", 5), unsafe_allow_html=True)
+        st.dataframe(pd.DataFrame([{
+            "Published": e.get("published", ""), "Episode": e.get("title", ""),
+            "Link": e.get("url", ""),
+        } for e in eps[:25]]), use_container_width=True, hide_index=True,
+            height=min(480, 36 * min(len(eps), 25) + 40),
+            column_config={"Link": st.column_config.LinkColumn("Link", display_text="open ↗")})
+
+
+# ------------------------------------------------------------------- guests --
+def _guests(art: dict) -> None:
+    doc = art["podcasts"]
+    guests = doc.get("guests") or {}
+    if not guests:
+        st.info("No podcast harvest yet. Run "
+                "`python -m zenith.index.compute --action podcasts`.")
+        return
+
+    promoted = [g for g in guests.values()
+                if idx_guests.meets_threshold(g.get("confidence", "low"))]
+    multi = [g for g in promoted if g.get("n_podcasts", 0) >= 2]
+    with_firm = [g for g in promoted if g.get("current_firm")]
+
+    st.markdown(section("The guest database", 0,
+                        help="Built by parsing the title and show notes of every "
+                             "harvested episode. Every field traces to text the "
+                             "publisher wrote — nothing is inferred."),
+                unsafe_allow_html=True)
+    st.markdown(uc.numeric_slab([
+        {"label": "Guests", "value": f"{len(promoted):,}", "color": THEME.teal,
+         "sub": f"of {len(guests):,} parsed"},
+        {"label": "On 2+ shows", "value": f"{len(multi):,}", "color": THEME.mint,
+         "sub": "cross-show researchers"},
+        {"label": "With an affiliation", "value": f"{len(with_firm):,}",
+         "color": THEME.navy, "sub": "firm stated in metadata"},
+        {"label": "Appearances", "value": f"{doc.get('records', 0):,}",
+         "color": THEME.mustard, "sub": "guest-episode links"},
+    ]), unsafe_allow_html=True)
+
+    q = st.text_input("Search guests", "", key="idx_guest_q",
+                      placeholder="name, firm or podcast")
+    c1, c2 = st.columns([1, 1])
+    only_multi = c1.checkbox("Only guests on 2+ shows", value=False, key="idx_guest_multi")
+    min_apps = c2.slider("Minimum appearances", 1, 10, 1, key="idx_guest_min")
+
+    rows = promoted
+    if q.strip():
+        needle = q.strip().lower()
+        rows = [g for g in rows
+                if needle in g["name"].lower()
+                or needle in str(g.get("current_firm", "")).lower()
+                or any(needle in p.lower() for p in g.get("podcasts", []))]
+    if only_multi:
+        rows = [g for g in rows if g.get("n_podcasts", 0) >= 2]
+    rows = [g for g in rows if g.get("n_appearances", 0) >= min_apps]
+    rows.sort(key=lambda g: (-g.get("n_appearances", 0), g.get("name", "")))
+
+    st.caption(f"{len(rows):,} of {len(promoted):,} guests match.")
+    st.session_state["idx_guest_names"] = [g["name"] for g in rows]
+    if not rows:
+        st.info("No guests match those filters.")
+        return
+
+    gdf = pd.DataFrame([{
+        "Guest": g["name"],
+        "Appearances": g.get("n_appearances", 0),
+        "Shows": g.get("n_podcasts", 0),
+        "Podcasts": ", ".join(g.get("podcasts", [])),
+        "Affiliation": g.get("current_firm", ""),
+        "Role": g.get("role", ""),
+        "Most recent": (g.get("appearances") or [{}])[0].get("published", ""),
+    } for g in rows[:500]])
+    st.dataframe(gdf, use_container_width=True, hide_index=True,
+                 height=min(620, 36 * len(gdf) + 40),
+                 column_config=uc.colcfg(gdf.columns, {
+                     "Shows": "How many different monitored podcasts this person has "
+                              "appeared on.",
+                     "Affiliation": "Firm as stated in the episode metadata — not "
+                                    "independently verified.",
+                 }))
+    if len(rows) > 500:
+        st.caption(f"Showing the 500 most frequent of {len(rows):,}.")
+
+    st.markdown(section("Guest detail", 3), unsafe_allow_html=True)
+    pick = st.selectbox("Guest", [g["name"] for g in rows[:500]], key="idx_guest_pick")
+    prof = next(g for g in rows if g["name"] == pick)
+    st.caption(" · ".join(x for x in (
+        f"{prof.get('n_appearances', 0)} appearance(s)",
+        f"{prof.get('n_podcasts', 0)} show(s)",
+        prof.get("role", ""), prof.get("current_firm", ""),
+        f"confidence {prof.get('confidence', '')}") if x))
+    if prof.get("past_firms"):
+        st.markdown("**Previously associated with:** " + ", ".join(prof["past_firms"]))
+    apps = prof.get("appearances") or []
+    if apps:
+        st.dataframe(pd.DataFrame([{
+            "Published": a.get("published", ""), "Podcast": a.get("podcast", ""),
+            "Episode": a.get("title", ""), "Link": a.get("url", ""),
+        } for a in apps]), use_container_width=True, hide_index=True,
+            height=min(420, 36 * len(apps) + 40),
+            column_config={"Link": st.column_config.LinkColumn("Link", display_text="open ↗")})
+        st.caption("Appearances shown here are the most recent stored on the profile; "
+                   "the full archive lives in episodes.json.")
+
+    new_eps = art["status"].get("new_episodes") or []
+    if new_eps:
+        st.markdown(section("Newly detected episodes", 5,
+                            help="Episodes that appeared in a feed for the first time on "
+                                 "the most recent harvest."), unsafe_allow_html=True)
+        st.dataframe(pd.DataFrame([{
+            "Published": e.get("published", ""), "Podcast": e.get("podcast", ""),
+            "Episode": e.get("title", ""),
+        } for e in new_eps]), use_container_width=True, hide_index=True,
+            height=min(360, 36 * len(new_eps) + 40))
+
+
 # ----------------------------------------------------------------- taxonomy --
 def _taxonomy(art: dict) -> None:
     ents = art["entities"]
@@ -590,6 +866,10 @@ def render() -> None:
         _directory(art)
     elif sub == "Entity detail":
         _entity_detail(art)
+    elif sub == "Podcasts":
+        _podcasts(art)
+    elif sub == "Guests":
+        _guests(art)
     elif sub == "Taxonomy":
         _taxonomy(art)
     else:
