@@ -342,6 +342,34 @@ def test_export_filename_shape():
     assert export.filename("csv", "2026-09-01") == "zenith_master_list_2026-09-01.csv"
 
 
+# ------------------------------------------------------------------ compute --
+def test_non_rebuilding_actions_preserve_the_import_audit(tmp_path, monkeypatch):
+    """REGRESSION: `links` and `quality` do not rebuild the catalog, so they have
+    no dedupe report of their own. Emitting an empty one DELETED the record of
+    what the last real import did, and the Data Management view then claimed no
+    merges had ever been made. A CI run of `--action quality` stripped 87 lines
+    of audit trail out of status.json exactly this way."""
+    from zenith import config as cfg
+    import zenith.index as zidx
+    from zenith.index import compute as idx_compute
+
+    files = {k: tmp_path / f"{k}.json" for k in cfg.INDEX_FILES}
+    monkeypatch.setattr(cfg, "INDEX_FILES", files)
+    monkeypatch.setattr(zidx, "INDEX_FILES", files)
+
+    ent = m.make("Acme", url="https://acme.test", description="d",
+                 insight_types=["research"], provenance="test")
+    zidx.save("entities", [ent])
+    zidx.save("relationships", [])
+    zidx.save("status", {"dedupe_report": [
+        {"action": "merged", "primary": "A", "other": "B", "reason": "same entity"}]})
+
+    status = idx_compute.run("quality")
+    assert status["action"] == "quality"
+    assert len(status["dedupe_report"]) == 1, "the import audit must survive"
+    assert status["dedupe_report"][0]["primary"] == "A"
+
+
 # ---------------------------------------------------------------------- seed --
 def test_seed_builds_a_coherent_catalog():
     ents, rels = seed.build()

@@ -164,8 +164,14 @@ def run(action: str = "auto") -> dict:
     else:
         entities = load("entities", [])
         rels = load("relationships", [])
-        report = []
         link_results = load("links", {})
+        # CARRY THE IMPORT AUDIT FORWARD. `links` and `quality` do not rebuild
+        # the catalog, so they have no dedupe report of their own — but emitting
+        # an empty one DELETES the record of what the last real import did, and
+        # the Data Management view then claims no merges were ever made. A CI
+        # run of `--action quality` stripped 87 lines of audit trail from
+        # status.json exactly this way.
+        report = (load("status", {}) or {}).get("dedupe_report") or []
 
     if action == "links":
         if not entities:
