@@ -140,6 +140,36 @@ def test_clean_firm_normalises_real_firms():
     assert guests.clean_firm("Research Affiliates") == "Research Affiliates"
 
 
+def test_institutional_names_with_connectives_survive():
+    """REGRESSION: capping firms at six tokens and demanding every token be
+    capitalised rejected "MIT Sloan School of Management", "Federal Reserve Bank
+    of Chicago" and every other institution whose name contains a lowercase
+    connective — silently dropping 26 real affiliations."""
+    for firm in ("MIT Sloan School of Management",
+                 "Federal Reserve Bank of Chicago",
+                 "Stanford Graduate School of Business"):
+        assert guests.clean_firm(firm, positional=True) == firm
+
+
+def test_eponymous_firms_with_ampersands_survive():
+    """"Zelman & Associates" and "Horowitz & Company" are firms, not prose."""
+    for firm in ("Zelman & Associates", "Horowitz & Company",
+                 "Rosenberg Research & Associates Inc"):
+        assert guests.clean_firm(firm, positional=True) == firm
+
+
+def test_a_role_is_never_an_employer():
+    """"Author" reached the catalog as an ORGANISATION entity before the role
+    vocabulary covered it."""
+    for role in ("Author", "Journalist", "Trader", "Managing Director"):
+        assert guests.clean_firm(role, positional=True) == ""
+
+
+def test_narrative_show_notes_are_not_an_employer():
+    assert guests.clean_firm("Max Wiethe sits down with Capelight Partners",
+                             positional=True) == ""
+
+
 def test_positional_mode_allows_single_word_firms():
     """REGRESSION: Transtrend, Winton and Principalium are all real firms in this
     catalog and were being dropped for being one word long."""

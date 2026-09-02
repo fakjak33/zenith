@@ -112,6 +112,12 @@ _VERBISH_SUFFIXES = ("ing", "tion", "sion", "ment", "ness")
 # Apostrophes are legitimate only in these name prefixes.
 _APOSTROPHE_OK = ("o'", "o’", "d'", "d’", "l'", "l’")
 
+# Lowercase words that legitimately sit INSIDE an organisation's name.
+# "&" is included because eponymous firms are full of it: "Zelman &
+# Associates", "Rosenberg Research & Associates", "Horowitz & Company".
+_CONNECTIVES = {"of", "and", "for", "the", "at", "in", "on", "de", "du", "van",
+                "&", "+"}
+
 # Strip characters commonly left clinging to a parsed fragment.
 _EDGE_CHARS = " .,:;–—- ‘’“”'\""
 
@@ -201,6 +207,7 @@ _PROSE_WORDS = {
     "that", "these", "those", "speak", "speaks", "joins", "join", "joined",
     "discuss", "discusses", "talks", "talk", "explains", "explain", "returns",
     "welcome", "welcomes", "episode", "today", "here", "back", "about", "why",
+    "sits", "sat", "down", "with", "chats", "chat", "interviews", "hosts",
     "how", "what", "who", "where", "when", "is", "are", "was", "were", "has",
     "have", "had", "will", "would", "can", "could", "also", "just", "very",
 }
@@ -274,15 +281,20 @@ def clean_firm(text: str, positional: bool = False) -> str:
     if not raw or not raw[:1].isupper():
         return ""
     toks = raw.split()
-    if not 1 <= len(toks) <= 6:
+    # Institutional names run long and contain lowercase connectives:
+    # "Federal Reserve Bank of Chicago", "MIT Sloan School of Management",
+    # "Stanford Graduate School of Business". Capping at six tokens and
+    # demanding every token be capitalised rejected all of them.
+    if not 1 <= len(toks) <= 8:
         return ""
     if {t.lower().strip(".,'’") for t in toks} & _PROSE_WORDS:
         return ""
     if positional:
-        # Position already established this is an organisation; just require it
-        # to be capitalised and not obviously a sentence.
+        # Position already established this is an organisation; just require the
+        # SUBSTANTIVE tokens to be capitalised. Lowercase connectives are normal
+        # inside an institution's name and must not disqualify it.
         return raw if all(t[:1].isupper() or t.lower() in _PARTICLES
-                          for t in toks) else ""
+                          or t.lower() in _CONNECTIVES for t in toks) else ""
     if looks_like_person(raw):
         return ""
     return raw if looks_like_org(raw) else ""
