@@ -1,8 +1,8 @@
 {
-  "date": "2026-08-29",
+  "date": "2026-09-02",
   "state": "POST",
   "month": "2026-08",
-  "tau_offset": 0,
+  "tau_offset": 2,
   "days_to_open": 0,
   "days_to_close_classic": 0,
   "days_to_close_t1": 0,
@@ -17,12 +17,39 @@
     "tom_start": "2026-08-31",
     "tom_end": "2026-09-03"
   },
-  "calendar_check": "n/a",
+  "calendar_check": "ok",
+  "n_months": 26,
   "segments": [
     {
-      "segment": "gate",
+      "segment": "universe",
       "ok": true,
-      "note": "non-trading day"
+      "source": "vanguard_vone",
+      "n": 1024,
+      "weights_source": "vone"
+    },
+    {
+      "segment": "prices(2026-08)",
+      "ok": true,
+      "n": 102,
+      "requested": 102,
+      "error": ""
+    },
+    {
+      "segment": "reconcile(2026-08)",
+      "ok": true,
+      "state": "post"
+    },
+    {
+      "segment": "prices(spy-max)",
+      "ok": true,
+      "n": 1,
+      "requested": 1,
+      "error": ""
+    },
+    {
+      "segment": "tom_longrun",
+      "ok": true,
+      "n": 402
     }
   ]
 }

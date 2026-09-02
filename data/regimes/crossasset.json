@@ -1,37 +1,37 @@
 {
-  "as_of": "2026-08-29",
+  "as_of": "2026-09-02",
   "trends": {
     "SPY": {
-      "trend_3m": 0.022,
+      "trend_3m": 0.0126,
       "direction": "up"
     },
     "TLT": {
-      "trend_3m": -0.0193,
+      "trend_3m": -0.0292,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": 0.0131,
-      "direction": "up"
+      "trend_3m": -0.0273,
+      "direction": "down"
     },
     "DBC": {
-      "trend_3m": 0.0468,
+      "trend_3m": 0.0541,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.013,
+      "trend_3m": 0.0126,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": 0.0348,
+      "trend_3m": 0.0125,
       "direction": "up"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 2.003,
-    "defensives_avg": 0.898,
+    "cyclicals_avg": 1.652,
+    "defensives_avg": 0.762,
     "cyclicals_leading": true,
-    "as_of": "2026-08-28"
+    "as_of": "2026-09-02"
   },
   "confirmation": {
     "checks": [
@@ -44,14 +44,14 @@
       {
         "check": "Small-cap vs Large-cap (risk appetite proxy)",
         "expects": "small-caps outperforming",
-        "observed": "small-caps outperforming",
-        "confirms": true
+        "observed": "large-caps outperforming",
+        "confirms": false
       },
       {
         "check": "Gold trend (inflation-hedge proxy)",
         "expects": "falling",
-        "observed": "rising",
-        "confirms": false
+        "observed": "falling",
+        "confirms": true
       },
       {
         "check": "Long Treasuries (rate-expectation proxy)",
@@ -66,9 +66,9 @@
   },
   "divergences": [
     {
-      "flag": "Gold trend (inflation-hedge proxy)",
-      "classifier_expects": "falling",
-      "market_shows": "rising",
+      "flag": "Small-cap vs Large-cap (risk appetite proxy)",
+      "classifier_expects": "small-caps outperforming",
+      "market_shows": "large-caps outperforming",
       "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
     },
     {

@@ -1,30 +1,30 @@
 {
-  "as_of": "2026-08-29",
+  "as_of": "2026-09-02",
   "themes": {
     "dollar": {
-      "signal_score": 53.1,
-      "composite_z": 0.246,
-      "real_yield_z": 1.486,
+      "signal_score": 54.6,
+      "composite_z": 0.368,
+      "real_yield_z": 1.546,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 72.4,
+      "signal_score": 72.2,
       "components": {
-        "DGS30": 1.704,
-        "THREEFYTP10": 2.036,
-        "GFDEBTN": 1.632
+        "DGS30": 1.717,
+        "THREEFYTP10": 2.001,
+        "GFDEBTN": 1.603
       },
       "context": "This theme distinguishes two DIFFERENT things that both increase Treasury buyback activity: (1) LIQUIDITY OPERATIONS — the Treasury smoothing the maturity profile of outstanding debt, which is routine market-structure management and not obviously yield-suppressive; versus (2) actual FINANCIAL REPRESSION — policy that holds real yields below their market-clearing level to erode the real value of debt. The August 2026 increase in long-duration buybacks (to at least $4bn, following the 30y yield reaching a multi-year high) has been read both ways by market participants; this score does not adjudicate which interpretation is correct, it tracks the term premium and long-yield trend components that either interpretation would move."
     },
     "yen": {
       "intervention_risk": "Low",
-      "usdjpy_z": 1.636,
-      "usdjpy_pct_move_3m": -0.002,
-      "us_real_yield_z": 1.486,
+      "usdjpy_z": 1.655,
+      "usdjpy_pct_move_3m": -0.0162,
+      "us_real_yield_z": 1.546,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": null,
+      "semis_relative_strength_3m": -0.1579,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -55,6 +55,15 @@
           "category": "Fact"
         },
         {
+          "title": "America is still poised for a data center boom",
+          "source": "Marginal Revolution",
+          "link": "https://marginalrevolution.com/marginalrevolution/2026/09/america-is-still-poised-for-a-data-center-boom.html?utm_source=rss&utm_medium=rss&utm_campaign=america-is-still-poised-for-a-data-center-boom",
+          "published": "Wed, 02 Sep 2026 04:33:26 +0000",
+          "archive_date": "2026-09-02",
+          "summary": "Eric Levitz, via Matt Yglesias. The post America is still poised for a data center boom appeared first on Marginal REVOLUTION.",
+          "category": "Fact"
+        },
+        {
           "title": "ERCOT Prices Remain Steady Despite Record Load",
           "source": "FactSet Insight",
           "link": "https://insight.factset.com/ercot-prices-remain-steady-despite-record-load",
@@ -82,13 +91,13 @@
           "category": "Interpretation"
         },
         {
-          "title": "The AI Boom and the Future of Finance",
-          "source": "Project Syndicate (Economics)",
-          "link": "https://www.project-syndicate.org/onpoint/the-ai-boom-and-the-future-of-finance",
-          "published": "Thu, 30 Jul 2026 09:49:51 GMT",
-          "archive_date": "2026-07-31",
-          "summary": "Amid reports of mass layoffs, large-scale destruction of books, sweeping copyright violations, and severe environmental damage caused by AI data centers, an increasingly popular refrain is that the AI bubble cannot burst soon enough. AI-related companies have gained some $27 trillion in market value since November 2022…",
-          "category": "Fact"
+          "title": "The Closer – Diesel, Data Center Construction, Job Openings – 9/1/26",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/the-closer/the-closer-diesel-data-center-construction-job-openings-9-1-26/",
+          "published": "Tue, 01 Sep 2026 21:28:18 +0000",
+          "archive_date": "2026-09-02",
+          "summary": "",
+          "category": "Interpretation"
         },
         {
           "title": "Thursday assorted links",
@@ -107,20 +116,11 @@
           "archive_date": "2026-08-21",
           "summary": "The good folks at “Our World in Data” have been putting together a data series which shows monthly spending on the “on-site work to build data centers each month, including materials and construction labor. It excludes the cost of IT hardware like servers and storage, which can account for a large share of total invest…",
           "category": "Fact"
-        },
-        {
-          "title": "FTAV’s further reading",
-          "source": "FT Alphaville",
-          "link": "https://www.ft.com/content/32f71c02-9abd-4c5b-8f74-9b31303bf386",
-          "published": "Thu, 20 Aug 2026 05:30:09 GMT",
-          "archive_date": "2026-08-21",
-          "summary": "Hyperscaler toast; Niklas Sule; the parenthesis; the stocks market; categories of contempt",
-          "category": "Fact"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.2959,
+      "btc_trend_3m": 0.2493,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
@@ -163,12 +163,21 @@
           "category": "Fact"
         },
         {
-          "title": "Trump’s New Tariffs Are an Opportunity to Fight Back",
-          "source": "Project Syndicate (Economics)",
-          "link": "https://www.project-syndicate.org/commentary/trump-tariffs-unserious-rationale-calls-for-serious-retaliation-by-joseph-e-stiglitz-2026-07",
-          "published": "Thu, 30 Jul 2026 11:47:20 GMT",
-          "archive_date": "2026-07-31",
-          "summary": "Once again, President Donald Trump is subverting domestic and international law in an effort to seize a larger fraction of global value and supply chains, and harming the US economy in the process. The longer that businesses and other governments avoid standing up to him, the greater the disaster that awaits us all.",
+          "title": "Tariff Threats, Macroeconomic Expectations, and Policy Communication Strategies: Experiments Based on a Multi-Agent System",
+          "source": "arXiv q-fin (Quant Finance)",
+          "link": "https://arxiv.org/abs/2608.30522",
+          "published": "Tue, 01 Sep 2026 00:00:00 -0400",
+          "archive_date": "2026-09-01",
+          "summary": "arXiv:2608.30522v1 Announce Type: new Abstract: Tariff threats can move household beliefs before policy is enacted, yet their rapidly changing language is difficult to study with conventional surveys. We build a multi-agent system that turns 300 households from the Michigan Surveys of Consumers into persistent large-la…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "10 Sunday Reads",
+          "source": "The Big Picture (Ritholtz)",
+          "link": "https://ritholtz.com/2026/08/10-sunday-reads-243/",
+          "published": "Sun, 30 Aug 2026 10:30:53 +0000",
+          "archive_date": "2026-08-31",
+          "summary": "Avert your eyes! My Sunday morning look at incompetency, corruption and policy failures: • ‘A Deal Written in Pencil’: Tariffs Are Erasing America’s Credibility: David Hebert on the lesson Mark Carney says Canada drew from 18 months of dealing with Washington, after the US slapped a 50% tariff on $20 billion of Canadia…",
           "category": "Fact"
         },
         {
@@ -199,24 +208,6 @@
           "category": "Interpretation"
         },
         {
-          "title": "The Tech Tide Turns",
-          "source": "Bespoke Investment Group",
-          "link": "https://www.bespokepremium.com/think-big-blog/the-tech-tide-turns/",
-          "published": "Fri, 31 Jul 2026 19:50:04 +0000",
-          "archive_date": "2026-08-01",
-          "summary": "Technology rallied 5.24% yesterday for its best day since April 9, 2025, when the sector surged 14.15% after the Tariff Tantrum. Tech had fallen 5.41% over the prior four trading days, and yesterday’s rebound recovered more than 90% of that decline. By comparison, the sector tumbled 14.37% from April 2 through April 8,…",
-          "category": "Interpretation"
-        },
-        {
-          "title": "Energy Market and Carbon Emission Spillovers in Critical Minerals Investment: A Dynamic Connectedness Approach",
-          "source": "arXiv q-fin (Quant Finance)",
-          "link": "https://arxiv.org/abs/2607.27485",
-          "published": "Fri, 31 Jul 2026 00:00:00 -0400",
-          "archive_date": "2026-07-31",
-          "summary": "arXiv:2607.27485v1 Announce Type: cross Abstract: Design/methodology/approach A time-varying parameter vector autoregression (TVP-VAR) model is employed to quantify dynamic connectedness and directional volatility spillovers using daily data from May 1, 2013, to May 2, 2023. The study isolates the impact of extreme eve…",
-          "category": "Forecast"
-        },
-        {
           "title": "Trade Deficit Upside Surprise by $18bn",
           "source": "Econbrowser",
           "link": "https://econbrowser.com/archives/2026/08/trade-deficit-upside-surprise-by-18bn",
@@ -232,6 +223,15 @@
           "published": "Fri, 21 Aug 2026 16:36:40 +0000",
           "archive_date": "2026-08-22",
           "summary": "From Bloomberg: President Donald Trump said he would allow tariff relief for some ground beef imports in a bid to lower prices for American consumers, a key concern ahead of November midterm elections. “Today, I concluded a deal to substantially lower the price of ground beef for working American families,” Trump said …",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Beef and Eggs Back Under $10",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/think-big-blog/beef-and-eggs-back-under-10/",
+          "published": "Fri, 21 Aug 2026 15:53:06 +0000",
+          "archive_date": "2026-08-22",
+          "summary": "Beef prices are back in the news today after President Trump announced a plan to import 300,000 tons of ground beef over the next three months exempt from tariffs and at 25% below market prices. Earlier this year, it was looking like ground beef prices would eclipse $7/lb by the summer, but as shown below, […] The post…",
           "category": "Interpretation"
         }
       ],

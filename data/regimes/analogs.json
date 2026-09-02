@@ -1,9 +1,9 @@
 {
-  "as_of": "2026-08-29",
+  "as_of": "2026-09-02",
   "analogs": [
     {
       "month": "2025-12-31",
-      "distance": 0.318,
+      "distance": 0.29,
       "n_shared_dimensions": 8,
       "forward": {
         "3": -0.0437,
@@ -13,27 +13,17 @@
     },
     {
       "month": "2025-09-30",
-      "distance": 0.371,
+      "distance": 0.37,
       "n_shared_dimensions": 8,
       "forward": {
         "3": 0.0267,
         "6": -0.0182,
-        "12": null
-      }
-    },
-    {
-      "month": "2026-02-28",
-      "distance": 0.376,
-      "n_shared_dimensions": 8,
-      "forward": {
-        "3": 0.1058,
-        "6": 0.13,
-        "12": null
+        "12": 0.153
       }
     },
     {
       "month": "2025-11-30",
-      "distance": 0.397,
+      "distance": 0.381,
       "n_shared_dimensions": 8,
       "forward": {
         "3": 0.0068,
@@ -43,11 +33,21 @@
     },
     {
       "month": "2025-10-31",
-      "distance": 0.43,
+      "distance": 0.422,
       "n_shared_dimensions": 8,
       "forward": {
         "3": 0.0175,
         "6": 0.0597,
+        "12": null
+      }
+    },
+    {
+      "month": "2026-02-28",
+      "distance": 0.425,
+      "n_shared_dimensions": 8,
+      "forward": {
+        "3": 0.1058,
+        "6": 0.1241,
         "12": null
       }
     }
@@ -68,11 +68,17 @@
       "q25": 0.0597,
       "q75": 0.1133,
       "win_rate": 0.8,
-      "best": 0.13,
+      "best": 0.1241,
       "worst": -0.0182
     },
     "12": {
-      "n": 0
+      "n": 1,
+      "median": 0.153,
+      "q25": 0.153,
+      "q75": 0.153,
+      "win_rate": 1.0,
+      "best": 0.153,
+      "worst": 0.153
     }
   },
   "note": "5 nearest historical months by 8-dimension macro similarity; forward SPY returns are historical outcomes, NOT a forecast."
