@@ -28,12 +28,15 @@ from ..config import THEME
 from ..ui_theme import help_badge, key_findings, section, stamp
 from . import DISCLAIMER, load
 from . import export as idx_export
+from . import discover as idx_discover
 from . import guests as idx_guests
+from . import network as idx_network
+from . import ranking as idx_ranking
 from . import quality as idx_quality
 from . import taxonomy as tx
 
 SUBVIEWS = ["Overview", "Directory", "Entity detail", "Podcasts", "Guests",
-            "Taxonomy", "Data management"]
+            "Network", "Discover", "Taxonomy", "Data management"]
 
 _FINDINGS = [
     {"stat": "Every link is checked by an actual HTTP request, and a site that blocks "
@@ -703,6 +706,314 @@ def _guests(art: dict) -> None:
             height=min(360, 36 * len(new_eps) + 40))
 
 
+# ------------------------------------------------------------------ network --
+@st.cache_data(ttl=600, show_spinner=False)
+def _scored(cache_bust: str = "") -> dict:
+    """Prominence scores. Cached because it touches every entity and edge."""
+    return idx_ranking.score_all(load("entities", []), load("relationships", []),
+                                 (load("podcasts", {}) or {}).get("guests", {}))
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def _discoveries(cache_bust: str = "") -> dict:
+    pod = load("podcasts", {}) or {}
+    return idx_discover.build(load("entities", []), load("relationships", []),
+                              pod.get("guests", {}), pod)
+
+
+def _network(art: dict) -> None:
+    ents, rels = art["entities"], art["relationships"]
+    if not rels:
+        st.info("No relationships yet — run `--action auto` to build the graph.")
+        return
+
+    st.markdown(section("Knowledge graph", 0,
+                        help="Every edge is a stated fact with a provenance — who works "
+                             "where, who hosts what, who appeared on which show — never "
+                             "an inferred similarity."),
+                unsafe_allow_html=True)
+    st.caption(
+        f"{len(ents):,} entries and {len(rels):,} relationships. Drawing all of them at "
+        f"once would be an unreadable hairball, so every view below is a bounded "
+        f"subgraph of at most {idx_network.NODE_LIMIT} nodes. Distance in the picture "
+        "is a layout artefact — only the connections carry meaning.")
+
+    mode = st.radio("View", ["Around an entity", "Most connected", "Path between two"],
+                    horizontal=True, key="idx_net_mode")
+
+    if mode == "Around an entity":
+        names = sorted((e["name"] for e in ents), key=str.lower)
+        default = names.index("Robert Carver") if "Robert Carver" in names else 0
+        pick = st.selectbox("Centre on", names, index=default, key="idx_net_focus")
+        hops = st.slider("Hops", 1, 3, 1, key="idx_net_hops",
+                         help="1 = direct connections only. 2 includes their "
+                              "connections, which for a podcast guest quickly pulls in "
+                              "every other guest of that show.")
+        focus = next(e for e in ents if e["name"] == pick)
+        ids = idx_network.ego_ids(ents, rels, focus["id"], hops=hops)
+        graph = idx_network.build(ents, rels, ids)
+        _render_graph(graph, highlight=focus["id"])
+        if graph:
+            st.caption(f"{graph['n']} nodes · {len(graph['edges'])} edges centred on "
+                       f"**{pick}**." + ("  Truncated at the node limit."
+                                         if graph["truncated"] else ""))
+
+    elif mode == "Most connected":
+        kinds = st.multiselect(
+            "Restrict to", [tx.label_of("entity_type", k) for k in tx.known("entity_type")],
+            default=[], key="idx_net_kinds")
+        want = tuple(tx.resolve("entity_type", k) for k in kinds) or None
+        n = st.slider("Nodes", 20, idx_network.NODE_LIMIT, 50, key="idx_net_n")
+        ids = idx_network.top_connected_ids(ents, rels, limit=n, entity_types=want)
+        if want:
+            # People do not connect to other people — they connect THROUGH the
+            # shows and firms they share. Restricting to one type alone therefore
+            # produces a graph with no edges at all, so the connectors are pulled
+            # back in and the restriction acts on the SEED set rather than on the
+            # finished picture.
+            expanded = list(ids)
+            for eid in ids:
+                for nb in idx_network.ego_ids(ents, rels, eid, hops=1, limit=8):
+                    if nb not in expanded:
+                        expanded.append(nb)
+            ids = expanded[:idx_network.NODE_LIMIT]
+        _render_graph(idx_network.build(ents, rels, ids))
+        if want:
+            st.caption("Showing the most-connected entries of the chosen type, plus the "
+                       "entities that connect them — without those, a single-type graph "
+                       "has no edges at all.")
+        else:
+            st.caption("The podcasts dominate this view by construction — every guest "
+                       "edge lands on one. Restrict to People or Organisations to see "
+                       "how the rest of the graph hangs together.")
+
+    else:
+        names = sorted((e["name"] for e in ents), key=str.lower)
+        c1, c2 = st.columns(2)
+        a = c1.selectbox("From", names,
+                         index=names.index("Robert Carver") if "Robert Carver" in names else 0,
+                         key="idx_net_a")
+        b = c2.selectbox("To", names,
+                         index=names.index("Man Group") if "Man Group" in names else 1,
+                         key="idx_net_b")
+        ea = next(e for e in ents if e["name"] == a)
+        eb = next(e for e in ents if e["name"] == b)
+        path = idx_network.path_between(ents, rels, ea["id"], eb["id"])
+        if not path:
+            st.info(f"No path found between **{a}** and **{b}** within 6 hops. "
+                    "They are in unconnected parts of the graph.")
+            return
+        hops = idx_network.describe_path(ents, rels, path)
+        st.markdown("".join(
+            uc.chip(f"{h['from']} → {h['to']}", color=THEME.teal, sub=h["type"])
+            for h in hops), unsafe_allow_html=True)
+        st.caption(f"{len(hops)} hop(s). Every step is a recorded relationship, not an "
+                   "inferred one.")
+        _render_graph(idx_network.build(ents, rels, path), highlight=ea["id"])
+
+
+_NODE_COLORS = {"person": THEME.teal, "organisation": THEME.mustard,
+                "podcast": THEME.coral, "academic_source": THEME.navy,
+                "tool": THEME.mint, "publication": THEME.mauve}
+
+
+def _render_graph(graph: dict | None, highlight: str = "") -> None:
+    if not graph:
+        st.info("Not enough connections to draw a graph for that selection.")
+        return
+    nodes = pd.DataFrame(graph["nodes"])
+    # Label only the dozen best-connected nodes (plus the focus). Labelling more
+    # produces an unreadable smear where the graph is dense — everything else is
+    # reachable on hover.
+    keep = set(nodes.nlargest(min(12, len(nodes)), "degree")["id"])
+    keep.add(highlight)
+    nodes["label"] = nodes["name"].where(nodes["id"].isin(keep), "")
+    nodes["kind"] = nodes["entity_type"].map(lambda t: tx.label_of("entity_type", t))
+    edges = pd.DataFrame(idx_network.edge_segments(graph))
+
+    def build(alt):
+        edge_layer = alt.Chart(edges).mark_line(color=THEME.muted, opacity=0.3).encode(
+            x=alt.X("x:Q", axis=None), y=alt.Y("y:Q", axis=None),
+            detail="edge_id:N", tooltip=["label:N", "type:N"])
+        node_layer = alt.Chart(nodes).mark_circle(stroke=THEME.bg, strokeWidth=1).encode(
+            x=alt.X("x:Q", axis=None, title=None), y=alt.Y("y:Q", axis=None, title=None),
+            size=alt.Size("degree:Q", scale=alt.Scale(range=[60, 620]), legend=None),
+            color=alt.Color("kind:N", legend=alt.Legend(title="Type"),
+                            scale=alt.Scale(
+                                domain=[tx.label_of("entity_type", k) for k in _NODE_COLORS],
+                                range=list(_NODE_COLORS.values()))),
+            tooltip=["name:N", "kind:N", alt.Tooltip("degree:Q", title="connections")])
+        text_layer = alt.Chart(nodes).mark_text(
+            dy=-14, fontSize=10, color=THEME.text).encode(
+            x="x:Q", y="y:Q", text="label:N")
+        return (edge_layer + node_layer + text_layer).properties(height=560)
+
+    uc.render_chart(build, fallback=nodes[["name", "kind", "degree"]])
+    st.caption("Node size = number of connections. Only the better-connected nodes are "
+               "labelled, so the picture stays readable; hover any node for its name.")
+
+
+# ----------------------------------------------------------------- discover --
+def _discover(art: dict) -> None:
+    ents, rels = art["entities"], art["relationships"]
+    pod = art.get("podcasts") or {}
+    disc = _discoveries(str(art["status"].get("date", "")))
+    scored = disc["scored"]
+    by_id = {e["id"]: e for e in ents}
+
+    st.markdown(section("Discoveries — what is here that you did not put here", 0,
+                        help="Every panel is defined against what you already have: the "
+                             "curated seed list and the sources Zenith already ingests."),
+                unsafe_allow_html=True)
+
+    def _row(ent, extra=""):
+        raw = (scored.get(ent["id"]) or {}).get("raw", {})
+        return {"Name": ent["name"],
+                "Affiliation": ent.get("current_affiliation", ""),
+                "Role": ent.get("role", ""),
+                "Appearances": raw.get("appearances", 0),
+                "Shows": raw.get("reach", 0),
+                "Connections": raw.get("connections", 0),
+                "Extra": extra}
+
+    tabs = st.tabs(["New to you", "Cross-show voices", "Bridges", "Emerging",
+                    "By topic", "Discovered firms", "Where this is weak"])
+
+    with tabs[0]:
+        rows = disc["new_to_you"]
+        st.caption("People who recur across these archives, are **not** on your supplied "
+                   "resource list, and are **not** already a Zenith source. This is the "
+                   "core discovery query — everything here is genuinely new to your own "
+                   "index.")
+        if rows:
+            st.dataframe(pd.DataFrame([_row(e) for e in rows]).drop(columns=["Extra"]),
+                         use_container_width=True, hide_index=True,
+                         height=min(620, 36 * len(rows) + 40))
+        else:
+            st.info("Nothing new — every recurring guest is already in your list.")
+
+    with tabs[1]:
+        rows = disc["cross_pollinators"]
+        st.caption("People several DIFFERENT monitored shows independently wanted to "
+                   "interview. Breadth across shows is a different signal from repetition "
+                   "on one.")
+        st.dataframe(pd.DataFrame([_row(e) for e in rows]).drop(columns=["Extra"]),
+                     use_container_width=True, hide_index=True,
+                     height=min(620, 36 * len(rows) + 40))
+
+    with tabs[2]:
+        rows = disc["bridges"]
+        st.caption("People whose connections span both firms AND podcasts — structural "
+                   "connectors rather than merely frequent guests.")
+        if rows:
+            st.dataframe(pd.DataFrame([{
+                "Name": r["entity"]["name"], "Spans": r["spans"],
+                "Connected to": ", ".join(r["targets"][:8]),
+            } for r in rows]), use_container_width=True, hide_index=True,
+                height=min(560, 36 * len(rows) + 40))
+
+    with tabs[3]:
+        rows = disc["emerging"]
+        st.caption("People whose FIRST appearance anywhere in these archives is recent — "
+                   "new voices rather than long-standing guests who happened to be on "
+                   "last week.")
+        if rows:
+            st.dataframe(pd.DataFrame([{
+                "Name": r["entity"]["name"], "First seen": r["first_seen"],
+                "Days ago": r["days"], "Appearances": r["appearances"],
+                "Podcasts": ", ".join(r["podcasts"]),
+                "Affiliation": r["entity"].get("current_affiliation", ""),
+            } for r in rows]), use_container_width=True, hide_index=True,
+                height=min(560, 36 * len(rows) + 40))
+        else:
+            st.info("No first-time guests in the last 180 days.")
+
+    with tabs[4]:
+        st.caption("Answers 'who in this catalog works on X' — most connected first. "
+                   "Note that is a different, and more honest, question than 'who is best'.")
+        c1, c2 = st.columns(2)
+        vocab = c1.selectbox("Vocabulary",
+                             ["investment_approach", "asset_class", "insight_type"],
+                             format_func=lambda v: tx.VOCABULARY_LABELS.get(v, v),
+                             key="idx_disc_vocab")
+        field = {"investment_approach": "investment_approach",
+                 "asset_class": "asset_classes", "insight_type": "insight_types"}[vocab]
+        opts = _filter_options(ents, field, vocab)
+        if opts:
+            term = c2.selectbox("Term", opts, key="idx_disc_term")
+            rows = idx_discover.by_topic(ents, scored, vocab, term, limit=40)
+            st.dataframe(pd.DataFrame([{
+                "Name": e["name"],
+                "Type": tx.label_of("entity_type", e.get("entity_type", "")),
+                "Affiliation": e.get("current_affiliation", ""),
+                "Connections": (scored.get(e["id"], {}).get("raw", {})).get("connections", 0),
+                "Appearances": (scored.get(e["id"], {}).get("raw", {})).get("appearances", 0),
+                "Link": e.get("url", ""),
+            } for e in rows]), use_container_width=True, hide_index=True,
+                height=min(600, 36 * len(rows) + 40),
+                column_config={"Link": st.column_config.LinkColumn(
+                    "Link", display_text="open ↗")})
+
+    with tabs[5]:
+        rows = disc["discovered_firms"]
+        st.caption("Organisations that entered the catalog only because a podcast named "
+                   "them. None has a verified URL yet — they are leads, not entries you "
+                   "should rely on.")
+        if rows:
+            st.dataframe(pd.DataFrame([{
+                "Name": e["name"], "Description": e.get("description", "")[:140],
+                "Status": str(e.get("lifecycle_state", "")).replace("_", " "),
+            } for e in rows]), use_container_width=True, hide_index=True,
+                height=min(560, 36 * len(rows) + 40))
+
+    with tabs[6]:
+        st.caption("Where this directory is WEAK. A discovery surface that only reports "
+                   "success teaches you to trust it uniformly, which would be wrong.")
+        for gap in disc["gaps"]:
+            st.markdown(f"**{gap['subject']}** — {gap['detail']}")
+        if not disc["gaps"]:
+            st.success("No major coverage gaps detected.")
+
+    # ------------------------------------------------------------- ranking --
+    st.markdown(section("Prominence ranking", 4,
+                        help="How CENTRAL an entry is within the data collected here — "
+                             "explicitly not a judgement of quality."),
+                unsafe_allow_html=True)
+    st.markdown(uc.state_banner(
+        THEME.mustard, "READ THIS FIRST",
+        "This ranks how central an entry is in THIS dataset. It is not a quality, "
+        "insight or importance judgement, and must not be read as one."),
+        unsafe_allow_html=True)
+
+    kinds = st.multiselect("Restrict to",
+                           [tx.label_of("entity_type", k) for k in tx.known("entity_type")],
+                           default=[], key="idx_rank_kinds")
+    want = tuple(tx.resolve("entity_type", k) for k in kinds) or None
+    top = idx_ranking.top(ents, scored, limit=40, entity_types=want)
+    st.dataframe(pd.DataFrame([{
+        "#": scored[e["id"]]["rank"],
+        "Name": e["name"],
+        "Type": tx.label_of("entity_type", e.get("entity_type", "")),
+        "Score": scored[e["id"]]["score"],
+        "Connections": scored[e["id"]]["raw"]["connections"],
+        "Appearances": scored[e["id"]]["raw"]["appearances"],
+        "Shows": scored[e["id"]]["raw"]["reach"],
+    } for e in top]), use_container_width=True, hide_index=True,
+        height=min(620, 36 * len(top) + 40))
+
+    if top:
+        st.markdown(section("Why an entry ranks where it does", 5), unsafe_allow_html=True)
+        pick = st.selectbox("Explain", [e["name"] for e in top], key="idx_rank_explain")
+        ent = next(e for e in top if e["name"] == pick)
+        breakdown = idx_ranking.explain(ent, scored)
+        st.dataframe(pd.DataFrame(breakdown), use_container_width=True, hide_index=True)
+        st.caption(f"Contributions sum to {scored[ent['id']]['score']:.4f} — the score "
+                   f"shown above. Nothing is hidden in a residual.")
+
+    with st.expander("Ranking methodology — read before using these numbers"):
+        st.markdown(idx_ranking.METHODOLOGY)
+
+
 # ----------------------------------------------------------------- taxonomy --
 def _taxonomy(art: dict) -> None:
     ents = art["entities"]
@@ -870,6 +1181,10 @@ def render() -> None:
         _podcasts(art)
     elif sub == "Guests":
         _guests(art)
+    elif sub == "Network":
+        _network(art)
+    elif sub == "Discover":
+        _discover(art)
     elif sub == "Taxonomy":
         _taxonomy(art)
     else:
@@ -898,8 +1213,21 @@ def render() -> None:
             "**History is kept.** When a person changes firm the previous affiliation moves "
             "into their history rather than being overwritten, so the record of where "
             "someone came from survives.\n\n"
-            "**Coming next.** *Phase 2* — podcast intelligence: harvesting the full episode "
-            "archives of the 14 monitored shows (~5,700 episodes, all confirmed available) "
-            "and extracting a guest database linked to firms, strategies and episodes. "
-            "*Phase 3* — the network visualisation, a discovery surface for finding "
-            "researchers worth following, and transparent relevance ranking.")
+            "**Where the guests come from.** The full episode archives of all 14 monitored "
+            "shows are harvested from their RSS feeds — every feed resolved through Apple's "
+            "keyless iTunes Search API and then probed, because a show's own website is "
+            "usually the wrong place to look. Guests are parsed from episode titles and "
+            "show notes using per-show patterns written by reading the real archives. Only "
+            "confident parses become directory entries; the rest stay recorded against "
+            "their episode, so the yield is auditable rather than silently discarded.\n\n"
+            "**Reading the network.** Every edge is a stated fact with a provenance — who "
+            "works where, who hosts what, who appeared on which show — never an inferred "
+            "similarity. Distance in the picture is a layout artefact of the force "
+            "simulation and means nothing on its own.\n\n"
+            "**Reading the ranking.** It measures how CENTRAL an entry is inside the data "
+            "collected here, and nothing else. It is not a judgement of quality, insight or "
+            "importance. Every input is a count that was measured, the weights are stated "
+            "round numbers rather than fitted parameters, and any row can be expanded to "
+            "show exactly what each component contributed. Its known biases — shows with "
+            "structured titles yield more guests, people are covered better than "
+            "institutions — are listed in the methodology panel rather than hidden.")

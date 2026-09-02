@@ -220,6 +220,8 @@ _ROLE_ONLY_WORDS = {
     "strategist", "analyst", "economist", "president", "chairman", "chairwoman",
     "founder", "cofounder", "co-founder", "partner", "strategy", "equity",
     "derivatives", "sales", "trading", "operations", "research", "investing",
+    "author", "journalist", "professor", "host", "advisor", "adviser",
+    "consultant", "trader", "investor", "editor", "writer",
 }
 
 # "Partner at Ruffer Investment Management" -> the firm is what follows.

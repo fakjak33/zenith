@@ -990,6 +990,75 @@ def screen_index() -> None:
     else:
         warn("index: no podcast harvest yet (run `--action podcasts`)")
 
+    # --- Phase 3: graph, ranking, discovery --------------------------------
+    if rels:
+        from zenith.index import discover as idisc
+        from zenith.index import network as inet
+        from zenith.index import ranking as irank
+
+        # degrees() counts distinct NEIGHBOURS, not edges, so this compares
+        # against distinct pairs. Two entities legitimately carry two edges:
+        # Niels Kaastrup-Larsen both `hosts` Top Traders Unplugged and
+        # `works_at` it, and 33 other host/show pairs are the same shape.
+        deg = inet.degrees(ents, rels)
+        ids = {e["id"] for e in ents}
+        pairs = {frozenset((r["source"], r["target"])) for r in rels
+                 if r.get("source") in ids and r.get("target") in ids
+                 and r["source"] != r["target"]}
+        check(sum(deg.values()) == 2 * len(pairs),
+              f"index: degree sum matches twice the distinct-pair count "
+              f"({sum(deg.values())} vs {2 * len(pairs)})")
+
+        # A bounded subgraph must stay bounded, or the network view becomes an
+        # unreadable hairball rather than a picture.
+        big = inet.build(ents, rels, [e["id"] for e in ents])
+        check(big is None or big["n"] <= inet.NODE_LIMIT,
+              f"index: network subgraph respects the {inet.NODE_LIMIT}-node limit")
+
+        # Layout must be deterministic, or the same page redraws differently on
+        # every rerun and nobody can point at a node twice.
+        by_name = {e["name"]: e for e in ents}
+        if "Robert Carver" in by_name:
+            ids = inet.ego_ids(ents, rels, by_name["Robert Carver"]["id"], hops=1)
+            a, b = inet.build(ents, rels, ids), inet.build(ents, rels, ids)
+            check(a and b and [n["x"] for n in a["nodes"]] == [n["x"] for n in b["nodes"]],
+                  "index: network layout is deterministic across runs")
+            if "Man Group" in by_name:
+                path = inet.path_between(ents, rels, by_name["Robert Carver"]["id"],
+                                         by_name["Man Group"]["id"])
+                check(bool(path),
+                      "index: the graph is traversable (Carver -> Man Group)")
+
+        scored = irank.score_all(ents, rels, (pod or {}).get("guests", {}))
+        check(len(scored) == len(ents),
+              f"index: every entity is scored ({len(scored)} vs {len(ents)})")
+        # The transparency promise: contributions must reconstruct the score.
+        drift = [eid for eid, row in scored.items()
+                 if abs(sum(row["components"].values()) - row["score"]) > 1e-9]
+        check(not drift,
+              f"index: ranking contributions sum to the score ({len(drift)} drifted)")
+        # A published methodology that does not match the computation is a lie.
+        sample = next(iter(scored.values()))
+        check(set(sample["components"]) == set(irank.COMPONENTS),
+              "index: computed components match the published COMPONENTS")
+        check(abs(sum(w for w, _l, _d in irank.COMPONENTS.values()) - 1.0) < 1e-9,
+              "index: ranking weights sum to 1.0")
+        out_of_range = [eid for eid, row in scored.items()
+                        if not 0.0 <= row["score"] <= 1.0]
+        check(not out_of_range, f"index: every score is in 0..1 ({out_of_range[:3]})")
+
+        # Discovery must not recommend things the user already supplied.
+        disc = idisc.build(ents, rels, (pod or {}).get("guests", {}), pod or {})
+        leaked = [e["name"] for e in disc["new_to_you"]
+                  if idisc.is_curated(e) or e.get("zenith_source")]
+        check(not leaked,
+              f"index: 'new to you' excludes curated and ingested entries ({leaked[:3]})")
+        print(f"       graph: {len(rels)} edges · max degree "
+              f"{max(deg.values()) if deg else 0} · "
+              f"{len(disc['new_to_you'])} new-to-you · "
+              f"{len(disc['cross_pollinators'])} cross-show · "
+              f"{len(disc['bridges'])} bridges · {len(disc['gaps'])} gaps reported")
+
     # --- staleness ---------------------------------------------------------
     if status.get("date"):
         age = (date.today() - date.fromisoformat(status["date"])).days
