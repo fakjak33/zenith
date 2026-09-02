@@ -1,17 +1,17 @@
 {
-  "as_of": "2026-09-01",
+  "as_of": "2026-09-02",
   "themes": {
     "dollar": {
       "signal_score": 54.6,
       "composite_z": 0.368,
-      "real_yield_z": 1.528,
+      "real_yield_z": 1.546,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 72.0,
+      "signal_score": 72.2,
       "components": {
-        "DGS30": 1.693,
-        "THREEFYTP10": 1.983,
+        "DGS30": 1.717,
+        "THREEFYTP10": 2.001,
         "GFDEBTN": 1.603
       },
       "context": "This theme distinguishes two DIFFERENT things that both increase Treasury buyback activity: (1) LIQUIDITY OPERATIONS — the Treasury smoothing the maturity profile of outstanding debt, which is routine market-structure management and not obviously yield-suppressive; versus (2) actual FINANCIAL REPRESSION — policy that holds real yields below their market-clearing level to erode the real value of debt. The August 2026 increase in long-duration buybacks (to at least $4bn, following the 30y yield reaching a multi-year high) has been read both ways by market participants; this score does not adjudicate which interpretation is correct, it tracks the term premium and long-yield trend components that either interpretation would move."
@@ -20,11 +20,11 @@
       "intervention_risk": "Low",
       "usdjpy_z": 1.655,
       "usdjpy_pct_move_3m": -0.0162,
-      "us_real_yield_z": 1.528,
+      "us_real_yield_z": 1.546,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.132,
+      "semis_relative_strength_3m": -0.1579,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -55,6 +55,15 @@
           "category": "Fact"
         },
         {
+          "title": "America is still poised for a data center boom",
+          "source": "Marginal Revolution",
+          "link": "https://marginalrevolution.com/marginalrevolution/2026/09/america-is-still-poised-for-a-data-center-boom.html?utm_source=rss&utm_medium=rss&utm_campaign=america-is-still-poised-for-a-data-center-boom",
+          "published": "Wed, 02 Sep 2026 04:33:26 +0000",
+          "archive_date": "2026-09-02",
+          "summary": "Eric Levitz, via Matt Yglesias. The post America is still poised for a data center boom appeared first on Marginal REVOLUTION.",
+          "category": "Fact"
+        },
+        {
           "title": "ERCOT Prices Remain Steady Despite Record Load",
           "source": "FactSet Insight",
           "link": "https://insight.factset.com/ercot-prices-remain-steady-despite-record-load",
@@ -82,6 +91,15 @@
           "category": "Interpretation"
         },
         {
+          "title": "The Closer – Diesel, Data Center Construction, Job Openings – 9/1/26",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/the-closer/the-closer-diesel-data-center-construction-job-openings-9-1-26/",
+          "published": "Tue, 01 Sep 2026 21:28:18 +0000",
+          "archive_date": "2026-09-02",
+          "summary": "",
+          "category": "Interpretation"
+        },
+        {
           "title": "Thursday assorted links",
           "source": "Marginal Revolution",
           "link": "https://marginalrevolution.com/marginalrevolution/2026/08/thursday-assorted-links-567.html?utm_source=rss&utm_medium=rss&utm_campaign=thursday-assorted-links-567",
@@ -98,29 +116,11 @@
           "archive_date": "2026-08-21",
           "summary": "The good folks at “Our World in Data” have been putting together a data series which shows monthly spending on the “on-site work to build data centers each month, including materials and construction labor. It excludes the cost of IT hardware like servers and storage, which can account for a large share of total invest…",
           "category": "Fact"
-        },
-        {
-          "title": "FTAV’s further reading",
-          "source": "FT Alphaville",
-          "link": "https://www.ft.com/content/32f71c02-9abd-4c5b-8f74-9b31303bf386",
-          "published": "Thu, 20 Aug 2026 05:30:09 GMT",
-          "archive_date": "2026-08-21",
-          "summary": "Hyperscaler toast; Niklas Sule; the parenthesis; the stocks market; categories of contempt",
-          "category": "Fact"
-        },
-        {
-          "title": "The hyperscalers’ exploding ‘purchase commitments’ reach $1.5tn",
-          "source": "FT Alphaville",
-          "link": "https://www.ft.com/content/1fbe47a6-bbf1-4de1-973b-8ce5baea591d",
-          "published": "Thu, 13 Aug 2026 05:00:02 GMT",
-          "archive_date": "2026-08-14",
-          "summary": "Spend now, spend more later",
-          "category": "Fact"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.2985,
+      "btc_trend_3m": 0.2493,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
