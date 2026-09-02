@@ -190,3 +190,143 @@ def test_cas_calendar_has_fomc():
     at.run()
     text = " ".join(str(m.value) for m in at.markdown)
     assert "FOMC" in text and "Verdict from our SPY" in text
+
+
+# --------------------------------------------------------------------- INDEX --
+@pytest.fixture(autouse=True, scope="function")
+def _clear_streamlit_cache():
+    """INDEX's view caches its artefacts with @st.cache_data. Without clearing
+    it between tests, the no-data test's empty result leaks into the real-data
+    test and makes it fail for the wrong reason."""
+    import streamlit as st
+    st.cache_data.clear()
+    yield
+    st.cache_data.clear()
+
+
+def _index_results(at) -> list:
+    """AppTest's session_state proxy has no .get(), so read it defensively."""
+    try:
+        return list(at.session_state["idx_result_names"])
+    except (KeyError, AttributeError):
+        return []
+
+
+def _index_at(subview: str | None = None, timeout: int = 180):
+    at = AppTest.from_string("from zenith.index import view\nview.render()\n",
+                             default_timeout=timeout)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    if subview:
+        at.radio(key="idx_sub").set_value(subview).run()
+        assert not at.exception, (subview, [e.value for e in at.exception])
+    return at
+
+
+def test_index_view_renders_with_no_data(tmp_path, monkeypatch):
+    """Day-one convention: the view must render before any data exists,
+    telling the user how to build it rather than raising."""
+    from zenith import config as cfg
+    import zenith.index as zidx
+    empty = {k: tmp_path / f"{k}.json" for k in cfg.INDEX_FILES}
+    monkeypatch.setattr(cfg, "INDEX_FILES", empty)
+    monkeypatch.setattr(zidx, "INDEX_FILES", empty)
+    at = AppTest.from_string(
+        "import zenith.index.view as v\nv.render()\n", default_timeout=120)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "has not been built yet" in " ".join(str(i.value) for i in at.info)
+
+
+def test_index_view_renders_with_real_data():
+    if not config.INDEX_FILES["entities"].exists():
+        pytest.skip("no committed index data")
+    at, text = _render("from zenith.index import view\nview.render()\n")
+    assert "key findings" in text.lower()
+    # the verification strip, NOT a fabricated A/B/C evidence grade
+    assert "Verification" in text
+    assert "Need review" in text
+    assert "evidence strength" not in text.lower(), (
+        "INDEX must NOT display an A/B/C evidence badge — it is a directory, "
+        "not a predictive signal (see zenith/index/__init__.py)")
+
+
+def test_index_subviews_all_render():
+    if not config.INDEX_FILES["entities"].exists():
+        pytest.skip("no committed index data")
+    from zenith.index.view import SUBVIEWS
+    for sub in SUBVIEWS:
+        _index_at(sub)
+
+
+def test_index_directory_search_and_filter():
+    if not config.INDEX_FILES["entities"].exists():
+        pytest.skip("no committed index data")
+    at = _index_at("Directory")
+
+    total = len(_index_results(at))
+    assert total > 100, "the unfiltered directory should list the whole catalog"
+
+    # free-text search must match a tag's human LABEL, not only its slug, and
+    # must actually NARROW -- asserting only "some results came back" would pass
+    # just as happily against a filter that silently does nothing.
+    at.text_input(key="idx_q").set_value("trend following").run()
+    assert not at.exception, [e.value for e in at.exception]
+    names = _index_results(at)
+    assert names, "searching 'trend following' should match entries"
+    assert len(names) < total, "search must narrow the result set"
+    assert any(n in names for n in ("Man AHL", "AlphaSimplex Group", "Robert Carver"))
+
+    # A nonsense query must return NOTHING rather than falling back to
+    # everything. Uses a fresh AppTest: setting the same text_input twice on one
+    # instance does not re-apply, so reusing `at` here would silently re-assert
+    # the previous query's result.
+    at2 = _index_at("Directory")
+    at2.text_input(key="idx_q").set_value("zzzznotathing").run()
+    assert _index_results(at2) == []
+
+    # two filters applied simultaneously must narrow, not error
+    at.text_input(key="idx_q").set_value("").run()
+    at.multiselect(key="idx_cat").set_value(["Tool"]).run()
+    only_tools = _index_results(at)
+    at.multiselect(key="idx_insight").set_value(["Options"]).run()
+    assert not at.exception, [e.value for e in at.exception]
+    narrowed = _index_results(at)
+    assert narrowed, "Tool + Options should match the options analytics platforms"
+    assert len(narrowed) < len(only_tools) < total, "each filter must narrow further"
+    assert any("Option" in n or "Chameleon" in n for n in narrowed), narrowed
+
+
+def test_index_cards_layout_renders():
+    if not config.INDEX_FILES["entities"].exists():
+        pytest.skip("no committed index data")
+    at = _index_at("Directory")
+    at.radio(key="idx_layout").set_value("Cards").run()
+    assert not at.exception, [e.value for e in at.exception]
+
+
+def test_index_entity_detail_shows_the_knowledge_graph():
+    """The worked reference example end-to-end: Robert Carver's profile must
+    show his blog, his preserved employment history, and the relationship edges
+    that make Carver -> Man AHL -> Man Group traversable."""
+    if not config.INDEX_FILES["entities"].exists():
+        pytest.skip("no committed index data")
+    at = _index_at("Entity detail")
+    at.selectbox(key="idx_detail_name").set_value("Robert Carver").run()
+    assert not at.exception, [e.value for e in at.exception]
+    text = (" ".join(str(m.value) for m in at.markdown)
+            + " " + " ".join(str(c.value) for c in at.caption))
+    assert "qoppac.blogspot.com" in text
+    assert "Previously:" in text and "Man AHL" in text and "Barclays" in text
+    assert "worked at" in text, "relationship edges should be listed"
+    assert "Systematic Trading" in text, "his books should appear"
+    # the cross-link back into Zenith's own scrape registry
+    assert "Robert Carver (Systematic)" in text
+
+
+def test_index_export_buttons_present():
+    if not config.INDEX_FILES["entities"].exists():
+        pytest.skip("no committed index data")
+    at = _index_at("Data management")
+    labels = " ".join(str(b.label) for b in at.get("download_button"))
+    assert "CSV" in labels and "Excel" in labels and "JSON" in labels

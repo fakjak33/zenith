@@ -474,6 +474,67 @@ REGIMES_MIN_COVERAGE = 3
 for _d in (REGIMES_DIR, REGIMES_JOURNAL_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
+# --- INDEX (Master List: financial intelligence directory & knowledge graph) -
+# A DIRECTORY, not a signal engine: it maps the information ecosystem (firms,
+# people, academic sources, podcasts, tools) rather than scoring securities.
+# Entities and relationships are stored SEPARATELY -- entities.json is the
+# catalog, relationships.json is a plain edge list -- so Phase 2 (podcast guest
+# edges) and Phase 3 (network rendering) add edges without reshaping the
+# catalog. `seed/` holds the user's raw source lists committed verbatim as
+# provenance, so any enrichment can always be traced back to what was supplied.
+INDEX_DIR = DATA_DIR / "index"
+INDEX_SEED_DIR = INDEX_DIR / "seed"          # raw supplied lists, committed as provenance
+INDEX_FILES = {
+    "entities": INDEX_DIR / "entities.json",           # the catalog
+    "relationships": INDEX_DIR / "relationships.json",  # edge list {source,target,type}
+    "links": INDEX_DIR / "links.json",                 # per-URL health from links.py
+    "status": INDEX_DIR / "status.json",               # run health + counts + as-of
+    # --- Phase 2 (podcast intelligence) — reserved, not yet written ---
+    "podcasts": INDEX_DIR / "podcasts.json",           # feed registry + harvest state
+    "episodes": INDEX_DIR / "episodes.json",           # harvested episode archive
+}
+
+# Link checking is a live network sweep, so it is rate-limited and never run
+# from the view. A URL is re-checked only once its last check is this stale.
+INDEX_LINK_TTL_DAYS = 14
+INDEX_LINK_TIMEOUT = 12
+INDEX_LINK_MAX_PER_RUN = 400        # ceiling on URLs probed in one compute run
+INDEX_LINK_WORKERS = 8              # modest concurrency; these are other people's servers
+
+# An entity needs this fraction of its "useful" fields populated before quality.py
+# will call the profile complete. Deliberately not 1.0: many legitimate entries
+# (a journal, a screener) have no founder, location or strategy tags and should
+# not be perpetually flagged incomplete for lacking fields that do not apply.
+INDEX_COMPLETENESS_TARGET = 0.6
+
+# --- Phase 2: podcast intelligence ------------------------------------------
+# Feed descriptions run to many KB of show notes, sponsor copy and timestamps,
+# but a guest's affiliation is stated in the opening sentences. Keeping a
+# bounded prefix is what lets ~5,700 episodes stay a sane committed artifact.
+INDEX_EPISODE_SUMMARY_CHARS = 700
+
+# A parsed guest name is only trusted enough to become a Person entity at or
+# above this confidence. Lower-confidence parses are still RECORDED against the
+# episode (so nothing is lost and the yield is auditable) but do not manufacture
+# directory entries -- a directory full of misparsed fragments is worse than a
+# smaller correct one.
+INDEX_GUEST_MIN_CONFIDENCE = "medium"
+
+# A firm named in episode metadata only becomes its own directory ENTITY once it
+# has been seen this many times. A one-off mention is recorded as the guest's
+# affiliation text (losing nothing) but does not manufacture an organisation
+# stub with no URL -- otherwise several hundred unverifiable entries would swamp
+# the review queue and drown the curated catalog.
+INDEX_FIRM_ENTITY_MIN_MENTIONS = 3
+
+# Appearances kept inline on a person's entity record. The full episode archive
+# lives in episodes.json; the entity carries the most recent few so a profile is
+# readable without loading thousands of rows.
+INDEX_INLINE_APPEARANCES = 12
+
+for _d in (INDEX_DIR, INDEX_SEED_DIR):
+    _d.mkdir(parents=True, exist_ok=True)
+
 # --- HOLDINGS (fund position intelligence — DBMF first) ---------------------
 # One sub-directory per tracked fund so a second fund is a registry entry, not
 # a schema change: data/holdings/<fund>/{latest,history,changes,status}.json

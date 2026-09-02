@@ -64,7 +64,14 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "secondary regimes (monetary, liquidity, credit, financial conditions, dollar, "
         "volatility) alongside it, and reconstructs the full historical regime timeline back "
         "to 1990.\n"
-        "12. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "12. **INDEX** — the *Master List*: a curated directory of the financial information "
+        "ecosystem itself — institutions, people, academic sources, podcasts and tools. "
+        "Deduplicated, classified against an extensible taxonomy, link-verified, and "
+        "extended by harvesting the full archives of 14 finance podcasts into a guest "
+        "database, so it answers *who is doing interesting work, where do they work, and "
+        "where do I read them*. Includes a traversable knowledge graph, a discovery "
+        "surface for names your own list does not contain, and a CSV/Excel/JSON export.\n"
+        "13. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -126,10 +133,11 @@ def insights_research_news(items, key_prefix):
 
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
- tab_nightday, tab_holdings, tab_mom, tab_ideas, tab_regimes, tab_archive, tab_sources) = st.tabs(
+ tab_nightday, tab_holdings, tab_mom, tab_ideas, tab_regimes, tab_index,
+ tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
      "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "IDEAS", "REGIMES",
-     "ARCHIVE", "SOURCES"])
+     "INDEX", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -140,9 +148,10 @@ with tab_today:
     from zenith.mom.view import today_badge as mom_today_badge
     from zenith.ideas.view import today_badge as ideas_today_badge
     from zenith.regimes.view import today_badge as regimes_today_badge
+    from zenith.index.view import today_badge as index_today_badge
     for _b in (today_badge(), pead_today_badge(), edge_today_badge(),
                holdings_today_badge(), mom_today_badge(), ideas_today_badge(),
-               regimes_today_badge()):
+               regimes_today_badge(), index_today_badge()):
         if _b:
             st.markdown(_b, unsafe_allow_html=True)
     latest = store.load_latest()
@@ -216,6 +225,12 @@ with tab_regimes:
                 unsafe_allow_html=True)
     from zenith.regimes import view as regimes_view
     regimes_view.render()
+
+with tab_index:
+    st.markdown(section("INDEX — the Master List: financial intelligence directory", 5),
+                unsafe_allow_html=True)
+    from zenith.index import view as index_view
+    index_view.render()
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)

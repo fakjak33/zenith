@@ -832,6 +832,246 @@ def screen_regimes() -> None:
              f"n_themes={len(themes_doc)} n_alerts={n_alerts}")
 
 
+def screen_index() -> None:
+    """INDEX (Master List) — catalog integrity, taxonomy conformance, graph sanity.
+
+    A directory fails differently from a signal engine: the damage is silent
+    (a dropped row, a duplicate slug, an edge left dangling by an import, an
+    entry quietly claiming to be verified) rather than a wrong number on screen.
+    These checks target exactly those failure modes.
+    """
+    from zenith.index import load as index_load
+    from zenith.index import taxonomy as itx
+    from zenith.index import quality as iq
+
+    print("\n[INDEX]")
+    ents = index_load("entities", [])
+    rels = index_load("relationships", [])
+    status = index_load("status", {})
+    if not ents:
+        warn("index: no catalog yet (run `python -m zenith.index.compute --action seed`)")
+        return
+
+    check(len(ents) >= 100, f"index: catalog has {len(ents)} entries (expected >= 100)")
+
+    # --- identity integrity ------------------------------------------------
+    ids = [e.get("id") for e in ents]
+    slugs = [e.get("slug") for e in ents]
+    dup_ids = {i for i in ids if ids.count(i) > 1}
+    dup_slugs = {sl for sl in slugs if slugs.count(sl) > 1}
+    check(not dup_ids, f"index: no duplicate ids ({len(dup_ids)} found)")
+    check(not dup_slugs, f"index: no duplicate slugs ({sorted(dup_slugs)[:4]})")
+    check(all(e.get("name") for e in ents), "index: every entry has a name")
+    check(all(e.get("id") for e in ents), "index: every entry has an id")
+
+    # --- taxonomy conformance ---------------------------------------------
+    bad_cat = [e["name"] for e in ents
+               if e.get("primary_category") not in itx.PRIMARY_CATEGORIES]
+    bad_type = [e["name"] for e in ents if e.get("entity_type") not in itx.ENTITY_TYPES]
+    bad_state = [e["name"] for e in ents
+                 if e.get("lifecycle_state") not in itx.LIFECYCLE_STATES]
+    bad_conf = [e["name"] for e in ents
+                if e.get("confidence") not in itx.CONFIDENCE_LEVELS]
+    check(not bad_cat, f"index: every primary_category is declared ({bad_cat[:3]})")
+    check(not bad_type, f"index: every entity_type is declared ({bad_type[:3]})")
+    check(not bad_state, f"index: every lifecycle_state is declared ({bad_state[:3]})")
+    check(not bad_conf, f"index: every confidence level is declared ({bad_conf[:3]})")
+
+    # --- graph integrity ---------------------------------------------------
+    orphans = iq.orphan_edges(ents, rels)
+    check(not orphans, f"index: no orphan relationship edges ({len(orphans)} found)")
+    self_loops = [r for r in rels if r.get("source") == r.get("target")]
+    check(not self_loops, f"index: no self-referencing edges ({len(self_loops)} found)")
+    bad_rel = [r.get("type") for r in rels if r.get("type") not in itx.RELATIONSHIP_TYPES]
+    check(not bad_rel, f"index: every relationship type is declared ({sorted(set(bad_rel))[:3]})")
+
+    # --- honesty invariants (the ones this feature exists to uphold) -------
+    # An entry may only claim `verified` if a link check actually succeeded.
+    false_verified = [e["name"] for e in ents
+                      if e.get("lifecycle_state") == "verified" and e.get("link_status") != "ok"]
+    check(not false_verified,
+          f"index: nothing marked verified without a live link ({false_verified[:3]})")
+    # A low-confidence entry must not assert a URL that does not resolve.
+    unconfirmed_url = [e["name"] for e in ents
+                       if e.get("confidence") == "low" and e.get("url")
+                       and e.get("link_status") not in ("ok", "blocked")]
+    check(not unconfirmed_url,
+          f"index: low-confidence entries assert no unreachable URL ({unconfirmed_url[:3]})")
+    # NaN/None leakage into user-visible string fields.
+    leaked = [e["name"] for e in ents
+              for f in ("description", "url", "notes", "name")
+              if str(e.get(f, "")).strip().lower() in ("nan", "none", "null")]
+    check(not leaked, f"index: no NaN/None leaked into text fields ({leaked[:3]})")
+
+    # --- export round-trip -------------------------------------------------
+    try:
+        from zenith.index import export as iex
+        df = iex.to_dataframe(ents, rels)
+        check(len(df) == len(ents),
+              f"index: export row count matches catalog ({len(df)} vs {len(ents)})")
+        check("relationships" in df.columns and "url" in df.columns,
+              "index: export carries links and relationships")
+    except Exception as exc:
+        check(False, f"index: export failed — {type(exc).__name__}: {exc}")
+
+    # --- Phase 2: podcast intelligence -------------------------------------
+    pod = index_load("podcasts", {})
+    if pod.get("shows"):
+        from zenith.index import guests as ig
+        from zenith.index import podcasts as ipc
+
+        shows = pod["shows"]
+        check(len(shows) == len(ipc.PODCASTS),
+              f"index: all {len(ipc.PODCASTS)} registered podcasts harvested ({len(shows)})")
+        dead = [s["podcast"] for s in shows if not s.get("ok")]
+        if dead:
+            warn(f"index: podcast feed(s) returned nothing: {dead}")
+        thin = [s["podcast"] for s in shows if s.get("ok") and s["episodes"] < 50]
+        if thin:
+            warn(f"index: suspiciously shallow archive(s) — a site feed capped at "
+                 f"10 posts looks like this: {thin}")
+
+        # Every declared extraction pattern must actually exist, or the show
+        # silently degrades to the loose generic fallback (a real bug once).
+        phantom = [(p.name, s) for p in ipc.PODCASTS for s in p.patterns
+                   if s not in ig.STRATEGIES]
+        check(not phantom, f"index: every declared podcast pattern exists ({phantom[:3]})")
+
+        # Hosts must never be recorded as guests of their own show.
+        guests = pod.get("guests") or {}
+        host_leak = []
+        for p in ipc.PODCASTS:
+            hosts = {h.lower() for h in p.hosts}
+            for key, prof in guests.items():
+                if key in hosts and p.name in (prof.get("podcasts") or []):
+                    host_leak.append((p.name, prof.get("name")))
+        check(not host_leak, f"index: no host recorded as their own guest ({host_leak[:3]})")
+
+        # Nothing below the confidence bar may have become a directory entry.
+        # (Guests already in the catalog from the curated seed are exempt — they
+        # were verified by hand, not by the parser.)
+        harvest_names = {e["name"].lower() for e in ents
+                         if "harvest" in str(e.get("provenance", ""))
+                         and "seed list" not in str(e.get("provenance", ""))}
+        leaked = sorted(key for key, g in guests.items()
+                        if not ig.meets_threshold(g.get("confidence", "low"))
+                        and key in harvest_names)
+        check(not leaked,
+              f"index: no low-confidence guest reached the directory ({leaked[:4]})")
+
+        # Every guest name still has to look like a person.
+        malformed = [g.get("name") for g in guests.values()
+                     if ig.meets_threshold(g.get("confidence", "low"))
+                     and not ig.looks_like_person(g.get("name", ""))]
+        check(not malformed,
+              f"index: every promoted guest name parses as a person ({malformed[:4]})")
+
+        # Appearances must point at real episodes.
+        episodes = index_load("episodes", [])
+        check(len(episodes) >= 1000,
+              f"index: episode archive has {len(episodes)} episodes (expected 1000+)")
+        ep_ids = {e.get("id") for e in episodes}
+        dangling = sum(1 for g in guests.values() for a in (g.get("appearances") or [])
+                       if a.get("episode_id") and a["episode_id"] not in ep_ids)
+        check(not dangling, f"index: no appearance points at a missing episode ({dangling})")
+
+        # A person's affiliation must not itself be a person's name.
+        person_firms = [(e["name"], e["current_affiliation"]) for e in ents
+                        if e.get("entity_type") == "person" and e.get("current_affiliation")
+                        and e["current_affiliation"].lower() in
+                        {x["name"].lower() for x in ents if x.get("entity_type") == "person"}]
+        check(not person_firms,
+              f"index: no person recorded as another person's employer ({person_firms[:3]})")
+
+        cov = {s["podcast"]: s["coverage"] for s in shows}
+        print(f"       podcasts: {len(shows)} shows · {pod.get('episodes', 0)} episodes · "
+              f"{pod.get('guests_promoted', 0)}/{pod.get('guests_total', 0)} guests promoted · "
+              f"coverage {min(cov.values()):.0%}-{max(cov.values()):.0%}")
+    else:
+        warn("index: no podcast harvest yet (run `--action podcasts`)")
+
+    # --- Phase 3: graph, ranking, discovery --------------------------------
+    if rels:
+        from zenith.index import discover as idisc
+        from zenith.index import network as inet
+        from zenith.index import ranking as irank
+
+        # degrees() counts distinct NEIGHBOURS, not edges, so this compares
+        # against distinct pairs. Two entities legitimately carry two edges:
+        # Niels Kaastrup-Larsen both `hosts` Top Traders Unplugged and
+        # `works_at` it, and 33 other host/show pairs are the same shape.
+        deg = inet.degrees(ents, rels)
+        ids = {e["id"] for e in ents}
+        pairs = {frozenset((r["source"], r["target"])) for r in rels
+                 if r.get("source") in ids and r.get("target") in ids
+                 and r["source"] != r["target"]}
+        check(sum(deg.values()) == 2 * len(pairs),
+              f"index: degree sum matches twice the distinct-pair count "
+              f"({sum(deg.values())} vs {2 * len(pairs)})")
+
+        # A bounded subgraph must stay bounded, or the network view becomes an
+        # unreadable hairball rather than a picture.
+        big = inet.build(ents, rels, [e["id"] for e in ents])
+        check(big is None or big["n"] <= inet.NODE_LIMIT,
+              f"index: network subgraph respects the {inet.NODE_LIMIT}-node limit")
+
+        # Layout must be deterministic, or the same page redraws differently on
+        # every rerun and nobody can point at a node twice.
+        by_name = {e["name"]: e for e in ents}
+        if "Robert Carver" in by_name:
+            ids = inet.ego_ids(ents, rels, by_name["Robert Carver"]["id"], hops=1)
+            a, b = inet.build(ents, rels, ids), inet.build(ents, rels, ids)
+            check(a and b and [n["x"] for n in a["nodes"]] == [n["x"] for n in b["nodes"]],
+                  "index: network layout is deterministic across runs")
+            if "Man Group" in by_name:
+                path = inet.path_between(ents, rels, by_name["Robert Carver"]["id"],
+                                         by_name["Man Group"]["id"])
+                check(bool(path),
+                      "index: the graph is traversable (Carver -> Man Group)")
+
+        scored = irank.score_all(ents, rels, (pod or {}).get("guests", {}))
+        check(len(scored) == len(ents),
+              f"index: every entity is scored ({len(scored)} vs {len(ents)})")
+        # The transparency promise: contributions must reconstruct the score.
+        drift = [eid for eid, row in scored.items()
+                 if abs(sum(row["components"].values()) - row["score"]) > 1e-9]
+        check(not drift,
+              f"index: ranking contributions sum to the score ({len(drift)} drifted)")
+        # A published methodology that does not match the computation is a lie.
+        sample = next(iter(scored.values()))
+        check(set(sample["components"]) == set(irank.COMPONENTS),
+              "index: computed components match the published COMPONENTS")
+        check(abs(sum(w for w, _l, _d in irank.COMPONENTS.values()) - 1.0) < 1e-9,
+              "index: ranking weights sum to 1.0")
+        out_of_range = [eid for eid, row in scored.items()
+                        if not 0.0 <= row["score"] <= 1.0]
+        check(not out_of_range, f"index: every score is in 0..1 ({out_of_range[:3]})")
+
+        # Discovery must not recommend things the user already supplied.
+        disc = idisc.build(ents, rels, (pod or {}).get("guests", {}), pod or {})
+        leaked = [e["name"] for e in disc["new_to_you"]
+                  if idisc.is_curated(e) or e.get("zenith_source")]
+        check(not leaked,
+              f"index: 'new to you' excludes curated and ingested entries ({leaked[:3]})")
+        print(f"       graph: {len(rels)} edges · max degree "
+              f"{max(deg.values()) if deg else 0} · "
+              f"{len(disc['new_to_you'])} new-to-you · "
+              f"{len(disc['cross_pollinators'])} cross-show · "
+              f"{len(disc['bridges'])} bridges · {len(disc['gaps'])} gaps reported")
+
+    # --- staleness ---------------------------------------------------------
+    if status.get("date"):
+        age = (date.today() - date.fromisoformat(status["date"])).days
+        if age > 30:
+            warn(f"index: status is {age} days old — re-run compute")
+
+    ls = status.get("links", {}) or {}
+    print(f"       {len(ents)} entries · {len(rels)} edges · "
+          f"{status.get('verified', 0)} verified · {status.get('needs_review', 0)} need review · "
+          f"links ok/blocked/error {ls.get('ok', 0)}/{ls.get('blocked', 0)}/{ls.get('error', 0)} · "
+          f"{status.get('zenith_sources_linked', 0)} linked to Zenith sources")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -845,6 +1085,7 @@ def main() -> None:
     screen_mvt()
     screen_ideas()
     screen_regimes()
+    screen_index()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")
