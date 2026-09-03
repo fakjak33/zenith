@@ -1,0 +1,60 @@
+name: ETF MOMENTUM compute
+
+on:
+  schedule:
+    - cron: "0 4 * * 2-6"       # mom.yml starts 03:00 UTC with a 60-minute
+                                # timeout and commits data/mom/mvt/etfs_latest.json
+                                # (this job's 6th factor); ideas.yml starts 03:30.
+                                # 04:00 gives the mvt artefact an hour to land and
+                                # staggers the pushes. If mom.yml overruns, this
+                                # run reads the previous day's mvt scores and
+                                # reports mvt_stale_days rather than failing --
+                                # the right degradation for a slow-moving factor.
+                                # Self-gates on the trading calendar like every
+                                # other job.
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etfmom
+  cancel-in-progress: false
+
+jobs:
+  etfmom:
+    runs-on: ubuntu-latest
+    # ~912 tickers x 5y of daily OHLC, chunked by cas.sources.prices.get_history.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run ETF MOMENTUM compute
+        run: >
+          python -m zenith.etfmom.compute
+          --action ${{ github.event.inputs.action || 'auto' }}
+
+      - name: Commit ETF MOMENTUM data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          # ONLY data/etfmom/. This job must never write data/mom/ -- the ETF
+          # metadata cache under data/mom/mvt/ belongs to mom.yml, and two
+          # workflows committing the same path would race on push.
+          git add data/etfmom/
+          if git diff --cached --quiet; then
+            echo "No ETF MOMENTUM changes."
+          else
+            git commit -m "etfmom: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi

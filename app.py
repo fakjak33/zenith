@@ -133,11 +133,11 @@ def insights_research_news(items, key_prefix):
 
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
- tab_nightday, tab_holdings, tab_mom, tab_ideas, tab_regimes, tab_index,
+ tab_nightday, tab_holdings, tab_mom, tab_etfmom, tab_ideas, tab_regimes, tab_index,
  tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
-     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "IDEAS", "REGIMES",
-     "INDEX", "ARCHIVE", "SOURCES"])
+     "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM",
+     "IDEAS", "REGIMES", "INDEX", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -146,12 +146,13 @@ with tab_today:
     from zenith.edge.view import today_badge as edge_today_badge
     from zenith.holdings.view import today_badge as holdings_today_badge
     from zenith.mom.view import today_badge as mom_today_badge
+    from zenith.etfmom.view import today_badge as etfmom_today_badge
     from zenith.ideas.view import today_badge as ideas_today_badge
     from zenith.regimes.view import today_badge as regimes_today_badge
     from zenith.index.view import today_badge as index_today_badge
     for _b in (today_badge(), pead_today_badge(), edge_today_badge(),
-               holdings_today_badge(), mom_today_badge(), ideas_today_badge(),
-               regimes_today_badge(), index_today_badge()):
+               holdings_today_badge(), mom_today_badge(), etfmom_today_badge(),
+               ideas_today_badge(), regimes_today_badge(), index_today_badge()):
         if _b:
             st.markdown(_b, unsafe_allow_html=True)
     latest = store.load_latest()
@@ -213,6 +214,12 @@ with tab_mom:
                 unsafe_allow_html=True)
     from zenith.mom import view as mom_view
     mom_view.render()
+
+with tab_etfmom:
+    st.markdown(section("ETF MOMENTUM — the momentum engine over the full ETF universe", 2),
+                unsafe_allow_html=True)
+    from zenith.etfmom import view as etfmom_view
+    etfmom_view.render()
 
 with tab_ideas:
     st.markdown(section("IDEAS — discretionary-systematic opportunity engine", 3),
