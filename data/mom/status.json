@@ -1,55 +1,54 @@
 {
-  "date": "2026-09-02",
+  "date": "2026-09-03",
   "is_trading_day": true,
   "disclaimer": "MOMENTUM scores every current Russell 1000 constituent on six documented momentum dimensions (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend) and blends them into a transparent -20..+20 composite. Momentum is well-replicated academically but crashes hard in panic states and is most crowded in large caps (this universe). Decision-support and a research monitor, not investment advice.",
   "segments": [
     {
       "segment": "universe",
       "ok": true,
-      "source": "vanguard_vone",
+      "source": "stale:vanguard_vone",
       "n": 1024,
       "weights_source": "vone"
     },
     {
       "segment": "prices",
       "ok": true,
-      "n": 1015,
-      "requested": 1025,
+      "n": 995,
+      "requested": 1008,
       "error": ""
     },
     {
       "segment": "coverage",
       "ok": true,
-      "n": 1014,
+      "n": 1011,
       "requested": 1024,
-      "coverage": 0.9902
+      "coverage": 0.9873
     },
     {
       "segment": "metadata",
       "ok": true,
       "checked": 1024,
-      "stale": 0,
-      "refreshed": 0
+      "stale": 4,
+      "refreshed": 4
     },
     {
       "segment": "factors",
       "ok": true,
-      "n": 983
+      "n": 980
     },
     {
       "segment": "mvt",
       "ok": true,
-      "n": 991,
+      "n": 973,
       "universe": "equities",
-      "n_priced": 1014,
+      "n_priced": 994,
       "panel": {
-        "n_in": 1014,
-        "n_kept": 998,
+        "n_in": 994,
+        "n_kept": 979,
         "dropped": {
           "BLSH": "insufficient_history(<280d)",
           "CBC": "insufficient_history(<280d)",
           "CBRS": "insufficient_history(<280d)",
-          "FDXF": "insufficient_history(<280d)",
           "FIG": "insufficient_history(<280d)",
           "FIGR": "insufficient_history(<280d)",
           "FPS": "insufficient_history(<280d)",
@@ -66,34 +65,34 @@
         "n_days": 1254
       },
       "empirical_excluded": 2,
-      "n_scored": 991,
+      "n_scored": 973,
       "k_factors": 15,
-      "explained_variance_ratio": 0.5341,
-      "effective_factor_count": 73.973,
+      "explained_variance_ratio": 0.5323,
+      "effective_factor_count": 74.632,
       "erc_horizon_weights": {
-        "12_1": 0.1787,
-        "12m": 0.1502,
+        "12_1": 0.1802,
+        "12m": 0.1508,
         "9m": 0.1521,
-        "6m": 0.1571,
-        "3m": 0.1627,
-        "1m": 0.1992
+        "6m": 0.1573,
+        "3m": 0.1653,
+        "1m": 0.1943
       }
     },
     {
       "segment": "mvt_crossuniverse",
       "ok": true,
-      "n": 929
+      "n": 912
     },
     {
       "segment": "artifacts",
       "ok": true,
-      "n": 983
+      "n": 980
     },
     {
       "segment": "history",
       "ok": true,
-      "history_added": 983,
-      "picks_added": 196,
+      "history_added": 964,
+      "picks_added": 192,
       "evaluated": 0
     },
     {
