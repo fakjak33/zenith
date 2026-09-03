@@ -53,7 +53,7 @@ def today_badge() -> str | None:
         n_buy, n_sell = doc.get("n_buy", 0), doc.get("n_sell", 0)
         if not n_buy and not n_sell:
             return None
-        return uc.chip(f"IDEAS -- {n_buy} BUY / {n_sell} SELL today", color=THEME.mauve,
+        return uc.chip(f"IDEAS — {n_buy} BUY / {n_sell} SELL today", color=THEME.mauve,
                        sub="see IDEAS tab")
     except Exception:
         return None

@@ -13,6 +13,7 @@ import streamlit as st
 
 from . import DISCLAIMER, load
 from . import history as ehist
+from .. import ui_charts as uc
 from ..config import THEME
 from ..ui_theme import evidence_rating, key_findings, section, stamp
 
@@ -265,11 +266,9 @@ def today_badge() -> str | None:
         return None
     n = len(shorts)
     color = THEME.coral
-    return (f'<div style="display:inline-block; font-family:{THEME.font_display}; '
-            f'font-size:0.95rem; letter-spacing:0.1em; text-transform:uppercase; '
-            f'color:{color}; border:1px solid {color}; padding:0.15rem 0.6rem; '
-            f'margin:0 0.4rem 0.6rem 0;">◆ EDGE: {n} lottery-short & short-interest '
-            f'names flagged · see EDGE SCREENS</div>')
+    # Shared chip helper -- see the note in pretom/view.py::today_badge.
+    return uc.chip(f"EDGE — {n} lottery-short & short-interest names flagged",
+                   color=color, sub="see EDGE SCREENS tab")
 
 
 def _stale_cut() -> str:

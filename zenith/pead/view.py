@@ -17,6 +17,7 @@ from . import DISCLAIMER, load, load_day, archive_days
 from . import history as ph
 from .signals import WEIGHTS, CONVICTION, POOL_MIN
 from ..pretom import calendar as cal
+from .. import ui_charts as uc
 from ..config import THEME
 from ..ui_theme import evidence_rating, key_findings, section, stamp
 
@@ -143,13 +144,6 @@ def _latest_sheet(latest: dict) -> dict:
     return load_day(days[0]) if days else {}
 
 
-def _chip(text: str, color: str) -> str:
-    return (f'<div style="display:inline-block; font-family:{THEME.font_display}; '
-            f'font-size:0.95rem; letter-spacing:0.1em; text-transform:uppercase; '
-            f'color:{color}; border:1px solid {color}; padding:0.15rem 0.6rem; '
-            f'margin:0 0.4rem 0.6rem 0;">{text} · see PEAD tab</div>')
-
-
 EAP_BADGE_MIN = 10          # chip only when the near-term calendar is busy
 
 
@@ -163,15 +157,18 @@ def today_badge() -> str | None:
     d = sheet.get("day", "")
     if (n_l or n_s) and d >= (date.today() - timedelta(days=4)).isoformat():
         color = THEME.teal if n_l >= n_s else THEME.coral
-        chips.append(_chip(f"◆ PEAD: {n_l} long / {n_s} short "
-                           f"signal{'s' * ((n_l + n_s) != 1)} ({d})", color))
+        # Shared chip helper -- see the note in pretom/view.py::today_badge.
+        chips.append(uc.chip(f"PEAD — {n_l} long / {n_s} short "
+                             f"signal{'s' * ((n_l + n_s) != 1)}",
+                             color=color, sub=f"{d} · see PEAD tab"))
     eap_obj = load("eap", {})
     cutoff = (date.today() + timedelta(days=4)).isoformat()
     soon = [u for u in eap_obj.get("upcoming", [])
             if u.get("reaction_day", "9999") <= cutoff]
     if len(soon) >= EAP_BADGE_MIN:
-        chips.append(_chip(f"◆ EAP: {len(soon)} R1000 names report in the next "
-                           f"few sessions", THEME.mustard))
+        chips.append(uc.chip(f"EAP — {len(soon)} R1000 names report in the next "
+                             f"few sessions",
+                             color=THEME.mustard, sub="see PEAD tab"))
     return "".join(chips) or None
 
 

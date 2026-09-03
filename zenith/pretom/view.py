@@ -14,6 +14,7 @@ import streamlit as st
 
 from . import DISCLAIMER, load, load_month, archive_months
 from . import calendar as cal
+from .. import ui_charts as uc
 from ..config import THEME
 from ..ui_theme import evidence_rating, key_findings, section, stamp
 
@@ -131,13 +132,13 @@ def today_badge() -> str | None:
     state = _live_state()
     stt, k = state["state"], state["tau_offset"]
     if stt == "LOCKED":
-        text = (f"▲ PRETOM basket locked — short window opens in "
+        text = (f"PRETOM basket locked — short window opens in "
                 f"{state['days_to_open']} trading day{'s' * (state['days_to_open'] != 1)}")
     elif stt == "WINDOW_OPEN":
         if state["t1_tail"]:
-            text = "▲ PRETOM T+1 extension day (τ−3) — classic window closed"
+            text = "PRETOM T+1 extension day (τ−3) — classic window closed"
         else:
-            text = (f"▲ PRETOM WINDOW OPEN — day {k + 10} of 6 "
+            text = (f"PRETOM WINDOW OPEN — day {k + 10} of 6 "
                     f"(classic closes in {state['days_to_close_classic']} td)")
     elif stt == "FORMING" and state["days_to_open"] <= 4:
         text = f"PRETOM window opens in {state['days_to_open']} trading days"
@@ -145,11 +146,12 @@ def today_badge() -> str | None:
         text = "PRETOM post-window — reversal watch"
     else:
         return None
+    # uc.chip, not hand-rolled HTML: the TODAY tab stacks these chips from nine
+    # different feature packages, so they have to come out of one helper or they
+    # drift apart visually (this one used to render as a larger, uppercase,
+    # letter-spaced div while six other features used the shared chip).
     color = _STATE_META[stt][0]
-    return (f'<div style="display:inline-block; font-family:{THEME.font_display}; '
-            f'font-size:0.95rem; letter-spacing:0.1em; text-transform:uppercase; '
-            f'color:{color}; border:1px solid {color}; padding:0.15rem 0.6rem; '
-            f'margin:0 0 0.6rem 0;">{text} · see PRETOM tab</div>')
+    return uc.chip(text, color=color, sub="see PRETOM tab")
 
 
 # ------------------------------------------------------------------ charts --
