@@ -1,19 +1,19 @@
 {
-  "date": "2026-09-02",
+  "date": "2026-09-03",
   "is_trading_day": true,
   "disclaimer": "NIGHT & DAY decomposes yfinance OHLC into overnight (close->open) and intraday (open->close) streams (Lou-Polk-Skouras 2019). The overnight tilt is real and persistent in the data but NOT cheaply tradable — capturing it literally pays the open/close spread daily. A research monitor and tilt input, not a trading system.",
   "segments": [
     {
       "segment": "universe",
       "ok": true,
-      "source": "vanguard_vone",
+      "source": "stale:vanguard_vone",
       "n": 1024,
       "weights_source": "vone"
     },
     {
       "segment": "prices",
       "ok": true,
-      "n": 1030
+      "n": 1011
     },
     {
       "segment": "panel",
@@ -23,13 +23,13 @@
     {
       "segment": "screen",
       "ok": true,
-      "n": 1014
+      "n": 1012
     },
     {
       "segment": "history",
       "ok": true,
       "added": 102,
-      "evaluated": 106
+      "evaluated": 175
     }
   ]
 }
