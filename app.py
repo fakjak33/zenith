@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 from pathlib import Path
 
 import pandas as pd
@@ -132,6 +133,30 @@ def insights_research_news(items, key_prefix):
             render_items(news)
 
 
+def render_feature(module_path: str, feature: str) -> None:
+    """Import a feature's view module and render it, containing any failure to
+    THIS tab.
+
+    Without this, one feature package failing to import raised straight out of
+    app.py and every one of the 16 tabs showed the same traceback instead of
+    the one broken tab -- which is exactly what happened when a Streamlit Cloud
+    redeploy left a newly-added package importing against a `zenith.config`
+    still cached in sys.modules from the previous process.
+
+    The error is shown, not swallowed: a broken tab says so plainly, in its own
+    tab, while the other fifteen keep working. Streamlit already prints the
+    traceback to the server log, so `Manage app` still has the detail.
+    """
+    try:
+        importlib.import_module(module_path).render()
+    except Exception as exc:
+        st.error(f"The {feature} tab could not be loaded: "
+                 f"{type(exc).__name__}: {exc}")
+        st.caption("The rest of the app is unaffected. If this followed a fresh deploy, "
+                   "rebooting the app usually clears it — stale modules can survive a "
+                   "redeploy even when the code on disk is correct.")
+
+
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
  tab_nightday, tab_holdings, tab_mom, tab_etfmom, tab_ideas, tab_regimes, tab_index,
  tab_archive, tab_sources) = st.tabs(
@@ -141,20 +166,46 @@ def insights_research_news(items, key_prefix):
 
 with tab_today:
     from zenith.ui_theme import stamp
-    from zenith.pretom.view import today_badge
-    from zenith.pead.view import today_badge as pead_today_badge
-    from zenith.edge.view import today_badge as edge_today_badge
-    from zenith.holdings.view import today_badge as holdings_today_badge
-    from zenith.mom.view import today_badge as mom_today_badge
-    from zenith.etfmom.view import today_badge as etfmom_today_badge
-    from zenith.ideas.view import today_badge as ideas_today_badge
-    from zenith.regimes.view import today_badge as regimes_today_badge
-    from zenith.index.view import today_badge as index_today_badge
-    for _b in (today_badge(), pead_today_badge(), edge_today_badge(),
-               holdings_today_badge(), mom_today_badge(), etfmom_today_badge(),
-               ideas_today_badge(), regimes_today_badge(), index_today_badge()):
+
+    # A TODAY chip is decorative -- a one-line summary of another tab. It must
+    # never be able to take the whole app down, and until this was guarded it
+    # could: these are hard module-level imports of nine separate feature
+    # packages, so an ImportError in ANY of them raised straight out of app.py
+    # and blanked all 16 tabs rather than dropping one chip.
+    #
+    # That is not hypothetical. Streamlit Cloud re-executes app.py when a new
+    # commit lands but keeps already-imported modules in sys.modules; after the
+    # ETF MOMENTUM deploy the freshly-added `zenith.etfmom` package was imported
+    # against a `zenith.config` still cached from the previous process, which
+    # predated ETFMOM_FILES. Every page showed an ImportError until the app was
+    # rebooted. The underlying code was correct on disk the whole time -- which
+    # is exactly the kind of failure a decorative element should absorb rather
+    # than propagate.
+    _BADGE_SOURCES = (
+        ("PRETOM", "zenith.pretom.view"),
+        ("PEAD", "zenith.pead.view"),
+        ("EDGE", "zenith.edge.view"),
+        ("HOLDINGS", "zenith.holdings.view"),
+        ("MOMENTUM", "zenith.mom.view"),
+        ("ETF MOMENTUM", "zenith.etfmom.view"),
+        ("IDEAS", "zenith.ideas.view"),
+        ("REGIMES", "zenith.regimes.view"),
+        ("INDEX", "zenith.index.view"),
+    )
+    _chips, _chip_failures = [], []
+    for _label, _module in _BADGE_SOURCES:
+        try:
+            _chips.append(importlib.import_module(_module).today_badge())
+        except Exception:
+            _chip_failures.append(_label)
+    for _b in _chips:
         if _b:
             st.markdown(_b, unsafe_allow_html=True)
+    if _chip_failures:
+        # Named, not swallowed silently -- a missing chip should be visible as a
+        # missing chip, so a genuinely broken feature still gets noticed.
+        st.caption(f"Status chip unavailable this run: {', '.join(_chip_failures)} "
+                   f"(that tab may still work — open it directly).")
     latest = store.load_latest()
     dates = store.archive_dates()
     st.markdown(stamp(dates[0] if dates else "—", "Today"), unsafe_allow_html=True)
@@ -165,79 +216,66 @@ with tab_today:
 
 with tab_brief:
     st.markdown(section("Weekly Brief — markets in one read", 0), unsafe_allow_html=True)
-    from zenith.brief import view as brief_view
-    brief_view.render()
+    render_feature("zenith.brief.view", "WEEKLY BRIEF")
 
 with tab_cas:
     st.markdown(section("CAS — Complex Adaptive Systems monitor", 2), unsafe_allow_html=True)
-    from zenith.cas import view as cas_view
-    cas_view.render()
+    render_feature("zenith.cas.view", "CAS")
 
 with tab_pretom:
     st.markdown(section("PRETOM — intramonth momentum short screener", 4),
                 unsafe_allow_html=True)
-    from zenith.pretom import view as pretom_view
-    pretom_view.render()
+    render_feature("zenith.pretom.view", "PRETOM")
 
 with tab_pead:
     st.markdown(section("PEAD — post-earnings drift screener", 1),
                 unsafe_allow_html=True)
-    from zenith.pead import view as pead_view
-    pead_view.render()
+    render_feature("zenith.pead.view", "PEAD")
 
 with tab_fmom:
     st.markdown(section("FACTOR MOMENTUM — Gupta & Kelly, three ways", 3),
                 unsafe_allow_html=True)
-    from zenith.fmom import view as fmom_view
-    fmom_view.render()
+    render_feature("zenith.fmom.view", "FACTOR MOMENTUM")
 
 with tab_edge:
     st.markdown(section("EDGE SCREENS — rated cross-sectional signals", 3),
                 unsafe_allow_html=True)
-    from zenith.edge import view as edge_view
-    edge_view.render()
+    render_feature("zenith.edge.view", "EDGE SCREENS")
 
 with tab_nightday:
     st.markdown(section("NIGHT & DAY — overnight vs intraday", 1),
                 unsafe_allow_html=True)
-    from zenith.nightday import view as nightday_view
-    nightday_view.render()
+    render_feature("zenith.nightday.view", "NIGHT & DAY")
 
 with tab_holdings:
     st.markdown(section("HOLDINGS — fund position intelligence", 5),
                 unsafe_allow_html=True)
-    from zenith.holdings import view as holdings_view
-    holdings_view.render()
+    render_feature("zenith.holdings.view", "HOLDINGS")
 
 with tab_mom:
     st.markdown(section("MOMENTUM — Russell 1000 stock momentum engine", 4),
                 unsafe_allow_html=True)
-    from zenith.mom import view as mom_view
-    mom_view.render()
+    render_feature("zenith.mom.view", "MOMENTUM")
 
 with tab_etfmom:
     st.markdown(section("ETF MOMENTUM — the momentum engine over the full ETF universe", 2),
                 unsafe_allow_html=True)
-    from zenith.etfmom import view as etfmom_view
-    etfmom_view.render()
+    render_feature("zenith.etfmom.view", "ETF MOMENTUM")
 
 with tab_ideas:
     st.markdown(section("IDEAS — discretionary-systematic opportunity engine", 3),
                 unsafe_allow_html=True)
-    from zenith.ideas import view as ideas_view
-    ideas_view.render()
+    render_feature("zenith.ideas.view", "IDEAS")
 
 with tab_regimes:
     st.markdown(section("REGIMES — macro regime intelligence & early-warning system", 2),
                 unsafe_allow_html=True)
-    from zenith.regimes import view as regimes_view
-    regimes_view.render()
+    render_feature("zenith.regimes.view", "REGIMES")
 
 with tab_index:
     st.markdown(section("INDEX — the Master List: financial intelligence directory", 5),
                 unsafe_allow_html=True)
-    from zenith.index import view as index_view
-    index_view.render()
+    render_feature("zenith.index.view", "INDEX")
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)
