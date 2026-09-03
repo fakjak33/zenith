@@ -1,7 +1,14 @@
 {
-  "as_of": "2026-09-02",
+  "as_of": "2026-09-03",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "recent_days": [
+    {
+      "day": "2026-09-02",
+      "n_reporters": 7,
+      "n_eligible": 0,
+      "n_long": 0,
+      "n_short": 0
+    },
     {
       "day": "2026-09-01",
       "n_reporters": 1,
@@ -64,16 +71,261 @@
       "n_eligible": 1,
       "n_long": 1,
       "n_short": 0
-    },
-    {
-      "day": "2026-08-19",
-      "n_reporters": 9,
-      "n_eligible": 5,
-      "n_long": 5,
-      "n_short": 0
     }
   ],
   "signals": [
+    {
+      "ticker": "PANW",
+      "name": "Palo Alto Networks, Inc.",
+      "sector": "",
+      "report_date": "2026-09-01",
+      "time": "time-after-hours",
+      "reaction_day": "2026-09-02",
+      "side": "mixed",
+      "eps_actual": 0.53,
+      "eps_consensus": 0.51,
+      "n_estimates": 14,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 5.5e-05,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.907767
+      },
+      "context": {
+        "close_pre": 362.09,
+        "cap_tier": "large",
+        "mktcap": 295103365000.0,
+        "adv_usd": 2059652751.2451172,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_prices",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
+    {
+      "ticker": "DELL",
+      "name": "Dell Technologies Inc.",
+      "sector": "",
+      "report_date": "2026-09-01",
+      "time": "time-not-supplied",
+      "reaction_day": "2026-09-02",
+      "side": "mixed",
+      "eps_actual": 6.76,
+      "eps_consensus": 4.72,
+      "n_estimates": 5,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.0048,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.826848
+      },
+      "context": {
+        "close_pre": 425.0,
+        "cap_tier": "large",
+        "mktcap": 275445907000.0,
+        "adv_usd": 2702367112.1154785,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_prices",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
+    {
+      "ticker": "CRDO",
+      "name": "Credo Technology Group Holding Ltd",
+      "sector": "",
+      "report_date": "2026-09-01",
+      "time": "time-after-hours",
+      "reaction_day": "2026-09-02",
+      "side": "mixed",
+      "eps_actual": 0.78,
+      "eps_consensus": 0.93,
+      "n_estimates": 4,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": -0.000726,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.66942
+      },
+      "context": {
+        "close_pre": 206.63,
+        "cap_tier": "large",
+        "mktcap": 38832939000.0,
+        "adv_usd": 1447010403.1356812,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_prices",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
+    {
+      "ticker": "MDB",
+      "name": "MongoDB, Inc.",
+      "sector": "",
+      "report_date": "2026-09-01",
+      "time": "time-after-hours",
+      "reaction_day": "2026-09-02",
+      "side": "mixed",
+      "eps_actual": 0.54,
+      "eps_consensus": 0.08,
+      "n_estimates": 9,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.001059,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.917797
+      },
+      "context": {
+        "close_pre": 434.21,
+        "cap_tier": "large",
+        "mktcap": 34924347000.0,
+        "adv_usd": 523542750.3768921,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_prices",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
+    {
+      "ticker": "GTLB",
+      "name": "GitLab Inc.",
+      "sector": "",
+      "report_date": "2026-09-01",
+      "time": "time-after-hours",
+      "reaction_day": "2026-09-02",
+      "side": "mixed",
+      "eps_actual": -0.13,
+      "eps_consensus": -0.07,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": -0.001331,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.860825
+      },
+      "context": {
+        "close_pre": 45.09,
+        "cap_tier": "mid",
+        "mktcap": 7615701000.0,
+        "adv_usd": 139045371.0357666,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_prices",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
+    {
+      "ticker": "BF-B",
+      "name": "Brown Forman Corporation",
+      "sector": "",
+      "report_date": "2026-09-02",
+      "time": "time-pre-market",
+      "reaction_day": "2026-09-02",
+      "side": "mixed",
+      "eps_actual": null,
+      "eps_consensus": 0.38,
+      "n_estimates": 4,
+      "sue_source": "",
+      "raw": {
+        "sue": null,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.847292
+      },
+      "context": {
+        "close_pre": 26.36,
+        "cap_tier": "mid",
+        "mktcap": 12393923600.0,
+        "adv_usd": 63921560.24122238,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_eps",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
+    {
+      "ticker": "OLLI",
+      "name": "Ollie's Bargain Outlet Holdings, Inc.",
+      "sector": "",
+      "report_date": "2026-09-02",
+      "time": "time-pre-market",
+      "reaction_day": "2026-09-02",
+      "side": "mixed",
+      "eps_actual": null,
+      "eps_consensus": 1.14,
+      "n_estimates": 6,
+      "sue_source": "",
+      "raw": {
+        "sue": null,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.519647
+      },
+      "context": {
+        "close_pre": 72.34,
+        "cap_tier": "small",
+        "mktcap": 4373191200.0,
+        "adv_usd": 128434416.64047241,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_eps",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
     {
       "ticker": "MDT",
       "name": "Medtronic plc",
@@ -1227,429 +1479,6 @@
       },
       "composite": 39.2,
       "rank_pool_n": 1005
-    },
-    {
-      "ticker": "SJM",
-      "name": "The J.M. Smucker Company",
-      "sector": "",
-      "report_date": "2026-08-26",
-      "time": "time-pre-market",
-      "reaction_day": "2026-08-26",
-      "side": "long",
-      "eps_actual": 3.24,
-      "eps_consensus": 2.21,
-      "n_estimates": 6,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.00821,
-        "ear": 0.043222,
-        "rue": null,
-        "avol": 0.702598,
-        "nearness": 0.991975
-      },
-      "context": {
-        "close_pre": 125.45,
-        "cap_tier": "mid",
-        "mktcap": 13408182561.0,
-        "adv_usd": 156836027.07138062,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": false,
-        "momentum_aligned": true,
-        "rue_missing": true
-      },
-      "excluded_reason": null,
-      "ranks": {
-        "sue": 96.1,
-        "ear": 77.3,
-        "rue": 50.0,
-        "avol": 49.1,
-        "anchor": 96.6
-      },
-      "composite": 78.9,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "BBWI",
-      "name": "Bath & Body Works, Inc.",
-      "sector": "",
-      "report_date": "2026-08-26",
-      "time": "time-pre-market",
-      "reaction_day": "2026-08-26",
-      "side": "long",
-      "eps_actual": 0.62,
-      "eps_consensus": 0.24,
-      "n_estimates": 8,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.021615,
-        "ear": 0.074863,
-        "rue": null,
-        "avol": 1.134125,
-        "nearness": 0.567545
-      },
-      "context": {
-        "close_pre": 17.58,
-        "cap_tier": "small",
-        "mktcap": 3543456655.0,
-        "adv_usd": 102472609.9770546,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": true,
-        "momentum_aligned": false,
-        "rue_missing": true
-      },
-      "excluded_reason": null,
-      "ranks": {
-        "sue": 99.4,
-        "ear": 86.8,
-        "rue": 50.0,
-        "avol": 81.3,
-        "anchor": 9.7
-      },
-      "composite": 74.5,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "ZM",
-      "name": "Zoom Communications, Inc.",
-      "sector": "",
-      "report_date": "2026-08-25",
-      "time": "time-after-hours",
-      "reaction_day": "2026-08-26",
-      "side": "short",
-      "eps_actual": 0.93,
-      "eps_consensus": 1.01,
-      "n_estimates": 7,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": -0.000793,
-        "ear": -0.070476,
-        "rue": null,
-        "avol": 0.772113,
-        "nearness": 0.879554
-      },
-      "context": {
-        "close_pre": 100.92,
-        "cap_tier": "large",
-        "mktcap": 29592995441.0,
-        "adv_usd": 318674973.9040375,
-        "next_earn_date": "2026-11-24",
-        "td_to_next_earn": 63
-      },
-      "flags": {
-        "gap_held": true,
-        "momentum_aligned": false,
-        "rue_missing": true
-      },
-      "excluded_reason": null,
-      "ranks": {
-        "sue": 88.7,
-        "ear": 85.1,
-        "rue": 50.0,
-        "avol": 55.0,
-        "anchor": 45.8
-      },
-      "composite": 72.3,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "WSM",
-      "name": "Williams-Sonoma, Inc.",
-      "sector": "",
-      "report_date": "2026-08-26",
-      "time": "time-pre-market",
-      "reaction_day": "2026-08-26",
-      "side": "long",
-      "eps_actual": 2.84,
-      "eps_consensus": 2.05,
-      "n_estimates": 8,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.003365,
-        "ear": 0.011237,
-        "rue": null,
-        "avol": 0.943744,
-        "nearness": 0.920946
-      },
-      "context": {
-        "close_pre": 234.74,
-        "cap_tier": "large",
-        "mktcap": 27639839466.0,
-        "adv_usd": 219884316.79382324,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": true,
-        "momentum_aligned": true,
-        "rue_missing": true
-      },
-      "excluded_reason": null,
-      "ranks": {
-        "sue": 87.6,
-        "ear": 59.7,
-        "rue": 50.0,
-        "avol": 70.1,
-        "anchor": 66.9
-      },
-      "composite": 69.7,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "SMTC",
-      "name": "Semtech Corporation",
-      "sector": "",
-      "report_date": "2026-08-25",
-      "time": "time-after-hours",
-      "reaction_day": "2026-08-26",
-      "side": "long",
-      "eps_actual": 0.51,
-      "eps_consensus": 0.41,
-      "n_estimates": 6,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.000784,
-        "ear": 0.103919,
-        "rue": null,
-        "avol": 1.323101,
-        "nearness": 0.71903
-      },
-      "context": {
-        "close_pre": 127.52,
-        "cap_tier": "mid",
-        "mktcap": 11878636943.0,
-        "adv_usd": 380727532.2189331,
-        "next_earn_date": "2026-11-23",
-        "td_to_next_earn": 62
-      },
-      "flags": {
-        "gap_held": true,
-        "momentum_aligned": true,
-        "rue_missing": true
-      },
-      "excluded_reason": null,
-      "ranks": {
-        "sue": 53.5,
-        "ear": 91.3,
-        "rue": 50.0,
-        "avol": 87.9,
-        "anchor": 25.4
-      },
-      "composite": 65.4,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "HEI",
-      "name": "Heico Corporation",
-      "sector": "",
-      "report_date": "2026-08-25",
-      "time": "time-after-hours",
-      "reaction_day": "2026-08-26",
-      "side": "mixed",
-      "eps_actual": 1.67,
-      "eps_consensus": 1.51,
-      "n_estimates": 5,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.000456,
-        "ear": -0.01418,
-        "rue": null,
-        "avol": 1.092254,
-        "nearness": 0.931513
-      },
-      "context": {
-        "close_pre": 351.05,
-        "cap_tier": "large",
-        "mktcap": 49054922393.0,
-        "adv_usd": 160958559.86328125,
-        "next_earn_date": "2026-12-17",
-        "td_to_next_earn": 79
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 39.7,
-        "ear": 41.0,
-        "rue": 50.0,
-        "avol": 79.3,
-        "anchor": 70.4
-      },
-      "composite": 51.7,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "DY",
-      "name": "Dycom Industries, Inc.",
-      "sector": "",
-      "report_date": "2026-08-26",
-      "time": "time-pre-market",
-      "reaction_day": "2026-08-26",
-      "side": "mixed",
-      "eps_actual": 5.29,
-      "eps_consensus": 4.36,
-      "n_estimates": 4,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.002644,
-        "ear": -0.116453,
-        "rue": null,
-        "avol": 1.857163,
-        "nearness": 0.621039
-      },
-      "context": {
-        "close_pre": 351.8,
-        "cap_tier": "mid",
-        "mktcap": 10565065869.0,
-        "adv_usd": 193820162.9562378,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 83.8,
-        "ear": 6.4,
-        "rue": 50.0,
-        "avol": 97.7,
-        "anchor": 14.2
-      },
-      "composite": 48.8,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "DCI",
-      "name": "Donaldson Company, Inc.",
-      "sector": "",
-      "report_date": "2026-08-26",
-      "time": "time-pre-market",
-      "reaction_day": "2026-08-26",
-      "side": "long",
-      "eps_actual": 1.15,
-      "eps_consensus": 1.12,
-      "n_estimates": 5,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.000322,
-        "ear": 0.021009,
-        "rue": null,
-        "avol": 0.579686,
-        "nearness": 0.832328
-      },
-      "context": {
-        "close_pre": 93.26,
-        "cap_tier": "mid",
-        "mktcap": 10809865083.0,
-        "adv_usd": 61440887.11357117,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": true,
-        "momentum_aligned": true,
-        "rue_missing": true
-      },
-      "excluded_reason": null,
-      "ranks": {
-        "sue": 34.1,
-        "ear": 65.6,
-        "rue": 50.0,
-        "avol": 39.2,
-        "anchor": 43.1
-      },
-      "composite": 47.3,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "INTU",
-      "name": "Intuit Inc.",
-      "sector": "",
-      "report_date": "2026-08-25",
-      "time": "time-after-hours",
-      "reaction_day": "2026-08-26",
-      "side": "mixed",
-      "eps_actual": 2.17,
-      "eps_consensus": 2.12,
-      "n_estimates": 9,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.00014,
-        "ear": -0.032617,
-        "rue": null,
-        "avol": 0.890571,
-        "nearness": 0.512673
-      },
-      "context": {
-        "close_pre": 357.46,
-        "cap_tier": "large",
-        "mktcap": 97778536020.0,
-        "adv_usd": 1356757188.5147095,
-        "next_earn_date": "2026-11-19",
-        "td_to_next_earn": 60
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 26.7,
-        "ear": 29.8,
-        "rue": 50.0,
-        "avol": 65.4,
-        "anchor": 6.1
-      },
-      "composite": 32.7,
-      "rank_pool_n": 1010
-    },
-    {
-      "ticker": "HEI-A",
-      "name": "Heico Corporation",
-      "sector": "",
-      "report_date": "2026-08-25",
-      "time": "time-not-supplied",
-      "reaction_day": "2026-08-26",
-      "side": "mixed",
-      "eps_actual": 1.67,
-      "eps_consensus": null,
-      "n_estimates": null,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": null,
-        "ear": -0.005123,
-        "rue": null,
-        "avol": 0.429359,
-        "nearness": 0.919794
-      },
-      "context": {
-        "close_pre": 257.1,
-        "cap_tier": "large",
-        "mktcap": 49054922393.0,
-        "adv_usd": 63183434.27886963,
-        "next_earn_date": "2026-12-17",
-        "td_to_next_earn": 79
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null
-      },
-      "excluded_reason": "no_consensus",
-      "ranks": {},
-      "composite": null,
-      "rank_pool_n": 0
     }
   ],
   "active_book": {
@@ -4926,8 +4755,8 @@
         "active": true,
         "running": {
           "last_close_date": "2026-09-01",
-          "ret": 0.0542,
-          "excess_ret": 0.026
+          "ret": 0.0543,
+          "excess_ret": 0.0261
         }
       },
       {
@@ -6395,9 +6224,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-01",
-          "ret": 0.0217,
-          "excess_ret": -0.0054
+          "last_close_date": "2026-09-02",
+          "ret": -0.4988,
+          "excess_ret": -0.5259
         }
       },
       {
@@ -6624,7 +6453,7 @@
         "entry_open": 37.97,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-11-04",
+        "next_earn_date": "2026-10-28",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -11696,9 +11525,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-01",
-          "ret": -0.0853,
-          "excess_ret": -0.0705
+          "last_close_date": "2026-09-02",
+          "ret": -0.1036,
+          "excess_ret": -0.0887
         }
       },
       {
@@ -11930,9 +11759,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-08-31",
-          "ret": -0.0853,
-          "excess_ret": -0.0773
+          "last_close_date": "2026-09-01",
+          "ret": -0.0999,
+          "excess_ret": -0.085
         }
       },
       {
@@ -15498,7 +15327,7 @@
         "entry_open": 9.8,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-29",
+        "next_earn_date": "2026-11-03",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -19365,53 +19194,6 @@
   "drift_curve_as_of": "2026-08-24",
   "rank_pool": {
     "days": {
-      "2026-05-20": {
-        "sue": [
-          0.001063,
-          0.001128,
-          0.001965,
-          0.001049,
-          0.001598,
-          0.000384,
-          0.000436,
-          0.000275,
-          0.0
-        ],
-        "ear": [
-          0.138634,
-          0.046361,
-          -0.048837,
-          0.087785,
-          -0.016148,
-          0.020601,
-          -0.049495,
-          0.002024,
-          0.095551
-        ],
-        "rue": [],
-        "avol": [
-          1.258872,
-          0.742299,
-          1.404756,
-          0.627243,
-          0.869776,
-          1.383342,
-          1.087145,
-          0.820796,
-          1.050531
-        ],
-        "nearness": [
-          0.930102,
-          0.911672,
-          0.965005,
-          0.738718,
-          0.929587,
-          0.790768,
-          0.950863,
-          0.748714,
-          0.624204
-        ]
-      },
       "2026-05-21": {
         "sue": [
           0.000792,
@@ -24403,19 +24185,31 @@
         "nearness": [
           0.873627
         ]
+      },
+      "2026-09-02": {
+        "sue": [
+          5.5e-05,
+          0.0048,
+          -0.000726,
+          0.001059,
+          -0.001331
+        ],
+        "ear": [],
+        "rue": [],
+        "avol": [],
+        "nearness": [
+          0.907767,
+          0.826848,
+          0.66942,
+          0.917797,
+          0.860825,
+          0.847292,
+          0.519647
+        ]
       }
     },
-    "window_start": "2026-05-20",
+    "window_start": "2026-05-21",
     "sue": [
-      0.001063,
-      0.001128,
-      0.001965,
-      0.001049,
-      0.001598,
-      0.000384,
-      0.000436,
-      0.000275,
-      0.0,
       0.000792,
       0.000724,
       0.000591,
@@ -25416,18 +25210,14 @@
       0.00063,
       0.002221,
       0.000296,
-      0.000772
+      0.000772,
+      5.5e-05,
+      0.0048,
+      -0.000726,
+      0.001059,
+      -0.001331
     ],
     "ear": [
-      0.138634,
-      0.046361,
-      -0.048837,
-      0.087785,
-      -0.016148,
-      0.020601,
-      -0.049495,
-      0.002024,
-      0.095551,
       0.1367,
       0.062871,
       0.045335,
@@ -26537,15 +26327,6 @@
     ],
     "rue": [],
     "avol": [
-      1.258872,
-      0.742299,
-      1.404756,
-      0.627243,
-      0.869776,
-      1.383342,
-      1.087145,
-      0.820796,
-      1.050531,
       1.307157,
       0.8466,
       1.439072,
@@ -27654,15 +27435,6 @@
       0.892699
     ],
     "nearness": [
-      0.930102,
-      0.911672,
-      0.965005,
-      0.738718,
-      0.929587,
-      0.790768,
-      0.950863,
-      0.748714,
-      0.624204,
       0.836888,
       0.815172,
       0.335916,
@@ -28772,7 +28544,14 @@
       0.527254,
       0.822207,
       0.961674,
-      0.873627
+      0.873627,
+      0.907767,
+      0.826848,
+      0.66942,
+      0.917797,
+      0.860825,
+      0.847292,
+      0.519647
     ]
   }
 }
