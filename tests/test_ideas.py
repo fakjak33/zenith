@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 
 from zenith.ideas import (conviction, unusual, confluence, divergence, classify,
-                          riskreward, valuation, groups)
+                          riskreward, valuation, groups, narrative)
 from zenith.config import IDEAS_WEIGHTS
 
 
@@ -232,3 +232,35 @@ def test_groups_score_all_returns_all_eight():
     for g in SIGNAL_GROUPS:
         assert "score" in out[g] and "coverage" in out[g] and "explain" in out[g]
         assert not math.isnan(out[g]["score"])
+
+
+# ----------------------------------------------------------------- narrative
+def _tech_group(row: dict) -> dict:
+    score, coverage, explain = groups.technicals(row)
+    return {"technicals": {"score": score, "coverage": coverage, "explain": explain}}
+
+
+def test_narrative_survives_a_null_technical_state():
+    """Regression: the nightly IDEAS Action died for two days on
+    `AttributeError: 'NoneType' object has no attribute 'lower'`.
+
+    `state` is not an optional key -- it is always PRESENT and sometimes None,
+    so `.get("state", "mixed")` never fired its default. panel.py's price-only
+    ETF fallback hardcodes `"state": None`, and groups.technicals() passes it
+    straight through; the first time such a name reached the final candidate
+    pool, narrative.build() crashed and took the whole run with it.
+    """
+    row = {"technicals": {"composite": 7.5, "state": None,
+                          "source": "ideas.panel(price_only_fallback)"}}
+    out = narrative.build("SPY", "long", "Trend Continuation", _tech_group(row),
+                          {"flags": []}, {"n_agree": 1})
+    assert "mixed technical read" in out["thesis"]
+    assert "composite 7.5" in out["thesis"]
+    assert "None" not in out["thesis"]     # a null composite must not leak either
+
+
+def test_narrative_still_reads_a_real_technical_state():
+    row = {"technicals": {"composite": 12.0, "state": "STRONG BULLISH", "pctile": 91.0}}
+    out = narrative.build("AAPL", "long", "Trend Continuation", _tech_group(row),
+                          {"flags": []}, {"n_agree": 1})
+    assert "strong bullish technical read" in out["thesis"]

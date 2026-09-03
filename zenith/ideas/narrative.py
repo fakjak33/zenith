@@ -32,8 +32,18 @@ def build(ticker: str, side: str, opp_type: str, group_scores: dict,
     lead_bits = []
     tech = g.get("technicals", {})
     if tech.get("coverage"):
-        lead_bits.append(f"a {tech['explain'].get('state', 'mixed').lower()} technical read "
-                         f"(composite {tech['explain'].get('composite')})")
+        # `.get(key, default)` only falls back when the KEY IS ABSENT -- and it
+        # never is. Both producers of this dict store `state` explicitly as
+        # None when there is no MOMENTUM state to report: groups.technicals()
+        # passes `tech.get("state")` straight through, and panel.py's
+        # price-only ETF fallback hardcodes `"state": None`. So the default
+        # never fired and `.lower()` hit None instead, which is what took the
+        # nightly IDEAS run down. `or` handles both the absent key and the
+        # present-but-None value. `_num` likewise keeps a None composite from
+        # rendering as the literal string "None" in the thesis.
+        te = tech.get("explain") or {}
+        lead_bits.append(f"a {(te.get('state') or 'mixed').lower()} technical read "
+                         f"(composite {_num(te.get('composite'))})")
     val = g.get("valuation", {})
     if val.get("coverage"):
         cross = (val.get("explain") or {}).get("cross_sectional") or {}
