@@ -581,6 +581,118 @@ def screen_mom() -> None:
     print(f"       picks={len(picks)} evaluated_cells={len(exs)}")
 
 
+def screen_etfmom() -> None:
+    print("[etfmom]")
+    import json as _json
+    from zenith.etfmom import load as etf_load
+    from zenith.etfmom.universe import ASSET_CLASSES
+    from zenith.config import ETFMOM_HISTORY_DIR, MOM_MVT_LEVERAGED_EXCLUDE
+
+    status = etf_load("status", {})
+    if not status:
+        warn(True, "etfmom not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("date", "")) <= 5, f"etfmom status fresh ({status.get('date')})")
+    segs = {s.get("segment"): s for s in status.get("segments", [])}
+    coverage_seg = segs.get("coverage", {})
+    check((coverage_seg.get("coverage") or 0) >= 0.85,
+          f"etfmom coverage >= 0.85 ({coverage_seg.get('coverage')})")
+
+    # The 6th factor comes from a DIFFERENT workflow (mom.yml). If mom ran fine
+    # today and etfmom still couldn't read its artefact, that is a wiring bug,
+    # not a data gap — worth separating from an honest staleness warning.
+    mvt_seg = segs.get("mvt", {})
+    stale = mvt_seg.get("mvt_stale_days")
+    warn(bool(stale), f"etfmom: multivariate-trend factor is {stale} day(s) stale")
+    from zenith.mom import load as mom_load
+    mom_fresh = _days_old((mom_load("status", {}) or {}).get("date", "")) <= 1
+    check(not (mom_fresh and mvt_seg.get("error")),
+          f"etfmom mvt link healthy given a fresh mom run ({mvt_seg.get('error') or 'ok'})")
+
+    scores = etf_load("scores", {})
+    rows = [r for r in scores.get("rows", []) if not r.get("excluded")]
+    if not rows:
+        warn(True, "etfmom: no scored rows yet")
+        return
+
+    tks = [r["ticker"] for r in rows]
+    check(len(tks) == len(set(tks)), "etfmom scores: no duplicate tickers")
+    ranks = sorted(r["rank"] for r in rows)
+    check(ranks == list(range(1, len(rows) + 1)), "etfmom scores: ranks contiguous")
+    check(all(0 <= (r.get("pctile") or 0) <= 100 for r in rows),
+          "etfmom scores: pctiles within [0,100]")
+    check(all(-20.0 <= r["composite"] <= 20.0 for r in rows),
+          "etfmom scores: composite within [-20,+20]")
+    bad = [r["ticker"] for r in rows
+           if abs(max(-20.0, min(20.0, sum((r.get("contributions") or {}).values())))
+                  - r["composite"]) > 1e-4]
+    check(not bad, f"etfmom scores: contributions sum to composite ({bad[:5] if bad else 'ok'})")
+    lt = {r["ticker"] for r in rows if r.get("side") == "long"}
+    sh = {r["ticker"] for r in rows if r.get("side") == "short"}
+    check(not (lt & sh), "etfmom scores: long/short disjoint")
+    check(600 <= scores.get("n", 0) <= 1200,
+          f"etfmom universe size in band 600-1200 ({scores.get('n')})")
+
+    # No leveraged/inverse fund may ever reach the scored set — the whole point
+    # of the three name layers plus the empirical backstop.
+    leaked = sorted(set(tks) & set(MOM_MVT_LEVERAGED_EXCLUDE))
+    check(not leaked, f"etfmom: no known leveraged/inverse tickers scored ({leaked[:5]})")
+
+    # Taxonomy integrity.
+    unknown = [r["ticker"] for r in rows if r.get("asset_class") not in ASSET_CLASSES]
+    check(not unknown, f"etfmom: every asset_class is a known bucket ({unknown[:5]})")
+    n_unclassified = sum(1 for r in rows if r.get("asset_class") == "Unknown")
+    warn(n_unclassified > 0.02 * len(rows),
+         f"etfmom: {n_unclassified}/{len(rows)} rows have no Morningstar category")
+
+    # The honesty fields have to actually agree with the composite they describe.
+    check(all(r.get("n_factors") == len(r.get("factor_scores") or {}) for r in rows),
+          "etfmom: n_factors matches factor_scores length")
+    check(all(r.get("n_factors") in (5, 6) for r in rows),
+          "etfmom: every row scored on 5 or 6 factors")
+    # An inherited mvt score must point at a fund that is itself directly scored
+    # — the inheritance chain must never dangle.
+    direct = {r["ticker"] for r in rows
+              if "mvt" in (r.get("factor_scores") or {}) and not r.get("mvt_source")}
+    dangling = [r["ticker"] for r in rows if r.get("mvt_source")
+                and r["mvt_source"] not in direct]
+    check(not dangling, f"etfmom: no dangling mvt inheritance ({dangling[:5]})")
+
+    n_direct = len(direct)
+    n_inherit = sum(1 for r in rows if r.get("mvt_source"))
+    n_absent = len(rows) - n_direct - n_inherit
+    warn((n_direct + n_inherit) < 0.80 * len(rows),
+         f"etfmom: multivariate-trend coverage below 80% ({n_direct + n_inherit}/{len(rows)})")
+
+    # Both taxonomy levels must partition the scored set exactly — the check
+    # most likely to catch a rollup bug.
+    cats = etf_load("categories", {})
+    for level in ("asset_classes", "categories"):
+        total = sum(v.get("n", 0) for v in (cats.get(level) or {}).values())
+        check(total == len(rows), f"etfmom {level}: partitions the scored set ({total}/{len(rows)})")
+
+    advs = [r.get("adv_dollar") for r in rows if r.get("adv_dollar") is not None]
+    check(all(v >= 0 for v in advs), "etfmom: ADV$ non-negative")
+    n_aum = sum(1 for r in rows if r.get("aum_m") is not None)
+    warn(n_aum < 0.45 * len(rows),
+         f"etfmom: AUM known for only {n_aum}/{len(rows)} (catalog covers ~574)")
+
+    if ETFMOM_HISTORY_DIR.exists():
+        for y in sorted(int(p.stem) for p in ETFMOM_HISTORY_DIR.glob("*.json")
+                        if p.stem.isdigit()):
+            doc = _json.loads((ETFMOM_HISTORY_DIR / f"{y}.json").read_text(encoding="utf-8"))
+            seen = sorted({r["date"] for r in doc.get("rows", [])})
+            check(seen == sorted(seen), f"etfmom history {y}: dates monotonic")
+
+    picks = etf_load("picks", {}).get("rows", [])
+    exs = [c["excess"] for r in picks for c in r.get("eval", {}).values()
+           if c.get("evaluated") and c.get("excess") is not None]
+    check(all(-5.0 <= v <= 5.0 for v in exs), "etfmom picks: evaluated excess sane")
+    print(f"       universe={scores.get('n', 0)} scored={len(rows)} "
+          f"mvt={n_direct}d+{n_inherit}i/{n_absent}absent "
+          f"classes={len(cats.get('asset_classes') or {})} picks={len(picks)}")
+
+
 def screen_mvt() -> None:
     print("[mom.mvt]")
     from zenith.mom.mvt import load as mvt_load
@@ -1083,6 +1195,7 @@ def main() -> None:
     screen_holdings()
     screen_mom()
     screen_mvt()
+    screen_etfmom()
     screen_ideas()
     screen_regimes()
     screen_index()

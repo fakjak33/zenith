@@ -114,6 +114,59 @@ def test_mvt_validation_view_renders():
         assert "no validation backtest yet" in infos
 
 
+def _etfmom_sub(sub: str):
+    """Drive one ETF MOMENTUM sub-view. `st.radio` sub-nav is not reliably
+    clickable in the browser pane (a standing gotcha in this repo), so
+    pre-seeding session state before render() is the trusted path -- the same
+    approach the mvt sub-view tests above use."""
+    return _render("\n".join([
+        "from zenith.etfmom import view",
+        "import streamlit as st",
+        f"st.session_state['etfmom_sub'] = {sub!r}",
+        "view.render()",
+    ]))
+
+
+def test_etfmom_view_renders_with_or_without_data():
+    at, text = _render("from zenith.etfmom import view\nview.render()\n")
+    low = text.lower()
+    assert "evidence strength" in low          # rating badge present
+    assert "key findings" in low
+    assert "moskowitz" in low                  # multi-asset citation, not J-T
+    if config.ETFMOM_FILES["scores"].exists():
+        assert "etf momentum" in low
+    else:
+        infos = " ".join(str(i.value) for i in at.info).lower()
+        assert "no data yet" in infos
+
+
+@pytest.mark.skipif(not config.ETFMOM_FILES["scores"].exists(),
+                    reason="no committed etfmom data")
+@pytest.mark.parametrize("sub,needle", [
+    ("Overview", "breadth"),
+    ("Rankings", "scored funds"),
+    ("Factors", "redundancy"),
+    ("Categories", "asset class"),
+    ("ETF", "factor breakdown"),
+])
+def test_etfmom_sub_views_render(sub, needle):
+    at, text = _etfmom_sub(sub)
+    assert needle in text.lower()
+
+
+@pytest.mark.skipif(not config.ETFMOM_FILES["scores"].exists(),
+                    reason="no committed etfmom data")
+def test_etfmom_discloses_its_own_caveats():
+    """The two things that make this tab honest rather than just pretty: the
+    mixed-asset cross-sectional caveat, and the fact that near-duplicate funds
+    are deliberately kept so breadth counts funds rather than independent bets."""
+    _, text = _etfmom_sub("Overview")
+    low = text.lower()
+    assert "independent bets" in low
+    _, rank_text = _etfmom_sub("Rankings")
+    assert "within an asset class" in rank_text.lower()
+
+
 def test_ideas_view_renders():
     # renders with zero committed data -- the day-one condition -- showing the
     # rating badge, key findings, and an info prompt rather than a crash.

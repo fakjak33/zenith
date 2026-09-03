@@ -35,12 +35,22 @@ PICK_HORIZONS_TD = (20, 60, 126)   # ~1 / 3 / 6 months
 
 
 # ---------------------------------------------------------- sharded history --
-def _shard_path(year: int) -> Path:
-    return MOM_HISTORY_DIR / f"{year}.json"
+# Every store-touching function below takes an OPTIONAL `history_dir` /
+# `load_fn` / `save_fn`, resolved to this module's globals INSIDE the function
+# body rather than as a default argument value. Two things depend on that:
+#   * tests/test_mom.py's `tmp_mom_store` fixture monkeypatches
+#     `mh.MOM_HISTORY_DIR` and `mom.MOM_FILES` directly -- a default evaluated
+#     at import time would capture the real paths and the fixture would
+#     silently stop redirecting;
+#   * zenith/etfmom/history.py binds these same functions to the ETF store, so
+#     the sharded-append, decile-pick and sign-adjusted-excess logic has ONE
+#     implementation rather than a fork.
+def _shard_path(year: int, history_dir: Path | None = None) -> Path:
+    return (history_dir or MOM_HISTORY_DIR) / f"{year}.json"
 
 
-def _read_shard(year: int) -> dict:
-    p = _shard_path(year)
+def _read_shard(year: int, history_dir: Path | None = None) -> dict:
+    p = _shard_path(year, history_dir)
     if p.exists():
         try:
             return json.loads(p.read_text(encoding="utf-8"))
@@ -49,12 +59,14 @@ def _read_shard(year: int) -> dict:
     return {"year": year, "rows": []}
 
 
-def _write_shard(year: int, doc: dict) -> None:
-    MOM_HISTORY_DIR.mkdir(parents=True, exist_ok=True)
-    _shard_path(year).write_text(json.dumps(doc, indent=None, ensure_ascii=False), encoding="utf-8")
+def _write_shard(year: int, doc: dict, history_dir: Path | None = None) -> None:
+    d = history_dir or MOM_HISTORY_DIR
+    d.mkdir(parents=True, exist_ok=True)
+    _shard_path(year, d).write_text(json.dumps(doc, indent=None, ensure_ascii=False), encoding="utf-8")
 
 
-def append_history(rows: list[dict], today: date, full: bool | None = None) -> int:
+def append_history(rows: list[dict], today: date, full: bool | None = None,
+                   history_dir: Path | None = None) -> int:
     """Append one composite-history row per scored ticker for `today` to the
     current year's shard. `full` (defaults to True on Fridays) additionally
     stores the five factor scores + contributions, so the "historical factor
@@ -62,7 +74,7 @@ def append_history(rows: list[dict], today: date, full: bool | None = None) -> i
     paying daily storage for it. Idempotent per (date, ticker)."""
     full = (today.weekday() == 4) if full is None else full
     year = today.year
-    doc = _read_shard(year)
+    doc = _read_shard(year, history_dir)
     existing = doc.get("rows", [])
     seen = {(r["date"], r["ticker"]) for r in existing}
     today_iso = today.isoformat()
@@ -82,24 +94,26 @@ def append_history(rows: list[dict], today: date, full: bool | None = None) -> i
         added += 1
     doc["rows"] = existing
     doc["as_of"] = today_iso
-    _write_shard(year, doc)
+    _write_shard(year, doc, history_dir)
     return added
 
 
-def series_for(ticker: str, start_year: int | None = None, end_year: int | None = None) -> list[dict]:
+def series_for(ticker: str, start_year: int | None = None, end_year: int | None = None,
+               history_dir: Path | None = None) -> list[dict]:
     """Composite (+ factor, on weeks it was captured) history for one ticker,
     across all available yearly shards in [start_year, end_year], ascending
     by date. Used by the Stock-detail historical score chart."""
-    if not MOM_HISTORY_DIR.exists():
+    d = history_dir or MOM_HISTORY_DIR
+    if not d.exists():
         return []
-    years = sorted(int(p.stem) for p in MOM_HISTORY_DIR.glob("*.json") if p.stem.isdigit())
+    years = sorted(int(p.stem) for p in d.glob("*.json") if p.stem.isdigit())
     if start_year is not None:
         years = [y for y in years if y >= start_year]
     if end_year is not None:
         years = [y for y in years if y <= end_year]
     out = []
     for y in years:
-        doc = _read_shard(y)
+        doc = _read_shard(y, history_dir)
         out.extend(r for r in doc.get("rows", []) if r["ticker"] == ticker)
     out.sort(key=lambda r: r["date"])
     return out
@@ -123,8 +137,9 @@ def make_pick_rows(scored_rows: list[dict], asof: str) -> list[dict]:
     return rows
 
 
-def append_picks(new_rows: list[dict]) -> int:
-    doc = load("picks", {"rows": []})
+def append_picks(new_rows: list[dict], load_fn=None, save_fn=None) -> int:
+    load_fn, save_fn = load_fn or load, save_fn or save
+    doc = load_fn("picks", {"rows": []})
     rows = doc.get("rows", [])
     seen = {(r["ticker"], r["asof"]) for r in rows}
     added = 0
@@ -136,7 +151,7 @@ def append_picks(new_rows: list[dict]) -> int:
             added += 1
     rows.sort(key=lambda r: (r["asof"], r["ticker"]))
     doc.update({"as_of": date.today().isoformat(), "disclaimer": DISCLAIMER, "rows": rows})
-    save("picks", doc, indent=None)
+    save_fn("picks", doc, indent=None)
     return added
 
 
@@ -148,10 +163,22 @@ def _close_on(series: pd.Series, d: date) -> float | None:
     return float(series.iloc[i]) if di == d else None
 
 
-def evaluate_pending(px: dict, spy_close: pd.Series, today: date) -> int:
+def evaluate_pending(px: dict, bench_close: pd.Series, today: date,
+                     load_fn=None, save_fn=None) -> int:
     """Fill entry closes and any matured horizon's excess return. Sign-
-    adjusted: positive excess = the pick worked (short excess is negated)."""
-    doc = load("picks", {"rows": []})
+    adjusted: positive excess = the pick worked (short excess is negated).
+
+    `bench_close` is whatever the CALLER considers the right benchmark, and
+    that choice matters more than it looks. MOMENTUM passes SPY, which is
+    correct for a Russell 1000 cross-section. ETF MOMENTUM passes an
+    equal-weight index of its OWN scored universe instead: against SPY, a long
+    Treasury-fund pick would "fail" through every bull market and a long
+    equity-fund pick would "succeed" through it, regardless of whether the
+    momentum signal had any skill -- the resulting IC would measure asset-class
+    beta, not the signal. The benchmark has to be the universe the ranking was
+    actually made in."""
+    load_fn, save_fn = load_fn or load, save_fn or save
+    doc = load_fn("picks", {"rows": []})
     changed = 0
     for r in doc.get("rows", []):
         frame = px.get(r["ticker"])
@@ -170,7 +197,7 @@ def evaluate_pending(px: dict, spy_close: pd.Series, today: date) -> int:
                 continue
             ed = exit_days[h]
             c0 = r.get("entry_close")
-            c1, s0, s1 = _close_on(close, ed), _close_on(spy_close, asof), _close_on(spy_close, ed)
+            c1, s0, s1 = _close_on(close, ed), _close_on(bench_close, asof), _close_on(bench_close, ed)
             if None in (c0, c1, s0, s1) or c0 <= 0 or s0 <= 0:
                 continue
             raw = (c1 / c0 - 1.0) - (s1 / s0 - 1.0)
@@ -180,7 +207,7 @@ def evaluate_pending(px: dict, spy_close: pd.Series, today: date) -> int:
             changed += 1
     if changed:
         doc["as_of"] = today.isoformat()
-        save("picks", doc, indent=None)
+        save_fn("picks", doc, indent=None)
     return changed
 
 

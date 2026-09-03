@@ -60,14 +60,20 @@ def equities_constituents(max_age_hours: float = 168.0) -> tuple[list[dict], dic
 
 
 # -------------------------------------------------------------------- ETFs --
-def _etf_catalog() -> dict[str, dict]:
+def etf_catalog() -> dict[str, dict]:
     """ticker -> {name, category, groups, aum_m, er} from the committed
     Morningstar strategic-beta export (data/fmom/etf_catalog.json, 574
-    names) -- reused as-is, not re-fetched."""
+    names) -- reused as-is, not re-fetched.
+
+    Public (zenith/etfmom/universe.py imports it for the aum_m/er columns);
+    `_etf_catalog` is kept below as a backwards-compatible alias."""
     if not FMOM_FILES["etf_catalog"].exists():
         return {}
     doc = json.loads(FMOM_FILES["etf_catalog"].read_text(encoding="utf-8"))
     return {e["ticker"]: e for e in doc.get("etfs", []) if e.get("ticker")}
+
+
+_etf_catalog = etf_catalog   # backwards-compatible alias (used within this module)
 
 
 def raw_etf_tickers() -> list[str]:

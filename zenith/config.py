@@ -307,6 +307,52 @@ MOM_MVT_LEVERAGED_EXCLUDE = frozenset({
 for _d in (MOM_MVT_DIR, MOM_MVT_HISTORY_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
+# --- ETF MOMENTUM (the MOMENTUM engine over Zenith's full ETF universe) -----
+# The SAME six factors, the SAME weights, the SAME horizons and the SAME
+# -20..+20 scale as MOMENTUM above -- deliberately. MOM_WEIGHTS /
+# MOM_HORIZON_WEIGHTS / MOM_STATES / MOM_MA_PERIODS and factors.MIN_BARS /
+# factors.HORIZON_SPEC are IMPORTED by zenith/etfmom/, never copied: the whole
+# point of an ETF tab alongside the stock tab is that the two composites are
+# directly comparable, and a forked weight dict would quietly destroy that.
+#
+# What differs is the universe (a curated ETF union rather than the Russell
+# 1000) and the taxonomy (Morningstar category + a mechanical asset-class
+# rollup rather than GICS sector/industry). See zenith/etfmom/__init__.py.
+#
+# The 6th factor (Multivariate Trend) is NOT recomputed here -- mom.yml
+# already scores the ETF universe nightly and commits
+# data/mom/mvt/etfs_latest.json; etfmom READS that artefact (and inherits a
+# score across mvt's own near-duplicate clusters). See etfmom/mvt_link.py.
+ETFMOM_DIR = DATA_DIR / "etfmom"
+ETFMOM_HISTORY_DIR = ETFMOM_DIR / "history"   # sharded data/etfmom/history/<YYYY>.json
+ETFMOM_FILES = {
+    "scores": ETFMOM_DIR / "scores_latest.json",       # full ranked composite + factors
+    "detail": ETFMOM_DIR / "detail_latest.json",       # per-ETF factor internals (MAs, slopes, ...)
+    "categories": ETFMOM_DIR / "categories.json",      # asset-class / category aggregates
+    "diagnostics": ETFMOM_DIR / "diagnostics.json",    # factor correlation matrix, IC, hit rates
+    "picks": ETFMOM_DIR / "picks.json",                # append-only decile pick tracker + eval
+    "status": ETFMOM_DIR / "status.json",
+}
+
+# 5y (not mvt's 3y) to match the equity engine's own pull and leave room for a
+# future --action backfill. factors.MIN_BARS=460 is the binding constraint on
+# what can be scored at all: a 400-day MA slope AND a second slope reading 21
+# days earlier genuinely cannot exist on a younger fund. Measured live: of 888
+# priced ETFs, 857 clear it -- the 31 that don't are reported as excluded with
+# a stated reason, never scored on a truncated window.
+ETFMOM_PRICE_PERIOD = "5y"
+
+# The committed mvt ETF artefact is written by a DIFFERENT workflow (mom.yml,
+# 03:00 UTC) than this one (etfmom.yml, 04:00 UTC). If mom.yml overruns or
+# fails, etfmom reads the previous day's mvt scores rather than failing -- the
+# correct degradation for a slow-moving factor. Past this many days the 6th
+# factor is dropped entirely and composite() renormalizes the other five,
+# rather than silently blending a stale signal into a fresh composite.
+ETFMOM_MVT_MAX_STALE_DAYS = 10
+
+for _d in (ETFMOM_DIR, ETFMOM_HISTORY_DIR):
+    _d.mkdir(parents=True, exist_ok=True)
+
 # --- IDEAS (discretionary-systematic opportunity engine) --------------------
 # Fusion layer over MOMENTUM/EDGE/PEAD/FMOM/CAS — not a new data pipeline (see
 # zenith/ideas/__init__.py for the full architecture note). Its own committed
