@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-09-02",
+  "as_of": "2026-09-03",
   "trends": {
     "SPY": {
-      "trend_3m": 0.0126,
+      "trend_3m": 0.0133,
       "direction": "up"
     },
     "TLT": {
-      "trend_3m": -0.0292,
+      "trend_3m": -0.0282,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": -0.0273,
+      "trend_3m": -0.0206,
       "direction": "down"
     },
     "DBC": {
@@ -18,20 +18,20 @@
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.0126,
+      "trend_3m": 0.0111,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": 0.0125,
+      "trend_3m": 0.0245,
       "direction": "up"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 1.652,
-    "defensives_avg": 0.762,
+    "cyclicals_avg": 1.881,
+    "defensives_avg": 0.815,
     "cyclicals_leading": true,
-    "as_of": "2026-09-02"
+    "as_of": "2026-09-03"
   },
   "confirmation": {
     "checks": [
@@ -44,8 +44,8 @@
       {
         "check": "Small-cap vs Large-cap (risk appetite proxy)",
         "expects": "small-caps outperforming",
-        "observed": "large-caps outperforming",
-        "confirms": false
+        "observed": "small-caps outperforming",
+        "confirms": true
       },
       {
         "check": "Gold trend (inflation-hedge proxy)",
@@ -60,17 +60,11 @@
         "confirms": false
       }
     ],
-    "n_confirming": 2,
+    "n_confirming": 3,
     "n_total": 4,
-    "confirmation_ratio": 0.5
+    "confirmation_ratio": 0.75
   },
   "divergences": [
-    {
-      "flag": "Small-cap vs Large-cap (risk appetite proxy)",
-      "classifier_expects": "small-caps outperforming",
-      "market_shows": "large-caps outperforming",
-      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
-    },
     {
       "flag": "Long Treasuries (rate-expectation proxy)",
       "classifier_expects": "rising (yields down)",
