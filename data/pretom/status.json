@@ -1,8 +1,8 @@
 {
-  "date": "2026-09-02",
+  "date": "2026-09-03",
   "state": "POST",
   "month": "2026-08",
-  "tau_offset": 2,
+  "tau_offset": 3,
   "days_to_open": 0,
   "days_to_close_classic": 0,
   "days_to_close_t1": 0,
@@ -23,21 +23,21 @@
     {
       "segment": "universe",
       "ok": true,
-      "source": "vanguard_vone",
+      "source": "stale:vanguard_vone",
       "n": 1024,
       "weights_source": "vone"
     },
     {
       "segment": "prices(2026-08)",
       "ok": true,
-      "n": 102,
+      "n": 101,
       "requested": 102,
       "error": ""
     },
     {
       "segment": "reconcile(2026-08)",
       "ok": true,
-      "state": "post"
+      "state": "final"
     },
     {
       "segment": "prices(spy-max)",
