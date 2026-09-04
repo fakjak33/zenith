@@ -1,23 +1,23 @@
 {
-  "date": "2026-09-03",
-  "state": "POST",
-  "month": "2026-08",
-  "tau_offset": 3,
-  "days_to_open": 0,
-  "days_to_close_classic": 0,
-  "days_to_close_t1": 0,
+  "date": "2026-09-04",
+  "state": "FORMING",
+  "month": "2026-09",
+  "tau_offset": -17,
+  "days_to_open": 8,
+  "days_to_close_classic": 13,
+  "days_to_close_t1": 14,
   "schedule": {
-    "tau": "2026-08-31",
-    "lock_by": "2026-08-17",
-    "win_start": "2026-08-18",
-    "win_end_classic": "2026-08-25",
-    "win_end_t1": "2026-08-26",
-    "post_start": "2026-08-26",
-    "post_end": "2026-09-03",
-    "tom_start": "2026-08-31",
-    "tom_end": "2026-09-03"
+    "tau": "2026-09-30",
+    "lock_by": "2026-09-16",
+    "win_start": "2026-09-17",
+    "win_end_classic": "2026-09-24",
+    "win_end_t1": "2026-09-25",
+    "post_start": "2026-09-25",
+    "post_end": "2026-10-05",
+    "tom_start": "2026-09-30",
+    "tom_end": "2026-10-05"
   },
-  "calendar_check": "ok",
+  "calendar_check": "n/a",
   "n_months": 26,
   "segments": [
     {
@@ -26,18 +26,6 @@
       "source": "stale:vanguard_vone",
       "n": 1024,
       "weights_source": "vone"
-    },
-    {
-      "segment": "prices(2026-08)",
-      "ok": true,
-      "n": 101,
-      "requested": 102,
-      "error": ""
-    },
-    {
-      "segment": "reconcile(2026-08)",
-      "ok": true,
-      "state": "final"
     },
     {
       "segment": "prices(spy-max)",
