@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-03",
+  "date": "2026-09-04",
   "is_trading_day": true,
   "disclaimer": "MOMENTUM scores every current Russell 1000 constituent on six documented momentum dimensions (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend) and blends them into a transparent -20..+20 composite. Momentum is well-replicated academically but crashes hard in panic states and is most crowded in large caps (this universe). Decision-support and a research monitor, not investment advice.",
   "segments": [
@@ -13,38 +13,38 @@
     {
       "segment": "prices",
       "ok": true,
-      "n": 995,
+      "n": 996,
       "requested": 1008,
       "error": ""
     },
     {
       "segment": "coverage",
       "ok": true,
-      "n": 1011,
+      "n": 1012,
       "requested": 1024,
-      "coverage": 0.9873
+      "coverage": 0.9883
     },
     {
       "segment": "metadata",
       "ok": true,
       "checked": 1024,
-      "stale": 4,
-      "refreshed": 4
+      "stale": 0,
+      "refreshed": 0
     },
     {
       "segment": "factors",
       "ok": true,
-      "n": 980
+      "n": 981
     },
     {
       "segment": "mvt",
       "ok": true,
-      "n": 973,
+      "n": 974,
       "universe": "equities",
-      "n_priced": 994,
+      "n_priced": 995,
       "panel": {
-        "n_in": 994,
-        "n_kept": 979,
+        "n_in": 995,
+        "n_kept": 980,
         "dropped": {
           "BLSH": "insufficient_history(<280d)",
           "CBC": "insufficient_history(<280d)",
@@ -65,33 +65,33 @@
         "n_days": 1254
       },
       "empirical_excluded": 2,
-      "n_scored": 973,
+      "n_scored": 974,
       "k_factors": 15,
-      "explained_variance_ratio": 0.5323,
-      "effective_factor_count": 74.632,
+      "explained_variance_ratio": 0.533,
+      "effective_factor_count": 74.326,
       "erc_horizon_weights": {
-        "12_1": 0.1802,
-        "12m": 0.1508,
-        "9m": 0.1521,
-        "6m": 0.1573,
-        "3m": 0.1653,
-        "1m": 0.1943
+        "12_1": 0.178,
+        "12m": 0.1505,
+        "9m": 0.1515,
+        "6m": 0.1557,
+        "3m": 0.1647,
+        "1m": 0.1995
       }
     },
     {
       "segment": "mvt_crossuniverse",
       "ok": true,
-      "n": 912
+      "n": 913
     },
     {
       "segment": "artifacts",
       "ok": true,
-      "n": 980
+      "n": 981
     },
     {
       "segment": "history",
       "ok": true,
-      "history_added": 964,
+      "history_added": 965,
       "picks_added": 192,
       "evaluated": 0
     },
