@@ -1,37 +1,37 @@
 {
-  "as_of": "2026-09-03",
+  "as_of": "2026-09-04",
   "trends": {
     "SPY": {
-      "trend_3m": 0.0133,
+      "trend_3m": 0.051,
       "direction": "up"
     },
     "TLT": {
-      "trend_3m": -0.0282,
+      "trend_3m": -0.024,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": -0.0206,
-      "direction": "down"
+      "trend_3m": 0.0353,
+      "direction": "up"
     },
     "DBC": {
-      "trend_3m": 0.0541,
+      "trend_3m": 0.0934,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.0111,
-      "direction": "up"
+      "trend_3m": -0.0004,
+      "direction": "down"
     },
     "IWM": {
-      "trend_3m": 0.0245,
+      "trend_3m": 0.0506,
       "direction": "up"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 1.881,
-    "defensives_avg": 0.815,
+    "cyclicals_avg": 1.88,
+    "defensives_avg": 0.829,
     "cyclicals_leading": true,
-    "as_of": "2026-09-03"
+    "as_of": "2026-09-04"
   },
   "confirmation": {
     "checks": [
@@ -44,14 +44,14 @@
       {
         "check": "Small-cap vs Large-cap (risk appetite proxy)",
         "expects": "small-caps outperforming",
-        "observed": "small-caps outperforming",
-        "confirms": true
+        "observed": "large-caps outperforming",
+        "confirms": false
       },
       {
         "check": "Gold trend (inflation-hedge proxy)",
         "expects": "falling",
-        "observed": "falling",
-        "confirms": true
+        "observed": "rising",
+        "confirms": false
       },
       {
         "check": "Long Treasuries (rate-expectation proxy)",
@@ -60,11 +60,23 @@
         "confirms": false
       }
     ],
-    "n_confirming": 3,
+    "n_confirming": 1,
     "n_total": 4,
-    "confirmation_ratio": 0.75
+    "confirmation_ratio": 0.25
   },
   "divergences": [
+    {
+      "flag": "Small-cap vs Large-cap (risk appetite proxy)",
+      "classifier_expects": "small-caps outperforming",
+      "market_shows": "large-caps outperforming",
+      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
+    },
+    {
+      "flag": "Gold trend (inflation-hedge proxy)",
+      "classifier_expects": "falling",
+      "market_shows": "rising",
+      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
+    },
     {
       "flag": "Long Treasuries (rate-expectation proxy)",
       "classifier_expects": "rising (yields down)",
