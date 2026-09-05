@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-09-04",
+  "as_of": "2026-09-05",
   "themes": {
     "dollar": {
       "signal_score": 54.6,
       "composite_z": 0.368,
-      "real_yield_z": 1.555,
+      "real_yield_z": 1.528,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
       "signal_score": 72.2,
       "components": {
-        "DGS30": 1.734,
+        "DGS30": 1.717,
         "THREEFYTP10": 2.001,
         "GFDEBTN": 1.603
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Low",
       "usdjpy_z": 1.655,
       "usdjpy_pct_move_3m": -0.0162,
-      "us_real_yield_z": 1.555,
+      "us_real_yield_z": 1.528,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.081,
+      "semis_relative_strength_3m": -0.0967,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -44,15 +44,6 @@
           "archive_date": "2026-08-13",
           "summary": "Relative Performance of Hyperscalers to S&P 500 Hyperscalers have been trapped in a two-year range versus the S&P 500. Now the question is whether they can break out while AI capex returns remain in doubt. Image: Deutsche Bank Asset Allocation",
           "category": "Interpretation"
-        },
-        {
-          "title": "Wednesday assorted links",
-          "source": "Marginal Revolution",
-          "link": "https://marginalrevolution.com/marginalrevolution/2026/08/wednesday-assorted-links-565.html?utm_source=rss&utm_medium=rss&utm_campaign=wednesday-assorted-links-565",
-          "published": "Wed, 05 Aug 2026 15:35:40 +0000",
-          "archive_date": "2026-08-06",
-          "summary": "1. A catalog of past AI predictions. 2. Jasmine Sun on why people do not want data centers. And Jasmine Sun on Ezra Klein, on data centers (NYT). 3. A bot running an SF retail boutique? (NYT) 4. Elise Cawley, RIP. 5. On the NYC grocery store plan. 6. New credit card gives you tokens […] The post Wednesday assorted link…",
-          "category": "Fact"
         },
         {
           "title": "Wednesday Update: Yellow Lines, Falling Yields, and a Lightning Bolt",
@@ -116,11 +107,20 @@
           "archive_date": "2026-08-28",
           "summary": "1. Data centers in space? Good Anton Leicht essay on the different considerations in the political economy. 2. More whales and Dr. Doolittle stuff. 3. Rohit on the AI hacks. And Peter Wilderford. 4. Is Australia the most resilient country to global catastrophic risk? 5. Dolly Parton’s philanthropy (NYT). 6. Why has New…",
           "category": "Fact"
+        },
+        {
+          "title": "Data Center Spending in US",
+          "source": "Conversable Economist",
+          "link": "https://conversableeconomist.com/2026/08/20/__trashed-8/",
+          "published": "Thu, 20 Aug 2026 16:36:29 +0000",
+          "archive_date": "2026-08-21",
+          "summary": "The good folks at “Our World in Data” have been putting together a data series which shows monthly spending on the “on-site work to build data centers each month, including materials and construction labor. It excludes the cost of IT hardware like servers and storage, which can account for a large share of total invest…",
+          "category": "Fact"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.2954,
+      "btc_trend_3m": 0.2532,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },

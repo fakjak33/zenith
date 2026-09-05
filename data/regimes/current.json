@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-04",
+  "as_of": "2026-09-05",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-09-30",
   "regime": "Goldilocks / Reflation",
@@ -12,7 +12,7 @@
     "breadth": 0.6363636363636364,
     "n_rising": 7,
     "n_total": 11,
-    "z": 0.176,
+    "z": 0.175,
     "indicators": [
       {
         "id": "CFNAI",
@@ -38,7 +38,7 @@
         "id": "PAYEMS",
         "label": "Nonfarm Payrolls (level)",
         "raw_value": 0.0,
-        "z": -0.059,
+        "z": -0.06,
         "direction": 1,
         "rising": false,
         "lag_days": 5,
@@ -97,8 +97,8 @@
       {
         "id": "NEWORDER",
         "label": "Core Capital Goods New Orders",
-        "raw_value": 11.9001,
-        "z": 1.237,
+        "raw_value": 11.6007,
+        "z": 1.196,
         "direction": 1,
         "rising": true,
         "lag_days": 35,
@@ -117,8 +117,8 @@
       {
         "id": "SAHMREALTIME",
         "label": "Sahm Rule Recession Indicator",
-        "raw_value": -0.03,
-        "z": 0.359,
+        "raw_value": -0.07,
+        "z": 0.383,
         "direction": -1,
         "rising": true,
         "lag_days": 5,
@@ -131,7 +131,7 @@
     "breadth": 0.16666666666666666,
     "n_rising": 2,
     "n_total": 12,
-    "z": -0.09,
+    "z": -0.063,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -186,8 +186,8 @@
       {
         "id": "CES0500000003",
         "label": "Avg Hourly Earnings (wage growth)",
-        "raw_value": 2.5068,
-        "z": -1.299,
+        "raw_value": 2.861,
+        "z": -0.98,
         "direction": 1,
         "rising": false,
         "lag_days": 5,
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 5.3,
-    "growth_slope": 0.0034,
-    "growth_r2": 0.033,
-    "infl_slope": -0.1145,
-    "infl_r2": 0.923,
+    "score": 5.0,
+    "growth_slope": 0.0037,
+    "growth_r2": 0.035,
+    "infl_slope": -0.1081,
+    "infl_r2": 0.92,
     "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.03) while inflation signals have moderated (trend R²=0.92)."
   }
 }
