@@ -1,85 +1,12 @@
 {
-  "date": "2026-09-04",
-  "is_trading_day": true,
+  "date": "2026-09-05",
+  "is_trading_day": false,
   "disclaimer": "ETF MOMENTUM scores Zenith's curated ETF universe on the same six documented momentum dimensions as the Russell 1000 engine (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend), blended with the same weights into the same transparent -20..+20 composite, so the two tabs are directly comparable. Cross-sectional momentum is weaker evidence across mixed asset classes than within one, and overlapping funds make breadth readings softer than they look. Decision-support and a research monitor, not investment advice.",
-  "mvt_as_of": "2026-09-04",
-  "mvt_stale_days": 0,
   "segments": [
     {
-      "segment": "universe",
+      "segment": "gate",
       "ok": true,
-      "n_raw": 935,
-      "meta_refresh": {
-        "refreshed": 0
-      },
-      "n_excluded_by_name": 23,
-      "n_included": 912,
-      "n_categories": 76,
-      "by_asset_class": {
-        "Equity": 716,
-        "Fixed Income": 106,
-        "Commodity": 47,
-        "Alternative": 12,
-        "Real Estate": 10,
-        "Allocation": 6,
-        "Unknown": 5,
-        "Digital Assets": 5,
-        "Currency": 5
-      },
-      "n_without_category": 5
-    },
-    {
-      "segment": "prices",
-      "ok": true,
-      "n": 887,
-      "requested": 912,
-      "error": ""
-    },
-    {
-      "segment": "coverage",
-      "ok": true,
-      "n": 887,
-      "requested": 912,
-      "coverage": 0.9726
-    },
-    {
-      "segment": "leverage_backstop",
-      "ok": true,
-      "n_excluded": 0,
-      "note": "empirical vol/correlation gate only; near-duplicates deliberately kept"
-    },
-    {
-      "segment": "factors",
-      "ok": true,
-      "n": 857
-    },
-    {
-      "segment": "mvt",
-      "ok": true,
-      "mvt_as_of": "2026-09-04",
-      "mvt_stale_days": 0,
-      "n_rows": 760,
-      "direct": 760,
-      "inherited": 102
-    },
-    {
-      "segment": "artifacts",
-      "ok": true,
-      "n": 857
-    },
-    {
-      "segment": "history",
-      "ok": true,
-      "benchmark": "equal_weight_universe",
-      "benchmark_available": true,
-      "history_added": 857,
-      "picks_added": 172,
-      "evaluated": 0
-    },
-    {
-      "segment": "diagnostics",
-      "ok": true,
-      "flagged_pairs": 1
+      "note": "non-trading day"
     }
   ]
 }
