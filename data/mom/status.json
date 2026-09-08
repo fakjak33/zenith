@@ -1,12 +1,109 @@
 {
-  "date": "2026-09-05",
-  "is_trading_day": false,
+  "date": "2026-09-08",
+  "is_trading_day": true,
   "disclaimer": "MOMENTUM scores every current Russell 1000 constituent on six documented momentum dimensions (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend) and blends them into a transparent -20..+20 composite. Momentum is well-replicated academically but crashes hard in panic states and is most crowded in large caps (this universe). Decision-support and a research monitor, not investment advice.",
   "segments": [
     {
-      "segment": "gate",
+      "segment": "universe",
       "ok": true,
-      "note": "non-trading day"
+      "source": "stale:vanguard_vone",
+      "n": 1024,
+      "weights_source": "vone"
+    },
+    {
+      "segment": "prices",
+      "ok": true,
+      "n": 996,
+      "requested": 1008,
+      "error": ""
+    },
+    {
+      "segment": "coverage",
+      "ok": true,
+      "n": 1012,
+      "requested": 1024,
+      "coverage": 0.9883
+    },
+    {
+      "segment": "metadata",
+      "ok": true,
+      "checked": 1024,
+      "stale": 0,
+      "refreshed": 0
+    },
+    {
+      "segment": "factors",
+      "ok": true,
+      "n": 981
+    },
+    {
+      "segment": "mvt",
+      "ok": true,
+      "n": 974,
+      "universe": "equities",
+      "n_priced": 995,
+      "panel": {
+        "n_in": 995,
+        "n_kept": 980,
+        "dropped": {
+          "BLSH": "insufficient_history(<280d)",
+          "CBC": "insufficient_history(<280d)",
+          "CBRS": "insufficient_history(<280d)",
+          "FIG": "insufficient_history(<280d)",
+          "FIGR": "insufficient_history(<280d)",
+          "FPS": "insufficient_history(<280d)",
+          "FRMI": "insufficient_history(<280d)",
+          "JAN": "insufficient_history(<280d)",
+          "MDLN": "insufficient_history(<280d)",
+          "MWH": "insufficient_history(<280d)",
+          "Q": "insufficient_history(<280d)",
+          "SOLS": "insufficient_history(<280d)",
+          "SUNB": "insufficient_history(<280d)",
+          "VSNT": "insufficient_history(<280d)",
+          "XE": "insufficient_history(<280d)"
+        },
+        "n_days": 1255
+      },
+      "empirical_excluded": 2,
+      "n_scored": 974,
+      "k_factors": 15,
+      "explained_variance_ratio": 0.5333,
+      "effective_factor_count": 74.383,
+      "erc_horizon_weights": {
+        "12_1": 0.1776,
+        "12m": 0.1512,
+        "9m": 0.1516,
+        "6m": 0.1564,
+        "3m": 0.1668,
+        "1m": 0.1964
+      }
+    },
+    {
+      "segment": "mvt_crossuniverse",
+      "ok": true,
+      "n": 913
+    },
+    {
+      "segment": "artifacts",
+      "ok": true,
+      "n": 981
+    },
+    {
+      "segment": "history",
+      "ok": true,
+      "history_added": 965,
+      "picks_added": 193,
+      "evaluated": 0
+    },
+    {
+      "segment": "diagnostics",
+      "ok": true,
+      "flagged_pairs": 3
+    },
+    {
+      "segment": "weighting",
+      "ok": true,
+      "mode": "declared"
     }
   ]
 }
