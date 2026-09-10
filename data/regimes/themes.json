@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-09",
+  "as_of": "2026-09-10",
   "themes": {
     "dollar": {
       "signal_score": 53.1,
@@ -10,7 +10,7 @@
     "fiscal": {
       "signal_score": 72.3,
       "components": {
-        "DGS30": 1.709,
+        "DGS30": 1.717,
         "THREEFYTP10": 2.037,
         "GFDEBTN": 1.603
       },
@@ -24,7 +24,7 @@
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.0711,
+      "semis_relative_strength_3m": -0.0478,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -82,15 +82,6 @@
           "category": "Interpretation"
         },
         {
-          "title": "Environmental and Economic Implications of Artificial Intelligence Data Centers in the United States",
-          "source": "arXiv q-fin (Quant Finance)",
-          "link": "https://arxiv.org/abs/2608.09882",
-          "published": "Tue, 11 Aug 2026 00:00:00 -0400",
-          "archive_date": "2026-08-11",
-          "summary": "arXiv:2608.09882v1 Announce Type: new Abstract: In this study, we use electricity demand growth, cooling requirements, and backup system operation to evaluate the environmental and economic implications of artificial intelligence data centers in the United States. Our results indicate that impacts are not determined so…",
-          "category": "Interpretation"
-        },
-        {
           "title": "The Closer – Diesel, Data Center Construction, Job Openings – 9/1/26",
           "source": "Bespoke Investment Group",
           "link": "https://www.bespokepremium.com/the-closer/the-closer-diesel-data-center-construction-job-openings-9-1-26/",
@@ -116,11 +107,20 @@
           "archive_date": "2026-08-21",
           "summary": "The good folks at “Our World in Data” have been putting together a data series which shows monthly spending on the “on-site work to build data centers each month, including materials and construction labor. It excludes the cost of IT hardware like servers and storage, which can account for a large share of total invest…",
           "category": "Fact"
+        },
+        {
+          "title": "FTAV’s further reading",
+          "source": "FT Alphaville",
+          "link": "https://www.ft.com/content/32f71c02-9abd-4c5b-8f74-9b31303bf386",
+          "published": "Thu, 20 Aug 2026 05:30:09 GMT",
+          "archive_date": "2026-08-21",
+          "summary": "Hyperscaler toast; Niklas Sule; the parenthesis; the stocks market; categories of contempt",
+          "category": "Fact"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.2564,
+      "btc_trend_3m": 0.2175,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
