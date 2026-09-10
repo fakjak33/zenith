@@ -214618,10 +214618,16 @@
       "backfilled": false,
       "gate": null,
       "pre": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": 0.11355,
+        "spy_ret": 0.057399,
+        "excess": 0.056151
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.038028,
+        "spy_ret": 0.055287,
+        "excess": -0.093315
       }
     },
     {
@@ -223217,9 +223223,116 @@
         "spy_ret": 0.001092,
         "excess": -0.079418
       }
+    },
+    {
+      "ticker": "CASY",
+      "name": "Caseys General Stores, Inc.",
+      "report_date": "2026-09-08",
+      "reaction_day": "2026-09-09",
+      "entry_date": "2026-09-01",
+      "pre_exit_date": "2026-09-08",
+      "through_exit_date": "2026-09-09",
+      "cap_tier": "large",
+      "mktcap": 27142733800.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.043577,
+        "spy_ret": 0.005487,
+        "excess": -0.049065
+      },
+      "through": {
+        "evaluated": false
+      }
+    },
+    {
+      "ticker": "CHWY",
+      "name": "Chewy, Inc.",
+      "report_date": "2026-09-09",
+      "reaction_day": "2026-09-09",
+      "entry_date": "2026-09-01",
+      "pre_exit_date": "2026-09-08",
+      "through_exit_date": "2026-09-09",
+      "cap_tier": "mid",
+      "mktcap": 9527301100.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.018971,
+        "spy_ret": 0.005487,
+        "excess": -0.024458
+      },
+      "through": {
+        "evaluated": false
+      }
+    },
+    {
+      "ticker": "CNM",
+      "name": "Core & Main, Inc.",
+      "report_date": "2026-09-09",
+      "reaction_day": "2026-09-09",
+      "entry_date": "2026-09-01",
+      "pre_exit_date": "2026-09-08",
+      "through_exit_date": "2026-09-09",
+      "cap_tier": "mid",
+      "mktcap": 8526492700.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": 0.047302,
+        "spy_ret": 0.005487,
+        "excess": 0.041815
+      },
+      "through": {
+        "evaluated": false
+      }
+    },
+    {
+      "ticker": "JMKE",
+      "name": "Jersey Mike's Subs Inc.",
+      "report_date": "2026-09-09",
+      "reaction_day": "2026-09-09",
+      "entry_date": "2026-09-01",
+      "pre_exit_date": "2026-09-08",
+      "through_exit_date": "2026-09-09",
+      "cap_tier": "mid",
+      "mktcap": 8378876400.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": false
+      },
+      "through": {
+        "evaluated": false
+      }
+    },
+    {
+      "ticker": "SAIL",
+      "name": "SailPoint, Inc.",
+      "report_date": "2026-09-09",
+      "reaction_day": "2026-09-09",
+      "entry_date": "2026-09-01",
+      "pre_exit_date": "2026-09-08",
+      "through_exit_date": "2026-09-09",
+      "cap_tier": "mid",
+      "mktcap": 10090185700.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.074883,
+        "spy_ret": 0.005487,
+        "excess": -0.08037
+      },
+      "through": {
+        "evaluated": false
+      }
     }
   ],
-  "as_of": "2026-09-08",
+  "as_of": "2026-09-10",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence."
 }
