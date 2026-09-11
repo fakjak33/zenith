@@ -216293,10 +216293,16 @@
       "backfilled": false,
       "gate": null,
       "pre": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.003328,
+        "spy_ret": 0.037886,
+        "excess": -0.041215
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.234191,
+        "spy_ret": 0.036228,
+        "excess": -0.27042
       }
     },
     {
@@ -223243,6 +223249,31 @@
         "excess": -0.049065
       },
       "through": {
+        "evaluated": true,
+        "ret": -0.179786,
+        "spy_ret": 0.000814,
+        "excess": -0.1806
+      }
+    },
+    {
+      "ticker": "AVAV",
+      "name": "AeroVironment, Inc.",
+      "report_date": "2026-09-09",
+      "reaction_day": "2026-09-10",
+      "entry_date": "2026-09-02",
+      "pre_exit_date": "2026-09-09",
+      "through_exit_date": "2026-09-10",
+      "cap_tier": "mid",
+      "mktcap": 7155824100.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.03157,
+        "spy_ret": -0.003607,
+        "excess": -0.027963
+      },
+      "through": {
         "evaluated": false
       }
     },
@@ -223265,7 +223296,10 @@
         "excess": -0.024458
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.125211,
+        "spy_ret": 0.000814,
+        "excess": -0.126025
       }
     },
     {
@@ -223285,6 +223319,31 @@
         "ret": 0.047302,
         "spy_ret": 0.005487,
         "excess": 0.041815
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.011172,
+        "spy_ret": 0.000814,
+        "excess": -0.011986
+      }
+    },
+    {
+      "ticker": "COO",
+      "name": "The Cooper Companies, Inc.",
+      "report_date": "2026-09-09",
+      "reaction_day": "2026-09-10",
+      "entry_date": "2026-09-02",
+      "pre_exit_date": "2026-09-09",
+      "through_exit_date": "2026-09-10",
+      "cap_tier": "mid",
+      "mktcap": 12380544000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.089631,
+        "spy_ret": -0.003607,
+        "excess": -0.086024
       },
       "through": {
         "evaluated": false
@@ -223328,11 +223387,36 @@
         "excess": -0.08037
       },
       "through": {
+        "evaluated": true,
+        "ret": -0.085803,
+        "spy_ret": 0.000814,
+        "excess": -0.086617
+      }
+    },
+    {
+      "ticker": "M",
+      "name": "Macy's Inc",
+      "report_date": "2026-09-10",
+      "reaction_day": "2026-09-10",
+      "entry_date": "2026-09-02",
+      "pre_exit_date": "2026-09-09",
+      "through_exit_date": "2026-09-10",
+      "cap_tier": "mid",
+      "mktcap": 5657946600.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.040589,
+        "spy_ret": -0.003607,
+        "excess": -0.036982
+      },
+      "through": {
         "evaluated": false
       }
     }
   ],
-  "as_of": "2026-09-10",
+  "as_of": "2026-09-11",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence."
 }
