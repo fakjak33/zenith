@@ -1,8 +1,8 @@
 {
-  "as_of": "2026-09-10",
+  "as_of": "2026-09-11",
   "dimensions": {
     "monetary": {
-      "composite_z": -0.195,
+      "composite_z": -0.172,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Neutral",
@@ -30,8 +30,8 @@
         {
           "id": "T10Y3M",
           "label": "10y-3m Curve",
-          "raw_value": 0.88,
-          "z": 0.516,
+          "raw_value": 0.95,
+          "z": 0.587,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
@@ -40,7 +40,7 @@
       ]
     },
     "liquidity": {
-      "composite_z": -0.23,
+      "composite_z": -0.119,
       "coverage_n": 2,
       "min_coverage": 3,
       "state": "Insufficient coverage",
@@ -48,10 +48,10 @@
         {
           "id": "NET_LIQ",
           "label": "Fed Net Liquidity (WALCL - RRP - TGA)",
-          "raw_value": -44.566,
-          "z": -0.241,
+          "raw_value": 39.145,
+          "z": -0.018,
           "direction": 1,
-          "rising": false,
+          "rising": true,
           "lag_days": 0,
           "freq": "W"
         },
@@ -68,7 +68,7 @@
       ]
     },
     "credit": {
-      "composite_z": 0.581,
+      "composite_z": 0.599,
       "coverage_n": 5,
       "min_coverage": 3,
       "state": "Easy / Expansionary",
@@ -76,8 +76,8 @@
         {
           "id": "BAA10Y",
           "label": "Baa Corporate - 10y Treasury Spread",
-          "raw_value": 1.57,
-          "z": 1.112,
+          "raw_value": 1.55,
+          "z": 1.162,
           "direction": -1,
           "rising": false,
           "lag_days": 0,
@@ -86,8 +86,8 @@
         {
           "id": "AAA10Y",
           "label": "Aaa Corporate - 10y Treasury Spread",
-          "raw_value": 1.13,
-          "z": 0.136,
+          "raw_value": 1.12,
+          "z": 0.173,
           "direction": -1,
           "rising": false,
           "lag_days": 0,
@@ -126,7 +126,7 @@
       ]
     },
     "financial_conditions": {
-      "composite_z": 0.563,
+      "composite_z": 0.554,
       "coverage_n": 4,
       "min_coverage": 3,
       "state": "Loose",
@@ -134,8 +134,8 @@
         {
           "id": "NFCI",
           "label": "Chicago Fed Financial Conditions Index",
-          "raw_value": -0.558,
-          "z": 0.603,
+          "raw_value": -0.564,
+          "z": 0.641,
           "direction": -1,
           "rising": true,
           "lag_days": 5,
@@ -144,8 +144,8 @@
         {
           "id": "ANFCI",
           "label": "Adjusted Financial Conditions Index",
-          "raw_value": -0.582,
-          "z": 0.588,
+          "raw_value": -0.588,
+          "z": 0.621,
           "direction": -1,
           "rising": true,
           "lag_days": 5,
@@ -164,8 +164,8 @@
         {
           "id": "VIXCLS",
           "label": "VIX",
-          "raw_value": 15.72,
-          "z": 0.425,
+          "raw_value": 16.46,
+          "z": 0.319,
           "direction": -1,
           "rising": true,
           "lag_days": 0,
@@ -222,7 +222,7 @@
       ]
     },
     "volatility": {
-      "composite_z": 0.562,
+      "composite_z": 0.656,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Elevated / Expansion",
@@ -230,8 +230,8 @@
         {
           "id": "OVXCLS",
           "label": "Oil Volatility (OVX)",
-          "raw_value": 48.59,
-          "z": 0.432,
+          "raw_value": 49.85,
+          "z": 0.5,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
@@ -240,18 +240,18 @@
         {
           "id": "GVZCLS",
           "label": "Gold Volatility (GVZ)",
-          "raw_value": 27.26,
-          "z": 1.827,
+          "raw_value": 27.79,
+          "z": 1.917,
           "direction": 1,
-          "rising": false,
+          "rising": true,
           "lag_days": 0,
           "freq": "D"
         },
         {
           "id": "TLT_RVOL",
           "label": "TLT Realized Volatility (MOVE proxy)",
-          "raw_value": 9.8867,
-          "z": -0.573,
+          "raw_value": 10.6506,
+          "z": -0.449,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
