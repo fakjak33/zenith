@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-11",
+  "as_of": "2026-09-12",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-09-30",
   "regime": "Goldilocks / Reflation",
@@ -131,7 +131,7 @@
     "breadth": 0.16666666666666666,
     "n_rising": 2,
     "n_total": 12,
-    "z": -0.048,
+    "z": -0.064,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -196,8 +196,8 @@
       {
         "id": "T10YIE",
         "label": "10y Breakeven Inflation",
-        "raw_value": 2.4,
-        "z": 0.819,
+        "raw_value": 2.36,
+        "z": 0.705,
         "direction": 1,
         "rising": true,
         "lag_days": 0,
@@ -206,8 +206,8 @@
       {
         "id": "T5YIFR",
         "label": "5y5y Forward Inflation Expectation",
-        "raw_value": 2.34,
-        "z": 0.954,
+        "raw_value": 2.32,
+        "z": 0.869,
         "direction": 1,
         "rising": true,
         "lag_days": 0,
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 4.9,
+    "score": 5.0,
     "growth_slope": 0.0037,
     "growth_r2": 0.035,
-    "infl_slope": -0.1059,
-    "infl_r2": 0.915,
+    "infl_slope": -0.1082,
+    "infl_r2": 0.921,
     "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.03) while inflation signals have moderated (trend R²=0.92)."
   }
 }

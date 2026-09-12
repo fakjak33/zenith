@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-09-11",
+  "as_of": "2026-09-12",
   "themes": {
     "dollar": {
       "signal_score": 53.1,
       "composite_z": 0.252,
-      "real_yield_z": 1.564,
+      "real_yield_z": 1.645,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 72.4,
+      "signal_score": 72.7,
       "components": {
-        "DGS30": 1.743,
+        "DGS30": 1.819,
         "THREEFYTP10": 2.037,
         "GFDEBTN": 1.603
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Moderate",
       "usdjpy_z": 1.467,
       "usdjpy_pct_move_3m": -0.04,
-      "us_real_yield_z": 1.564,
+      "us_real_yield_z": 1.645,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.1105,
+      "semis_relative_strength_3m": -0.116,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -35,15 +35,6 @@
           "archive_date": "2026-08-27",
           "summary": "The US discussion over datacenters is depressing. Datacenters do not use a lot of water, they produce very useful outputs, they are not a blight on the landscape. All of this is obvious. But I don’t want to restate the obvious. What bothers me most about the discussion is that people seem to think this […] The post Dat…",
           "category": "Fact"
-        },
-        {
-          "title": "Relative Performance of Hyperscalers to S&P 500",
-          "source": "ISABELNET (bank chart-of-the-day mirror)",
-          "link": "https://www.isabelnet.com/msci-emerging-market-equities-vs-sp-500-relative-performance/",
-          "published": "Wed, 12 Aug 2026 08:30:58 +0000",
-          "archive_date": "2026-08-13",
-          "summary": "Relative Performance of Hyperscalers to S&P 500 Hyperscalers have been trapped in a two-year range versus the S&P 500. Now the question is whether they can break out while AI capex returns remain in doubt. Image: Deutsche Bank Asset Allocation",
-          "category": "Interpretation"
         },
         {
           "title": "Wednesday Update: Yellow Lines, Falling Yields, and a Lightning Bolt",
@@ -116,11 +107,20 @@
           "archive_date": "2026-08-14",
           "summary": "Spend now, spend more later",
           "category": "Fact"
+        },
+        {
+          "title": "After the AI Bubble Bursts",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/commentary/private-debt-markets-opaque-as-ai-investment-soars-by-barry-eichengreen-2026-09",
+          "published": "Thu, 10 Sep 2026 12:08:39 GMT",
+          "archive_date": "2026-09-11",
+          "summary": "Just as debt markets fueled the global financial near-meltdown that followed the 2007–08 subprime-mortgage crisis, their exposure to AI will drive developments now. The problem is that we possess only very limited public information about those markets, and regulators are not making that information any easier to obtai…",
+          "category": "Fact"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.2085,
+      "btc_trend_3m": 0.2128,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
