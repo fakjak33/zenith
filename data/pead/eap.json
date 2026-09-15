@@ -1,23 +1,8 @@
 {
-  "as_of": "2026-09-11",
+  "as_of": "2026-09-15",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence.",
   "upcoming": [
-    {
-      "ticker": "KR",
-      "name": "Kroger Company (The)",
-      "report_date": "2026-09-11",
-      "time": "time-pre-market",
-      "reaction_day": "2026-09-11",
-      "entry_date": "2026-09-03",
-      "eps_consensus": 1.05,
-      "n_estimates": 8,
-      "cap_tier": "large",
-      "mktcap": 34577814000.0,
-      "past_avg_excess": -0.000565,
-      "past_n": 9,
-      "in_window": true
-    },
     {
       "ticker": "FPS",
       "name": "Forgent Power Solutions, Inc.",
@@ -28,7 +13,7 @@
       "eps_consensus": 0.22,
       "n_estimates": 1,
       "cap_tier": "mid",
-      "mktcap": 9434251300.0,
+      "mktcap": 9686927400.0,
       "past_avg_excess": null,
       "past_n": 0,
       "in_window": true
@@ -43,7 +28,7 @@
       "eps_consensus": 1.3,
       "n_estimates": 6,
       "cap_tier": "mid",
-      "mktcap": 19454691300.0,
+      "mktcap": 19175254000.0,
       "past_avg_excess": -0.048654,
       "past_n": 9,
       "in_window": true
@@ -58,28 +43,58 @@
       "eps_consensus": null,
       "n_estimates": 3,
       "cap_tier": "mid",
-      "mktcap": 19454691300.0,
+      "mktcap": 19175254000.0,
       "past_avg_excess": null,
       "past_n": 0,
+      "in_window": true
+    },
+    {
+      "ticker": "AZO",
+      "name": "AutoZone, Inc.",
+      "report_date": "2026-09-22",
+      "time": "time-pre-market",
+      "reaction_day": "2026-09-22",
+      "entry_date": "2026-09-15",
+      "eps_consensus": 54.97,
+      "n_estimates": 11,
+      "cap_tier": "large",
+      "mktcap": 46963966000.0,
+      "past_avg_excess": -0.029994,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "THO",
+      "name": "Thor Industries, Inc.",
+      "report_date": "2026-09-22",
+      "time": "time-pre-market",
+      "reaction_day": "2026-09-22",
+      "entry_date": "2026-09-15",
+      "eps_consensus": 0.95,
+      "n_estimates": 6,
+      "cap_tier": "small",
+      "mktcap": 3792900100.0,
+      "past_avg_excess": -0.041465,
+      "past_n": 9,
       "in_window": true
     }
   ],
   "summary": {
-    "n_rows": 8942,
+    "n_rows": 8946,
     "n_gated": 35,
     "pre": {
       "overall": {
-        "n": 8885,
-        "avg": 0.000452,
-        "median": -6.6e-05,
-        "win_rate": 0.4993
+        "n": 8889,
+        "avg": 0.000433,
+        "median": -7.3e-05,
+        "win_rate": 0.4992
       },
       "by_cap_tier": {
         "large": {
-          "n": 386,
-          "avg": -0.000211,
-          "median": -0.003669,
-          "win_rate": 0.4611
+          "n": 390,
+          "avg": -0.000639,
+          "median": -0.003785,
+          "win_rate": 0.459
         },
         "mid": {
           "n": 522,
@@ -97,23 +112,23 @@
     },
     "through": {
       "overall": {
-        "n": 8884,
-        "avg": 0.003189,
-        "median": -0.000489,
-        "win_rate": 0.4967
+        "n": 8891,
+        "avg": 0.003133,
+        "median": -0.00052,
+        "win_rate": 0.4966
       },
       "by_cap_tier": {
         "large": {
-          "n": 386,
-          "avg": -0.004066,
-          "median": -0.006717,
-          "win_rate": 0.4534
+          "n": 390,
+          "avg": -0.004548,
+          "median": -0.007108,
+          "win_rate": 0.4513
         },
         "mid": {
-          "n": 519,
-          "avg": 0.001184,
-          "median": -0.004343,
-          "win_rate": 0.4778
+          "n": 522,
+          "avg": 0.000663,
+          "median": -0.004416,
+          "win_rate": 0.477
         },
         "small": {
           "n": 68,
@@ -322,10 +337,10 @@
       },
       {
         "month": "2026-09",
-        "n": 28,
-        "avg": -0.057594,
-        "median": -0.046079,
-        "win_rate": 0.1786
+        "n": 35,
+        "avg": -0.059581,
+        "median": -0.05077,
+        "win_rate": 0.2
       }
     ]
   }

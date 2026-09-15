@@ -1,11 +1,117 @@
 {
-  "date": "2026-09-12",
-  "is_trading_day": false,
+  "date": "2026-09-15",
+  "is_trading_day": true,
+  "reaction_days_processed": [
+    "2026-09-11",
+    "2026-09-14",
+    "2026-09-15"
+  ],
+  "n_history_rows": 4556,
+  "n_active": 416,
+  "universe": {
+    "n": 1024,
+    "source": "stale:vanguard_vone"
+  },
+  "calendar_check": "ok",
   "segments": [
     {
-      "segment": "gate",
+      "segment": "universe",
       "ok": true,
-      "note": "non-trading day"
+      "source": "stale:vanguard_vone",
+      "n": 1024,
+      "weights_source": "vone"
+    },
+    {
+      "segment": "nasdaq(2026-09-10)",
+      "ok": true,
+      "n": 30
+    },
+    {
+      "segment": "nasdaq(2026-09-11)",
+      "ok": true,
+      "n": 10
+    },
+    {
+      "segment": "nasdaq(2026-09-11)",
+      "ok": true,
+      "n": 10
+    },
+    {
+      "segment": "nasdaq(2026-09-12)",
+      "ok": true,
+      "n": 0
+    },
+    {
+      "segment": "nasdaq(2026-09-13)",
+      "ok": true,
+      "n": 0
+    },
+    {
+      "segment": "nasdaq(2026-09-14)",
+      "ok": true,
+      "n": 15
+    },
+    {
+      "segment": "nasdaq(2026-09-14)",
+      "ok": true,
+      "n": 15
+    },
+    {
+      "segment": "nasdaq(2026-09-15)",
+      "ok": true,
+      "n": 17
+    },
+    {
+      "segment": "upcoming_calendar",
+      "ok": true,
+      "n": 5
+    },
+    {
+      "segment": "prices",
+      "ok": true,
+      "n": 428,
+      "requested": 432,
+      "error": ""
+    },
+    {
+      "segment": "sheet(2026-09-11)",
+      "ok": true,
+      "n": 4,
+      "eligible": 2,
+      "picks_added": 2
+    },
+    {
+      "segment": "sheet(2026-09-14)",
+      "ok": true,
+      "n": 0,
+      "eligible": 0,
+      "picks_added": 0
+    },
+    {
+      "segment": "sheet(2026-09-15)",
+      "ok": false,
+      "error": "no reaction bars yet — retry tomorrow"
+    },
+    {
+      "segment": "evaluate",
+      "ok": true,
+      "n": 9
+    },
+    {
+      "segment": "eap_evaluate",
+      "ok": true,
+      "n": 7
+    },
+    {
+      "segment": "next_earn_refresh",
+      "ok": true,
+      "n": 2
+    },
+    {
+      "segment": "eap_refresh",
+      "ok": true,
+      "n": 5,
+      "tracked": 8946
     }
   ]
 }

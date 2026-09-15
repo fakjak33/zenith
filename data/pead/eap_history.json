@@ -223274,7 +223274,10 @@
         "excess": -0.027963
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": 0.011555,
+        "spy_ret": -0.00958,
+        "excess": 0.021135
       }
     },
     {
@@ -223346,7 +223349,10 @@
         "excess": -0.086024
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.223146,
+        "spy_ret": -0.00958,
+        "excess": -0.213567
       }
     },
     {
@@ -223394,6 +223400,56 @@
       }
     },
     {
+      "ticker": "ADBE",
+      "name": "Adobe Inc.",
+      "report_date": "2026-09-10",
+      "reaction_day": "2026-09-11",
+      "entry_date": "2026-09-03",
+      "pre_exit_date": "2026-09-10",
+      "through_exit_date": "2026-09-11",
+      "cap_tier": "large",
+      "mktcap": 100261421000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.129204,
+        "spy_ret": -0.01984,
+        "excess": -0.109363
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.117305,
+        "spy_ret": -0.011485,
+        "excess": -0.10582
+      }
+    },
+    {
+      "ticker": "CPRT",
+      "name": "Copart, Inc.",
+      "report_date": "2026-09-10",
+      "reaction_day": "2026-09-11",
+      "entry_date": "2026-09-03",
+      "pre_exit_date": "2026-09-10",
+      "through_exit_date": "2026-09-11",
+      "cap_tier": "large",
+      "mktcap": 27728054300.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.084276,
+        "spy_ret": -0.01984,
+        "excess": -0.064436
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.1081,
+        "spy_ret": -0.011485,
+        "excess": -0.096615
+      }
+    },
+    {
       "ticker": "M",
       "name": "Macy's Inc",
       "report_date": "2026-09-10",
@@ -223412,11 +223468,64 @@
         "excess": -0.036982
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.085638,
+        "spy_ret": -0.00958,
+        "excess": -0.076058
+      }
+    },
+    {
+      "ticker": "ORCL",
+      "name": "Oracle Corporation",
+      "report_date": "2026-09-10",
+      "reaction_day": "2026-09-11",
+      "entry_date": "2026-09-03",
+      "pre_exit_date": "2026-09-10",
+      "through_exit_date": "2026-09-11",
+      "cap_tier": "large",
+      "mktcap": 432877175000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.007141,
+        "spy_ret": -0.01984,
+        "excess": 0.012699
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.024409,
+        "spy_ret": -0.011485,
+        "excess": -0.012924
+      }
+    },
+    {
+      "ticker": "KR",
+      "name": "Kroger Company (The)",
+      "report_date": "2026-09-11",
+      "reaction_day": "2026-09-11",
+      "entry_date": "2026-09-03",
+      "pre_exit_date": "2026-09-10",
+      "through_exit_date": "2026-09-11",
+      "cap_tier": "large",
+      "mktcap": 35833741000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.026662,
+        "spy_ret": -0.01984,
+        "excess": -0.006822
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.000342,
+        "spy_ret": -0.011485,
+        "excess": 0.011143
       }
     }
   ],
-  "as_of": "2026-09-11",
+  "as_of": "2026-09-15",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence."
 }
