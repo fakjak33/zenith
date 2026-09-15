@@ -1,55 +1,55 @@
 {
-  "as_of": "2026-09-11",
+  "as_of": "2026-09-15",
   "disclaimer": "MOMENTUM scores every current Russell 1000 constituent on six documented momentum dimensions (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend) and blends them into a transparent -20..+20 composite. Momentum is well-replicated academically but crashes hard in panic states and is most crowded in large caps (this universe). Decision-support and a research monitor, not investment advice.",
   "correlation": {
     "n": 981,
     "matrix": {
       "ts": {
         "ts": 1.0,
-        "breakout": 0.74,
+        "breakout": 0.743,
         "xsec": 0.999,
-        "speed": 0.801,
-        "strength": 0.737,
-        "mvt": 0.537
+        "speed": 0.795,
+        "strength": 0.792,
+        "mvt": 0.578
       },
       "breakout": {
-        "ts": 0.74,
+        "ts": 0.743,
         "breakout": 1.0,
-        "xsec": 0.758,
-        "speed": 0.872,
-        "strength": 0.892,
-        "mvt": 0.563
+        "xsec": 0.751,
+        "speed": 0.871,
+        "strength": 0.897,
+        "mvt": 0.584
       },
       "xsec": {
         "ts": 0.999,
-        "breakout": 0.758,
+        "breakout": 0.751,
         "xsec": 1.0,
-        "speed": 0.809,
-        "strength": 0.752,
-        "mvt": 0.55
+        "speed": 0.798,
+        "strength": 0.798,
+        "mvt": 0.587
       },
       "speed": {
-        "ts": 0.801,
-        "breakout": 0.872,
-        "xsec": 0.809,
+        "ts": 0.795,
+        "breakout": 0.871,
+        "xsec": 0.798,
         "speed": 1.0,
-        "strength": 0.827,
-        "mvt": 0.509
+        "strength": 0.848,
+        "mvt": 0.54
       },
       "strength": {
-        "ts": 0.737,
-        "breakout": 0.892,
-        "xsec": 0.752,
-        "speed": 0.827,
+        "ts": 0.792,
+        "breakout": 0.897,
+        "xsec": 0.798,
+        "speed": 0.848,
         "strength": 1.0,
-        "mvt": 0.586
+        "mvt": 0.595
       },
       "mvt": {
-        "ts": 0.537,
-        "breakout": 0.563,
-        "xsec": 0.55,
-        "speed": 0.509,
-        "strength": 0.586,
+        "ts": 0.578,
+        "breakout": 0.584,
+        "xsec": 0.587,
+        "speed": 0.54,
+        "strength": 0.595,
         "mvt": 1.0
       }
     },
@@ -62,22 +62,22 @@
       {
         "a": "breakout",
         "b": "speed",
-        "corr": 0.872
+        "corr": 0.871
       },
       {
         "a": "breakout",
         "b": "strength",
-        "corr": 0.892
+        "corr": 0.897
       }
     ]
   },
   "distribution": {
     "n": 981,
-    "mean": 0.621,
-    "median": 0.797,
-    "std": 5.46,
-    "pct_bullish": 0.2243,
-    "pct_bearish": 0.16,
+    "mean": 0.601,
+    "median": 0.697,
+    "std": 5.445,
+    "pct_bullish": 0.2141,
+    "pct_bearish": 0.1611,
     "n_extreme_bullish": 0,
     "n_extreme_bearish": 1
   },
