@@ -1,37 +1,37 @@
 {
-  "as_of": "2026-09-16",
+  "as_of": "2026-09-17",
   "trends": {
     "SPY": {
-      "trend_3m": 0.012,
+      "trend_3m": 0.0203,
       "direction": "up"
     },
     "TLT": {
-      "trend_3m": -0.0527,
+      "trend_3m": -0.0523,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": -0.0088,
-      "direction": "down"
+      "trend_3m": 0.0081,
+      "direction": "up"
     },
     "DBC": {
-      "trend_3m": 0.2072,
+      "trend_3m": 0.1967,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.0104,
+      "trend_3m": 0.0078,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": -0.0212,
+      "trend_3m": -0.018,
       "direction": "down"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 1.105,
-    "defensives_avg": -0.196,
+    "cyclicals_avg": 0.765,
+    "defensives_avg": -0.17,
     "cyclicals_leading": true,
-    "as_of": "2026-09-16"
+    "as_of": "2026-09-17"
   },
   "confirmation": {
     "checks": [
@@ -50,8 +50,8 @@
       {
         "check": "Gold trend (inflation-hedge proxy)",
         "expects": "falling",
-        "observed": "falling",
-        "confirms": true
+        "observed": "rising",
+        "confirms": false
       },
       {
         "check": "Long Treasuries (rate-expectation proxy)",
@@ -60,15 +60,21 @@
         "confirms": false
       }
     ],
-    "n_confirming": 2,
+    "n_confirming": 1,
     "n_total": 4,
-    "confirmation_ratio": 0.5
+    "confirmation_ratio": 0.25
   },
   "divergences": [
     {
       "flag": "Small-cap vs Large-cap (risk appetite proxy)",
       "classifier_expects": "small-caps outperforming",
       "market_shows": "large-caps outperforming",
+      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
+    },
+    {
+      "flag": "Gold trend (inflation-hedge proxy)",
+      "classifier_expects": "falling",
+      "market_shows": "rising",
       "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
     },
     {
