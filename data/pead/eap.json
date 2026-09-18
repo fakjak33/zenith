@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-17",
+  "as_of": "2026-09-18",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence.",
   "upcoming": [
@@ -13,7 +13,7 @@
       "eps_consensus": 54.97,
       "n_estimates": 11,
       "cap_tier": "large",
-      "mktcap": 46694597000.0,
+      "mktcap": 46511591000.0,
       "past_avg_excess": -0.029994,
       "past_n": 9,
       "in_window": true
@@ -28,7 +28,7 @@
       "eps_consensus": 0.95,
       "n_estimates": 6,
       "cap_tier": "small",
-      "mktcap": 3712731900.0,
+      "mktcap": 3630481150.0,
       "past_avg_excess": -0.041465,
       "past_n": 9,
       "in_window": true
@@ -43,7 +43,7 @@
       "eps_consensus": 1.35,
       "n_estimates": 8,
       "cap_tier": "large",
-      "mktcap": 79613731000.0,
+      "mktcap": 79687614000.0,
       "past_avg_excess": 0.006813,
       "past_n": 9,
       "in_window": true
@@ -58,7 +58,7 @@
       "eps_consensus": 1.33,
       "n_estimates": 6,
       "cap_tier": "large",
-      "mktcap": 42112492000.0,
+      "mktcap": 41550041000.0,
       "past_avg_excess": -0.015309,
       "past_n": 9,
       "in_window": true
@@ -73,7 +73,7 @@
       "eps_consensus": 0.72,
       "n_estimates": 6,
       "cap_tier": "mid",
-      "mktcap": 19556745200.0,
+      "mktcap": 19679711200.0,
       "past_avg_excess": -0.003298,
       "past_n": 9,
       "in_window": true
@@ -88,10 +88,10 @@
       "eps_consensus": 6.48,
       "n_estimates": 11,
       "cap_tier": "large",
-      "mktcap": 399729623000.0,
+      "mktcap": 396354748000.0,
       "past_avg_excess": -0.021742,
       "past_n": 9,
-      "in_window": false
+      "in_window": true
     },
     {
       "ticker": "DRI",
@@ -103,7 +103,7 @@
       "eps_consensus": 2.05,
       "n_estimates": 10,
       "cap_tier": "mid",
-      "mktcap": 23855984600.0,
+      "mktcap": 23737344000.0,
       "past_avg_excess": 0.04306,
       "past_n": 9,
       "in_window": true
@@ -118,21 +118,21 @@
       "eps_consensus": 4.38,
       "n_estimates": 5,
       "cap_tier": "mid",
-      "mktcap": 20987572200.0,
+      "mktcap": 20829255700.0,
       "past_avg_excess": 0.00037,
       "past_n": 9,
       "in_window": true
     }
   ],
   "summary": {
-    "n_rows": 8946,
+    "n_rows": 8948,
     "n_gated": 35,
     "pre": {
       "overall": {
-        "n": 8889,
-        "avg": 0.000433,
-        "median": -7.3e-05,
-        "win_rate": 0.4992
+        "n": 8891,
+        "avg": 0.000435,
+        "median": -6.6e-05,
+        "win_rate": 0.4993
       },
       "by_cap_tier": {
         "large": {
@@ -142,10 +142,10 @@
           "win_rate": 0.459
         },
         "mid": {
-          "n": 522,
-          "avg": 0.001007,
-          "median": -0.00334,
-          "win_rate": 0.4674
+          "n": 524,
+          "avg": 0.00104,
+          "median": -0.003193,
+          "win_rate": 0.4695
         },
         "small": {
           "n": 68,

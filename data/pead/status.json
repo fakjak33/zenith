@@ -1,11 +1,12 @@
 {
-  "date": "2026-09-17",
+  "date": "2026-09-18",
   "is_trading_day": true,
   "reaction_days_processed": [
-    "2026-09-17"
+    "2026-09-17",
+    "2026-09-18"
   ],
   "n_history_rows": 4556,
-  "n_active": 416,
+  "n_active": 415,
   "universe": {
     "n": 1024,
     "source": "stale:vanguard_vone"
@@ -22,12 +23,22 @@
     {
       "segment": "nasdaq(2026-09-16)",
       "ok": true,
-      "n": 22
+      "n": 9
     },
     {
       "segment": "nasdaq(2026-09-17)",
       "ok": true,
       "n": 15
+    },
+    {
+      "segment": "nasdaq(2026-09-17)",
+      "ok": true,
+      "n": 15
+    },
+    {
+      "segment": "nasdaq(2026-09-18)",
+      "ok": true,
+      "n": 7
     },
     {
       "segment": "upcoming_calendar",
@@ -43,29 +54,38 @@
     },
     {
       "segment": "sheet(2026-09-17)",
-      "ok": false,
-      "error": "no reaction bars yet — retry tomorrow"
+      "ok": true,
+      "n": 2,
+      "eligible": 0,
+      "picks_added": 0
+    },
+    {
+      "segment": "sheet(2026-09-18)",
+      "ok": true,
+      "n": 0,
+      "eligible": 0,
+      "picks_added": 0
     },
     {
       "segment": "evaluate",
       "ok": true,
-      "n": 4
+      "n": 0
     },
     {
       "segment": "eap_evaluate",
       "ok": true,
-      "n": 0
+      "n": 2
     },
     {
       "segment": "next_earn_refresh",
       "ok": true,
-      "n": 0
+      "n": 3
     },
     {
       "segment": "eap_refresh",
       "ok": true,
       "n": 8,
-      "tracked": 8946
+      "tracked": 8948
     }
   ]
 }
