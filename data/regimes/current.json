@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-17",
+  "as_of": "2026-09-18",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-09-30",
   "regime": "Goldilocks / Reflation",
@@ -12,7 +12,7 @@
     "breadth": 0.6363636363636364,
     "n_rising": 7,
     "n_total": 11,
-    "z": 0.175,
+    "z": 0.177,
     "indicators": [
       {
         "id": "CFNAI",
@@ -57,8 +57,8 @@
       {
         "id": "ICSA",
         "label": "Initial Jobless Claims",
-        "raw_value": 206000.0,
-        "z": 0.327,
+        "raw_value": 196000.0,
+        "z": 0.349,
         "direction": -1,
         "rising": true,
         "lag_days": 5,
@@ -131,7 +131,7 @@
     "breadth": 0.16666666666666666,
     "n_rising": 2,
     "n_total": 12,
-    "z": 0.03,
+    "z": 0.041,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -206,8 +206,8 @@
       {
         "id": "T5YIFR",
         "label": "5y5y Forward Inflation Expectation",
-        "raw_value": 2.31,
-        "z": 0.827,
+        "raw_value": 2.34,
+        "z": 0.954,
         "direction": 1,
         "rising": true,
         "lag_days": 0,
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 3.9,
-    "growth_slope": 0.0037,
-    "growth_r2": 0.035,
-    "infl_slope": -0.0881,
-    "infl_r2": 0.877,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.03) while inflation signals have moderated (trend R²=0.88)."
+    "score": 3.8,
+    "growth_slope": 0.004,
+    "growth_r2": 0.041,
+    "infl_slope": -0.0866,
+    "infl_r2": 0.87,
+    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.04) while inflation signals have moderated (trend R²=0.87)."
   }
 }
