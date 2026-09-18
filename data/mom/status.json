@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-17",
+  "date": "2026-09-18",
   "is_trading_day": true,
   "disclaimer": "MOMENTUM scores every current Russell 1000 constituent on six documented momentum dimensions (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend) and blends them into a transparent -20..+20 composite. Momentum is well-replicated academically but crashes hard in panic states and is most crowded in large caps (this universe). Decision-support and a research monitor, not investment advice.",
   "segments": [
@@ -13,16 +13,16 @@
     {
       "segment": "prices",
       "ok": true,
-      "n": 998,
+      "n": 997,
       "requested": 1008,
       "error": ""
     },
     {
       "segment": "coverage",
       "ok": true,
-      "n": 1014,
+      "n": 1013,
       "requested": 1024,
-      "coverage": 0.9902
+      "coverage": 0.9893
     },
     {
       "segment": "metadata",
@@ -34,17 +34,17 @@
     {
       "segment": "factors",
       "ok": true,
-      "n": 981
+      "n": 980
     },
     {
       "segment": "mvt",
       "ok": true,
-      "n": 975,
+      "n": 974,
       "universe": "equities",
-      "n_priced": 997,
+      "n_priced": 996,
       "panel": {
-        "n_in": 997,
-        "n_kept": 981,
+        "n_in": 996,
+        "n_kept": 980,
         "dropped": {
           "BLSH": "insufficient_history(<280d)",
           "CBC": "insufficient_history(<280d)",
@@ -66,40 +66,40 @@
         "n_days": 1254
       },
       "empirical_excluded": 2,
-      "n_scored": 975,
+      "n_scored": 974,
       "k_factors": 15,
       "explained_variance_ratio": 0.5331,
-      "effective_factor_count": 74.745,
+      "effective_factor_count": 74.76,
       "erc_horizon_weights": {
-        "12_1": 0.1813,
+        "12_1": 0.182,
         "12m": 0.1522,
-        "9m": 0.152,
+        "9m": 0.1528,
         "6m": 0.1546,
-        "3m": 0.167,
-        "1m": 0.1928
+        "3m": 0.168,
+        "1m": 0.1903
       }
     },
     {
       "segment": "mvt_crossuniverse",
       "ok": true,
-      "n": 914
+      "n": 913
     },
     {
       "segment": "artifacts",
       "ok": true,
-      "n": 981
+      "n": 980
     },
     {
       "segment": "history",
       "ok": true,
-      "history_added": 965,
-      "picks_added": 190,
+      "history_added": 964,
+      "picks_added": 191,
       "evaluated": 0
     },
     {
       "segment": "diagnostics",
       "ok": true,
-      "flagged_pairs": 4
+      "flagged_pairs": 3
     },
     {
       "segment": "weighting",

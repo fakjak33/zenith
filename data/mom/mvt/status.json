@@ -1,17 +1,17 @@
 {
-  "date": "2026-09-17",
+  "date": "2026-09-18",
   "disclaimer": "Multivariate Trend scores every instrument against ALL of its peers (not just its own history) across six horizons, using both a raw vol-normalized spread and a residual spread with common market/sector factors removed. The residual score is genuinely less redundant with cross-sectional momentum than the raw one (measured, not assumed) and is what feeds the Momentum composite. New, unproven signal (evidence tier C+) -- decision-support and a research monitor, not investment advice.",
   "segments": [
     {
       "segment": "mvt_equities",
       "ok": true,
-      "n": 975,
-      "history_added": 975,
+      "n": 974,
+      "history_added": 974,
       "universe": "equities",
-      "n_priced": 997,
+      "n_priced": 996,
       "panel": {
-        "n_in": 997,
-        "n_kept": 981,
+        "n_in": 996,
+        "n_kept": 980,
         "dropped": {
           "BLSH": "insufficient_history(<280d)",
           "CBC": "insufficient_history(<280d)",
@@ -33,17 +33,17 @@
         "n_days": 1254
       },
       "empirical_excluded": 2,
-      "n_scored": 975,
+      "n_scored": 974,
       "k_factors": 15,
       "explained_variance_ratio": 0.5331,
-      "effective_factor_count": 74.745,
+      "effective_factor_count": 74.76,
       "erc_horizon_weights": {
-        "12_1": 0.1813,
+        "12_1": 0.182,
         "12m": 0.1522,
-        "9m": 0.152,
+        "9m": 0.1528,
         "6m": 0.1546,
-        "3m": 0.167,
-        "1m": 0.1928
+        "3m": 0.168,
+        "1m": 0.1903
       }
     },
     {
@@ -88,20 +88,20 @@
           "VDG": "insufficient_history(<280d)",
           "VDV": "insufficient_history(<280d)"
         },
-        "n_days": 752
+        "n_days": 753
       },
       "empirical_excluded": 101,
       "n_scored": 763,
       "k_factors": 3,
-      "explained_variance_ratio": 0.6542,
-      "effective_factor_count": 11.983,
+      "explained_variance_ratio": 0.6544,
+      "effective_factor_count": 11.976,
       "erc_horizon_weights": {
-        "12_1": 0.1781,
+        "12_1": 0.1766,
         "12m": 0.1546,
-        "9m": 0.1527,
-        "6m": 0.1638,
-        "3m": 0.1748,
-        "1m": 0.1759
+        "9m": 0.1526,
+        "6m": 0.1657,
+        "3m": 0.1775,
+        "1m": 0.173
       }
     }
   ]
