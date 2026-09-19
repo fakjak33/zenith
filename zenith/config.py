@@ -353,6 +353,115 @@ ETFMOM_MVT_MAX_STALE_DAYS = 10
 for _d in (ETFMOM_DIR, ETFMOM_HISTORY_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
+# --- TREND FOLLOWING (seven-speed EWMAC, Carver-style) ----------------------
+# A pure TIME-SERIES trend system over the SAME two universes as MOMENTUM and
+# ETF MOMENTUM (their constituents() functions are called, never copied -- see
+# zenith/trend/universe.py). Each of the seven speeds is a vol-normalized
+# EWMAC forecast on the same +/-20 scale, and the Trend Score is their plain
+# equal-weight mean -- no FDM, no tilt toward fast or slow. Every constant the
+# signal depends on lives here so the methodology is auditable in one place.
+TREND_DIR = DATA_DIR / "trend"
+TREND_UNIVERSES = ("stocks", "etfs")
+
+
+def _trend_files(universe: str) -> dict:
+    d = TREND_DIR / universe
+    return {
+        "latest": d / "latest.json",                  # one row per universe member, today
+        "recent_events": d / "recent_events.json",    # last TREND_RECENT_EVENT_DAYS of events
+        "breadth": d / "breadth_history.json",        # per-date % bullish per speed + score stats
+        "diagnostics": d / "diagnostics.json",        # realized |forecast| per speed, speed correlation
+        "status": d / "status.json",
+    }
+
+
+TREND_FILES = {u: _trend_files(u) for u in TREND_UNIVERSES}
+TREND_HISTORY_DIRS = {u: TREND_DIR / u / "history" for u in TREND_UNIVERSES}   # <YYYY>.json columnar
+TREND_EVENT_DIRS = {u: TREND_DIR / u / "events" for u in TREND_UNIVERSES}      # <YYYY>.json append-only
+
+# (fast span, slow span) in trading days. The classic 4x ratio doubling ladder.
+TREND_SPEEDS = ((2, 8), (4, 16), (8, 32), (16, 64), (32, 128), (64, 256), (128, 512))
+
+# Forecast scalars: multiply the vol-normalized raw EWMAC so its long-run
+# average |forecast| is ~10 (Carver, "Systematic Trading", 2015; also the
+# pysystemtrade defaults). The first six are the published values. 128/512 is
+# not published: it is extrapolated at the published ladder's own ratio --
+# each doubling of the spans divides the scalar by ~sqrt(2) (10.6/7.5 = 1.413,
+# 7.5/5.3 = 1.415, 5.3/3.75 = 1.413, 3.75/2.65 = 1.415, 2.65/1.87 = 1.417),
+# so 1.87/1.414 = 1.32. FIXED, not fitted to this universe: +/-20 must mean the
+# same thing for every asset. diagnostics.json reports the realized mean
+# |forecast| per speed against the target of 10, so any drift is visible.
+TREND_FORECAST_SCALARS = {(2, 8): 10.6, (4, 16): 7.5, (8, 32): 5.3, (16, 64): 3.75,
+                          (32, 128): 2.65, (64, 256): 1.87, (128, 512): 1.32}
+TREND_SCALAR_EXTRAPOLATED = frozenset({(128, 512)})
+TREND_FORECAST_CAP = 20.0
+TREND_FORECAST_TARGET_ABS = 10.0
+
+# Per-speed normalization -- see trend/ewmac.py NORMALIZERS. "carver" (the
+# confirmed default) = raw x scalar, hard-capped at +/-20.
+TREND_NORMALIZATION = "carver"
+
+# Price volatility used to normalize (fast EMA - slow EMA): EWM std of daily
+# PRICE DIFFERENCES (price units, so the ratio is unitless), floored at a low
+# percentile of its own trailing history so a quiet stretch can't blow the
+# forecast up (Carver's robust_vol_calc).
+TREND_VOL_SPAN = 35
+TREND_VOL_MIN_PERIODS = 10
+TREND_VOL_FLOOR_WINDOW = 500
+TREND_VOL_FLOOR_QUANTILE = 0.05
+TREND_VOL_FLOOR_MIN_PERIODS = 100
+
+# A row needs at least this many valid speeds to be scored at all (4 = the
+# 16/64 speed, i.e. >= 64 bars). 4-6 valid speeds = a PARTIAL row, scored on
+# the equal-weight mean of the speeds that exist and flagged in the UI.
+TREND_MIN_SPEEDS = 4
+
+# Fast / slow groups for the term-structure analytics (indexes into TREND_SPEEDS).
+TREND_FAST_IDX = (0, 1, 2)
+TREND_SLOW_IDX = (4, 5, 6)
+
+# Structure labels (trend/structure.py): a "persistent" trend needs this many
+# of the seven speeds on its side AND a score beyond the bullish/bearish band.
+TREND_PERSISTENT_MIN_SPEEDS = 6
+# fast/slow groups must each sit beyond this (forecast units) before the
+# term structure counts as genuinely disagreeing rather than just noisy.
+TREND_DISAGREE_MIN = 1.0
+
+# Hysteresis buffer (score points) for trigger / upgrade / downgrade EVENTS.
+# Moving to a band FURTHER from neutral fires at the threshold itself (+4 ->
+# +9 is a bullish trigger at +5); moving BACK toward neutral only fires once
+# the score has cleared the band edge by this much (a BULLISH state survives
+# a dip to +4.5 and ends below +4). Without it, a score hovering around a
+# band line emitted a trigger/downgrade pair almost every day (~100 events
+# per direction per day across the Russell 1000). Affects events only --
+# never the score, the displayed state, or the exact EMA crossover dates.
+TREND_BAND_HYSTERESIS = 1.0
+
+# Multi-speed confirmation: >= N same-direction speed crossovers within a
+# window of W trading days.
+TREND_CONFIRM_MIN_SPEEDS = 3
+TREND_CONFIRM_WINDOW = 10
+
+# Prices: 5y nightly (enough for a 512-span EMA to be well past its start-up),
+# 10y for the one-off backfill (leaves ~7y of full seven-speed history).
+TREND_PRICE_PERIOD = "5y"
+TREND_BACKFILL_PERIOD = "10y"
+TREND_RECENT_EVENT_DAYS = 90        # triggers / band changes / confirmations kept in recent_events.json
+TREND_RECENT_CROSS_DAYS = 20        # single-speed crossovers (far more numerous) kept this long there;
+                                    # the full crossover record lives in the history shards' direction bits
+TREND_SPARK_DAYS = 60
+# A ticker whose last bar is this many calendar days older than the universe's
+# newest bar is excluded as stale (halted / delisted / data gap), not scored.
+TREND_STALE_DAYS = 7
+# Cash-like instruments (T-bill / ultrashort funds) drift up with almost no
+# volatility, so a vol-normalized EWMAC correctly -- but uselessly -- pins them
+# at +20. Assets whose trailing 1-year annualized volatility is below this are
+# FLAGGED `cash_like` (never re-scored) and hidden by default in the ETF screen.
+TREND_CASH_LIKE_VOL = 0.015
+
+for _d in (TREND_DIR, *TREND_HISTORY_DIRS.values(), *TREND_EVENT_DIRS.values()):
+    _d.mkdir(parents=True, exist_ok=True)
+
 # --- IDEAS (discretionary-systematic opportunity engine) --------------------
 # Fusion layer over MOMENTUM/EDGE/PEAD/FMOM/CAS — not a new data pipeline (see
 # zenith/ideas/__init__.py for the full architecture note). Its own committed

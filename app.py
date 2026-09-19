@@ -22,7 +22,7 @@ st.markdown(BANNER, unsafe_allow_html=True)
 
 with st.expander("What is Zenith?  ·  a 20-second orientation"):
     st.markdown(
-        "**Zenith is six tools in one, all built from free data:**\n"
+        "**Zenith is many tools in one, all built from free data:**\n"
         "1. **Weekly Brief** — a concise, visual market read: what moved, sectors & industries, "
         "rates & fixed income, earnings, factor rotation, and plain-English talking points.\n"
         "2. **CAS** — a *model & signal monitor*: many models score every ETF **buy → neutral → sell**, "
@@ -55,24 +55,30 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "full-index heatmap, sortable rankings, sector breadth, a pairwise relative-strength engine "
         "across the Russell 1000 and a broad ETF universe, and a per-stock drill-down explaining "
         "exactly why each score landed where it did.\n"
-        "10. **IDEAS** — a *discretionary-systematic opportunity engine*: fuses MOMENTUM/EDGE/PEAD/"
+        "10. **TREND FOLLOWING** — a *multi-speed systematic trend dashboard*: seven EWMAC speeds "
+        "(2/8 through 128/512 days), each a volatility-normalized forecast, averaged with equal weight "
+        "into a -20..+20 Trend Score for every stock in MOMENTUM's universe and every ETF in ETF "
+        "MOMENTUM's, showing whether a trend runs across every horizon or only at one. It includes "
+        "trigger and crossover tracking, a trend-structure map, and each asset's full daily signal "
+        "history.\n"
+        "11. **IDEAS** — a *discretionary-systematic opportunity engine*: fuses MOMENTUM/EDGE/PEAD/"
         "CAS/valuation signals into a daily ranked BUY/SELL idea list, scoring conviction and "
         "unusualness SEPARATELY so genuinely idiosyncratic setups outrank merely-popular ones, with "
         "a deterministic thesis (bull/bear case, idiosyncratic risk, invalidation) for every idea.\n"
-        "11. **REGIMES** — a *macro regime intelligence & early-warning system*: classifies the "
+        "12. **REGIMES** — a *macro regime intelligence & early-warning system*: classifies the "
         "current growth/inflation quadrant from ~45 point-in-time FRED indicators (with a "
         "persistence requirement so one noisy release can't flip the headline), scores six "
         "secondary regimes (monetary, liquidity, credit, financial conditions, dollar, "
         "volatility) alongside it, and reconstructs the full historical regime timeline back "
         "to 1990.\n"
-        "12. **INDEX** — the *Master List*: a curated directory of the financial information "
+        "13. **INDEX** — the *Master List*: a curated directory of the financial information "
         "ecosystem itself — institutions, people, academic sources, podcasts and tools. "
         "Deduplicated, classified against an extensible taxonomy, link-verified, and "
         "extended by harvesting the full archives of 14 finance podcasts into a guest "
         "database, so it answers *who is doing interesting work, where do they work, and "
         "where do I read them*. Includes a traversable knowledge graph, a discovery "
         "surface for names your own list does not contain, and a CSV/Excel/JSON export.\n"
-        "13. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "14. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -158,11 +164,11 @@ def render_feature(module_path: str, feature: str) -> None:
 
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
- tab_nightday, tab_holdings, tab_mom, tab_etfmom, tab_ideas, tab_regimes, tab_index,
- tab_archive, tab_sources) = st.tabs(
+ tab_nightday, tab_holdings, tab_mom, tab_etfmom, tab_trend, tab_ideas, tab_regimes,
+ tab_index, tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
      "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM",
-     "IDEAS", "REGIMES", "INDEX", "ARCHIVE", "SOURCES"])
+     "TREND FOLLOWING", "IDEAS", "REGIMES", "INDEX", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -188,6 +194,7 @@ with tab_today:
         ("HOLDINGS", "zenith.holdings.view"),
         ("MOMENTUM", "zenith.mom.view"),
         ("ETF MOMENTUM", "zenith.etfmom.view"),
+        ("TREND FOLLOWING", "zenith.trend.view"),
         ("IDEAS", "zenith.ideas.view"),
         ("REGIMES", "zenith.regimes.view"),
         ("INDEX", "zenith.index.view"),
@@ -261,6 +268,11 @@ with tab_etfmom:
     st.markdown(section("ETF MOMENTUM — the momentum engine over the full ETF universe", 2),
                 unsafe_allow_html=True)
     render_feature("zenith.etfmom.view", "ETF MOMENTUM")
+
+with tab_trend:
+    st.markdown(section("TREND FOLLOWING — seven-speed EWMAC, stocks & ETFs", 5),
+                unsafe_allow_html=True)
+    render_feature("zenith.trend.view", "TREND FOLLOWING")
 
 with tab_ideas:
     st.markdown(section("IDEAS — discretionary-systematic opportunity engine", 3),

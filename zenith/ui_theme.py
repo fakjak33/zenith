@@ -349,8 +349,13 @@ def section(label: str, idx: int = 0, help: str | None = None) -> str:
     grad = f"linear-gradient(90deg, {c1}, {c2})"
     badge = help_badge(help) if help else ""
     # gradient clip applies to the label text only; the help badge stays muted
+    # background-IMAGE (a longhand), not the `background` shorthand: when a
+    # rerun reuses this DOM node for a header with different colours, React's
+    # style diff re-sets only the changed property. Re-setting the shorthand
+    # silently resets background-clip to its default, and the gradient then
+    # fills the whole header box instead of the text.
     return (f'<div class="parallax-sec" style="--sec:{c1};">'
-            f'<span style="background:{grad}; -webkit-background-clip:text; '
+            f'<span style="background-image:{grad}; -webkit-background-clip:text; '
             f'background-clip:text; -webkit-text-fill-color:transparent;">{label}</span>'
             f'{badge}</div>')
 

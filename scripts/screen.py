@@ -693,6 +693,67 @@ def screen_etfmom() -> None:
           f"classes={len(cats.get('asset_classes') or {})} picks={len(picks)}")
 
 
+def screen_trend() -> None:
+    print("[trend]")
+    from zenith.trend import load as trend_load, SPEED_KEYS
+    from zenith.trend import history as trend_history
+    from zenith.trend.structure import STRUCTURES
+    from zenith.mom import load as mom_load
+    from zenith.etfmom import load as etf_load
+    from zenith.config import MOM_MVT_LEVERAGED_EXCLUDE, TREND_UNIVERSES
+
+    for u in TREND_UNIVERSES:
+        status = trend_load(u, "status", {})
+        if not status:
+            warn(True, f"trend {u}: not yet run (no status) — skipping")
+            continue
+        check(_days_old(status.get("checked") or status.get("date", "")) <= 5,
+              f"trend {u} status fresh ({status.get('checked') or status.get('date')})")
+        segs = {s.get("segment"): s for s in status.get("segments", [])}
+        cov = segs.get("coverage", {}).get("coverage")
+        check((cov or 0) >= 0.85, f"trend {u} coverage >= 0.85 ({cov})")
+        doc = trend_load(u, "latest", {})
+        rows = [r for r in doc.get("rows", []) if not r.get("excluded")]
+        if not rows:
+            warn(True, f"trend {u}: no scored rows yet")
+            continue
+        tks = [r["ticker"] for r in rows]
+        check(len(tks) == len(set(tks)), f"trend {u}: no duplicate tickers")
+        check(sorted(r["rank"] for r in rows) == list(range(1, len(rows) + 1)),
+              f"trend {u}: ranks contiguous")
+        check(all(-20.0 <= r["score"] <= 20.0 for r in rows), f"trend {u}: score within [-20,+20]")
+        check(all(len(r["forecasts"]) == len(SPEED_KEYS) for r in rows),
+              f"trend {u}: seven forecasts per row")
+        check(all(f is None or -20.0 <= f <= 20.0 for r in rows for f in r["forecasts"]),
+              f"trend {u}: every forecast within [-20,+20]")
+        # the equal-weight identity, on the rounded persisted values
+        bad = [r["ticker"] for r in rows
+               if abs(sum(f for f in r["forecasts"] if f is not None)
+                      / max(1, sum(1 for f in r["forecasts"] if f is not None)) - r["score"]) > 0.02]
+        check(not bad, f"trend {u}: score == equal-weight mean of forecasts ({bad[:5]})")
+        check(all(r["structure"] in STRUCTURES for r in rows), f"trend {u}: known structure labels")
+        # universe synchronization with the source tab
+        src = (mom_load if u == "stocks" else etf_load)("scores", {})
+        theirs = {r["ticker"] for r in src.get("rows", [])}
+        ours = {r["ticker"] for r in doc.get("rows", [])}
+        if theirs:
+            missing = sorted(theirs - ours)
+            extra = sorted(ours - theirs)
+            warn(bool(missing or extra),
+                 f"trend {u}: universe differs from its source tab "
+                 f"(missing {missing[:5]}, extra {extra[:5]}) — usually a one-day refresh lag")
+        if u == "etfs":
+            leaked = sorted(set(tks) & set(MOM_MVT_LEVERAGED_EXCLUDE))
+            check(not leaked, f"trend etfs: no known leveraged/inverse tickers scored ({leaked[:5]})")
+        last = trend_history.last_date(u)
+        check(last == doc.get("as_of"), f"trend {u}: history reaches the latest as_of ({last})")
+        breadth = trend_load(u, "breadth", {}).get("rows", [])
+        ds = [b["date"] for b in breadth]
+        check(ds == sorted(set(ds)), f"trend {u}: breadth history dates unique & ascending")
+        print(f"       {u}: universe={doc.get('n')} scored={len(rows)} partial={doc.get('n_partial')} "
+              f"history_years={trend_history.years(u)} breadth_days={len(breadth)}")
+
+
 def screen_mvt() -> None:
     print("[mom.mvt]")
     from zenith.mom.mvt import load as mvt_load
@@ -1196,6 +1257,7 @@ def main() -> None:
     screen_mom()
     screen_mvt()
     screen_etfmom()
+    screen_trend()
     screen_ideas()
     screen_regimes()
     screen_index()

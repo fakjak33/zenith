@@ -167,6 +167,51 @@ def test_etfmom_discloses_its_own_caveats():
     assert "within an asset class" in rank_text.lower()
 
 
+def _trend_sub(universe: str, sub: str):
+    """Drive one TREND FOLLOWING sub-view via pre-seeded session state (the
+    same trusted path as the etfmom sub-view tests above)."""
+    return _render("\n".join([
+        "from zenith.trend import view",
+        "import streamlit as st",
+        f"st.session_state['trend_uni'] = {universe!r}",
+        f"st.session_state['trend_sub_{universe}'] = {sub!r}",
+        "view.render()",
+    ]))
+
+
+def test_trend_view_renders_with_or_without_data():
+    at, text = _render("from zenith.trend import view\nview.render()\n")
+    low = text.lower()
+    assert "evidence strength" in low and "key findings" in low
+    assert "hurst" in low                                   # the century-of-trend citation
+    if config.TREND_FILES["stocks"]["latest"].exists():
+        assert "trend following" in low
+    else:
+        assert "no data yet" in " ".join(str(i.value) for i in at.info).lower()
+
+
+@pytest.mark.skipif(not config.TREND_FILES["stocks"]["latest"].exists(),
+                    reason="no committed trend data")
+@pytest.mark.parametrize("universe", ["stocks", "etfs"])
+@pytest.mark.parametrize("sub,needle", [
+    ("Overview", "structure map"),
+    ("All Trends", "sorted by"),
+    ("Triggers", "what just changed"),
+    ("Detail", "trend ladder"),
+])
+def test_trend_sub_views_render(universe, sub, needle):
+    _, text = _trend_sub(universe, sub)
+    assert needle in text.lower()
+
+
+def test_trend_is_not_a_recommendation():
+    """Signal semantics: the tab must say plainly that a score is a trend
+    signal, not a buy recommendation or a return forecast."""
+    _, text = _render("from zenith.trend import view\nview.render()\n")
+    low = text.lower()
+    assert "not a buy recommendation" in low
+
+
 def test_ideas_view_renders():
     # renders with zero committed data -- the day-one condition -- showing the
     # rating badge, key findings, and an info prompt rather than a crash.
@@ -383,3 +428,16 @@ def test_index_export_buttons_present():
     at = _index_at("Data management")
     labels = " ".join(str(b.label) for b in at.get("download_button"))
     assert "CSV" in labels and "Excel" in labels and "JSON" in labels
+
+
+def test_full_app_renders_with_trend_following_tab():
+    """app.py itself -- every tab in one run. Catches a broken app.py (which
+    no per-view test imports) and confirms the new tab is registered."""
+    from pathlib import Path
+    at = AppTest.from_file(str(Path(config.PROJECT_ROOT) / "app.py"), default_timeout=300)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    labels = [t.label for t in at.tabs]
+    assert "TREND FOLLOWING" in labels and "MOMENTUM" in labels and "ETF MOMENTUM" in labels
+    errors = " ".join(str(e.value) for e in at.error)
+    assert "could not be loaded" not in errors, errors

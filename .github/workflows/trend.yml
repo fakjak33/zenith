@@ -1,0 +1,61 @@
+name: TREND FOLLOWING compute
+
+on:
+  schedule:
+    - cron: "45 4 * * 2-6"      # after mom.yml (03:00) and etfmom.yml (04:00) so the
+                                # MOMENTUM metadata cache it reads (data/mom/meta.json)
+                                # is the freshest one. Does NOT depend on either job's
+                                # output to compute -- it resolves the same universes
+                                # itself and pulls its own prices -- so an overrun
+                                # upstream never blocks it. Self-gates on the trading
+                                # calendar like every other job.
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | backfill  (backfill = one-off 10y history rebuild)"
+        default: "auto"
+      universe:
+        description: "all | stocks | etfs"
+        default: "all"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trend
+  cancel-in-progress: false
+
+jobs:
+  trend:
+    runs-on: ubuntu-latest
+    # ~1,000 Russell 1000 + ~900 ETFs of daily OHLC in one chunked pull
+    # (5y nightly, 10y on backfill); the seven-speed math itself is seconds.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run TREND FOLLOWING compute
+        run: >
+          python -m zenith.trend.compute
+          --action ${{ github.event.inputs.action || 'auto' }}
+          --universe ${{ github.event.inputs.universe || 'all' }}
+
+      - name: Commit TREND FOLLOWING data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          # ONLY data/trend/. This job reads data/mom/ and data/etfmom/ but must
+          # never write them -- those belong to mom.yml / etfmom.yml.
+          git add -A data/trend/
+          if git diff --cached --quiet; then
+            echo "No TREND FOLLOWING changes."
+          else
+            git commit -m "trend: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi
