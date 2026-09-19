@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-03",
+  "as_of": "2026-09-19",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-09-30",
   "regime": "Goldilocks / Reflation",
@@ -38,7 +38,7 @@
         "id": "PAYEMS",
         "label": "Nonfarm Payrolls (level)",
         "raw_value": 0.0,
-        "z": -0.059,
+        "z": -0.06,
         "direction": 1,
         "rising": false,
         "lag_days": 5,
@@ -57,8 +57,8 @@
       {
         "id": "ICSA",
         "label": "Initial Jobless Claims",
-        "raw_value": 203000.0,
-        "z": 0.333,
+        "raw_value": 196000.0,
+        "z": 0.349,
         "direction": -1,
         "rising": true,
         "lag_days": 5,
@@ -97,8 +97,8 @@
       {
         "id": "NEWORDER",
         "label": "Core Capital Goods New Orders",
-        "raw_value": 11.9001,
-        "z": 1.237,
+        "raw_value": 11.6007,
+        "z": 1.196,
         "direction": 1,
         "rising": true,
         "lag_days": 35,
@@ -117,8 +117,8 @@
       {
         "id": "SAHMREALTIME",
         "label": "Sahm Rule Recession Indicator",
-        "raw_value": -0.03,
-        "z": 0.359,
+        "raw_value": -0.07,
+        "z": 0.383,
         "direction": -1,
         "rising": true,
         "lag_days": 5,
@@ -131,13 +131,13 @@
     "breadth": 0.16666666666666666,
     "n_rising": 2,
     "n_total": 12,
-    "z": -0.092,
+    "z": 0.044,
     "indicators": [
       {
         "id": "CPIAUCSL",
         "label": "CPI (headline)",
-        "raw_value": 2.6424,
-        "z": -0.323,
+        "raw_value": 3.0489,
+        "z": -0.125,
         "direction": 1,
         "rising": false,
         "lag_days": 12,
@@ -146,8 +146,8 @@
       {
         "id": "CPILFESL",
         "label": "Core CPI",
-        "raw_value": 1.9282,
-        "z": -0.814,
+        "raw_value": 2.2235,
+        "z": -0.616,
         "direction": 1,
         "rising": false,
         "lag_days": 12,
@@ -176,8 +176,8 @@
       {
         "id": "PPIFIS",
         "label": "PPI Final Demand",
-        "raw_value": 4.2051,
-        "z": 0.248,
+        "raw_value": 4.7695,
+        "z": 0.437,
         "direction": 1,
         "rising": false,
         "lag_days": 12,
@@ -186,8 +186,8 @@
       {
         "id": "CES0500000003",
         "label": "Avg Hourly Earnings (wage growth)",
-        "raw_value": 2.5068,
-        "z": -1.299,
+        "raw_value": 2.861,
+        "z": -0.98,
         "direction": 1,
         "rising": false,
         "lag_days": 5,
@@ -196,8 +196,8 @@
       {
         "id": "T10YIE",
         "label": "10y Breakeven Inflation",
-        "raw_value": 2.34,
-        "z": 0.648,
+        "raw_value": 2.33,
+        "z": 0.62,
         "direction": 1,
         "rising": true,
         "lag_days": 0,
@@ -206,8 +206,8 @@
       {
         "id": "T5YIFR",
         "label": "5y5y Forward Inflation Expectation",
-        "raw_value": 2.33,
-        "z": 0.911,
+        "raw_value": 2.35,
+        "z": 0.996,
         "direction": 1,
         "rising": true,
         "lag_days": 0,
@@ -216,8 +216,8 @@
       {
         "id": "EXPINF1YR",
         "label": "Cleveland Fed 1y Inflation Expectation",
-        "raw_value": 2.3937,
-        "z": 0.23,
+        "raw_value": 2.6438,
+        "z": 0.583,
         "direction": 1,
         "rising": false,
         "lag_days": 5,
@@ -236,8 +236,8 @@
       {
         "id": "CUSR0000SEHA",
         "label": "CPI Shelter",
-        "raw_value": 2.3515,
-        "z": -1.077,
+        "raw_value": 2.5292,
+        "z": -0.978,
         "direction": 1,
         "rising": false,
         "lag_days": 12,
@@ -246,8 +246,8 @@
       {
         "id": "CUSR0000SASLE",
         "label": "CPI Services less Energy",
-        "raw_value": 2.4414,
-        "z": -0.846,
+        "raw_value": 2.7768,
+        "z": -0.62,
         "direction": 1,
         "rising": false,
         "lag_days": 12,
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 5.3,
-    "growth_slope": 0.0035,
-    "growth_r2": 0.035,
-    "infl_slope": -0.1148,
-    "infl_r2": 0.924,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.04) while inflation signals have moderated (trend R²=0.92)."
+    "score": 3.7,
+    "growth_slope": 0.004,
+    "growth_r2": 0.041,
+    "infl_slope": -0.0861,
+    "infl_r2": 0.868,
+    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.04) while inflation signals have moderated (trend R²=0.87)."
   }
 }

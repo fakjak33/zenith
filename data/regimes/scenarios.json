@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-03",
+  "as_of": "2026-09-19",
   "quadrant_scenarios": [
     {
       "id": "inflation_accelerates",
@@ -136,12 +136,12 @@
           "ticker": "BTC-USD",
           "label": "Bitcoin",
           "n_months": 21,
-          "avg_return": 0.1454,
+          "avg_return": 0.1477,
           "median_return": 0.1174,
-          "win_rate": 0.8095,
-          "volatility_ann": 0.7683,
+          "win_rate": 0.8571,
+          "volatility_ann": 0.7633,
           "max_drawdown": -0.1479,
-          "sharpe_like": 2.272
+          "sharpe_like": 2.322
         },
         {
           "ticker": "EEM",
@@ -152,18 +152,29 @@
           "win_rate": 0.6383,
           "volatility_ann": 0.1912,
           "max_drawdown": -0.3378,
-          "sharpe_like": 1.087
+          "sharpe_like": 1.084
         },
         {
           "ticker": "QQQ",
           "label": "Nasdaq 100",
           "n_months": 55,
-          "avg_return": 0.0157,
+          "avg_return": 0.016,
           "median_return": 0.0207,
-          "win_rate": 0.6364,
-          "volatility_ann": 0.2051,
+          "win_rate": 0.6545,
+          "volatility_ann": 0.2048,
           "max_drawdown": -0.3015,
-          "sharpe_like": 0.918
+          "sharpe_like": 0.937
+        },
+        {
+          "ticker": "USO",
+          "label": "Crude Oil",
+          "n_months": 35,
+          "avg_return": 0.0142,
+          "median_return": 0.0039,
+          "win_rate": 0.5143,
+          "volatility_ann": 0.437,
+          "max_drawdown": -0.624,
+          "sharpe_like": 0.39
         },
         {
           "ticker": "SPY",
@@ -172,20 +183,9 @@
           "avg_return": 0.0125,
           "median_return": 0.0169,
           "win_rate": 0.7105,
-          "volatility_ann": 0.1317,
+          "volatility_ann": 0.1318,
           "max_drawdown": -0.2181,
-          "sharpe_like": 1.141
-        },
-        {
-          "ticker": "USO",
-          "label": "Crude Oil",
-          "n_months": 35,
-          "avg_return": 0.0115,
-          "median_return": 0.0039,
-          "win_rate": 0.5143,
-          "volatility_ann": 0.43,
-          "max_drawdown": -0.624,
-          "sharpe_like": 0.321
+          "sharpe_like": 1.138
         }
       ],
       "historical_losers": [
@@ -193,56 +193,56 @@
           "ticker": "SLV",
           "label": "Silver",
           "n_months": 35,
-          "avg_return": -0.0117,
+          "avg_return": -0.0113,
           "median_return": -0.0186,
           "win_rate": 0.4,
           "volatility_ann": 0.2832,
           "max_drawdown": -0.5621,
-          "sharpe_like": -0.494
+          "sharpe_like": -0.477
         },
         {
           "ticker": "UUP",
           "label": "US Dollar Index",
           "n_months": 35,
-          "avg_return": -0.0014,
+          "avg_return": -0.0012,
           "median_return": -0.0018,
           "win_rate": 0.4571,
-          "volatility_ann": 0.072,
+          "volatility_ann": 0.0723,
           "max_drawdown": -0.1068,
-          "sharpe_like": -0.241
+          "sharpe_like": -0.203
         },
         {
           "ticker": "TLT",
           "label": "Long Treasuries (20y+)",
           "n_months": 52,
-          "avg_return": -0.0003,
-          "median_return": -0.0075,
+          "avg_return": -0.0004,
+          "median_return": -0.0085,
           "win_rate": 0.4423,
-          "volatility_ann": 0.1181,
+          "volatility_ann": 0.1182,
           "max_drawdown": -0.2357,
-          "sharpe_like": -0.028
+          "sharpe_like": -0.044
         },
         {
           "ticker": "IEF",
           "label": "7-10y Treasuries",
           "n_months": 52,
-          "avg_return": 0.0012,
+          "avg_return": 0.0009,
           "median_return": -0.0012,
           "win_rate": 0.4808,
-          "volatility_ann": 0.0641,
+          "volatility_ann": 0.0647,
           "max_drawdown": -0.0998,
-          "sharpe_like": 0.215
+          "sharpe_like": 0.16
         },
         {
-          "ticker": "DBC",
-          "label": "Broad Commodities",
-          "n_months": 37,
-          "avg_return": 0.0022,
-          "median_return": -0.0023,
-          "win_rate": 0.4865,
-          "volatility_ann": 0.1758,
-          "max_drawdown": -0.4141,
-          "sharpe_like": 0.15
+          "ticker": "LQD",
+          "label": "IG Corporate Credit",
+          "n_months": 52,
+          "avg_return": 0.0027,
+          "median_return": 0.0034,
+          "win_rate": 0.5769,
+          "volatility_ann": 0.0618,
+          "max_drawdown": -0.0642,
+          "sharpe_like": 0.531
         }
       ],
       "grounded": true
@@ -259,12 +259,12 @@
           "ticker": "BTC-USD",
           "label": "Bitcoin",
           "n_months": 21,
-          "avg_return": 0.1454,
+          "avg_return": 0.1477,
           "median_return": 0.1174,
-          "win_rate": 0.8095,
-          "volatility_ann": 0.7683,
+          "win_rate": 0.8571,
+          "volatility_ann": 0.7633,
           "max_drawdown": -0.1479,
-          "sharpe_like": 2.272
+          "sharpe_like": 2.322
         },
         {
           "ticker": "EEM",
@@ -275,18 +275,29 @@
           "win_rate": 0.6383,
           "volatility_ann": 0.1912,
           "max_drawdown": -0.3378,
-          "sharpe_like": 1.087
+          "sharpe_like": 1.084
         },
         {
           "ticker": "QQQ",
           "label": "Nasdaq 100",
           "n_months": 55,
-          "avg_return": 0.0157,
+          "avg_return": 0.016,
           "median_return": 0.0207,
-          "win_rate": 0.6364,
-          "volatility_ann": 0.2051,
+          "win_rate": 0.6545,
+          "volatility_ann": 0.2048,
           "max_drawdown": -0.3015,
-          "sharpe_like": 0.918
+          "sharpe_like": 0.937
+        },
+        {
+          "ticker": "USO",
+          "label": "Crude Oil",
+          "n_months": 35,
+          "avg_return": 0.0142,
+          "median_return": 0.0039,
+          "win_rate": 0.5143,
+          "volatility_ann": 0.437,
+          "max_drawdown": -0.624,
+          "sharpe_like": 0.39
         },
         {
           "ticker": "SPY",
@@ -295,20 +306,9 @@
           "avg_return": 0.0125,
           "median_return": 0.0169,
           "win_rate": 0.7105,
-          "volatility_ann": 0.1317,
+          "volatility_ann": 0.1318,
           "max_drawdown": -0.2181,
-          "sharpe_like": 1.141
-        },
-        {
-          "ticker": "USO",
-          "label": "Crude Oil",
-          "n_months": 35,
-          "avg_return": 0.0115,
-          "median_return": 0.0039,
-          "win_rate": 0.5143,
-          "volatility_ann": 0.43,
-          "max_drawdown": -0.624,
-          "sharpe_like": 0.321
+          "sharpe_like": 1.138
         }
       ],
       "historical_losers": [
@@ -316,56 +316,56 @@
           "ticker": "SLV",
           "label": "Silver",
           "n_months": 35,
-          "avg_return": -0.0117,
+          "avg_return": -0.0113,
           "median_return": -0.0186,
           "win_rate": 0.4,
           "volatility_ann": 0.2832,
           "max_drawdown": -0.5621,
-          "sharpe_like": -0.494
+          "sharpe_like": -0.477
         },
         {
           "ticker": "UUP",
           "label": "US Dollar Index",
           "n_months": 35,
-          "avg_return": -0.0014,
+          "avg_return": -0.0012,
           "median_return": -0.0018,
           "win_rate": 0.4571,
-          "volatility_ann": 0.072,
+          "volatility_ann": 0.0723,
           "max_drawdown": -0.1068,
-          "sharpe_like": -0.241
+          "sharpe_like": -0.203
         },
         {
           "ticker": "TLT",
           "label": "Long Treasuries (20y+)",
           "n_months": 52,
-          "avg_return": -0.0003,
-          "median_return": -0.0075,
+          "avg_return": -0.0004,
+          "median_return": -0.0085,
           "win_rate": 0.4423,
-          "volatility_ann": 0.1181,
+          "volatility_ann": 0.1182,
           "max_drawdown": -0.2357,
-          "sharpe_like": -0.028
+          "sharpe_like": -0.044
         },
         {
           "ticker": "IEF",
           "label": "7-10y Treasuries",
           "n_months": 52,
-          "avg_return": 0.0012,
+          "avg_return": 0.0009,
           "median_return": -0.0012,
           "win_rate": 0.4808,
-          "volatility_ann": 0.0641,
+          "volatility_ann": 0.0647,
           "max_drawdown": -0.0998,
-          "sharpe_like": 0.215
+          "sharpe_like": 0.16
         },
         {
-          "ticker": "DBC",
-          "label": "Broad Commodities",
-          "n_months": 37,
-          "avg_return": 0.0022,
-          "median_return": -0.0023,
-          "win_rate": 0.4865,
-          "volatility_ann": 0.1758,
-          "max_drawdown": -0.4141,
-          "sharpe_like": 0.15
+          "ticker": "LQD",
+          "label": "IG Corporate Credit",
+          "n_months": 52,
+          "avg_return": 0.0027,
+          "median_return": 0.0034,
+          "win_rate": 0.5769,
+          "volatility_ann": 0.0618,
+          "max_drawdown": -0.0642,
+          "sharpe_like": 0.531
         }
       ],
       "grounded": true
