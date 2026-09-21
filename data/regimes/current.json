@@ -1,18 +1,18 @@
 {
-  "as_of": "2026-09-19",
+  "as_of": "2026-09-21",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-09-30",
   "regime": "Goldilocks / Reflation",
   "raw_regime": "Goldilocks / Reflation",
   "transitioning": false,
   "streak_months": 3,
-  "confidence": 47.0,
+  "confidence": 37.9,
   "growth": {
     "rising": true,
-    "breadth": 0.6363636363636364,
-    "n_rising": 7,
+    "breadth": 0.5454545454545454,
+    "n_rising": 6,
     "n_total": 11,
-    "z": 0.177,
+    "z": 0.193,
     "indicators": [
       {
         "id": "CFNAI",
@@ -27,8 +27,8 @@
       {
         "id": "INDPRO",
         "label": "Industrial Production",
-        "raw_value": 1.3041,
-        "z": 0.23,
+        "raw_value": 1.3772,
+        "z": 0.247,
         "direction": 1,
         "rising": false,
         "lag_days": 15,
@@ -67,8 +67,8 @@
       {
         "id": "RSAFS",
         "label": "Retail Sales",
-        "raw_value": 4.2899,
-        "z": -0.19,
+        "raw_value": 5.7027,
+        "z": 0.016,
         "direction": 1,
         "rising": false,
         "lag_days": 15,
@@ -77,8 +77,8 @@
       {
         "id": "HOUST",
         "label": "Housing Starts",
-        "raw_value": -6.0652,
-        "z": -0.592,
+        "raw_value": -3.3359,
+        "z": -0.409,
         "direction": 1,
         "rising": false,
         "lag_days": 18,
@@ -87,10 +87,10 @@
       {
         "id": "PERMIT",
         "label": "Building Permits",
-        "raw_value": -0.7618,
-        "z": -0.274,
+        "raw_value": -3.4626,
+        "z": -0.505,
         "direction": 1,
-        "rising": true,
+        "rising": false,
         "lag_days": 18,
         "freq": "M"
       },
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 3.7,
-    "growth_slope": 0.004,
-    "growth_r2": 0.041,
+    "score": 3.8,
+    "growth_slope": 0.0079,
+    "growth_r2": 0.137,
     "infl_slope": -0.0861,
     "infl_r2": 0.868,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.04) while inflation signals have moderated (trend R²=0.87)."
+    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.14) while inflation signals have moderated (trend R²=0.87)."
   }
 }
