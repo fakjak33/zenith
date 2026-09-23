@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-22",
+  "date": "2026-09-23",
   "is_trading_day": true,
   "disclaimer": "IDEAS fuses MOMENTUM/EDGE/PEAD/FMOM/CAS signals (free/best-effort data) into a daily BUY/SELL idea list with conviction, unusualness and confluence scores. This composite is novel and carries NO out-of-sample track record yet — see its evidence-strength badge and the accumulating diagnostics on the Diagnostics tab. Decision-support and a research prompt, not investment advice, and not a promise of forward returns.",
   "segments": [
@@ -27,9 +27,9 @@
       "ok": true,
       "label": "risk-on",
       "risk_score": 1.0,
-      "vix_percentile": 0.067,
-      "hy_oas_percentile": 0.095,
-      "curve_10y2y": 0.2,
+      "vix_percentile": 0.075,
+      "hy_oas_percentile": 0.063,
+      "curve_10y2y": 0.25,
       "spy_trend": 0.679
     },
     {
@@ -45,23 +45,23 @@
     {
       "segment": "candidates",
       "ok": true,
-      "n": 163
+      "n": 167
     },
     {
       "segment": "candidate_prices",
       "ok": true,
-      "n": 163,
-      "requested": 163,
+      "n": 167,
+      "requested": 167,
       "error": ""
     },
     {
       "segment": "select",
       "ok": true,
-      "n_buy": 2,
-      "n_sell": 3,
+      "n_buy": 3,
+      "n_sell": 5,
       "thin_day": {
         "long": true,
-        "short": true
+        "short": false
       }
     }
   ]
