@@ -1,7 +1,14 @@
 {
-  "as_of": "2026-09-22",
+  "as_of": "2026-09-23",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "recent_days": [
+    {
+      "day": "2026-09-22",
+      "n_reporters": 2,
+      "n_eligible": 0,
+      "n_long": 0,
+      "n_short": 0
+    },
     {
       "day": "2026-09-21",
       "n_reporters": 0,
@@ -64,16 +71,81 @@
       "n_eligible": 0,
       "n_long": 0,
       "n_short": 0
-    },
-    {
-      "day": "2026-09-08",
-      "n_reporters": 0,
-      "n_eligible": 0,
-      "n_long": 0,
-      "n_short": 0
     }
   ],
   "signals": [
+    {
+      "ticker": "AZO",
+      "name": "AutoZone, Inc.",
+      "sector": "",
+      "report_date": "2026-09-22",
+      "time": "time-pre-market",
+      "reaction_day": "2026-09-22",
+      "side": "mixed",
+      "eps_actual": 56.05,
+      "eps_consensus": 54.54,
+      "n_estimates": 11,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000539,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.647001
+      },
+      "context": {
+        "close_pre": 2803.25,
+        "cap_tier": "large",
+        "mktcap": 45764051000.0,
+        "adv_usd": 735091067.7368164,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_prices",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
+    {
+      "ticker": "THO",
+      "name": "Thor Industries, Inc.",
+      "sector": "",
+      "report_date": "2026-09-22",
+      "time": "time-pre-market",
+      "reaction_day": "2026-09-22",
+      "side": "mixed",
+      "eps_actual": 0.78,
+      "eps_consensus": 0.93,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": -0.002145,
+        "ear": null,
+        "rue": null,
+        "avol": null,
+        "nearness": 0.577252
+      },
+      "context": {
+        "close_pre": 69.94,
+        "cap_tier": "small",
+        "mktcap": 3640892670.0,
+        "adv_usd": 46399039.73731995,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "no_prices",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
     {
       "ticker": "LEN",
       "name": "Lennar Corporation",
@@ -1507,7 +1579,7 @@
         "entry_open": 612.07,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-19",
+        "next_earn_date": "2026-10-21",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -1675,7 +1747,7 @@
         "entry_open": 99.62,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-14",
+        "next_earn_date": "2026-10-21",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -1927,7 +1999,7 @@
         "entry_open": 56.88,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-29",
+        "next_earn_date": "2026-10-21",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -2305,7 +2377,7 @@
         "entry_open": 228.0,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-20",
+        "next_earn_date": "2026-10-22",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -10098,9 +10170,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-18",
-          "ret": -0.1303,
-          "excess_ret": -0.1178
+          "last_close_date": "2026-09-21",
+          "ret": -0.1461,
+          "excess_ret": -0.1489
         }
       },
       {
@@ -18012,29 +18084,6 @@
   "drift_curve_as_of": "2026-08-24",
   "rank_pool": {
     "days": {
-      "2026-06-09": {
-        "sue": [
-          -0.00111,
-          0.001277,
-          0.000565
-        ],
-        "ear": [
-          -0.040429,
-          0.107288,
-          -0.111819
-        ],
-        "rue": [],
-        "avol": [
-          1.26486,
-          1.094642,
-          1.32425
-        ],
-        "nearness": [
-          0.836744,
-          0.861878,
-          0.709018
-        ]
-      },
       "2026-06-10": {
         "sue": [
           0.001393,
@@ -22755,13 +22804,23 @@
         "rue": [],
         "avol": [],
         "nearness": []
+      },
+      "2026-09-22": {
+        "sue": [
+          0.000539,
+          -0.002145
+        ],
+        "ear": [],
+        "rue": [],
+        "avol": [],
+        "nearness": [
+          0.647001,
+          0.577252
+        ]
       }
     },
-    "window_start": "2026-06-09",
+    "window_start": "2026-06-10",
     "sue": [
-      -0.00111,
-      0.001277,
-      0.000565,
       0.001393,
       -0.00019,
       0.0,
@@ -23713,12 +23772,11 @@
       0.000702,
       0.001569,
       -0.000442,
-      -0.000766
+      -0.000766,
+      0.000539,
+      -0.002145
     ],
     "ear": [
-      -0.040429,
-      0.107288,
-      -0.111819,
       0.218635,
       -0.045203,
       -0.004823,
@@ -24757,9 +24815,6 @@
     ],
     "rue": [],
     "avol": [
-      1.26486,
-      1.094642,
-      1.32425,
       1.600328,
       0.74175,
       1.001076,
@@ -25797,9 +25852,6 @@
       0.78231
     ],
     "nearness": [
-      0.836744,
-      0.861878,
-      0.709018,
       0.844817,
       0.783715,
       0.429474,
@@ -26863,7 +26915,9 @@
       0.469448,
       0.670954,
       0.595087,
-      0.613352
+      0.613352,
+      0.647001,
+      0.577252
     ]
   }
 }
