@@ -1,9 +1,19 @@
 {
-  "as_of": "2026-09-22",
+  "as_of": "2026-09-23",
   "asset_classes": {
+    "Equity": {
+      "n": 679,
+      "mean": 2.814,
+      "median": 3.308,
+      "pct_bullish": 0.3667,
+      "pct_bearish": 0.0648,
+      "n_extreme_bullish": 1,
+      "n_extreme_bearish": 0,
+      "dispersion": 4.635
+    },
     "Fixed Income": {
       "n": 97,
-      "mean": -1.203,
+      "mean": -1.204,
       "median": -2.283,
       "pct_bullish": 0.1546,
       "pct_bearish": 0.4021,
@@ -11,30 +21,20 @@
       "n_extreme_bearish": 0,
       "dispersion": 6.308
     },
-    "Equity": {
-      "n": 678,
-      "mean": 2.812,
-      "median": 3.299,
-      "pct_bullish": 0.3673,
-      "pct_bearish": 0.0649,
-      "n_extreme_bullish": 1,
-      "n_extreme_bearish": 0,
-      "dispersion": 4.637
-    },
     "Commodity": {
       "n": 44,
       "mean": 6.926,
-      "median": 10.784,
+      "median": 10.783,
       "pct_bullish": 0.7273,
       "pct_bearish": 0.0227,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 6.253
+      "dispersion": 6.254
     },
     "Digital Assets": {
       "n": 5,
-      "mean": -0.225,
-      "median": -0.25,
+      "mean": -0.226,
+      "median": -0.252,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -44,7 +44,7 @@
     "Alternative": {
       "n": 10,
       "mean": 4.257,
-      "median": 4.606,
+      "median": 4.605,
       "pct_bullish": 0.5,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -53,13 +53,13 @@
     },
     "Allocation": {
       "n": 6,
-      "mean": 3.847,
+      "mean": 3.848,
       "median": 5.172,
       "pct_bullish": 0.5,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 3.33
+      "dispersion": 3.331
     },
     "Currency": {
       "n": 4,
@@ -69,12 +69,12 @@
       "pct_bearish": 0.25,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 3.692
+      "dispersion": 3.691
     },
     "Real Estate": {
       "n": 8,
-      "mean": -1.756,
-      "median": -1.79,
+      "mean": -1.757,
+      "median": -1.793,
       "pct_bullish": 0.0,
       "pct_bearish": 0.125,
       "n_extreme_bullish": 0,
@@ -83,39 +83,49 @@
     }
   },
   "categories": {
+    "Mid-Cap Value": {
+      "n": 35,
+      "mean": 3.168,
+      "median": 3.337,
+      "pct_bullish": 0.2,
+      "pct_bearish": 0.0,
+      "n_extreme_bullish": 0,
+      "n_extreme_bearish": 0,
+      "dispersion": 2.856
+    },
     "Nontraditional Bond": {
       "n": 2,
-      "mean": 1.453,
-      "median": 1.453,
+      "mean": 1.454,
+      "median": 1.454,
       "pct_bullish": 0.5,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 8.206
+      "dispersion": 8.207
     },
     "Global Large-Stock Blend": {
       "n": 8,
-      "mean": 4.474,
-      "median": 5.866,
+      "mean": 4.475,
+      "median": 5.867,
       "pct_bullish": 0.625,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 3.197
+      "dispersion": 3.198
     },
     "Foreign Large Blend": {
       "n": 25,
-      "mean": 4.126,
-      "median": 4.961,
+      "mean": 4.128,
+      "median": 4.963,
       "pct_bullish": 0.44,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.286
+      "dispersion": 2.287
     },
     "Intermediate Core Bond": {
       "n": 5,
-      "mean": -5.83,
+      "mean": -5.832,
       "median": -5.827,
       "pct_bullish": 0.0,
       "pct_bearish": 1.0,
@@ -131,12 +141,12 @@
       "pct_bearish": 0.0286,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 4.262
+      "dispersion": 4.263
     },
     "Large Blend": {
       "n": 60,
       "mean": 4.206,
-      "median": 5.598,
+      "median": 5.6,
       "pct_bullish": 0.5833,
       "pct_bearish": 0.0167,
       "n_extreme_bullish": 0,
@@ -145,13 +155,13 @@
     },
     "Energy Limited Partnership": {
       "n": 2,
-      "mean": 5.001,
-      "median": 5.001,
+      "mean": 5.0,
+      "median": 5.0,
       "pct_bullish": 0.5,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 3.565
+      "dispersion": 3.567
     },
     "High Yield Bond": {
       "n": 16,
@@ -161,7 +171,7 @@
       "pct_bearish": 0.0625,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.002
+      "dispersion": 2.003
     },
     "Focused Region": {
       "n": 33,
@@ -175,8 +185,8 @@
     },
     "Health": {
       "n": 20,
-      "mean": 8.836,
-      "median": 9.386,
+      "mean": 8.837,
+      "median": 9.387,
       "pct_bullish": 0.9,
       "pct_bearish": 0.05,
       "n_extreme_bullish": 0,
@@ -185,43 +195,33 @@
     },
     "Mid-Cap Growth": {
       "n": 18,
-      "mean": -1.067,
-      "median": -1.083,
+      "mean": -1.068,
+      "median": -1.084,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0556,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.556
+      "dispersion": 2.557
     },
     "Greater China Region": {
       "n": 9,
-      "mean": -4.666,
+      "mean": -4.668,
       "median": -7.43,
       "pct_bullish": 0.1111,
       "pct_bearish": 0.6667,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 7.887
-    },
-    "Mid-Cap Value": {
-      "n": 34,
-      "mean": 3.142,
-      "median": 3.277,
-      "pct_bullish": 0.2059,
-      "pct_bearish": 0.0,
-      "n_extreme_bullish": 0,
-      "n_extreme_bearish": 0,
-      "dispersion": 2.894
+      "dispersion": 7.888
     },
     "Global Small/Mid Stock": {
       "n": 2,
-      "mean": -0.823,
-      "median": -0.823,
+      "mean": -0.824,
+      "median": -0.824,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.679
+      "dispersion": 2.678
     },
     "Commodities Focused": {
       "n": 27,
@@ -236,17 +236,17 @@
     "Natural Resources": {
       "n": 23,
       "mean": -0.048,
-      "median": 0.026,
+      "median": 0.024,
       "pct_bullish": 0.2174,
       "pct_bearish": 0.1739,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 4.941
+      "dispersion": 4.942
     },
     "Japan Stock": {
       "n": 8,
-      "mean": 6.753,
-      "median": 6.953,
+      "mean": 6.754,
+      "median": 6.954,
       "pct_bullish": 0.875,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -255,8 +255,8 @@
     },
     "Commodities Broad Basket": {
       "n": 17,
-      "mean": 11.322,
-      "median": 11.163,
+      "mean": 11.324,
+      "median": 11.164,
       "pct_bullish": 1.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -265,23 +265,23 @@
     },
     "Consumer Cyclical": {
       "n": 12,
-      "mean": -6.951,
+      "mean": -6.952,
       "median": -7.108,
       "pct_bullish": 0.0,
       "pct_bearish": 0.8333,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 1.446
+      "dispersion": 1.447
     },
     "Mid-Cap Blend": {
       "n": 31,
-      "mean": 1.396,
+      "mean": 1.397,
       "median": 1.649,
       "pct_bullish": 0.0968,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.587
+      "dispersion": 2.588
     },
     "Ultrashort Bond": {
       "n": 12,
@@ -295,8 +295,8 @@
     },
     "Digital Assets": {
       "n": 5,
-      "mean": -0.225,
-      "median": -0.25,
+      "mean": -0.226,
+      "median": -0.252,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -305,8 +305,8 @@
     },
     "Bank Loan": {
       "n": 2,
-      "mean": 9.219,
-      "median": 9.219,
+      "mean": 9.221,
+      "median": 9.221,
       "pct_bullish": 1.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -325,8 +325,8 @@
     },
     "Global Bond-USD Hedged": {
       "n": 1,
-      "mean": -5.754,
-      "median": -5.754,
+      "mean": -5.756,
+      "median": -5.756,
       "pct_bullish": 0.0,
       "pct_bearish": 1.0,
       "n_extreme_bullish": 0,
@@ -335,8 +335,8 @@
     },
     "Industrials": {
       "n": 19,
-      "mean": -2.264,
-      "median": -3.812,
+      "mean": -2.265,
+      "median": -3.814,
       "pct_bullish": 0.1053,
       "pct_bearish": 0.2632,
       "n_extreme_bullish": 1,
@@ -356,22 +356,22 @@
     "Small Blend": {
       "n": 27,
       "mean": 0.931,
-      "median": 0.8,
+      "median": 0.799,
       "pct_bullish": 0.037,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 1.841
+      "dispersion": 1.842
     },
     "Global Bond": {
       "n": 2,
-      "mean": -1.378,
-      "median": -1.378,
+      "mean": -1.38,
+      "median": -1.38,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 1.28
+      "dispersion": 1.277
     },
     "Multisector Bond": {
       "n": 2,
@@ -385,18 +385,18 @@
     },
     "Small Growth": {
       "n": 11,
-      "mean": -0.003,
+      "mean": -0.002,
       "median": -0.044,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0909,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.703
+      "dispersion": 2.704
     },
     "Small Value": {
       "n": 30,
-      "mean": 2.021,
-      "median": 1.741,
+      "mean": 2.022,
+      "median": 1.74,
       "pct_bullish": 0.1,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -405,18 +405,18 @@
     },
     "Large Value": {
       "n": 65,
-      "mean": 5.879,
-      "median": 6.189,
+      "mean": 5.88,
+      "median": 6.19,
       "pct_bullish": 0.6308,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.983
+      "dispersion": 2.984
     },
     "Aggressive Allocation": {
       "n": 1,
-      "mean": 5.592,
-      "median": 5.592,
+      "mean": 5.591,
+      "median": 5.591,
       "pct_bullish": 1.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -426,17 +426,17 @@
     "Foreign Small/Mid Value": {
       "n": 7,
       "mean": 5.136,
-      "median": 4.398,
+      "median": 4.399,
       "pct_bullish": 0.2857,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 1.348
+      "dispersion": 1.349
     },
     "Foreign Large Value": {
       "n": 32,
-      "mean": 5.794,
-      "median": 6.348,
+      "mean": 5.795,
+      "median": 6.349,
       "pct_bullish": 0.7188,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -446,7 +446,7 @@
     "Diversified Emerging Mkts": {
       "n": 34,
       "mean": 5.915,
-      "median": 5.882,
+      "median": 5.883,
       "pct_bullish": 0.7059,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -455,8 +455,8 @@
     },
     "Global Large-Stock Value": {
       "n": 3,
-      "mean": 7.554,
-      "median": 7.522,
+      "mean": 7.557,
+      "median": 7.526,
       "pct_bullish": 1.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -465,8 +465,8 @@
     },
     "Europe Stock": {
       "n": 10,
-      "mean": 3.589,
-      "median": 3.038,
+      "mean": 3.59,
+      "median": 3.039,
       "pct_bullish": 0.2,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -475,13 +475,13 @@
     },
     "Derivative Income": {
       "n": 7,
-      "mean": 6.552,
-      "median": 5.255,
+      "mean": 6.553,
+      "median": 5.256,
       "pct_bullish": 0.7143,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 4.22
+      "dispersion": 4.219
     },
     "Foreign Large Growth": {
       "n": 8,
@@ -495,8 +495,8 @@
     },
     "Long Government": {
       "n": 8,
-      "mean": -6.596,
-      "median": -6.492,
+      "mean": -6.597,
+      "median": -6.494,
       "pct_bullish": 0.0,
       "pct_bearish": 1.0,
       "n_extreme_bullish": 0,
@@ -505,18 +505,18 @@
     },
     "Emerging Markets Bond": {
       "n": 4,
-      "mean": -1.866,
+      "mean": -1.868,
       "median": -1.671,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 0.732
+      "dispersion": 0.733
     },
     "Emerging-Markets Local-Currency Bond": {
       "n": 1,
-      "mean": 1.578,
-      "median": 1.578,
+      "mean": 1.577,
+      "median": 1.577,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -525,8 +525,8 @@
     },
     "India Equity": {
       "n": 4,
-      "mean": -5.483,
-      "median": -5.172,
+      "mean": -5.484,
+      "median": -5.173,
       "pct_bullish": 0.0,
       "pct_bearish": 0.5,
       "n_extreme_bullish": 0,
@@ -536,27 +536,27 @@
     "Communications": {
       "n": 8,
       "mean": -1.115,
-      "median": -2.174,
+      "median": -2.173,
       "pct_bullish": 0.0,
       "pct_bearish": 0.125,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 3.623
+      "dispersion": 3.622
     },
     "Miscellaneous Sector": {
       "n": 9,
-      "mean": -2.145,
-      "median": -1.973,
+      "mean": -2.147,
+      "median": -1.972,
       "pct_bullish": 0.0,
       "pct_bearish": 0.1111,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 3.05
+      "dispersion": 3.051
     },
     "Equity Energy": {
       "n": 15,
       "mean": 7.634,
-      "median": 8.353,
+      "median": 8.354,
       "pct_bullish": 0.8,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -566,7 +566,7 @@
     "Large Growth": {
       "n": 33,
       "mean": 4.097,
-      "median": 4.784,
+      "median": 4.781,
       "pct_bullish": 0.4545,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -575,8 +575,8 @@
     },
     "Financial": {
       "n": 17,
-      "mean": -1.099,
-      "median": -1.108,
+      "mean": -1.1,
+      "median": -1.11,
       "pct_bullish": 0.0,
       "pct_bearish": 0.1176,
       "n_extreme_bullish": 0,
@@ -585,8 +585,8 @@
     },
     "Pacific/Asia ex-Japan Stk": {
       "n": 1,
-      "mean": 2.961,
-      "median": 2.961,
+      "mean": 2.96,
+      "median": 2.96,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -595,8 +595,8 @@
     },
     "Consumer Defensive": {
       "n": 7,
-      "mean": -2.675,
-      "median": -2.337,
+      "mean": -2.677,
+      "median": -2.338,
       "pct_bullish": 0.0,
       "pct_bearish": 0.1429,
       "n_extreme_bullish": 0,
@@ -605,13 +605,13 @@
     },
     "Tactical Allocation": {
       "n": 3,
-      "mean": 3.164,
-      "median": 6.006,
+      "mean": 3.165,
+      "median": 6.009,
       "pct_bullish": 0.6667,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 4.992
+      "dispersion": 4.993
     },
     "Single Currency": {
       "n": 4,
@@ -621,12 +621,12 @@
       "pct_bearish": 0.25,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 3.692
+      "dispersion": 3.691
     },
     "Utilities": {
       "n": 5,
-      "mean": -8.938,
-      "median": -9.309,
+      "mean": -8.939,
+      "median": -9.311,
       "pct_bullish": 0.0,
       "pct_bearish": 1.0,
       "n_extreme_bullish": 0,
@@ -635,8 +635,8 @@
     },
     "Equity Precious Metals": {
       "n": 5,
-      "mean": 0.696,
-      "median": 0.753,
+      "mean": 0.694,
+      "median": 0.751,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -655,18 +655,18 @@
     },
     "Intermediate Government": {
       "n": 5,
-      "mean": -7.41,
+      "mean": -7.412,
       "median": -7.713,
       "pct_bullish": 0.0,
       "pct_bearish": 1.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 0.628
+      "dispersion": 0.627
     },
     "Global Real Estate": {
       "n": 1,
-      "mean": -1.517,
-      "median": -1.517,
+      "mean": -1.522,
+      "median": -1.522,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -675,18 +675,18 @@
     },
     "Infrastructure": {
       "n": 3,
-      "mean": -2.58,
-      "median": -3.741,
+      "mean": -2.582,
+      "median": -3.745,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.569
+      "dispersion": 2.571
     },
     "Inflation-Protected Bond": {
       "n": 4,
-      "mean": -6.502,
-      "median": -6.435,
+      "mean": -6.503,
+      "median": -6.436,
       "pct_bullish": 0.0,
       "pct_bearish": 1.0,
       "n_extreme_bullish": 0,
@@ -695,8 +695,8 @@
     },
     "High Yield Muni": {
       "n": 1,
-      "mean": -5.192,
-      "median": -5.192,
+      "mean": -5.194,
+      "median": -5.194,
       "pct_bullish": 0.0,
       "pct_bearish": 1.0,
       "n_extreme_bullish": 0,
@@ -711,12 +711,12 @@
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 2.174
+      "dispersion": 2.175
     },
     "Foreign Small/Mid Blend": {
       "n": 1,
-      "mean": 3.672,
-      "median": 3.672,
+      "mean": 3.674,
+      "median": 3.674,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -725,8 +725,8 @@
     },
     "Real Estate": {
       "n": 7,
-      "mean": -1.79,
-      "median": -2.062,
+      "mean": -1.791,
+      "median": -2.065,
       "pct_bullish": 0.0,
       "pct_bearish": 0.1429,
       "n_extreme_bullish": 0,
@@ -735,8 +735,8 @@
     },
     "Government Mortgage-Backed Bond": {
       "n": 1,
-      "mean": -4.816,
-      "median": -4.816,
+      "mean": -4.817,
+      "median": -4.817,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -745,18 +745,18 @@
     },
     "Muni National Interm": {
       "n": 3,
-      "mean": -7.583,
+      "mean": -7.584,
       "median": -7.271,
       "pct_bullish": 0.0,
       "pct_bearish": 1.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 0.921
+      "dispersion": 0.922
     },
     "Moderate Allocation": {
       "n": 1,
-      "mean": 3.248,
-      "median": 3.248,
+      "mean": 3.25,
+      "median": 3.25,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -765,8 +765,8 @@
     },
     "Preferred Stock": {
       "n": 6,
-      "mean": -4.74,
-      "median": -5.979,
+      "mean": -4.741,
+      "median": -5.982,
       "pct_bullish": 0.0,
       "pct_bearish": 0.5,
       "n_extreme_bullish": 0,
@@ -775,8 +775,8 @@
     },
     "Moderately Aggressive Allocation": {
       "n": 1,
-      "mean": 4.751,
-      "median": 4.751,
+      "mean": 4.752,
+      "median": 4.752,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
@@ -786,22 +786,22 @@
     "Short Government": {
       "n": 4,
       "mean": 1.632,
-      "median": 1.699,
+      "median": 1.701,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 0.221
+      "dispersion": 0.222
     },
     "Short-Term Inflation-Protected Bond": {
       "n": 3,
-      "mean": -1.554,
-      "median": -0.621,
+      "mean": -1.556,
+      "median": -0.62,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 1.682
+      "dispersion": 1.685
     },
     "Muni National Long": {
       "n": 1,
@@ -815,18 +815,18 @@
     },
     "Trading--Miscellaneous": {
       "n": 2,
-      "mean": 0.774,
-      "median": 0.774,
+      "mean": 0.772,
+      "median": 0.772,
       "pct_bullish": 0.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,
       "n_extreme_bearish": 0,
-      "dispersion": 4.618
+      "dispersion": 4.617
     },
     "Global Large-Stock Growth": {
       "n": 1,
-      "mean": 7.483,
-      "median": 7.483,
+      "mean": 7.482,
+      "median": 7.482,
       "pct_bullish": 1.0,
       "pct_bearish": 0.0,
       "n_extreme_bullish": 0,

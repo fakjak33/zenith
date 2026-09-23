@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-09-22",
+  "as_of": "2026-09-23",
   "disclaimer": "ETF MOMENTUM scores Zenith's curated ETF universe on the same six documented momentum dimensions as the Russell 1000 engine (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend), blended with the same weights into the same transparent -20..+20 composite, so the two tabs are directly comparable. Cross-sectional momentum is weaker evidence across mixed asset classes than within one, and overlapping funds make breadth readings softer than they look. Decision-support and a research monitor, not investment advice.",
   "benchmark": "equal-weight ETF universe index (not SPY) -- see compute.universe_benchmark for why",
   "correlation": {
-    "n": 852,
+    "n": 853,
     "matrix": {
       "ts": {
         "ts": 1.0,
         "breakout": 0.77,
         "xsec": 0.998,
-        "speed": 0.723,
+        "speed": 0.722,
         "strength": 0.888,
         "mvt": 0.712
       },
@@ -17,40 +17,40 @@
         "ts": 0.77,
         "breakout": 1.0,
         "xsec": 0.765,
-        "speed": 0.898,
+        "speed": 0.897,
         "strength": 0.867,
-        "mvt": 0.706
+        "mvt": 0.705
       },
       "xsec": {
         "ts": 0.998,
         "breakout": 0.765,
         "xsec": 1.0,
-        "speed": 0.712,
+        "speed": 0.711,
         "strength": 0.883,
-        "mvt": 0.708
+        "mvt": 0.707
       },
       "speed": {
-        "ts": 0.723,
-        "breakout": 0.898,
-        "xsec": 0.712,
+        "ts": 0.722,
+        "breakout": 0.897,
+        "xsec": 0.711,
         "speed": 1.0,
-        "strength": 0.856,
-        "mvt": 0.716
+        "strength": 0.854,
+        "mvt": 0.717
       },
       "strength": {
         "ts": 0.888,
         "breakout": 0.867,
         "xsec": 0.883,
-        "speed": 0.856,
+        "speed": 0.854,
         "strength": 1.0,
-        "mvt": 0.723
+        "mvt": 0.722
       },
       "mvt": {
         "ts": 0.712,
-        "breakout": 0.706,
-        "xsec": 0.708,
-        "speed": 0.716,
-        "strength": 0.723,
+        "breakout": 0.705,
+        "xsec": 0.707,
+        "speed": 0.717,
+        "strength": 0.722,
         "mvt": 1.0
       }
     },
@@ -68,7 +68,7 @@
       {
         "a": "breakout",
         "b": "speed",
-        "corr": 0.898
+        "corr": 0.897
       },
       {
         "a": "breakout",
@@ -83,17 +83,17 @@
       {
         "a": "speed",
         "b": "strength",
-        "corr": 0.856
+        "corr": 0.854
       }
     ]
   },
   "distribution": {
-    "n": 852,
-    "mean": 2.5,
-    "median": 2.873,
-    "std": 5.213,
-    "pct_bullish": 0.3568,
-    "pct_bearish": 0.1009,
+    "n": 853,
+    "mean": 2.502,
+    "median": 2.891,
+    "std": 5.211,
+    "pct_bullish": 0.3564,
+    "pct_bearish": 0.1008,
     "n_extreme_bullish": 1,
     "n_extreme_bearish": 0
   },
