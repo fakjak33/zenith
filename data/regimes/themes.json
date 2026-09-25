@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-09-24",
+  "as_of": "2026-09-25",
   "themes": {
     "dollar": {
       "signal_score": 56.0,
       "composite_z": 0.478,
-      "real_yield_z": 1.717,
+      "real_yield_z": 1.833,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 73.2,
+      "signal_score": 73.6,
       "components": {
-        "DGS30": 1.751,
+        "DGS30": 1.845,
         "THREEFYTP10": 2.22,
         "GFDEBTN": 1.603
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Moderate",
       "usdjpy_z": 1.505,
       "usdjpy_pct_move_3m": -0.0353,
-      "us_real_yield_z": 1.717,
+      "us_real_yield_z": 1.833,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.1039,
+      "semis_relative_strength_3m": -0.0731,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -62,15 +62,6 @@
           "archive_date": "2026-09-02",
           "summary": "Eric Levitz, via Matt Yglesias. The post America is still poised for a data center boom appeared first on Marginal REVOLUTION.",
           "category": "Fact"
-        },
-        {
-          "title": "ERCOT Prices Remain Steady Despite Record Load",
-          "source": "FactSet Insight",
-          "link": "https://insight.factset.com/ercot-prices-remain-steady-despite-record-load",
-          "published": "Tue, 25 Aug 2026 18:30:00 GMT",
-          "archive_date": "2026-08-26",
-          "summary": "Facing eye-opening load projections due to the ongoing AI race and data center boom, U.S. independent system operators (ISOs) and policymakers are scrambling to adopt strategies to meet the moment. Some demand growth has already arrived, however, and we are beginning to see its impact on U.S. electricity markets. Texas…",
-          "category": "Interpretation"
         },
         {
           "title": "The Closer – Diesel, Data Center Construction, Job Openings – 9/1/26",
@@ -116,11 +107,20 @@
           "archive_date": "2026-09-01",
           "summary": "Economists widely agree that AI will boost labor productivity. But this view does not account for the possibility that hyperscalers will go all out to get people hooked on LLMs, because the narrower applications for which these tools are actually useful do not justify the massive investments made so far.",
           "category": "Fact"
+        },
+        {
+          "title": "10 Monday AM Reads",
+          "source": "The Big Picture (Ritholtz)",
+          "link": "https://ritholtz.com/2026/08/10-monday-am-reads-490/",
+          "published": "Mon, 31 Aug 2026 10:30:27 +0000",
+          "archive_date": "2026-09-01",
+          "summary": "The end of August? How did that happen? Bid it farewell with my back-to-work morning reads: • Is the AI Capex Bubble About to Burst? What 250 Years of Market History Tell Us. The spending on artificial intelligence will end, but probably not when investors suspect it will. (Barron’s) • Rampell: Wall Street Loved Scott……",
+          "category": "Fact"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.2983,
+      "btc_trend_3m": 0.3127,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
@@ -143,24 +143,6 @@
           "archive_date": "2026-09-03",
           "summary": "Improving through 2025Q3. But taking out the revenue associated with the illegal IEEPA tariffs, well… Figure 1: Federal budget balance excluding automatic stabilizers (blue), and excluding IEEPA tariffs (red), as a share of potential GDP. Assumes amounts above Q1 tariff revenue is IEEPA related tariff revenue. Source: …",
           "category": "Interpretation"
-        },
-        {
-          "title": "What the Heck Is “Structural Excess Capacity”?",
-          "source": "Econbrowser",
-          "link": "https://econbrowser.com/archives/2026/08/what-the-heck-is-structural-excess-capacity",
-          "published": "Tue, 25 Aug 2026 17:47:38 +0000",
-          "archive_date": "2026-08-26",
-          "summary": "The US is going to expand the trade war against a whole slew of countries, using Section 301 charging “structural excess capacity”, caused by government intervention. China is up on the block, according Bloomberg: The US is set to impose a 7.5% tariff on Chinese goods over allegations of excess manufacturing capacity b…",
-          "category": "Forecast"
-        },
-        {
-          "title": "Historical Lessons: How New Tariffs Could Affect Financial Markets",
-          "source": "FactSet Insight",
-          "link": "https://insight.factset.com/historical-lessons-how-new-tariffs-could-affect-financial-markets",
-          "published": "Tue, 25 Aug 2026 16:18:19 GMT",
-          "archive_date": "2026-08-26",
-          "summary": "U.S.-imposed tariffs have been a recurring topic since the U.S. presidential inauguration in 2025. Given the new U.S. tariff imposed August 22, 2026, on select Canadian goods plus a new additional U.S. tariff proposed to begin January 1, 2027, on Canadian cars, trucks, and auto parts, we updated our analysis to provide…",
-          "category": "Forecast"
         },
         {
           "title": "Wisconsin Dairy Hit With Retaliatory Tariffs:",
@@ -196,6 +178,15 @@
           "published": "Thu, 3 Sep 2026 14:52:00 GMT",
           "archive_date": "2026-09-04",
           "summary": "Nick Heyman, Colin J. Hottman, and Ryan MonarchThis note examines the heterogeneous exposure of states in terms of their consumption of direct consumer goods imports, which is an important channel through which states are exposed to increases in trade costs such as tariffs. Building on the methodology that Hottman and …",
+          "category": "Interpretation"
+        },
+        {
+          "title": "The Fed Finally Gets It",
+          "source": "The Overshoot (Matthew Klein)",
+          "link": "https://theovershoot.co/p/the-fed-finally-gets-it",
+          "published": "Thu, 24 Sep 2026 22:20:06 GMT",
+          "archive_date": "2026-09-25",
+          "summary": "Tariffs, Hormuz, and fiscal policy are not good reasons to hike. The underlying growth trend and the asymmetric sensitivity of private sector spending to the level of interest rates are.",
           "category": "Interpretation"
         },
         {
