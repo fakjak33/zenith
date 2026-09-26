@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-09-25",
+  "as_of": "2026-09-26",
   "themes": {
     "dollar": {
       "signal_score": 56.0,
       "composite_z": 0.478,
-      "real_yield_z": 1.833,
+      "real_yield_z": 1.913,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 73.6,
+      "signal_score": 73.9,
       "components": {
-        "DGS30": 1.845,
+        "DGS30": 1.904,
         "THREEFYTP10": 2.22,
         "GFDEBTN": 1.603
       },
@@ -20,22 +20,13 @@
       "intervention_risk": "Moderate",
       "usdjpy_z": 1.505,
       "usdjpy_pct_move_3m": -0.0353,
-      "us_real_yield_z": 1.833,
+      "us_real_yield_z": 1.913,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.0731,
+      "semis_relative_strength_3m": -0.0838,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
-        {
-          "title": "Data Centers and the Open Access Order",
-          "source": "Marginal Revolution",
-          "link": "https://marginalrevolution.com/marginalrevolution/2026/08/data-centers-and-the-open-access-order.html?utm_source=rss&utm_medium=rss&utm_campaign=data-centers-and-the-open-access-order",
-          "published": "Wed, 26 Aug 2026 11:18:59 +0000",
-          "archive_date": "2026-08-27",
-          "summary": "The US discussion over datacenters is depressing. Datacenters do not use a lot of water, they produce very useful outputs, they are not a blight on the landscape. All of this is obvious. But I don’t want to restate the obvious. What bothers me most about the discussion is that people seem to think this […] The post Dat…",
-          "category": "Fact"
-        },
         {
           "title": "Animal Spirits: The Wobbly House of Cards",
           "source": "A Wealth of Common Sense",
@@ -116,11 +107,20 @@
           "archive_date": "2026-09-01",
           "summary": "The end of August? How did that happen? Bid it farewell with my back-to-work morning reads: • Is the AI Capex Bubble About to Burst? What 250 Years of Market History Tell Us. The spending on artificial intelligence will end, but probably not when investors suspect it will. (Barron’s) • Rampell: Wall Street Loved Scott……",
           "category": "Fact"
+        },
+        {
+          "title": "The People Not Worth Replacing",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/commentary/ai-data-center-politics-fear-of-future-with-no-place-for-natives-immigrants-alike-by-stephen-holmes-2026-09",
+          "published": "Mon, 14 Sep 2026 17:04:32 GMT",
+          "archive_date": "2026-09-15",
+          "summary": "At first glance, MAGA’s fear of immigrants and the rest of America’s fear of data centers have many similarities, with each reflecting insecurities about one’s place in a changing economy. But while the first fear tells natives that their place is valuable, the second assumes that it will soon be worth nothing.",
+          "category": "Fact"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.3127,
+      "btc_trend_3m": 0.2856,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },

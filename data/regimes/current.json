@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-25",
+  "as_of": "2026-09-26",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-09-30",
   "regime": "Goldilocks / Reflation",
@@ -12,13 +12,13 @@
     "breadth": 0.5454545454545454,
     "n_rising": 6,
     "n_total": 11,
-    "z": 0.193,
+    "z": 0.23,
     "indicators": [
       {
         "id": "CFNAI",
         "label": "Chicago Fed National Activity Index",
-        "raw_value": -0.08,
-        "z": -0.005,
+        "raw_value": -0.04,
+        "z": 0.014,
         "direction": 1,
         "rising": true,
         "lag_days": 35,
@@ -87,8 +87,8 @@
       {
         "id": "PERMIT",
         "label": "Building Permits",
-        "raw_value": -3.4626,
-        "z": -0.505,
+        "raw_value": -2.8393,
+        "z": -0.452,
         "direction": 1,
         "rising": false,
         "lag_days": 18,
@@ -97,8 +97,8 @@
       {
         "id": "NEWORDER",
         "label": "Core Capital Goods New Orders",
-        "raw_value": 11.6007,
-        "z": 1.196,
+        "raw_value": 14.0913,
+        "z": 1.538,
         "direction": 1,
         "rising": true,
         "lag_days": 35,
@@ -131,7 +131,7 @@
     "breadth": 0.16666666666666666,
     "n_rising": 2,
     "n_total": 12,
-    "z": 0.037,
+    "z": 0.027,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -196,8 +196,8 @@
       {
         "id": "T10YIE",
         "label": "10y Breakeven Inflation",
-        "raw_value": 2.33,
-        "z": 0.62,
+        "raw_value": 2.34,
+        "z": 0.648,
         "direction": 1,
         "rising": true,
         "lag_days": 0,
@@ -206,8 +206,8 @@
       {
         "id": "T5YIFR",
         "label": "5y5y Forward Inflation Expectation",
-        "raw_value": 2.33,
-        "z": 0.911,
+        "raw_value": 2.34,
+        "z": 0.954,
         "direction": 1,
         "rising": true,
         "lag_days": 0,
@@ -226,8 +226,8 @@
       {
         "id": "MICH",
         "label": "U Mich 1y Inflation Expectation",
-        "raw_value": 4.2,
-        "z": 0.667,
+        "raw_value": 4.0,
+        "z": 0.477,
         "direction": 1,
         "rising": false,
         "lag_days": 15,
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 3.9,
-    "growth_slope": 0.0079,
-    "growth_r2": 0.136,
-    "infl_slope": -0.0871,
-    "infl_r2": 0.873,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.14) while inflation signals have moderated (trend R²=0.87)."
+    "score": 4.3,
+    "growth_slope": 0.0149,
+    "growth_r2": 0.395,
+    "infl_slope": -0.0899,
+    "infl_r2": 0.881,
+    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.39) while inflation signals have moderated (trend R²=0.88)."
   }
 }
