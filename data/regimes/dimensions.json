@@ -1,8 +1,8 @@
 {
-  "as_of": "2026-09-28",
+  "as_of": "2026-09-29",
   "dimensions": {
     "monetary": {
-      "composite_z": -0.265,
+      "composite_z": -0.255,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Neutral",
@@ -30,8 +30,8 @@
         {
           "id": "T10Y3M",
           "label": "10y-3m Curve",
-          "raw_value": 0.93,
-          "z": 0.567,
+          "raw_value": 0.96,
+          "z": 0.597,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
@@ -48,7 +48,7 @@
         {
           "id": "NET_LIQ",
           "label": "Fed Net Liquidity (WALCL - RRP - TGA)",
-          "raw_value": -43.359,
+          "raw_value": -43.634,
           "z": -0.238,
           "direction": 1,
           "rising": false,
@@ -68,7 +68,7 @@
       ]
     },
     "credit": {
-      "composite_z": 0.856,
+      "composite_z": 0.776,
       "coverage_n": 5,
       "min_coverage": 3,
       "state": "Easy / Expansionary",
@@ -76,8 +76,8 @@
         {
           "id": "BAA10Y",
           "label": "Baa Corporate - 10y Treasury Spread",
-          "raw_value": 1.39,
-          "z": 1.562,
+          "raw_value": 1.46,
+          "z": 1.388,
           "direction": -1,
           "rising": true,
           "lag_days": 0,
@@ -86,8 +86,8 @@
         {
           "id": "AAA10Y",
           "label": "Aaa Corporate - 10y Treasury Spread",
-          "raw_value": 0.95,
-          "z": 0.807,
+          "raw_value": 1.01,
+          "z": 0.584,
           "direction": -1,
           "rising": true,
           "lag_days": 0,
@@ -174,16 +174,16 @@
       ]
     },
     "dollar": {
-      "composite_z": 0.478,
+      "composite_z": 0.592,
       "coverage_n": 4,
       "min_coverage": 3,
-      "state": "Neutral",
+      "state": "Strong / Appreciating",
       "indicators": [
         {
           "id": "DTWEXBGS",
           "label": "Broad Trade-Weighted Dollar",
-          "raw_value": 119.5133,
-          "z": 0.386,
+          "raw_value": 120.33,
+          "z": 0.556,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -192,8 +192,8 @@
         {
           "id": "DTWEXAFEGS",
           "label": "Advanced Foreign Economies Dollar",
-          "raw_value": 113.148,
-          "z": 0.415,
+          "raw_value": 113.9055,
+          "z": 0.571,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -202,18 +202,18 @@
         {
           "id": "DEXUSEU",
           "label": "USD per EUR",
-          "raw_value": 1.1464,
-          "z": -0.394,
+          "raw_value": 1.14,
+          "z": -0.278,
           "direction": -1,
-          "rising": false,
+          "rising": true,
           "lag_days": 0,
           "freq": "D"
         },
         {
           "id": "DEXJPUS",
           "label": "JPY per USD",
-          "raw_value": 156.87,
-          "z": 1.505,
+          "raw_value": 157.18,
+          "z": 1.52,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -222,7 +222,7 @@
       ]
     },
     "volatility": {
-      "composite_z": 0.409,
+      "composite_z": 0.424,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Neutral",
@@ -250,8 +250,8 @@
         {
           "id": "TLT_RVOL",
           "label": "TLT Realized Volatility (MOVE proxy)",
-          "raw_value": 9.8541,
-          "z": -0.578,
+          "raw_value": 10.1231,
+          "z": -0.535,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
