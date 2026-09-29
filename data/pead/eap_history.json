@@ -223593,7 +223593,10 @@
         "excess": -0.043735
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": 0.012055,
+        "spy_ret": 0.023648,
+        "excess": -0.011593
       }
     },
     {
@@ -223615,7 +223618,10 @@
         "excess": -0.043156
       },
       "through": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": 0.034773,
+        "spy_ret": 0.023648,
+        "excess": 0.011125
       }
     },
     {
@@ -223631,7 +223637,10 @@
       "backfilled": false,
       "gate": null,
       "pre": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.003309,
+        "spy_ret": 0.028182,
+        "excess": -0.031491
       },
       "through": {
         "evaluated": true,
@@ -223678,7 +223687,10 @@
       "backfilled": false,
       "gate": null,
       "pre": {
-        "evaluated": false
+        "evaluated": true,
+        "ret": -0.018763,
+        "spy_ret": 0.028182,
+        "excess": -0.046945
       },
       "through": {
         "evaluated": true,
@@ -223686,9 +223698,34 @@
         "spy_ret": 0.020777,
         "excess": -0.125557
       }
+    },
+    {
+      "ticker": "COST",
+      "name": "Costco Wholesale Corporation",
+      "report_date": "2026-09-24",
+      "reaction_day": "2026-09-25",
+      "entry_date": "2026-09-18",
+      "pre_exit_date": "2026-09-24",
+      "through_exit_date": "2026-09-25",
+      "cap_tier": "large",
+      "mktcap": 409226707000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": 0.001307,
+        "spy_ret": 0.007208,
+        "excess": -0.005901
+      },
+      "through": {
+        "evaluated": true,
+        "ret": 0.030671,
+        "spy_ret": 0.012682,
+        "excess": 0.017989
+      }
     }
   ],
-  "as_of": "2026-09-25",
+  "as_of": "2026-09-29",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence."
 }

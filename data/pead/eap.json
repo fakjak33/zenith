@@ -1,38 +1,8 @@
 {
-  "as_of": "2026-09-25",
+  "as_of": "2026-09-29",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence.",
   "upcoming": [
-    {
-      "ticker": "JEF",
-      "name": "Jefferies Financial Group Inc.",
-      "report_date": "2026-09-28",
-      "time": "time-after-hours",
-      "reaction_day": "2026-09-29",
-      "entry_date": "2026-09-22",
-      "eps_consensus": 1.04,
-      "n_estimates": 2,
-      "cap_tier": "mid",
-      "mktcap": 9102031900.0,
-      "past_avg_excess": -0.019986,
-      "past_n": 8,
-      "in_window": true
-    },
-    {
-      "ticker": "MTN",
-      "name": "Vail Resorts, Inc.",
-      "report_date": "2026-09-28",
-      "time": "time-after-hours",
-      "reaction_day": "2026-09-29",
-      "entry_date": "2026-09-22",
-      "eps_consensus": -5.37,
-      "n_estimates": 6,
-      "cap_tier": "small",
-      "mktcap": 4990475300.0,
-      "past_avg_excess": 0.007006,
-      "past_n": 9,
-      "in_window": true
-    },
     {
       "ticker": "CCL",
       "name": "Carnival Corporation Ltd.",
@@ -41,9 +11,9 @@
       "reaction_day": "2026-09-29",
       "entry_date": "2026-09-22",
       "eps_consensus": 1.36,
-      "n_estimates": null,
+      "n_estimates": 7,
       "cap_tier": "large",
-      "mktcap": 29858351100.0,
+      "mktcap": 30474692600.0,
       "past_avg_excess": 0.040341,
       "past_n": 9,
       "in_window": true
@@ -55,10 +25,10 @@
       "time": "time-pre-market",
       "reaction_day": "2026-09-29",
       "entry_date": "2026-09-22",
-      "eps_consensus": 0.66,
-      "n_estimates": null,
+      "eps_consensus": 0.68,
+      "n_estimates": 8,
       "cap_tier": "mid",
-      "mktcap": 8154211300.0,
+      "mktcap": 8118733800.0,
       "past_avg_excess": -0.049865,
       "past_n": 9,
       "in_window": true
@@ -73,7 +43,7 @@
       "eps_consensus": 31.24,
       "n_estimates": 10,
       "cap_tier": "large",
-      "mktcap": 1210573910000.0,
+      "mktcap": 1222319670000.0,
       "past_avg_excess": 0.028837,
       "past_n": 9,
       "in_window": true
@@ -88,7 +58,7 @@
       "eps_consensus": 3.86,
       "n_estimates": 4,
       "cap_tier": "large",
-      "mktcap": 32353013800.0,
+      "mktcap": 33190262800.0,
       "past_avg_excess": 0.037897,
       "past_n": 9,
       "in_window": true
@@ -103,7 +73,7 @@
       "eps_consensus": 4.32,
       "n_estimates": 7,
       "cap_tier": "mid",
-      "mktcap": 9938079700.0,
+      "mktcap": 9712238600.0,
       "past_avg_excess": 0.013509,
       "past_n": 9,
       "in_window": true
@@ -118,7 +88,7 @@
       "eps_consensus": 0.31,
       "n_estimates": 5,
       "cap_tier": "mid",
-      "mktcap": 7095399400.0,
+      "mktcap": 6874568200.0,
       "past_avg_excess": -0.007734,
       "past_n": 9,
       "in_window": true
@@ -133,7 +103,7 @@
       "eps_consensus": 3.19,
       "n_estimates": 7,
       "cap_tier": "large",
-      "mktcap": 122501472000.0,
+      "mktcap": 117555225000.0,
       "past_avg_excess": -0.022003,
       "past_n": 9,
       "in_window": true
@@ -148,7 +118,7 @@
       "eps_consensus": 0.44,
       "n_estimates": 12,
       "cap_tier": "large",
-      "mktcap": 53480129000.0,
+      "mktcap": 53035078000.0,
       "past_avg_excess": -0.043667,
       "past_n": 9,
       "in_window": true
@@ -163,7 +133,7 @@
       "eps_consensus": 0.75,
       "n_estimates": 6,
       "cap_tier": "mid",
-      "mktcap": 13197922300.0,
+      "mktcap": 12888742900.0,
       "past_avg_excess": -0.007855,
       "past_n": 9,
       "in_window": true
@@ -178,28 +148,73 @@
       "eps_consensus": 5.32,
       "n_estimates": 4,
       "cap_tier": "mid",
-      "mktcap": 9162073100.0,
+      "mktcap": 9562012700.0,
       "past_avg_excess": 0.036127,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "STZ",
+      "name": "Constellation Brands Inc",
+      "report_date": "2026-10-06",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-07",
+      "entry_date": "2026-09-30",
+      "eps_consensus": 3.62,
+      "n_estimates": 7,
+      "cap_tier": "mid",
+      "mktcap": 19405553700.0,
+      "past_avg_excess": -0.008441,
+      "past_n": 9,
+      "in_window": false
+    },
+    {
+      "ticker": "RPM",
+      "name": "RPM International Inc.",
+      "report_date": "2026-10-06",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-06",
+      "entry_date": "2026-09-29",
+      "eps_consensus": 1.95,
+      "n_estimates": 7,
+      "cap_tier": "mid",
+      "mktcap": 12830347300.0,
+      "past_avg_excess": 0.026776,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "LW",
+      "name": "Lamb Weston Holdings, Inc.",
+      "report_date": "2026-10-06",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-06",
+      "entry_date": "2026-09-29",
+      "eps_consensus": 0.58,
+      "n_estimates": 5,
+      "cap_tier": "mid",
+      "mktcap": 5991422500.0,
+      "past_avg_excess": -0.031413,
       "past_n": 9,
       "in_window": true
     }
   ],
   "summary": {
-    "n_rows": 8953,
+    "n_rows": 8954,
     "n_gated": 35,
     "pre": {
       "overall": {
-        "n": 8894,
-        "avg": 0.000418,
-        "median": -7.7e-05,
-        "win_rate": 0.4991
+        "n": 8897,
+        "avg": 0.000408,
+        "median": -8.2e-05,
+        "win_rate": 0.4989
       },
       "by_cap_tier": {
         "large": {
-          "n": 391,
-          "avg": -0.000749,
-          "median": -0.00387,
-          "win_rate": 0.4578
+          "n": 394,
+          "avg": -0.000958,
+          "median": -0.004073,
+          "win_rate": 0.4543
         },
         "mid": {
           "n": 525,
@@ -217,17 +232,17 @@
     },
     "through": {
       "overall": {
-        "n": 8896,
-        "avg": 0.003109,
-        "median": -0.000531,
-        "win_rate": 0.4965
+        "n": 8899,
+        "avg": 0.00311,
+        "median": -0.00052,
+        "win_rate": 0.4966
       },
       "by_cap_tier": {
         "large": {
-          "n": 392,
-          "avg": -0.004994,
+          "n": 394,
+          "avg": -0.004953,
           "median": -0.0076,
-          "win_rate": 0.449
+          "win_rate": 0.4492
         },
         "mid": {
           "n": 525,
@@ -236,10 +251,10 @@
           "win_rate": 0.4781
         },
         "small": {
-          "n": 68,
-          "avg": -0.002871,
-          "median": -0.016681,
-          "win_rate": 0.3971
+          "n": 69,
+          "avg": -0.002668,
+          "median": -0.012834,
+          "win_rate": 0.4058
         }
       }
     },
@@ -442,10 +457,10 @@
       },
       {
         "month": "2026-09",
-        "n": 40,
-        "avg": -0.057081,
-        "median": -0.049221,
-        "win_rate": 0.225
+        "n": 43,
+        "avg": -0.052691,
+        "median": -0.041388,
+        "win_rate": 0.2558
       }
     ]
   }
