@@ -1,4 +1,21 @@
 {
-  "as_of": "2026-09-29",
-  "alerts": []
+  "as_of": "2026-09-30",
+  "alerts": [
+    {
+      "id": "confidence_crossed_30",
+      "severity": "medium",
+      "title": "Confidence crossed below 30",
+      "description": "Regime confidence moved from 47 to 30 over 30 days.",
+      "what_changed": "47 → 30",
+      "watch_next": "Check whether breadth is genuinely broadening or concentrated in a few indicators."
+    },
+    {
+      "id": "transition_underway",
+      "severity": "high",
+      "title": "Transition underway toward Deflation / Slowdown",
+      "description": "The raw (unpersisted) regime signal has newly diverged from the declared regime.",
+      "what_changed": "raw regime now reads Deflation / Slowdown",
+      "watch_next": "If this persists 2 more monthly readings it will become the new declared regime."
+    }
+  ]
 }
