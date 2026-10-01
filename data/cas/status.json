@@ -1,9 +1,9 @@
 {
-  "date": "2026-09-26",
-  "cadence": "weekly",
-  "n_signals": 10785,
-  "n_assets": 587,
-  "regime": "risk-on",
+  "date": "2026-10-01",
+  "cadence": "monthly",
+  "n_signals": 10784,
+  "n_assets": 586,
+  "regime": "neutral / transition",
   "segments": [
     {
       "segment": "prices",
@@ -48,7 +48,7 @@
     {
       "segment": "rebalance",
       "ok": true,
-      "n": 2
+      "n": 1
     },
     {
       "segment": "fomc",
@@ -66,6 +66,18 @@
       "segment": "flows",
       "ok": true,
       "n": 608
+    },
+    {
+      "segment": "edgar13f",
+      "ok": true,
+      "n": 5,
+      "source": "edgar",
+      "error": ""
+    },
+    {
+      "segment": "backtest",
+      "ok": true,
+      "n": 42
     },
     {
       "segment": "history+hitrate",
