@@ -306579,8 +306579,29 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": -0.0219,
+        "long_ret": -0.042,
+        "short_ret": -0.0201,
+        "hit": false,
+        "per_factor": {
+          "ISSUE12": -0.0746,
+          "GRPROF": -0.0384,
+          "IVOL": -0.0507,
+          "STR": -0.0198,
+          "CP": 0.0009,
+          "DP": 0.0016,
+          "EP": -0.0154,
+          "MOM": -0.057,
+          "LTR": -0.001,
+          "SMB": 0.006,
+          "ACC": -0.0165,
+          "BM": -0.0253,
+          "ASSETG": -0.0172
+        },
+        "eval_date": "2026-10-01"
+      }
     },
     {
       "month": "2026-07",
@@ -306657,8 +306678,29 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": 0.0016,
+        "long_ret": -0.0325,
+        "short_ret": -0.0341,
+        "hit": true,
+        "per_factor": {
+          "GRPROF": -0.0384,
+          "ISSUE12": -0.0746,
+          "STR": -0.0198,
+          "IVOL": -0.0507,
+          "CP": 0.0009,
+          "DP": 0.0016,
+          "EP": -0.0154,
+          "ASSETG": -0.0172,
+          "ACC": -0.0165,
+          "BM": -0.0253,
+          "MOM": -0.057,
+          "LTR": -0.001,
+          "SMB": 0.006
+        },
+        "eval_date": "2026-10-01"
+      }
     },
     {
       "month": "2026-07",
@@ -306735,8 +306777,29 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": 0.0008,
+        "long_ret": -0.0166,
+        "short_ret": -0.0174,
+        "hit": true,
+        "per_factor": {
+          "GRPROF": -0.0384,
+          "ISSUE12": -0.0746,
+          "STR": -0.0198,
+          "IVOL": -0.0507,
+          "CP": 0.0009,
+          "DP": 0.0016,
+          "EP": -0.0154,
+          "ASSETG": -0.0172,
+          "ACC": -0.0165,
+          "BM": -0.0253,
+          "MOM": -0.057,
+          "LTR": -0.001,
+          "SMB": 0.006
+        },
+        "eval_date": "2026-10-01"
+      }
     },
     {
       "month": "2026-07",
@@ -307292,6 +307355,240 @@
     },
     {
       "month": "2026-08",
+      "model": "aqr_csfm",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "QMJ",
+            "w": 0.4954
+          },
+          {
+            "factor": "HMLDEV",
+            "w": 0.2664
+          },
+          {
+            "factor": "BAB",
+            "w": 0.1854
+          },
+          {
+            "factor": "SMB",
+            "w": 0.0239
+          },
+          {
+            "factor": "LTR",
+            "w": 0.0098
+          },
+          {
+            "factor": "DP",
+            "w": 0.0096
+          },
+          {
+            "factor": "CP",
+            "w": 0.0094
+          }
+        ],
+        "short": [
+          {
+            "factor": "MOM",
+            "w": -0.2261
+          },
+          {
+            "factor": "ISSUE12",
+            "w": -0.2154
+          },
+          {
+            "factor": "GRPROF",
+            "w": -0.1467
+          },
+          {
+            "factor": "BM",
+            "w": -0.0877
+          },
+          {
+            "factor": "IVOL",
+            "w": -0.0836
+          },
+          {
+            "factor": "STR",
+            "w": -0.074
+          },
+          {
+            "factor": "ACC",
+            "w": -0.0649
+          },
+          {
+            "factor": "ASSETG",
+            "w": -0.0592
+          },
+          {
+            "factor": "EP",
+            "w": -0.0424
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-08",
+      "model": "aqr_tsfm",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "QMJ",
+            "w": 0.521
+          },
+          {
+            "factor": "HMLDEV",
+            "w": 0.2741
+          },
+          {
+            "factor": "BAB",
+            "w": 0.183
+          },
+          {
+            "factor": "SMB",
+            "w": 0.0165
+          },
+          {
+            "factor": "DP",
+            "w": 0.0033
+          },
+          {
+            "factor": "CP",
+            "w": 0.0021
+          }
+        ],
+        "short": [
+          {
+            "factor": "MOM",
+            "w": -0.2141
+          },
+          {
+            "factor": "ISSUE12",
+            "w": -0.201
+          },
+          {
+            "factor": "GRPROF",
+            "w": -0.1433
+          },
+          {
+            "factor": "BM",
+            "w": -0.0902
+          },
+          {
+            "factor": "IVOL",
+            "w": -0.0798
+          },
+          {
+            "factor": "STR",
+            "w": -0.0795
+          },
+          {
+            "factor": "ACC",
+            "w": -0.0727
+          },
+          {
+            "factor": "ASSETG",
+            "w": -0.0657
+          },
+          {
+            "factor": "EP",
+            "w": -0.0484
+          },
+          {
+            "factor": "LTR",
+            "w": -0.0055
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-08",
+      "model": "aqr_tsfm_vs",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "QMJ",
+            "w": 0.269
+          },
+          {
+            "factor": "HMLDEV",
+            "w": 0.1415
+          },
+          {
+            "factor": "BAB",
+            "w": 0.0945
+          },
+          {
+            "factor": "SMB",
+            "w": 0.0085
+          },
+          {
+            "factor": "DP",
+            "w": 0.0017
+          },
+          {
+            "factor": "CP",
+            "w": 0.0011
+          }
+        ],
+        "short": [
+          {
+            "factor": "MOM",
+            "w": -0.1106
+          },
+          {
+            "factor": "ISSUE12",
+            "w": -0.1038
+          },
+          {
+            "factor": "GRPROF",
+            "w": -0.074
+          },
+          {
+            "factor": "BM",
+            "w": -0.0466
+          },
+          {
+            "factor": "IVOL",
+            "w": -0.0412
+          },
+          {
+            "factor": "STR",
+            "w": -0.0411
+          },
+          {
+            "factor": "ACC",
+            "w": -0.0375
+          },
+          {
+            "factor": "ASSETG",
+            "w": -0.0339
+          },
+          {
+            "factor": "EP",
+            "w": -0.025
+          },
+          {
+            "factor": "LTR",
+            "w": -0.0028
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-08",
       "model": "etf_csfm",
       "backfilled": false,
       "picks": {
@@ -307361,8 +307658,31 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": 0.0106,
+        "long_ret": -0.0056,
+        "short_ret": -0.0162,
+        "hit": true,
+        "per_factor": {
+          "Value": -0.0096,
+          "Multifactor": -0.0001,
+          "Growth": 0.025,
+          "High Beta": 0.0345,
+          "Low Volatility": -0.0337,
+          "Buyback": -0.0555,
+          "Shareholder Yield": -0.0543,
+          "Quality": 0.0037,
+          "Momentum": 0.062,
+          "Revenue": -0.0301,
+          "Dividend Yield": -0.0444,
+          "Dividend Growth": -0.0534,
+          "Size (small)": -0.0488,
+          "Fundamentals": -0.0212,
+          "Equal Weight": -0.045
+        },
+        "eval_date": "2026-10-01"
+      }
     },
     {
       "month": "2026-08",
@@ -307435,8 +307755,31 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": 0.0117,
+        "long_ret": -0.0052,
+        "short_ret": -0.0169,
+        "hit": true,
+        "per_factor": {
+          "Value": -0.0096,
+          "Growth": 0.025,
+          "High Beta": 0.0345,
+          "Multifactor": -0.0001,
+          "Low Volatility": -0.0337,
+          "Buyback": -0.0555,
+          "Shareholder Yield": -0.0543,
+          "Quality": 0.0037,
+          "Revenue": -0.0301,
+          "Momentum": 0.062,
+          "Dividend Yield": -0.0444,
+          "Dividend Growth": -0.0534,
+          "Size (small)": -0.0488,
+          "Fundamentals": -0.0212,
+          "Equal Weight": -0.045
+        },
+        "eval_date": "2026-10-01"
+      }
     },
     {
       "month": "2026-08",
@@ -307509,8 +307852,31 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": 0.0063,
+        "long_ret": -0.0028,
+        "short_ret": -0.0091,
+        "hit": true,
+        "per_factor": {
+          "Value": -0.0096,
+          "Growth": 0.025,
+          "High Beta": 0.0345,
+          "Multifactor": -0.0001,
+          "Low Volatility": -0.0337,
+          "Buyback": -0.0555,
+          "Shareholder Yield": -0.0543,
+          "Quality": 0.0037,
+          "Revenue": -0.0301,
+          "Momentum": 0.062,
+          "Dividend Yield": -0.0444,
+          "Dividend Growth": -0.0534,
+          "Size (small)": -0.0488,
+          "Fundamentals": -0.0212,
+          "Equal Weight": -0.045
+        },
+        "eval_date": "2026-10-01"
+      }
     },
     {
       "month": "2026-08",
@@ -307575,8 +307941,29 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": -0.0259,
+        "long_ret": -0.0387,
+        "short_ret": -0.0129,
+        "hit": false,
+        "per_factor": {
+          "Yield": -0.0629,
+          "Growth": 0.0179,
+          "Revenue/Fundamentals": -0.0321,
+          "Buyback": -0.0594,
+          "Proprietary": -0.0257,
+          "Momentum": 0.0248,
+          "Low Volatility": -0.0379,
+          "Multifactor": 0.0216,
+          "Principle-based": -0.0336,
+          "Value": -0.0363,
+          "Dividend": -0.0425,
+          "Quality": -0.0244,
+          "Size": -0.0359
+        },
+        "eval_date": "2026-10-01"
+      }
     },
     {
       "month": "2026-08",
@@ -307641,8 +308028,29 @@
         ]
       },
       "degenerate": false,
-      "evaluated": false,
-      "realized": {}
+      "evaluated": true,
+      "realized": {
+        "model_ret": -0.0269,
+        "long_ret": -0.0418,
+        "short_ret": -0.0149,
+        "hit": false,
+        "per_factor": {
+          "Yield": -0.0629,
+          "Growth": 0.0179,
+          "Buyback": -0.0594,
+          "Revenue/Fundamentals": -0.0321,
+          "Proprietary": -0.0257,
+          "Momentum": 0.0248,
+          "Low Volatility": -0.0379,
+          "Multifactor": 0.0216,
+          "Principle-based": -0.0336,
+          "Value": -0.0363,
+          "Dividend": -0.0425,
+          "Quality": -0.0244,
+          "Size": -0.0359
+        },
+        "eval_date": "2026-10-01"
+      }
     },
     {
       "month": "2026-08",
@@ -307707,10 +308115,451 @@
         ]
       },
       "degenerate": false,
+      "evaluated": true,
+      "realized": {
+        "model_ret": -0.0182,
+        "long_ret": -0.0283,
+        "short_ret": -0.0101,
+        "hit": false,
+        "per_factor": {
+          "Yield": -0.0629,
+          "Growth": 0.0179,
+          "Buyback": -0.0594,
+          "Revenue/Fundamentals": -0.0321,
+          "Proprietary": -0.0257,
+          "Momentum": 0.0248,
+          "Low Volatility": -0.0379,
+          "Multifactor": 0.0216,
+          "Principle-based": -0.0336,
+          "Value": -0.0363,
+          "Dividend": -0.0425,
+          "Quality": -0.0244,
+          "Size": -0.0359
+        },
+        "eval_date": "2026-10-01"
+      }
+    },
+    {
+      "month": "2026-09",
+      "model": "etf_csfm",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "Multifactor",
+            "w": 0.2749
+          },
+          {
+            "factor": "Growth",
+            "w": 0.2054
+          },
+          {
+            "factor": "Momentum",
+            "w": 0.1976
+          },
+          {
+            "factor": "Quality",
+            "w": 0.1779
+          },
+          {
+            "factor": "High Beta",
+            "w": 0.1225
+          },
+          {
+            "factor": "Value",
+            "w": 0.0217
+          }
+        ],
+        "short": [
+          {
+            "factor": "Buyback",
+            "w": -0.1622
+          },
+          {
+            "factor": "Equal Weight",
+            "w": -0.1575
+          },
+          {
+            "factor": "Dividend Yield",
+            "w": -0.1425
+          },
+          {
+            "factor": "Dividend Growth",
+            "w": -0.1329
+          },
+          {
+            "factor": "Shareholder Yield",
+            "w": -0.1226
+          },
+          {
+            "factor": "Size (small)",
+            "w": -0.1129
+          },
+          {
+            "factor": "Revenue",
+            "w": -0.0778
+          },
+          {
+            "factor": "Low Volatility",
+            "w": -0.0695
+          },
+          {
+            "factor": "Fundamentals",
+            "w": -0.0222
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-09",
+      "model": "etf_tsfm",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "Momentum",
+            "w": 0.3992
+          },
+          {
+            "factor": "Growth",
+            "w": 0.3113
+          },
+          {
+            "factor": "High Beta",
+            "w": 0.2099
+          },
+          {
+            "factor": "Quality",
+            "w": 0.0796
+          }
+        ],
+        "short": [
+          {
+            "factor": "Equal Weight",
+            "w": -0.1432
+          },
+          {
+            "factor": "Buyback",
+            "w": -0.1308
+          },
+          {
+            "factor": "Dividend Yield",
+            "w": -0.1307
+          },
+          {
+            "factor": "Dividend Growth",
+            "w": -0.1092
+          },
+          {
+            "factor": "Revenue",
+            "w": -0.1058
+          },
+          {
+            "factor": "Shareholder Yield",
+            "w": -0.0999
+          },
+          {
+            "factor": "Size (small)",
+            "w": -0.0975
+          },
+          {
+            "factor": "Fundamentals",
+            "w": -0.082
+          },
+          {
+            "factor": "Low Volatility",
+            "w": -0.0814
+          },
+          {
+            "factor": "Value",
+            "w": -0.0184
+          },
+          {
+            "factor": "Multifactor",
+            "w": -0.0012
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-09",
+      "model": "etf_tsfm_vs",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "Momentum",
+            "w": 0.2179
+          },
+          {
+            "factor": "Growth",
+            "w": 0.1699
+          },
+          {
+            "factor": "High Beta",
+            "w": 0.1146
+          },
+          {
+            "factor": "Quality",
+            "w": 0.0435
+          }
+        ],
+        "short": [
+          {
+            "factor": "Equal Weight",
+            "w": -0.0782
+          },
+          {
+            "factor": "Buyback",
+            "w": -0.0714
+          },
+          {
+            "factor": "Dividend Yield",
+            "w": -0.0713
+          },
+          {
+            "factor": "Dividend Growth",
+            "w": -0.0596
+          },
+          {
+            "factor": "Revenue",
+            "w": -0.0578
+          },
+          {
+            "factor": "Shareholder Yield",
+            "w": -0.0545
+          },
+          {
+            "factor": "Size (small)",
+            "w": -0.0532
+          },
+          {
+            "factor": "Fundamentals",
+            "w": -0.0448
+          },
+          {
+            "factor": "Low Volatility",
+            "w": -0.0444
+          },
+          {
+            "factor": "Value",
+            "w": -0.01
+          },
+          {
+            "factor": "Multifactor",
+            "w": -0.0007
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-09",
+      "model": "man_csfm",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "Growth",
+            "w": 0.4177
+          },
+          {
+            "factor": "Multifactor",
+            "w": 0.3285
+          },
+          {
+            "factor": "Momentum",
+            "w": 0.247
+          },
+          {
+            "factor": "Quality",
+            "w": 0.0068
+          }
+        ],
+        "short": [
+          {
+            "factor": "Yield",
+            "w": -0.2258
+          },
+          {
+            "factor": "Buyback",
+            "w": -0.2067
+          },
+          {
+            "factor": "Dividend",
+            "w": -0.1217
+          },
+          {
+            "factor": "Size",
+            "w": -0.1158
+          },
+          {
+            "factor": "Low Volatility",
+            "w": -0.1
+          },
+          {
+            "factor": "Value",
+            "w": -0.0865
+          },
+          {
+            "factor": "Principle-based",
+            "w": -0.0688
+          },
+          {
+            "factor": "Revenue/Fundamentals",
+            "w": -0.067
+          },
+          {
+            "factor": "Proprietary",
+            "w": -0.0078
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-09",
+      "model": "man_tsfm",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "Growth",
+            "w": 0.3879
+          },
+          {
+            "factor": "Multifactor",
+            "w": 0.3384
+          },
+          {
+            "factor": "Momentum",
+            "w": 0.2737
+          }
+        ],
+        "short": [
+          {
+            "factor": "Size",
+            "w": -0.1199
+          },
+          {
+            "factor": "Yield",
+            "w": -0.1173
+          },
+          {
+            "factor": "Buyback",
+            "w": -0.1117
+          },
+          {
+            "factor": "Proprietary",
+            "w": -0.1093
+          },
+          {
+            "factor": "Revenue/Fundamentals",
+            "w": -0.096
+          },
+          {
+            "factor": "Dividend",
+            "w": -0.0927
+          },
+          {
+            "factor": "Low Volatility",
+            "w": -0.0924
+          },
+          {
+            "factor": "Quality",
+            "w": -0.0881
+          },
+          {
+            "factor": "Value",
+            "w": -0.0876
+          },
+          {
+            "factor": "Principle-based",
+            "w": -0.085
+          }
+        ]
+      },
+      "degenerate": false,
+      "evaluated": false,
+      "realized": {}
+    },
+    {
+      "month": "2026-09",
+      "model": "man_tsfm_vs",
+      "backfilled": false,
+      "picks": {
+        "long": [
+          {
+            "factor": "Growth",
+            "w": 0.2401
+          },
+          {
+            "factor": "Multifactor",
+            "w": 0.2095
+          },
+          {
+            "factor": "Momentum",
+            "w": 0.1694
+          }
+        ],
+        "short": [
+          {
+            "factor": "Size",
+            "w": -0.0742
+          },
+          {
+            "factor": "Yield",
+            "w": -0.0726
+          },
+          {
+            "factor": "Buyback",
+            "w": -0.0691
+          },
+          {
+            "factor": "Proprietary",
+            "w": -0.0677
+          },
+          {
+            "factor": "Revenue/Fundamentals",
+            "w": -0.0594
+          },
+          {
+            "factor": "Dividend",
+            "w": -0.0574
+          },
+          {
+            "factor": "Low Volatility",
+            "w": -0.0572
+          },
+          {
+            "factor": "Quality",
+            "w": -0.0545
+          },
+          {
+            "factor": "Value",
+            "w": -0.0542
+          },
+          {
+            "factor": "Principle-based",
+            "w": -0.0526
+          }
+        ]
+      },
+      "degenerate": false,
       "evaluated": false,
       "realized": {}
     }
   ],
-  "as_of": "2026-09-04",
+  "as_of": "2026-10-01",
   "disclaimer": "FMOM is auto-generated from free/best-effort data (yfinance ETF prices, Ken French Data Library, AQR datasets). Based on Gupta & Kelly (2019), 'Factor Momentum Everywhere'. Long-short model returns ignore trading costs, borrow and slippage; ETF backtests start at fund inception. Decision-support, not investment advice."
 }
