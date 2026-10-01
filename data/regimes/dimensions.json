@@ -1,8 +1,8 @@
 {
-  "as_of": "2026-09-30",
+  "as_of": "2026-10-01",
   "dimensions": {
     "monetary": {
-      "composite_z": -0.302,
+      "composite_z": -0.289,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Neutral",
@@ -20,8 +20,8 @@
         {
           "id": "REAL_FFR",
           "label": "Real Fed Funds Rate (DFF - core PCE YoY)",
-          "raw_value": 1.1962,
-          "z": -0.807,
+          "raw_value": 1.2928,
+          "z": -0.851,
           "direction": -1,
           "rising": false,
           "lag_days": 30,
@@ -30,8 +30,8 @@
         {
           "id": "T10Y3M",
           "label": "10y-3m Curve",
-          "raw_value": 1.01,
-          "z": 0.654,
+          "raw_value": 1.09,
+          "z": 0.735,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
@@ -48,7 +48,7 @@
         {
           "id": "NET_LIQ",
           "label": "Fed Net Liquidity (WALCL - RRP - TGA)",
-          "raw_value": -67.164,
+          "raw_value": -67.257,
           "z": -0.303,
           "direction": 1,
           "rising": false,
@@ -68,7 +68,7 @@
       ]
     },
     "credit": {
-      "composite_z": 0.758,
+      "composite_z": 0.765,
       "coverage_n": 5,
       "min_coverage": 3,
       "state": "Easy / Expansionary",
@@ -86,8 +86,8 @@
         {
           "id": "AAA10Y",
           "label": "Aaa Corporate - 10y Treasury Spread",
-          "raw_value": 1.02,
-          "z": 0.534,
+          "raw_value": 1.01,
+          "z": 0.572,
           "direction": -1,
           "rising": true,
           "lag_days": 0,
@@ -126,7 +126,7 @@
       ]
     },
     "financial_conditions": {
-      "composite_z": 0.602,
+      "composite_z": 0.522,
       "coverage_n": 4,
       "min_coverage": 3,
       "state": "Loose",
@@ -134,8 +134,8 @@
         {
           "id": "NFCI",
           "label": "Chicago Fed Financial Conditions Index",
-          "raw_value": -0.555,
-          "z": 0.598,
+          "raw_value": -0.548,
+          "z": 0.533,
           "direction": -1,
           "rising": true,
           "lag_days": 5,
@@ -144,28 +144,28 @@
         {
           "id": "ANFCI",
           "label": "Adjusted Financial Conditions Index",
-          "raw_value": -0.573,
-          "z": 0.64,
+          "raw_value": -0.574,
+          "z": 0.523,
           "direction": -1,
-          "rising": true,
+          "rising": false,
           "lag_days": 5,
           "freq": "W"
         },
         {
           "id": "STLFSI4",
           "label": "St. Louis Fed Financial Stress Index",
-          "raw_value": -0.9075,
-          "z": 0.795,
+          "raw_value": -0.8074,
+          "z": 0.655,
           "direction": -1,
-          "rising": true,
+          "rising": false,
           "lag_days": 5,
           "freq": "W"
         },
         {
           "id": "VIXCLS",
           "label": "VIX",
-          "raw_value": 16.07,
-          "z": 0.373,
+          "raw_value": 16.04,
+          "z": 0.378,
           "direction": -1,
           "rising": false,
           "lag_days": 0,
@@ -222,16 +222,16 @@
       ]
     },
     "volatility": {
-      "composite_z": 0.563,
+      "composite_z": 0.498,
       "coverage_n": 3,
       "min_coverage": 3,
-      "state": "Elevated / Expansion",
+      "state": "Neutral",
       "indicators": [
         {
           "id": "OVXCLS",
           "label": "Oil Volatility (OVX)",
-          "raw_value": 56.11,
-          "z": 0.832,
+          "raw_value": 53.74,
+          "z": 0.705,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -240,8 +240,8 @@
         {
           "id": "GVZCLS",
           "label": "Gold Volatility (GVZ)",
-          "raw_value": 24.83,
-          "z": 1.389,
+          "raw_value": 24.37,
+          "z": 1.312,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
@@ -250,8 +250,8 @@
         {
           "id": "TLT_RVOL",
           "label": "TLT Realized Volatility (MOVE proxy)",
-          "raw_value": 10.1592,
-          "z": -0.531,
+          "raw_value": 10.2022,
+          "z": -0.524,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
