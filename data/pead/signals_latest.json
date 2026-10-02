@@ -1,7 +1,14 @@
 {
-  "as_of": "2026-10-01",
+  "as_of": "2026-10-02",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "recent_days": [
+    {
+      "day": "2026-10-01",
+      "n_reporters": 4,
+      "n_eligible": 2,
+      "n_long": 2,
+      "n_short": 0
+    },
     {
       "day": "2026-09-30",
       "n_reporters": 3,
@@ -64,16 +71,181 @@
       "n_eligible": 0,
       "n_long": 0,
       "n_short": 0
-    },
-    {
-      "day": "2026-09-17",
-      "n_reporters": 2,
-      "n_eligible": 0,
-      "n_long": 0,
-      "n_short": 0
     }
   ],
   "signals": [
+    {
+      "ticker": "ACN",
+      "name": "Accenture plc",
+      "sector": "",
+      "report_date": "2026-10-01",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-01",
+      "side": "long",
+      "eps_actual": 3.29,
+      "eps_consensus": 3.19,
+      "n_estimates": 7,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000545,
+        "ear": 0.155985,
+        "rue": null,
+        "avol": 1.66912,
+        "nearness": 0.642924
+      },
+      "context": {
+        "close_pre": 183.37,
+        "cap_tier": "large",
+        "mktcap": 122401350000.0,
+        "adv_usd": 956228483.4716797,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": false,
+        "momentum_aligned": false,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 43.3,
+        "ear": 96.0,
+        "rue": 50.0,
+        "avol": 96.7,
+        "anchor": 15.6
+      },
+      "composite": 63.6,
+      "rank_pool_n": 953
+    },
+    {
+      "ticker": "MU",
+      "name": "Micron Technology, Inc.",
+      "sector": "",
+      "report_date": "2026-09-30",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-01",
+      "side": "long",
+      "eps_actual": 33.19,
+      "eps_consensus": 31.41,
+      "n_estimates": 10,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.001671,
+        "ear": 0.028523,
+        "rue": null,
+        "avol": 0.403863,
+        "nearness": 0.848824
+      },
+      "context": {
+        "close_pre": 1065.11,
+        "cap_tier": "large",
+        "mktcap": 1202927960000.0,
+        "adv_usd": 30311665492.23633,
+        "next_earn_date": "2026-12-23",
+        "td_to_next_earn": 58
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 72.8,
+        "ear": 70.6,
+        "rue": 50.0,
+        "avol": 27.8,
+        "anchor": 46.5
+      },
+      "composite": 59.2,
+      "rank_pool_n": 953
+    },
+    {
+      "ticker": "AYI",
+      "name": "Acuity Inc.",
+      "sector": "",
+      "report_date": "2026-10-01",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-01",
+      "side": "mixed",
+      "eps_actual": 5.77,
+      "eps_consensus": 5.27,
+      "n_estimates": 4,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.001614,
+        "ear": -0.035772,
+        "rue": null,
+        "avol": 1.149579,
+        "nearness": 0.816508
+      },
+      "context": {
+        "close_pre": 309.81,
+        "cap_tier": "mid",
+        "mktcap": 9274332200.0,
+        "adv_usd": 86653297.66998291,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 71.5,
+        "ear": 26.9,
+        "rue": 50.0,
+        "avol": 83.8,
+        "anchor": 39.9
+      },
+      "composite": 53.1,
+      "rank_pool_n": 953
+    },
+    {
+      "ticker": "MKC",
+      "name": "McCormick & Company, Incorporated",
+      "sector": "",
+      "report_date": "2026-10-01",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-01",
+      "side": "mixed",
+      "eps_actual": 0.86,
+      "eps_consensus": 0.75,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.002371,
+        "ear": -0.05049,
+        "rue": null,
+        "avol": 1.164815,
+        "nearness": 0.652366
+      },
+      "context": {
+        "close_pre": 46.4,
+        "cap_tier": "mid",
+        "mktcap": 12474712100.0,
+        "adv_usd": 146507497.97172546,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 80.2,
+        "ear": 20.6,
+        "rue": 50.0,
+        "avol": 84.3,
+        "anchor": 16.7
+      },
+      "composite": 50.4,
+      "rank_pool_n": 953
+    },
     {
       "ticker": "FDS",
       "name": "FactSet Research Systems Inc.",
@@ -458,9 +630,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1124,
-          "excess_ret": -0.1252
+          "last_close_date": "2026-10-01",
+          "ret": -0.1238,
+          "excess_ret": -0.1385
         }
       },
       {
@@ -500,9 +672,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.216,
-          "excess_ret": -0.2289
+          "last_close_date": "2026-10-01",
+          "ret": -0.2192,
+          "excess_ret": -0.2339
         }
       },
       {
@@ -542,9 +714,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0434,
-          "excess_ret": -0.0563
+          "last_close_date": "2026-10-01",
+          "ret": -0.0366,
+          "excess_ret": -0.0513
         }
       },
       {
@@ -584,9 +756,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0474,
-          "excess_ret": -0.0658
+          "last_close_date": "2026-10-01",
+          "ret": -0.0419,
+          "excess_ret": -0.0621
         }
       },
       {
@@ -626,9 +798,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1113,
-          "excess_ret": -0.1297
+          "last_close_date": "2026-10-01",
+          "ret": -0.1157,
+          "excess_ret": -0.1359
         }
       },
       {
@@ -668,9 +840,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2441,
-          "excess_ret": -0.2726
+          "last_close_date": "2026-10-01",
+          "ret": -0.2334,
+          "excess_ret": -0.2638
         }
       },
       {
@@ -710,9 +882,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1327,
-          "excess_ret": -0.151
+          "last_close_date": "2026-10-01",
+          "ret": -0.1336,
+          "excess_ret": -0.1539
         }
       },
       {
@@ -752,9 +924,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1297,
-          "excess_ret": -0.148
+          "last_close_date": "2026-10-01",
+          "ret": -0.1356,
+          "excess_ret": -0.1558
         }
       },
       {
@@ -794,9 +966,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0215,
-          "excess_ret": -0.0501
+          "last_close_date": "2026-10-01",
+          "ret": -0.0427,
+          "excess_ret": -0.0731
         }
       },
       {
@@ -836,9 +1008,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0814,
-          "excess_ret": -0.11
+          "last_close_date": "2026-10-01",
+          "ret": -0.0799,
+          "excess_ret": -0.1103
         }
       },
       {
@@ -878,9 +1050,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1371,
-          "excess_ret": -0.1657
+          "last_close_date": "2026-10-01",
+          "ret": -0.1379,
+          "excess_ret": -0.1683
         }
       },
       {
@@ -920,9 +1092,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1347,
-          "excess_ret": -0.1633
+          "last_close_date": "2026-10-01",
+          "ret": -0.1458,
+          "excess_ret": -0.1762
         }
       },
       {
@@ -962,9 +1134,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1398,
-          "excess_ret": -0.1683
+          "last_close_date": "2026-10-01",
+          "ret": -0.1442,
+          "excess_ret": -0.1746
         }
       },
       {
@@ -1004,9 +1176,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.099,
-          "excess_ret": -0.1276
+          "last_close_date": "2026-10-01",
+          "ret": -0.1053,
+          "excess_ret": -0.1357
         }
       },
       {
@@ -1046,9 +1218,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0302,
-          "excess_ret": -0.0604
+          "last_close_date": "2026-10-01",
+          "ret": -0.0162,
+          "excess_ret": -0.0483
         }
       },
       {
@@ -1088,9 +1260,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1015,
-          "excess_ret": -0.1244
+          "last_close_date": "2026-10-01",
+          "ret": -0.0949,
+          "excess_ret": -0.1196
         }
       },
       {
@@ -1130,9 +1302,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0435,
-          "excess_ret": -0.0664
+          "last_close_date": "2026-10-01",
+          "ret": -0.0148,
+          "excess_ret": -0.0395
         }
       },
       {
@@ -1172,9 +1344,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0138,
-          "excess_ret": -0.0367
+          "last_close_date": "2026-10-01",
+          "ret": 0.012,
+          "excess_ret": -0.0127
         }
       },
       {
@@ -1214,9 +1386,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0459,
-          "excess_ret": -0.0688
+          "last_close_date": "2026-10-01",
+          "ret": -0.0525,
+          "excess_ret": -0.0772
         }
       },
       {
@@ -1256,9 +1428,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0575,
-          "excess_ret": -0.0932
+          "last_close_date": "2026-10-01",
+          "ret": -0.0433,
+          "excess_ret": -0.0808
         }
       },
       {
@@ -1298,9 +1470,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0705,
-          "excess_ret": 0.0348
+          "last_close_date": "2026-10-01",
+          "ret": 0.0525,
+          "excess_ret": 0.0149
         }
       },
       {
@@ -1382,9 +1554,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0465,
-          "excess_ret": 0.0108
+          "last_close_date": "2026-10-01",
+          "ret": 0.0589,
+          "excess_ret": 0.0214
         }
       },
       {
@@ -1424,9 +1596,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1186,
-          "excess_ret": -0.1533
+          "last_close_date": "2026-10-01",
+          "ret": -0.1181,
+          "excess_ret": -0.1545
         }
       },
       {
@@ -1466,9 +1638,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1073,
-          "excess_ret": -0.1419
+          "last_close_date": "2026-10-01",
+          "ret": -0.1182,
+          "excess_ret": -0.1546
         }
       },
       {
@@ -1508,9 +1680,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0231,
-          "excess_ret": -0.0578
+          "last_close_date": "2026-10-01",
+          "ret": -0.0114,
+          "excess_ret": -0.0479
         }
       },
       {
@@ -1550,9 +1722,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0841,
-          "excess_ret": -0.1188
+          "last_close_date": "2026-10-01",
+          "ret": -0.0726,
+          "excess_ret": -0.1091
         }
       },
       {
@@ -1592,9 +1764,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0198,
-          "excess_ret": -0.0149
+          "last_close_date": "2026-10-01",
+          "ret": -0.0229,
+          "excess_ret": -0.0593
         }
       },
       {
@@ -1634,9 +1806,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0663,
-          "excess_ret": -0.102
+          "last_close_date": "2026-10-01",
+          "ret": -0.064,
+          "excess_ret": -0.1015
         }
       },
       {
@@ -1676,9 +1848,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0193,
-          "excess_ret": -0.0539
+          "last_close_date": "2026-10-01",
+          "ret": -0.0174,
+          "excess_ret": -0.0538
         }
       },
       {
@@ -1718,9 +1890,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0059,
-          "excess_ret": -0.0416
+          "last_close_date": "2026-10-01",
+          "ret": -0.0196,
+          "excess_ret": -0.0572
         }
       },
       {
@@ -1760,9 +1932,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0603,
-          "excess_ret": -0.095
+          "last_close_date": "2026-10-01",
+          "ret": -0.0501,
+          "excess_ret": -0.0866
         }
       },
       {
@@ -1802,9 +1974,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0803,
-          "excess_ret": -0.1149
+          "last_close_date": "2026-10-01",
+          "ret": -0.0658,
+          "excess_ret": -0.1023
         }
       },
       {
@@ -1844,9 +2016,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0125,
-          "excess_ret": -0.0221
+          "last_close_date": "2026-10-01",
+          "ret": 0.0276,
+          "excess_ret": -0.0088
         }
       },
       {
@@ -1886,9 +2058,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0777,
-          "excess_ret": -0.1134
+          "last_close_date": "2026-10-01",
+          "ret": -0.0725,
+          "excess_ret": -0.1101
         }
       },
       {
@@ -1928,9 +2100,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0366,
-          "excess_ret": -0.0713
+          "last_close_date": "2026-10-01",
+          "ret": -0.0159,
+          "excess_ret": -0.0524
         }
       },
       {
@@ -1970,9 +2142,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.113,
-          "excess_ret": -0.1487
+          "last_close_date": "2026-10-01",
+          "ret": -0.1092,
+          "excess_ret": -0.1467
         }
       },
       {
@@ -2012,9 +2184,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1417,
-          "excess_ret": -0.1763
+          "last_close_date": "2026-10-01",
+          "ret": -0.1473,
+          "excess_ret": -0.1838
         }
       },
       {
@@ -2054,9 +2226,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0495,
-          "excess_ret": 0.0138
+          "last_close_date": "2026-10-01",
+          "ret": 0.0452,
+          "excess_ret": 0.0076
         }
       },
       {
@@ -2096,9 +2268,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0676,
-          "excess_ret": -0.1033
+          "last_close_date": "2026-10-01",
+          "ret": -0.0586,
+          "excess_ret": -0.0961
         }
       },
       {
@@ -2138,9 +2310,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1158,
-          "excess_ret": -0.1504
+          "last_close_date": "2026-10-01",
+          "ret": -0.0863,
+          "excess_ret": -0.1228
         }
       },
       {
@@ -2180,9 +2352,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0215,
-          "excess_ret": -0.0572
+          "last_close_date": "2026-10-01",
+          "ret": -0.0193,
+          "excess_ret": -0.0568
         }
       },
       {
@@ -2222,9 +2394,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0225,
-          "excess_ret": -0.0572
+          "last_close_date": "2026-10-01",
+          "ret": -0.0228,
+          "excess_ret": -0.0593
         }
       },
       {
@@ -2264,9 +2436,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.01,
-          "excess_ret": -0.0247
+          "last_close_date": "2026-10-01",
+          "ret": 0.0133,
+          "excess_ret": -0.0231
         }
       },
       {
@@ -2306,9 +2478,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1047,
-          "excess_ret": -0.1393
+          "last_close_date": "2026-10-01",
+          "ret": -0.1035,
+          "excess_ret": -0.14
         }
       },
       {
@@ -2348,9 +2520,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0282,
-          "excess_ret": -0.0629
+          "last_close_date": "2026-10-01",
+          "ret": 0.0124,
+          "excess_ret": -0.0241
         }
       },
       {
@@ -2390,9 +2562,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0222,
-          "excess_ret": -0.0124
+          "last_close_date": "2026-10-01",
+          "ret": 0.0136,
+          "excess_ret": -0.0229
         }
       },
       {
@@ -2432,9 +2604,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0728,
-          "excess_ret": -0.1075
+          "last_close_date": "2026-10-01",
+          "ret": -0.0668,
+          "excess_ret": -0.1033
         }
       },
       {
@@ -2474,9 +2646,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1456,
-          "excess_ret": -0.1802
+          "last_close_date": "2026-10-01",
+          "ret": -0.134,
+          "excess_ret": -0.1705
         }
       },
       {
@@ -2516,9 +2688,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0752,
-          "excess_ret": -0.1096
+          "last_close_date": "2026-10-01",
+          "ret": -0.0415,
+          "excess_ret": -0.0777
         }
       },
       {
@@ -2535,7 +2707,7 @@
         "entry_open": 568.59,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-20",
+        "next_earn_date": "2026-10-22",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -2558,9 +2730,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1044,
-          "excess_ret": -0.139
+          "last_close_date": "2026-10-01",
+          "ret": -0.111,
+          "excess_ret": -0.1474
         }
       },
       {
@@ -2600,9 +2772,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0058,
-          "excess_ret": -0.0288
+          "last_close_date": "2026-10-01",
+          "ret": 0.0021,
+          "excess_ret": -0.0344
         }
       },
       {
@@ -2642,9 +2814,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1211,
-          "excess_ret": -0.1558
+          "last_close_date": "2026-10-01",
+          "ret": -0.1176,
+          "excess_ret": -0.154
         }
       },
       {
@@ -2684,9 +2856,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0623,
-          "excess_ret": -0.0967
+          "last_close_date": "2026-10-01",
+          "ret": -0.0688,
+          "excess_ret": -0.105
         }
       },
       {
@@ -2726,9 +2898,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.036,
-          "excess_ret": -0.0707
+          "last_close_date": "2026-10-01",
+          "ret": 0.0003,
+          "excess_ret": -0.0362
         }
       },
       {
@@ -2768,9 +2940,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1194,
-          "excess_ret": -0.1541
+          "last_close_date": "2026-10-01",
+          "ret": -0.1225,
+          "excess_ret": -0.1589
         }
       },
       {
@@ -2810,9 +2982,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0658,
-          "excess_ret": -0.1002
+          "last_close_date": "2026-10-01",
+          "ret": -0.0559,
+          "excess_ret": -0.0922
         }
       },
       {
@@ -2852,9 +3024,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0716,
-          "excess_ret": 0.0372
+          "last_close_date": "2026-10-01",
+          "ret": 0.065,
+          "excess_ret": 0.0287
         }
       },
       {
@@ -2894,9 +3066,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1843,
-          "excess_ret": 0.1497
+          "last_close_date": "2026-10-01",
+          "ret": 0.1448,
+          "excess_ret": 0.1083
         }
       },
       {
@@ -2936,9 +3108,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1063,
-          "excess_ret": -0.1409
+          "last_close_date": "2026-10-01",
+          "ret": -0.1053,
+          "excess_ret": -0.1418
         }
       },
       {
@@ -2978,9 +3150,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0098,
-          "excess_ret": -0.0442
+          "last_close_date": "2026-10-01",
+          "ret": 0.0074,
+          "excess_ret": -0.0288
         }
       },
       {
@@ -3020,9 +3192,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0433,
-          "excess_ret": -0.0777
+          "last_close_date": "2026-10-01",
+          "ret": -0.0288,
+          "excess_ret": -0.0651
         }
       },
       {
@@ -3062,9 +3234,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1124,
-          "excess_ret": 0.078
+          "last_close_date": "2026-10-01",
+          "ret": 0.1036,
+          "excess_ret": 0.0674
         }
       },
       {
@@ -3104,9 +3276,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1645,
-          "excess_ret": -0.1989
+          "last_close_date": "2026-10-01",
+          "ret": -0.1747,
+          "excess_ret": -0.211
         }
       },
       {
@@ -3146,9 +3318,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0685,
-          "excess_ret": -0.1029
+          "last_close_date": "2026-10-01",
+          "ret": -0.0696,
+          "excess_ret": -0.1059
         }
       },
       {
@@ -3188,9 +3360,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.011,
-          "excess_ret": -0.0454
+          "last_close_date": "2026-10-01",
+          "ret": -0.0086,
+          "excess_ret": -0.0449
         }
       },
       {
@@ -3230,9 +3402,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0908,
-          "excess_ret": -0.1227
+          "last_close_date": "2026-10-01",
+          "ret": -0.0788,
+          "excess_ret": -0.1126
         }
       },
       {
@@ -3272,9 +3444,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1308,
-          "excess_ret": -0.1789
+          "last_close_date": "2026-10-01",
+          "ret": -0.1226,
+          "excess_ret": -0.1725
         }
       },
       {
@@ -3314,9 +3486,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0085,
-          "excess_ret": -0.0566
+          "last_close_date": "2026-10-01",
+          "ret": -0.006,
+          "excess_ret": -0.056
         }
       },
       {
@@ -3356,9 +3528,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1252,
-          "excess_ret": -0.1732
+          "last_close_date": "2026-10-01",
+          "ret": -0.1164,
+          "excess_ret": -0.1664
         }
       },
       {
@@ -3398,9 +3570,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1095,
-          "excess_ret": -0.1576
+          "last_close_date": "2026-10-01",
+          "ret": -0.1158,
+          "excess_ret": -0.1657
         }
       },
       {
@@ -3440,9 +3612,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0524,
-          "excess_ret": 0.0043
+          "last_close_date": "2026-10-01",
+          "ret": 0.0572,
+          "excess_ret": 0.0073
         }
       },
       {
@@ -3482,9 +3654,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0763,
-          "excess_ret": -0.1244
+          "last_close_date": "2026-10-01",
+          "ret": -0.072,
+          "excess_ret": -0.122
         }
       },
       {
@@ -3524,9 +3696,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0902,
-          "excess_ret": -0.1383
+          "last_close_date": "2026-10-01",
+          "ret": -0.099,
+          "excess_ret": -0.1489
         }
       },
       {
@@ -3566,9 +3738,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1706,
-          "excess_ret": -0.2014
+          "last_close_date": "2026-10-01",
+          "ret": -0.1824,
+          "excess_ret": -0.215
         }
       },
       {
@@ -3608,9 +3780,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0644,
-          "excess_ret": -0.0952
+          "last_close_date": "2026-10-01",
+          "ret": -0.0684,
+          "excess_ret": -0.101
         }
       },
       {
@@ -3650,9 +3822,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0389,
-          "excess_ret": -0.0869
+          "last_close_date": "2026-10-01",
+          "ret": -0.0505,
+          "excess_ret": -0.1004
         }
       },
       {
@@ -3692,9 +3864,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.089,
-          "excess_ret": -0.1198
+          "last_close_date": "2026-10-01",
+          "ret": -0.0688,
+          "excess_ret": -0.1014
         }
       },
       {
@@ -3734,9 +3906,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0351,
-          "excess_ret": -0.0659
+          "last_close_date": "2026-10-01",
+          "ret": 0.0239,
+          "excess_ret": -0.0088
         }
       },
       {
@@ -3776,9 +3948,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1396,
-          "excess_ret": -0.1703
+          "last_close_date": "2026-10-01",
+          "ret": -0.1293,
+          "excess_ret": -0.1619
         }
       },
       {
@@ -3795,7 +3967,7 @@
         "entry_open": 15.34,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-22",
+        "next_earn_date": "2026-10-28",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -3818,9 +3990,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2138,
-          "excess_ret": -0.2446
+          "last_close_date": "2026-10-01",
+          "ret": -0.2001,
+          "excess_ret": -0.2328
         }
       },
       {
@@ -3860,9 +4032,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0584,
-          "excess_ret": -0.1064
+          "last_close_date": "2026-10-01",
+          "ret": -0.091,
+          "excess_ret": -0.141
         }
       },
       {
@@ -3902,9 +4074,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1119,
-          "excess_ret": 0.0638
+          "last_close_date": "2026-10-01",
+          "ret": 0.0783,
+          "excess_ret": 0.0284
         }
       },
       {
@@ -3944,9 +4116,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1384,
-          "excess_ret": -0.1864
+          "last_close_date": "2026-10-01",
+          "ret": -0.1265,
+          "excess_ret": -0.1764
         }
       },
       {
@@ -3986,9 +4158,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.029,
-          "excess_ret": -0.0771
+          "last_close_date": "2026-10-01",
+          "ret": -0.0288,
+          "excess_ret": -0.0787
         }
       },
       {
@@ -4028,9 +4200,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.019,
-          "excess_ret": -0.0118
+          "last_close_date": "2026-10-01",
+          "ret": 0.0469,
+          "excess_ret": 0.0143
         }
       },
       {
@@ -4070,9 +4242,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0946,
-          "excess_ret": -0.1254
+          "last_close_date": "2026-10-01",
+          "ret": -0.0955,
+          "excess_ret": -0.1281
         }
       },
       {
@@ -4112,9 +4284,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2027,
-          "excess_ret": -0.2507
+          "last_close_date": "2026-10-01",
+          "ret": -0.2017,
+          "excess_ret": -0.2517
         }
       },
       {
@@ -4154,9 +4326,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2038,
-          "excess_ret": -0.2518
+          "last_close_date": "2026-10-01",
+          "ret": -0.2054,
+          "excess_ret": -0.2553
         }
       },
       {
@@ -4196,9 +4368,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0962,
-          "excess_ret": -0.1442
+          "last_close_date": "2026-10-01",
+          "ret": -0.0871,
+          "excess_ret": -0.137
         }
       },
       {
@@ -4238,9 +4410,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1602,
-          "excess_ret": -0.2083
+          "last_close_date": "2026-10-01",
+          "ret": -0.1472,
+          "excess_ret": -0.1971
         }
       },
       {
@@ -4280,9 +4452,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.3327,
-          "excess_ret": 0.2846
+          "last_close_date": "2026-10-01",
+          "ret": 0.2287,
+          "excess_ret": 0.1788
         }
       },
       {
@@ -4322,9 +4494,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0878,
-          "excess_ret": -0.1359
+          "last_close_date": "2026-10-01",
+          "ret": -0.1062,
+          "excess_ret": -0.1562
         }
       },
       {
@@ -4364,9 +4536,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0816,
-          "excess_ret": -0.1297
+          "last_close_date": "2026-10-01",
+          "ret": -0.0887,
+          "excess_ret": -0.1386
         }
       },
       {
@@ -4406,9 +4578,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1524,
-          "excess_ret": 0.1216
+          "last_close_date": "2026-10-01",
+          "ret": 0.1951,
+          "excess_ret": 0.1625
         }
       },
       {
@@ -4448,9 +4620,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0788,
-          "excess_ret": -0.1096
+          "last_close_date": "2026-10-01",
+          "ret": -0.0667,
+          "excess_ret": -0.0993
         }
       },
       {
@@ -4467,7 +4639,7 @@
         "entry_open": 84.86,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-22",
+        "next_earn_date": "2026-10-27",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -4490,9 +4662,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2798,
-          "excess_ret": -0.3278
+          "last_close_date": "2026-10-01",
+          "ret": -0.2673,
+          "excess_ret": -0.3172
         }
       },
       {
@@ -4532,9 +4704,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0155,
-          "excess_ret": -0.0463
+          "last_close_date": "2026-10-01",
+          "ret": -0.0141,
+          "excess_ret": -0.0467
         }
       },
       {
@@ -4574,9 +4746,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0321,
-          "excess_ret": -0.0629
+          "last_close_date": "2026-10-01",
+          "ret": -0.0292,
+          "excess_ret": -0.0619
         }
       },
       {
@@ -4616,9 +4788,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1773,
-          "excess_ret": -0.2254
+          "last_close_date": "2026-10-01",
+          "ret": -0.1805,
+          "excess_ret": -0.2304
         }
       },
       {
@@ -4658,9 +4830,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0285,
-          "excess_ret": -0.0592
+          "last_close_date": "2026-10-01",
+          "ret": -0.0062,
+          "excess_ret": -0.0389
         }
       },
       {
@@ -4700,9 +4872,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.4722,
-          "excess_ret": -0.503
+          "last_close_date": "2026-10-01",
+          "ret": -0.4636,
+          "excess_ret": -0.4962
         }
       },
       {
@@ -4742,9 +4914,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0344,
-          "excess_ret": 0.0036
+          "last_close_date": "2026-10-01",
+          "ret": 0.033,
+          "excess_ret": 0.0004
         }
       },
       {
@@ -4784,9 +4956,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1052,
-          "excess_ret": 0.0744
+          "last_close_date": "2026-10-01",
+          "ret": 0.0902,
+          "excess_ret": 0.0576
         }
       },
       {
@@ -4826,9 +4998,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0358,
-          "excess_ret": -0.0666
+          "last_close_date": "2026-10-01",
+          "ret": -0.0451,
+          "excess_ret": -0.0777
         }
       },
       {
@@ -4868,9 +5040,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1261,
-          "excess_ret": -0.1568
+          "last_close_date": "2026-10-01",
+          "ret": -0.112,
+          "excess_ret": -0.1447
         }
       },
       {
@@ -4910,9 +5082,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0514,
-          "excess_ret": -0.0822
+          "last_close_date": "2026-10-01",
+          "ret": -0.0445,
+          "excess_ret": -0.0771
         }
       },
       {
@@ -4952,9 +5124,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1585,
-          "excess_ret": -0.182
+          "last_close_date": "2026-10-01",
+          "ret": -0.1488,
+          "excess_ret": -0.174
         }
       },
       {
@@ -4994,9 +5166,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0244,
-          "excess_ret": -0.0478
+          "last_close_date": "2026-10-01",
+          "ret": -0.0345,
+          "excess_ret": -0.0598
         }
       },
       {
@@ -5036,9 +5208,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1213,
-          "excess_ret": -0.1447
+          "last_close_date": "2026-10-01",
+          "ret": -0.113,
+          "excess_ret": -0.1383
         }
       },
       {
@@ -5078,9 +5250,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0443,
-          "excess_ret": -0.0678
+          "last_close_date": "2026-10-01",
+          "ret": -0.0436,
+          "excess_ret": -0.0689
         }
       },
       {
@@ -5120,9 +5292,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0494,
-          "excess_ret": -0.0728
+          "last_close_date": "2026-10-01",
+          "ret": -0.0502,
+          "excess_ret": -0.0754
         }
       },
       {
@@ -5162,9 +5334,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.3347,
-          "excess_ret": 0.3113
+          "last_close_date": "2026-10-01",
+          "ret": 0.3269,
+          "excess_ret": 0.3017
         }
       },
       {
@@ -5204,9 +5376,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0857,
-          "excess_ret": -0.1165
+          "last_close_date": "2026-10-01",
+          "ret": -0.1052,
+          "excess_ret": -0.1378
         }
       },
       {
@@ -5246,9 +5418,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0279,
-          "excess_ret": -0.0029
+          "last_close_date": "2026-10-01",
+          "ret": 0.0327,
+          "excess_ret": 0.0001
         }
       },
       {
@@ -5288,9 +5460,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0209,
-          "excess_ret": -0.0517
+          "last_close_date": "2026-10-01",
+          "ret": -0.0358,
+          "excess_ret": -0.0685
         }
       },
       {
@@ -5330,9 +5502,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
+          "last_close_date": "2026-10-01",
           "ret": -0.2224,
-          "excess_ret": -0.2531
+          "excess_ret": -0.255
         }
       },
       {
@@ -5372,9 +5544,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.013,
-          "excess_ret": -0.0438
+          "last_close_date": "2026-10-01",
+          "ret": -0.0049,
+          "excess_ret": -0.0375
         }
       },
       {
@@ -5391,7 +5563,7 @@
         "entry_open": 144.03,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-11-04",
+        "next_earn_date": "2026-10-27",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -5414,9 +5586,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0321,
-          "excess_ret": 0.0013
+          "last_close_date": "2026-10-01",
+          "ret": 0.0537,
+          "excess_ret": 0.0211
         }
       },
       {
@@ -5456,9 +5628,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.3061,
-          "excess_ret": -0.3369
+          "last_close_date": "2026-10-01",
+          "ret": -0.2723,
+          "excess_ret": -0.3049
         }
       },
       {
@@ -5498,9 +5670,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0305,
-          "excess_ret": -0.0613
+          "last_close_date": "2026-10-01",
+          "ret": -0.0035,
+          "excess_ret": -0.0361
         }
       },
       {
@@ -5540,9 +5712,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0417,
-          "excess_ret": 0.0182
+          "last_close_date": "2026-10-01",
+          "ret": 0.0784,
+          "excess_ret": 0.0532
         }
       },
       {
@@ -5582,9 +5754,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0683,
-          "excess_ret": -0.0917
+          "last_close_date": "2026-10-01",
+          "ret": -0.0583,
+          "excess_ret": -0.0835
         }
       },
       {
@@ -5624,9 +5796,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1398,
-          "excess_ret": 0.1164
+          "last_close_date": "2026-10-01",
+          "ret": 0.1396,
+          "excess_ret": 0.1143
         }
       },
       {
@@ -5666,9 +5838,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0955,
-          "excess_ret": -0.1263
+          "last_close_date": "2026-10-01",
+          "ret": -0.0842,
+          "excess_ret": -0.1168
         }
       },
       {
@@ -5708,9 +5880,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1172,
-          "excess_ret": -0.148
+          "last_close_date": "2026-10-01",
+          "ret": -0.1093,
+          "excess_ret": -0.142
         }
       },
       {
@@ -5750,9 +5922,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0388,
-          "excess_ret": -0.0623
+          "last_close_date": "2026-10-01",
+          "ret": -0.04,
+          "excess_ret": -0.0652
         }
       },
       {
@@ -5792,9 +5964,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1568,
-          "excess_ret": -0.1876
+          "last_close_date": "2026-10-01",
+          "ret": -0.1443,
+          "excess_ret": -0.1769
         }
       },
       {
@@ -5834,9 +6006,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2287,
-          "excess_ret": -0.2521
+          "last_close_date": "2026-10-01",
+          "ret": -0.2504,
+          "excess_ret": -0.2756
         }
       },
       {
@@ -5876,9 +6048,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1457,
-          "excess_ret": -0.1692
+          "last_close_date": "2026-10-01",
+          "ret": -0.1295,
+          "excess_ret": -0.1547
         }
       },
       {
@@ -5895,7 +6067,7 @@
         "entry_open": 204.57,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-28",
+        "next_earn_date": "2026-11-05",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -5918,9 +6090,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1795,
-          "excess_ret": -0.2103
+          "last_close_date": "2026-10-01",
+          "ret": -0.1769,
+          "excess_ret": -0.2095
         }
       },
       {
@@ -5960,9 +6132,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2414,
-          "excess_ret": -0.2722
+          "last_close_date": "2026-10-01",
+          "ret": -0.2487,
+          "excess_ret": -0.2813
         }
       },
       {
@@ -6002,9 +6174,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1047,
-          "excess_ret": -0.1138
+          "last_close_date": "2026-10-01",
+          "ret": -0.108,
+          "excess_ret": -0.1189
         }
       },
       {
@@ -6021,7 +6193,7 @@
         "entry_open": 172.27,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-21",
+        "next_earn_date": "2026-10-29",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -6044,9 +6216,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0093,
-          "excess_ret": -0.0327
+          "last_close_date": "2026-10-01",
+          "ret": -0.0038,
+          "excess_ret": -0.029
         }
       },
       {
@@ -6086,9 +6258,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1085,
-          "excess_ret": -0.1319
+          "last_close_date": "2026-10-01",
+          "ret": -0.1218,
+          "excess_ret": -0.1471
         }
       },
       {
@@ -6128,9 +6300,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.04,
-          "excess_ret": -0.0634
+          "last_close_date": "2026-10-01",
+          "ret": -0.0545,
+          "excess_ret": -0.0797
         }
       },
       {
@@ -6170,9 +6342,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0162,
-          "excess_ret": -0.0396
+          "last_close_date": "2026-10-01",
+          "ret": -0.0011,
+          "excess_ret": -0.0264
         }
       },
       {
@@ -6212,9 +6384,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.002,
-          "excess_ret": -0.0111
+          "last_close_date": "2026-10-01",
+          "ret": 0.0029,
+          "excess_ret": -0.008
         }
       },
       {
@@ -6254,9 +6426,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0116,
-          "excess_ret": 0.0026
+          "last_close_date": "2026-10-01",
+          "ret": 0.0109,
+          "excess_ret": 0.0001
         }
       },
       {
@@ -6296,9 +6468,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1006,
-          "excess_ret": -0.124
+          "last_close_date": "2026-10-01",
+          "ret": -0.0833,
+          "excess_ret": -0.1085
         }
       },
       {
@@ -6338,9 +6510,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2276,
-          "excess_ret": -0.2367
+          "last_close_date": "2026-10-01",
+          "ret": -0.2239,
+          "excess_ret": -0.2348
         }
       },
       {
@@ -6380,9 +6552,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1966,
-          "excess_ret": -0.2056
+          "last_close_date": "2026-10-01",
+          "ret": -0.2106,
+          "excess_ret": -0.2214
         }
       },
       {
@@ -6422,9 +6594,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1732,
-          "excess_ret": -0.1966
+          "last_close_date": "2026-10-01",
+          "ret": -0.1507,
+          "excess_ret": -0.176
         }
       },
       {
@@ -6464,9 +6636,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1514,
-          "excess_ret": -0.1748
+          "last_close_date": "2026-10-01",
+          "ret": -0.1443,
+          "excess_ret": -0.1695
         }
       },
       {
@@ -6506,9 +6678,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0136,
-          "excess_ret": -0.037
+          "last_close_date": "2026-10-01",
+          "ret": -0.0248,
+          "excess_ret": -0.0501
         }
       },
       {
@@ -6525,7 +6697,7 @@
         "entry_open": 46.0,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-29",
+        "next_earn_date": "2026-11-05",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -6548,9 +6720,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1248,
-          "excess_ret": -0.1482
+          "last_close_date": "2026-10-01",
+          "ret": -0.1363,
+          "excess_ret": -0.1615
         }
       },
       {
@@ -6590,9 +6762,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1352,
-          "excess_ret": -0.1442
+          "last_close_date": "2026-10-01",
+          "ret": -0.1172,
+          "excess_ret": -0.1281
         }
       },
       {
@@ -6632,9 +6804,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0286,
-          "excess_ret": -0.052
+          "last_close_date": "2026-10-01",
+          "ret": -0.0311,
+          "excess_ret": -0.0564
         }
       },
       {
@@ -6674,9 +6846,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0245,
-          "excess_ret": -0.0335
+          "last_close_date": "2026-10-01",
+          "ret": -0.0214,
+          "excess_ret": -0.0322
         }
       },
       {
@@ -6716,9 +6888,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0498,
-          "excess_ret": -0.0588
+          "last_close_date": "2026-10-01",
+          "ret": -0.0401,
+          "excess_ret": -0.0509
         }
       },
       {
@@ -6758,9 +6930,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0652,
-          "excess_ret": -0.0742
+          "last_close_date": "2026-10-01",
+          "ret": -0.0591,
+          "excess_ret": -0.07
         }
       },
       {
@@ -6800,9 +6972,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0719,
-          "excess_ret": 0.0628
+          "last_close_date": "2026-10-01",
+          "ret": 0.0508,
+          "excess_ret": 0.0399
         }
       },
       {
@@ -6842,9 +7014,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0539,
-          "excess_ret": -0.0774
+          "last_close_date": "2026-10-01",
+          "ret": -0.0244,
+          "excess_ret": -0.0496
         }
       },
       {
@@ -6884,9 +7056,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0435,
-          "excess_ret": 0.02
+          "last_close_date": "2026-10-01",
+          "ret": 0.0112,
+          "excess_ret": -0.0141
         }
       },
       {
@@ -6926,9 +7098,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1101,
-          "excess_ret": -0.1191
+          "last_close_date": "2026-10-01",
+          "ret": -0.0972,
+          "excess_ret": -0.1081
         }
       },
       {
@@ -6968,9 +7140,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.223,
-          "excess_ret": -0.232
+          "last_close_date": "2026-10-01",
+          "ret": -0.2223,
+          "excess_ret": -0.2331
         }
       },
       {
@@ -7010,9 +7182,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1388,
-          "excess_ret": -0.1478
+          "last_close_date": "2026-10-01",
+          "ret": -0.126,
+          "excess_ret": -0.1368
         }
       },
       {
@@ -7052,9 +7224,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.241,
-          "excess_ret": 0.2176
+          "last_close_date": "2026-10-01",
+          "ret": 0.3078,
+          "excess_ret": 0.2825
         }
       },
       {
@@ -7094,9 +7266,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.018,
-          "excess_ret": -0.0054
+          "last_close_date": "2026-10-01",
+          "ret": 0.0511,
+          "excess_ret": 0.0258
         }
       },
       {
@@ -7136,9 +7308,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1336,
-          "excess_ret": -0.157
+          "last_close_date": "2026-10-01",
+          "ret": -0.1235,
+          "excess_ret": -0.1487
         }
       },
       {
@@ -7178,9 +7350,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2521,
-          "excess_ret": -0.2611
+          "last_close_date": "2026-10-01",
+          "ret": -0.2701,
+          "excess_ret": -0.281
         }
       },
       {
@@ -7220,9 +7392,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1374,
-          "excess_ret": -0.1608
+          "last_close_date": "2026-10-01",
+          "ret": -0.1351,
+          "excess_ret": -0.1604
         }
       },
       {
@@ -7262,9 +7434,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0586,
-          "excess_ret": -0.0677
+          "last_close_date": "2026-10-01",
+          "ret": -0.0475,
+          "excess_ret": -0.0583
         }
       },
       {
@@ -7304,9 +7476,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.09,
-          "excess_ret": -0.0991
+          "last_close_date": "2026-10-01",
+          "ret": -0.0838,
+          "excess_ret": -0.0946
         }
       },
       {
@@ -7346,9 +7518,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0452,
-          "excess_ret": 0.0361
+          "last_close_date": "2026-10-01",
+          "ret": 0.06,
+          "excess_ret": 0.0491
         }
       },
       {
@@ -7388,9 +7560,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0381,
-          "excess_ret": 0.0291
+          "last_close_date": "2026-10-01",
+          "ret": 0.0564,
+          "excess_ret": 0.0455
         }
       },
       {
@@ -7430,9 +7602,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0739,
-          "excess_ret": -0.0829
+          "last_close_date": "2026-10-01",
+          "ret": -0.0633,
+          "excess_ret": -0.0741
         }
       },
       {
@@ -7472,9 +7644,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.5773,
-          "excess_ret": -0.5864
+          "last_close_date": "2026-10-01",
+          "ret": -0.5654,
+          "excess_ret": -0.5762
         }
       },
       {
@@ -7514,9 +7686,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0744,
-          "excess_ret": -0.0835
+          "last_close_date": "2026-10-01",
+          "ret": -0.0694,
+          "excess_ret": -0.0803
         }
       },
       {
@@ -7556,9 +7728,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0516,
-          "excess_ret": 0.0426
+          "last_close_date": "2026-10-01",
+          "ret": 0.087,
+          "excess_ret": 0.0762
         }
       },
       {
@@ -7598,9 +7770,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1831,
-          "excess_ret": -0.1763
+          "last_close_date": "2026-10-01",
+          "ret": -0.1475,
+          "excess_ret": -0.1424
         }
       },
       {
@@ -7640,9 +7812,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0786,
-          "excess_ret": -0.0717
+          "last_close_date": "2026-10-01",
+          "ret": -0.054,
+          "excess_ret": -0.0489
         }
       },
       {
@@ -7682,9 +7854,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2308,
-          "excess_ret": -0.224
+          "last_close_date": "2026-10-01",
+          "ret": -0.2342,
+          "excess_ret": -0.2292
         }
       },
       {
@@ -7724,9 +7896,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1466,
-          "excess_ret": -0.1378
+          "last_close_date": "2026-10-01",
+          "ret": -0.1276,
+          "excess_ret": -0.1205
         }
       },
       {
@@ -7766,9 +7938,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
+          "last_close_date": "2026-10-01",
           "ret": 0.1746,
-          "excess_ret": 0.1834
+          "excess_ret": 0.1816
         }
       },
       {
@@ -7808,9 +7980,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1543,
-          "excess_ret": 0.1611
+          "last_close_date": "2026-10-01",
+          "ret": 0.1727,
+          "excess_ret": 0.1778
         }
       },
       {
@@ -7850,9 +8022,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1097,
-          "excess_ret": -0.1029
+          "last_close_date": "2026-10-01",
+          "ret": -0.1311,
+          "excess_ret": -0.1261
         }
       },
       {
@@ -7892,9 +8064,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1349,
-          "excess_ret": -0.128
+          "last_close_date": "2026-10-01",
+          "ret": -0.1462,
+          "excess_ret": -0.1411
         }
       },
       {
@@ -7934,9 +8106,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1739,
-          "excess_ret": -0.167
+          "last_close_date": "2026-10-01",
+          "ret": -0.1817,
+          "excess_ret": -0.1766
         }
       },
       {
@@ -7976,9 +8148,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0638,
-          "excess_ret": -0.0585
+          "last_close_date": "2026-10-01",
+          "ret": -0.0548,
+          "excess_ret": -0.0513
         }
       },
       {
@@ -8018,9 +8190,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1244,
-          "excess_ret": -0.1192
+          "last_close_date": "2026-10-01",
+          "ret": -0.1153,
+          "excess_ret": -0.1119
         }
       },
       {
@@ -8060,9 +8232,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.016,
-          "excess_ret": 0.0212
+          "last_close_date": "2026-10-01",
+          "ret": -0.0183,
+          "excess_ret": -0.0149
         }
       },
       {
@@ -8102,9 +8274,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0581,
-          "excess_ret": 0.0634
+          "last_close_date": "2026-10-01",
+          "ret": 0.0628,
+          "excess_ret": 0.0663
         }
       },
       {
@@ -8144,9 +8316,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0947,
-          "excess_ret": 0.0999
+          "last_close_date": "2026-10-01",
+          "ret": 0.0305,
+          "excess_ret": 0.034
         }
       },
       {
@@ -8186,9 +8358,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.213,
-          "excess_ret": -0.2077
+          "last_close_date": "2026-10-01",
+          "ret": -0.2257,
+          "excess_ret": -0.2222
         }
       },
       {
@@ -8228,9 +8400,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2602,
-          "excess_ret": 0.2655
+          "last_close_date": "2026-10-01",
+          "ret": 0.2055,
+          "excess_ret": 0.209
         }
       },
       {
@@ -8270,9 +8442,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0143,
-          "excess_ret": -0.009
+          "last_close_date": "2026-10-01",
+          "ret": 0.0018,
+          "excess_ret": 0.0053
         }
       },
       {
@@ -8312,9 +8484,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1212,
-          "excess_ret": -0.1159
+          "last_close_date": "2026-10-01",
+          "ret": -0.1258,
+          "excess_ret": -0.1224
         }
       },
       {
@@ -8331,7 +8503,7 @@
         "entry_open": 21.98,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-22",
+        "next_earn_date": "2026-11-02",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -8354,9 +8526,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0914,
-          "excess_ret": -0.0862
+          "last_close_date": "2026-10-01",
+          "ret": -0.1156,
+          "excess_ret": -0.1121
         }
       },
       {
@@ -8396,9 +8568,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1745,
-          "excess_ret": -0.1692
+          "last_close_date": "2026-10-01",
+          "ret": -0.1597,
+          "excess_ret": -0.1562
         }
       },
       {
@@ -8438,9 +8610,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0561,
-          "excess_ret": -0.0509
+          "last_close_date": "2026-10-01",
+          "ret": -0.035,
+          "excess_ret": -0.0315
         }
       },
       {
@@ -8457,7 +8629,7 @@
         "entry_open": 141.8,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-11-04",
+        "next_earn_date": "2026-10-29",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -8480,9 +8652,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0865,
-          "excess_ret": 0.0917
+          "last_close_date": "2026-10-01",
+          "ret": 0.1176,
+          "excess_ret": 0.1211
         }
       },
       {
@@ -8522,9 +8694,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0045,
-          "excess_ret": 0.0008
+          "last_close_date": "2026-10-01",
+          "ret": 0.0087,
+          "excess_ret": 0.0122
         }
       },
       {
@@ -8564,9 +8736,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0674,
-          "excess_ret": -0.0622
+          "last_close_date": "2026-10-01",
+          "ret": -0.0568,
+          "excess_ret": -0.0533
         }
       },
       {
@@ -8606,9 +8778,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0391,
-          "excess_ret": -0.0339
+          "last_close_date": "2026-10-01",
+          "ret": -0.0433,
+          "excess_ret": -0.0398
         }
       },
       {
@@ -8625,7 +8797,7 @@
         "entry_open": 30.49,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-11-03",
+        "next_earn_date": "2026-11-02",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -8648,9 +8820,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0282,
-          "excess_ret": -0.023
+          "last_close_date": "2026-10-01",
+          "ret": -0.0574,
+          "excess_ret": -0.0539
         }
       },
       {
@@ -8690,9 +8862,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2133,
-          "excess_ret": -0.208
+          "last_close_date": "2026-10-01",
+          "ret": -0.2109,
+          "excess_ret": -0.2074
         }
       },
       {
@@ -8732,9 +8904,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1633,
-          "excess_ret": -0.158
+          "last_close_date": "2026-10-01",
+          "ret": -0.16,
+          "excess_ret": -0.1566
         }
       },
       {
@@ -8774,9 +8946,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0587,
-          "excess_ret": -0.0534
+          "last_close_date": "2026-10-01",
+          "ret": -0.063,
+          "excess_ret": -0.0596
         }
       },
       {
@@ -8816,9 +8988,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0379,
-          "excess_ret": -0.0326
+          "last_close_date": "2026-10-01",
+          "ret": -0.0107,
+          "excess_ret": -0.0072
         }
       },
       {
@@ -8858,9 +9030,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0965,
-          "excess_ret": 0.1018
+          "last_close_date": "2026-10-01",
+          "ret": 0.0811,
+          "excess_ret": 0.0846
         }
       },
       {
@@ -8900,9 +9072,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0348,
-          "excess_ret": -0.0296
+          "last_close_date": "2026-10-01",
+          "ret": -0.019,
+          "excess_ret": -0.0156
         }
       },
       {
@@ -8942,9 +9114,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.3383,
-          "excess_ret": 0.3436
+          "last_close_date": "2026-10-01",
+          "ret": 0.3048,
+          "excess_ret": 0.3083
         }
       },
       {
@@ -8984,9 +9156,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0828,
-          "excess_ret": -0.0776
+          "last_close_date": "2026-10-01",
+          "ret": -0.0851,
+          "excess_ret": -0.0816
         }
       },
       {
@@ -9026,9 +9198,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1672,
-          "excess_ret": -0.1619
+          "last_close_date": "2026-10-01",
+          "ret": -0.1603,
+          "excess_ret": -0.1568
         }
       },
       {
@@ -9045,7 +9217,7 @@
         "entry_open": 397.94,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-30",
+        "next_earn_date": "2026-11-03",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -9068,9 +9240,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1042,
-          "excess_ret": 0.1094
+          "last_close_date": "2026-10-01",
+          "ret": 0.0693,
+          "excess_ret": 0.0728
         }
       },
       {
@@ -9110,9 +9282,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2147,
-          "excess_ret": -0.2095
+          "last_close_date": "2026-10-01",
+          "ret": -0.2358,
+          "excess_ret": -0.2323
         }
       },
       {
@@ -9152,9 +9324,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1816,
-          "excess_ret": -0.1703
+          "last_close_date": "2026-10-01",
+          "ret": -0.1874,
+          "excess_ret": -0.1779
         }
       },
       {
@@ -9194,9 +9366,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1846,
-          "excess_ret": -0.1733
+          "last_close_date": "2026-10-01",
+          "ret": -0.1752,
+          "excess_ret": -0.1657
         }
       },
       {
@@ -9236,9 +9408,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1545,
-          "excess_ret": 0.1658
+          "last_close_date": "2026-10-01",
+          "ret": 0.2046,
+          "excess_ret": 0.2141
         }
       },
       {
@@ -9278,9 +9450,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0254,
-          "excess_ret": -0.0141
+          "last_close_date": "2026-10-01",
+          "ret": 0.0033,
+          "excess_ret": 0.0128
         }
       },
       {
@@ -9320,9 +9492,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.4769,
-          "excess_ret": 0.4882
+          "last_close_date": "2026-10-01",
+          "ret": 0.3669,
+          "excess_ret": 0.3765
         }
       },
       {
@@ -9362,9 +9534,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1266,
-          "excess_ret": -0.1153
+          "last_close_date": "2026-10-01",
+          "ret": -0.1198,
+          "excess_ret": -0.1103
         }
       },
       {
@@ -9404,9 +9576,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0248,
-          "excess_ret": -0.0135
+          "last_close_date": "2026-10-01",
+          "ret": -0.022,
+          "excess_ret": -0.0124
         }
       },
       {
@@ -9446,9 +9618,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0958,
-          "excess_ret": -0.0845
+          "last_close_date": "2026-10-01",
+          "ret": -0.0998,
+          "excess_ret": -0.0902
         }
       },
       {
@@ -9488,9 +9660,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0356,
-          "excess_ret": -0.0243
+          "last_close_date": "2026-10-01",
+          "ret": -0.0157,
+          "excess_ret": -0.0062
         }
       },
       {
@@ -9530,9 +9702,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0202,
-          "excess_ret": -0.0089
+          "last_close_date": "2026-10-01",
+          "ret": -0.0398,
+          "excess_ret": -0.0303
         }
       },
       {
@@ -9572,9 +9744,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0938,
-          "excess_ret": 0.1051
+          "last_close_date": "2026-10-01",
+          "ret": 0.1276,
+          "excess_ret": 0.1371
         }
       },
       {
@@ -9614,9 +9786,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2599,
-          "excess_ret": -0.2486
+          "last_close_date": "2026-10-01",
+          "ret": -0.2511,
+          "excess_ret": -0.2415
         }
       },
       {
@@ -9656,9 +9828,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0833,
-          "excess_ret": 0.0946
+          "last_close_date": "2026-10-01",
+          "ret": 0.0603,
+          "excess_ret": 0.0699
         }
       },
       {
@@ -9698,9 +9870,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0536,
-          "excess_ret": -0.0423
+          "last_close_date": "2026-10-01",
+          "ret": -0.0517,
+          "excess_ret": -0.0421
         }
       },
       {
@@ -9740,9 +9912,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0677,
-          "excess_ret": -0.0564
+          "last_close_date": "2026-10-01",
+          "ret": -0.0634,
+          "excess_ret": -0.0538
         }
       },
       {
@@ -9782,9 +9954,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0735,
-          "excess_ret": 0.0848
+          "last_close_date": "2026-10-01",
+          "ret": 0.1022,
+          "excess_ret": 0.1117
         }
       },
       {
@@ -9824,9 +9996,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0588,
-          "excess_ret": -0.0475
+          "last_close_date": "2026-10-01",
+          "ret": -0.0668,
+          "excess_ret": -0.0572
         }
       },
       {
@@ -9866,9 +10038,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0262,
-          "excess_ret": -0.0149
+          "last_close_date": "2026-10-01",
+          "ret": -0.0265,
+          "excess_ret": -0.017
         }
       },
       {
@@ -9908,9 +10080,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0077,
-          "excess_ret": 0.0036
+          "last_close_date": "2026-10-01",
+          "ret": 0.0375,
+          "excess_ret": 0.047
         }
       },
       {
@@ -9950,9 +10122,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0033,
-          "excess_ret": 0.0146
+          "last_close_date": "2026-10-01",
+          "ret": 0.0485,
+          "excess_ret": 0.0581
         }
       },
       {
@@ -9992,9 +10164,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0555,
-          "excess_ret": 0.0668
+          "last_close_date": "2026-10-01",
+          "ret": 0.096,
+          "excess_ret": 0.1055
         }
       },
       {
@@ -10034,9 +10206,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.16,
-          "excess_ret": -0.1487
+          "last_close_date": "2026-10-01",
+          "ret": -0.1528,
+          "excess_ret": -0.1433
         }
       },
       {
@@ -10076,9 +10248,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0863,
-          "excess_ret": -0.075
+          "last_close_date": "2026-10-01",
+          "ret": -0.0487,
+          "excess_ret": -0.0391
         }
       },
       {
@@ -10118,9 +10290,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1256,
-          "excess_ret": -0.1143
+          "last_close_date": "2026-10-01",
+          "ret": -0.0995,
+          "excess_ret": -0.09
         }
       },
       {
@@ -10160,9 +10332,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-29",
-          "ret": -0.1798,
-          "excess_ret": -0.1706
+          "last_close_date": "2026-09-30",
+          "ret": -0.189,
+          "excess_ret": -0.1777
         }
       },
       {
@@ -10202,9 +10374,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0053,
-          "excess_ret": 0.0166
+          "last_close_date": "2026-10-01",
+          "ret": 0.0739,
+          "excess_ret": 0.0834
         }
       },
       {
@@ -10244,9 +10416,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0581,
-          "excess_ret": -0.0468
+          "last_close_date": "2026-10-01",
+          "ret": -0.044,
+          "excess_ret": -0.0345
         }
       },
       {
@@ -10286,9 +10458,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.3004,
-          "excess_ret": -0.2894
+          "last_close_date": "2026-10-01",
+          "ret": -0.2436,
+          "excess_ret": -0.2344
         }
       },
       {
@@ -10328,9 +10500,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.101,
-          "excess_ret": -0.09
+          "last_close_date": "2026-10-01",
+          "ret": -0.102,
+          "excess_ret": -0.0928
         }
       },
       {
@@ -10370,9 +10542,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0959,
-          "excess_ret": -0.0849
+          "last_close_date": "2026-10-01",
+          "ret": -0.106,
+          "excess_ret": -0.0968
         }
       },
       {
@@ -10412,9 +10584,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1516,
-          "excess_ret": -0.1403
+          "last_close_date": "2026-10-01",
+          "ret": -0.1438,
+          "excess_ret": -0.1343
         }
       },
       {
@@ -10454,9 +10626,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0213,
-          "excess_ret": 0.0326
+          "last_close_date": "2026-10-01",
+          "ret": 0.016,
+          "excess_ret": 0.0256
         }
       },
       {
@@ -10496,9 +10668,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0599,
-          "excess_ret": -0.0489
+          "last_close_date": "2026-10-01",
+          "ret": -0.0843,
+          "excess_ret": -0.0751
         }
       },
       {
@@ -10538,9 +10710,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0825,
-          "excess_ret": 0.0938
+          "last_close_date": "2026-10-01",
+          "ret": 0.099,
+          "excess_ret": 0.1086
         }
       },
       {
@@ -10580,9 +10752,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0166,
-          "excess_ret": 0.0279
+          "last_close_date": "2026-10-01",
+          "ret": -0.0083,
+          "excess_ret": 0.0012
         }
       },
       {
@@ -10622,9 +10794,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0044,
-          "excess_ret": 0.0157
+          "last_close_date": "2026-10-01",
+          "ret": -0.0176,
+          "excess_ret": -0.008
         }
       },
       {
@@ -10664,9 +10836,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2354,
-          "excess_ret": -0.2244
+          "last_close_date": "2026-10-01",
+          "ret": -0.2274,
+          "excess_ret": -0.2182
         }
       },
       {
@@ -10706,9 +10878,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0823,
-          "excess_ret": -0.0713
+          "last_close_date": "2026-10-01",
+          "ret": -0.0883,
+          "excess_ret": -0.0791
         }
       },
       {
@@ -10748,9 +10920,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.074,
-          "excess_ret": 0.085
+          "last_close_date": "2026-10-01",
+          "ret": 0.0404,
+          "excess_ret": 0.0496
         }
       },
       {
@@ -10790,9 +10962,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1545,
-          "excess_ret": -0.1432
+          "last_close_date": "2026-10-01",
+          "ret": -0.1956,
+          "excess_ret": -0.1861
         }
       },
       {
@@ -10832,9 +11004,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0729,
-          "excess_ret": -0.0616
+          "last_close_date": "2026-10-01",
+          "ret": -0.0715,
+          "excess_ret": -0.0619
         }
       },
       {
@@ -10874,9 +11046,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1737,
-          "excess_ret": -0.1627
+          "last_close_date": "2026-10-01",
+          "ret": -0.1773,
+          "excess_ret": -0.168
         }
       },
       {
@@ -10916,9 +11088,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.4432,
-          "excess_ret": -0.4322
+          "last_close_date": "2026-10-01",
+          "ret": -0.4523,
+          "excess_ret": -0.4431
         }
       },
       {
@@ -10958,9 +11130,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0175,
-          "excess_ret": 0.0288
+          "last_close_date": "2026-10-01",
+          "ret": 0.0303,
+          "excess_ret": 0.0398
         }
       },
       {
@@ -11000,9 +11172,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0909,
-          "excess_ret": -0.0799
+          "last_close_date": "2026-10-01",
+          "ret": -0.0824,
+          "excess_ret": -0.0732
         }
       },
       {
@@ -11042,9 +11214,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0492,
-          "excess_ret": -0.0379
+          "last_close_date": "2026-10-01",
+          "ret": -0.0528,
+          "excess_ret": -0.0433
         }
       },
       {
@@ -11084,9 +11256,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0812,
-          "excess_ret": -0.0699
+          "last_close_date": "2026-10-01",
+          "ret": -0.0269,
+          "excess_ret": -0.0174
         }
       },
       {
@@ -11126,9 +11298,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0259,
-          "excess_ret": -0.0149
+          "last_close_date": "2026-10-01",
+          "ret": -0.0035,
+          "excess_ret": 0.0057
         }
       },
       {
@@ -11168,9 +11340,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1144,
-          "excess_ret": -0.1031
+          "last_close_date": "2026-10-01",
+          "ret": -0.1047,
+          "excess_ret": -0.0952
         }
       },
       {
@@ -11210,9 +11382,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0043,
-          "excess_ret": 0.0153
+          "last_close_date": "2026-10-01",
+          "ret": -0.0023,
+          "excess_ret": 0.007
         }
       },
       {
@@ -11252,9 +11424,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1024,
-          "excess_ret": -0.0911
+          "last_close_date": "2026-10-01",
+          "ret": -0.0832,
+          "excess_ret": -0.0736
         }
       },
       {
@@ -11294,9 +11466,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0192,
-          "excess_ret": 0.0305
+          "last_close_date": "2026-10-01",
+          "ret": -0.0106,
+          "excess_ret": -0.0011
         }
       },
       {
@@ -11336,9 +11508,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0014,
-          "excess_ret": 0.0096
+          "last_close_date": "2026-10-01",
+          "ret": -0.0081,
+          "excess_ret": 0.0011
         }
       },
       {
@@ -11378,9 +11550,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0213,
-          "excess_ret": -0.0103
+          "last_close_date": "2026-10-01",
+          "ret": -0.0347,
+          "excess_ret": -0.0255
         }
       },
       {
@@ -11420,9 +11592,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0656,
-          "excess_ret": -0.0543
+          "last_close_date": "2026-10-01",
+          "ret": -0.0843,
+          "excess_ret": -0.0748
         }
       },
       {
@@ -11462,9 +11634,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1366,
-          "excess_ret": -0.1253
+          "last_close_date": "2026-10-01",
+          "ret": -0.1214,
+          "excess_ret": -0.1119
         }
       },
       {
@@ -11504,9 +11676,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2033,
-          "excess_ret": 0.2143
+          "last_close_date": "2026-10-01",
+          "ret": 0.2746,
+          "excess_ret": 0.2838
         }
       },
       {
@@ -11546,9 +11718,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0956,
-          "excess_ret": -0.0843
+          "last_close_date": "2026-10-01",
+          "ret": -0.0879,
+          "excess_ret": -0.0783
         }
       },
       {
@@ -11588,9 +11760,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0248,
-          "excess_ret": 0.0361
+          "last_close_date": "2026-10-01",
+          "ret": 0.059,
+          "excess_ret": 0.0685
         }
       },
       {
@@ -11630,9 +11802,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1962,
-          "excess_ret": 0.2072
+          "last_close_date": "2026-10-01",
+          "ret": 0.2322,
+          "excess_ret": 0.2414
         }
       },
       {
@@ -11672,9 +11844,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0378,
-          "excess_ret": -0.0265
+          "last_close_date": "2026-10-01",
+          "ret": 0.0252,
+          "excess_ret": 0.0347
         }
       },
       {
@@ -11714,9 +11886,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1331,
-          "excess_ret": -0.1218
+          "last_close_date": "2026-10-01",
+          "ret": -0.117,
+          "excess_ret": -0.1074
         }
       },
       {
@@ -11756,9 +11928,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1069,
-          "excess_ret": -0.0956
+          "last_close_date": "2026-10-01",
+          "ret": -0.0987,
+          "excess_ret": -0.0892
         }
       },
       {
@@ -11798,9 +11970,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
+          "last_close_date": "2026-10-01",
           "ret": 0.1759,
-          "excess_ret": 0.1872
+          "excess_ret": 0.1854
         }
       },
       {
@@ -11840,9 +12012,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1038,
-          "excess_ret": -0.0925
+          "last_close_date": "2026-10-01",
+          "ret": -0.1132,
+          "excess_ret": -0.1037
         }
       },
       {
@@ -11882,9 +12054,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0583,
-          "excess_ret": -0.0504
+          "last_close_date": "2026-10-01",
+          "ret": -0.0534,
+          "excess_ret": -0.0474
         }
       },
       {
@@ -11924,9 +12096,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0309,
-          "excess_ret": 0.0412
+          "last_close_date": "2026-10-01",
+          "ret": 0.0448,
+          "excess_ret": 0.0534
         }
       },
       {
@@ -11966,9 +12138,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1195,
-          "excess_ret": -0.1092
+          "last_close_date": "2026-10-01",
+          "ret": -0.1024,
+          "excess_ret": -0.0939
         }
       },
       {
@@ -12008,9 +12180,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0719,
-          "excess_ret": -0.0616
+          "last_close_date": "2026-10-01",
+          "ret": -0.0403,
+          "excess_ret": -0.0317
         }
       },
       {
@@ -12050,9 +12222,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2347,
-          "excess_ret": -0.2175
+          "last_close_date": "2026-10-01",
+          "ret": -0.2304,
+          "excess_ret": -0.215
         }
       },
       {
@@ -12092,9 +12264,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1877,
-          "excess_ret": -0.1705
+          "last_close_date": "2026-10-01",
+          "ret": -0.1742,
+          "excess_ret": -0.1588
         }
       },
       {
@@ -12134,9 +12306,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2466,
-          "excess_ret": -0.2294
+          "last_close_date": "2026-10-01",
+          "ret": -0.2195,
+          "excess_ret": -0.2041
         }
       },
       {
@@ -12176,9 +12348,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0489,
-          "excess_ret": 0.066
+          "last_close_date": "2026-10-01",
+          "ret": 0.1294,
+          "excess_ret": 0.1448
         }
       },
       {
@@ -12218,9 +12390,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0726,
-          "excess_ret": 0.0898
+          "last_close_date": "2026-10-01",
+          "ret": 0.0948,
+          "excess_ret": 0.1102
         }
       },
       {
@@ -12260,9 +12432,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0766,
-          "excess_ret": -0.0614
+          "last_close_date": "2026-10-01",
+          "ret": -0.0569,
+          "excess_ret": -0.0434
         }
       },
       {
@@ -12302,9 +12474,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1779,
-          "excess_ret": -0.1674
+          "last_close_date": "2026-10-01",
+          "ret": -0.137,
+          "excess_ret": -0.1282
         }
       },
       {
@@ -12344,9 +12516,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2928,
-          "excess_ret": 0.2987
+          "last_close_date": "2026-10-01",
+          "ret": 0.3036,
+          "excess_ret": 0.3077
         }
       },
       {
@@ -12386,9 +12558,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1957,
-          "excess_ret": -0.1898
+          "last_close_date": "2026-10-01",
+          "ret": -0.2019,
+          "excess_ret": -0.1978
         }
       },
       {
@@ -12428,9 +12600,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1667,
-          "excess_ret": -0.1608
+          "last_close_date": "2026-10-01",
+          "ret": -0.1727,
+          "excess_ret": -0.1686
         }
       },
       {
@@ -12470,9 +12642,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1229,
-          "excess_ret": -0.1254
+          "last_close_date": "2026-10-01",
+          "ret": -0.1192,
+          "excess_ret": -0.1235
         }
       },
       {
@@ -12512,9 +12684,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.076,
-          "excess_ret": -0.0785
+          "last_close_date": "2026-10-01",
+          "ret": -0.0649,
+          "excess_ret": -0.0692
         }
       },
       {
@@ -12554,9 +12726,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0478,
-          "excess_ret": -0.0503
+          "last_close_date": "2026-10-01",
+          "ret": -0.0743,
+          "excess_ret": -0.0786
         }
       },
       {
@@ -12596,9 +12768,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1466,
-          "excess_ret": -0.1492
+          "last_close_date": "2026-10-01",
+          "ret": -0.1555,
+          "excess_ret": -0.1598
         }
       },
       {
@@ -12638,9 +12810,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0302,
-          "excess_ret": -0.0286
+          "last_close_date": "2026-10-01",
+          "ret": -0.0267,
+          "excess_ret": -0.0269
         }
       },
       {
@@ -12680,9 +12852,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.002,
-          "excess_ret": -0.0045
+          "last_close_date": "2026-10-01",
+          "ret": -0.0019,
+          "excess_ret": -0.0062
         }
       },
       {
@@ -12722,9 +12894,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0196,
-          "excess_ret": -0.021
+          "last_close_date": "2026-10-01",
+          "ret": -0.0167,
+          "excess_ret": -0.0199
         }
       },
       {
@@ -12764,9 +12936,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0517,
-          "excess_ret": -0.0531
+          "last_close_date": "2026-10-01",
+          "ret": -0.0274,
+          "excess_ret": -0.0306
         }
       },
       {
@@ -12806,9 +12978,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1938,
-          "excess_ret": 0.2023
+          "last_close_date": "2026-10-01",
+          "ret": 0.2489,
+          "excess_ret": 0.2557
         }
       },
       {
@@ -12848,9 +13020,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1044,
-          "excess_ret": 0.1107
+          "last_close_date": "2026-10-01",
+          "ret": 0.0683,
+          "excess_ret": 0.0728
         }
       },
       {
@@ -12890,9 +13062,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1482,
-          "excess_ret": -0.1397
+          "last_close_date": "2026-10-01",
+          "ret": -0.1225,
+          "excess_ret": -0.1158
         }
       },
       {
@@ -12932,9 +13104,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0834,
-          "excess_ret": -0.0772
+          "last_close_date": "2026-10-01",
+          "ret": -0.055,
+          "excess_ret": -0.0505
         }
       },
       {
@@ -12974,9 +13146,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0693,
-          "excess_ret": -0.0608
+          "last_close_date": "2026-10-01",
+          "ret": -0.0616,
+          "excess_ret": -0.0548
         }
       },
       {
@@ -13016,9 +13188,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0116,
-          "excess_ret": 0.0179
+          "last_close_date": "2026-10-01",
+          "ret": 0.0276,
+          "excess_ret": 0.0321
         }
       },
       {
@@ -13058,9 +13230,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0045,
-          "excess_ret": 0.0108
+          "last_close_date": "2026-10-01",
+          "ret": 0.0154,
+          "excess_ret": 0.0199
         }
       },
       {
@@ -13100,9 +13272,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2143,
-          "excess_ret": 0.2206
+          "last_close_date": "2026-10-01",
+          "ret": 0.2348,
+          "excess_ret": 0.2393
         }
       },
       {
@@ -13142,9 +13314,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0873,
-          "excess_ret": -0.0788
+          "last_close_date": "2026-10-01",
+          "ret": -0.1101,
+          "excess_ret": -0.1033
         }
       },
       {
@@ -13184,9 +13356,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0583,
-          "excess_ret": -0.052
+          "last_close_date": "2026-10-01",
+          "ret": 0.0621,
+          "excess_ret": 0.0666
         }
       },
       {
@@ -13226,9 +13398,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0195,
-          "excess_ret": 0.0257
+          "last_close_date": "2026-10-01",
+          "ret": 0.0069,
+          "excess_ret": 0.0114
         }
       },
       {
@@ -13268,9 +13440,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.036,
-          "excess_ret": -0.0275
+          "last_close_date": "2026-10-01",
+          "ret": -0.0129,
+          "excess_ret": -0.0062
         }
       },
       {
@@ -13310,9 +13482,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0847,
-          "excess_ret": -0.0815
+          "last_close_date": "2026-10-01",
+          "ret": -0.0689,
+          "excess_ret": -0.0674
         }
       },
       {
@@ -13352,9 +13524,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0643,
-          "excess_ret": -0.061
+          "last_close_date": "2026-10-01",
+          "ret": -0.0581,
+          "excess_ret": -0.0565
         }
       },
       {
@@ -13394,9 +13566,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0061,
-          "excess_ret": -0.0028
+          "last_close_date": "2026-10-01",
+          "ret": -0.0109,
+          "excess_ret": -0.0094
         }
       },
       {
@@ -13436,9 +13608,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0531,
-          "excess_ret": -0.0498
+          "last_close_date": "2026-10-01",
+          "ret": -0.0715,
+          "excess_ret": -0.07
         }
       },
       {
@@ -13478,9 +13650,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0646,
-          "excess_ret": -0.0638
+          "last_close_date": "2026-10-01",
+          "ret": -0.063,
+          "excess_ret": -0.0639
         }
       },
       {
@@ -13517,9 +13689,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0361,
-          "excess_ret": -0.0343
+          "last_close_date": "2026-10-01",
+          "ret": 0.0121,
+          "excess_ret": 0.0122
         }
       },
       {
@@ -13556,9 +13728,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0116,
-          "excess_ret": -0.0164
+          "last_close_date": "2026-10-01",
+          "ret": 0.0029,
+          "excess_ret": -0.0037
         }
       },
       {
@@ -13592,9 +13764,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0152,
-          "excess_ret": -0.0113
+          "last_close_date": "2026-10-01",
+          "ret": -0.0102,
+          "excess_ret": -0.0081
         }
       },
       {
@@ -13628,9 +13800,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0489,
-          "excess_ret": -0.0489
+          "last_close_date": "2026-10-01",
+          "ret": -0.0364,
+          "excess_ret": -0.0382
         }
       },
       {
@@ -13664,9 +13836,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0335,
-          "excess_ret": -0.0335
+          "last_close_date": "2026-10-01",
+          "ret": -0.0126,
+          "excess_ret": -0.0144
         }
       },
       {
@@ -13700,9 +13872,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0681,
-          "excess_ret": -0.0681
+          "last_close_date": "2026-10-01",
+          "ret": -0.055,
+          "excess_ret": -0.0567
         }
       },
       {
@@ -13714,6 +13886,73 @@
         "score_tercile": "mid",
         "sue_source": "nasdaq",
         "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": "2026-10-01",
+        "entry_open": 277.03,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2026-12-17",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true,
+        "running": {
+          "last_close_date": "2026-10-01",
+          "ret": 0.0021,
+          "excess_ret": 0.0021
+        }
+      },
+      {
+        "ticker": "MU",
+        "report_date": "2026-09-30",
+        "reaction_day": "2026-10-01",
+        "side": "long",
+        "composite": 59.2,
+        "score_tercile": "mid",
+        "sue_source": "nasdaq",
+        "cap_tier": "large",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2026-12-23",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "ACN",
+        "report_date": "2026-10-01",
+        "reaction_day": "2026-10-01",
+        "side": "long",
+        "composite": 63.6,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "large",
         "backfilled": false,
         "entry_date": null,
         "entry_open": null,
@@ -13775,9 +14014,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0673,
-          "excess_ret": 0.08
+          "last_close_date": "2026-10-01",
+          "ret": -0.0755,
+          "excess_ret": 0.09
         }
       },
       {
@@ -13817,9 +14056,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.6867,
-          "excess_ret": -0.6683
+          "last_close_date": "2026-10-01",
+          "ret": 0.7058,
+          "excess_ret": -0.6856
         }
       },
       {
@@ -13859,9 +14098,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0534,
-          "excess_ret": 0.0836
+          "last_close_date": "2026-10-01",
+          "ret": -0.0521,
+          "excess_ret": 0.0841
         }
       },
       {
@@ -13901,9 +14140,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1508,
-          "excess_ret": 0.1737
+          "last_close_date": "2026-10-01",
+          "ret": -0.1501,
+          "excess_ret": 0.1748
         }
       },
       {
@@ -13943,9 +14182,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2995,
-          "excess_ret": -0.2638
+          "last_close_date": "2026-10-01",
+          "ret": 0.3444,
+          "excess_ret": -0.3069
         }
       },
       {
@@ -13985,9 +14224,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0314,
-          "excess_ret": 0.0671
+          "last_close_date": "2026-10-01",
+          "ret": 0.0063,
+          "excess_ret": 0.0313
         }
       },
       {
@@ -14027,9 +14266,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0322,
-          "excess_ret": 0.0668
+          "last_close_date": "2026-10-01",
+          "ret": -0.0311,
+          "excess_ret": 0.0676
         }
       },
       {
@@ -14069,9 +14308,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0248,
-          "excess_ret": 0.0109
+          "last_close_date": "2026-10-01",
+          "ret": 0.0242,
+          "excess_ret": 0.0134
         }
       },
       {
@@ -14111,9 +14350,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.4118,
-          "excess_ret": -0.3772
+          "last_close_date": "2026-10-01",
+          "ret": 0.4513,
+          "excess_ret": -0.4148
         }
       },
       {
@@ -14153,9 +14392,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2237,
-          "excess_ret": 0.2583
+          "last_close_date": "2026-10-01",
+          "ret": -0.2121,
+          "excess_ret": 0.2486
         }
       },
       {
@@ -14195,9 +14434,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1063,
-          "excess_ret": -0.0717
+          "last_close_date": "2026-10-01",
+          "ret": 0.1041,
+          "excess_ret": -0.0676
         }
       },
       {
@@ -14237,9 +14476,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0403,
-          "excess_ret": -0.0057
+          "last_close_date": "2026-10-01",
+          "ret": 0.0502,
+          "excess_ret": -0.0137
         }
       },
       {
@@ -14279,9 +14518,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2209,
-          "excess_ret": -0.1865
+          "last_close_date": "2026-10-01",
+          "ret": 0.2051,
+          "excess_ret": -0.1688
         }
       },
       {
@@ -14321,9 +14560,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0684,
-          "excess_ret": 0.1028
+          "last_close_date": "2026-10-01",
+          "ret": -0.0898,
+          "excess_ret": 0.1261
         }
       },
       {
@@ -14363,9 +14602,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1178,
-          "excess_ret": 0.1659
+          "last_close_date": "2026-10-01",
+          "ret": -0.1024,
+          "excess_ret": 0.1523
         }
       },
       {
@@ -14405,9 +14644,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1025,
-          "excess_ret": 0.1333
+          "last_close_date": "2026-10-01",
+          "ret": -0.09,
+          "excess_ret": 0.1227
         }
       },
       {
@@ -14447,9 +14686,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.3033,
-          "excess_ret": 0.3341
+          "last_close_date": "2026-10-01",
+          "ret": -0.3069,
+          "excess_ret": 0.3395
         }
       },
       {
@@ -14489,9 +14728,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0836,
-          "excess_ret": 0.1144
+          "last_close_date": "2026-10-01",
+          "ret": -0.0883,
+          "excess_ret": 0.121
         }
       },
       {
@@ -14531,9 +14770,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0702,
-          "excess_ret": 0.101
+          "last_close_date": "2026-10-01",
+          "ret": -0.0672,
+          "excess_ret": 0.0998
         }
       },
       {
@@ -14573,9 +14812,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
+          "last_close_date": "2026-10-01",
           "ret": -0.1491,
-          "excess_ret": 0.1725
+          "excess_ret": 0.1743
         }
       },
       {
@@ -14615,9 +14854,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0649,
-          "excess_ret": 0.0884
+          "last_close_date": "2026-10-01",
+          "ret": -0.0603,
+          "excess_ret": 0.0855
         }
       },
       {
@@ -14657,9 +14896,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-29",
-          "ret": -0.0573,
-          "excess_ret": 0.0828
+          "last_close_date": "2026-10-01",
+          "ret": -0.0444,
+          "excess_ret": 0.0696
         }
       },
       {
@@ -14676,7 +14915,7 @@
         "entry_open": 105.77,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-11-04",
+        "next_earn_date": "2026-10-29",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -14699,9 +14938,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0112,
-          "excess_ret": 0.0196
+          "last_close_date": "2026-10-01",
+          "ret": 0.0079,
+          "excess_ret": 0.0247
         }
       },
       {
@@ -14741,9 +14980,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0917,
-          "excess_ret": 0.1151
+          "last_close_date": "2026-10-01",
+          "ret": -0.102,
+          "excess_ret": 0.1273
         }
       },
       {
@@ -14783,9 +15022,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1565,
-          "excess_ret": 0.1873
+          "last_close_date": "2026-10-01",
+          "ret": -0.1516,
+          "excess_ret": 0.1843
         }
       },
       {
@@ -14825,9 +15064,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1731,
-          "excess_ret": 0.1965
+          "last_close_date": "2026-10-01",
+          "ret": -0.1717,
+          "excess_ret": 0.1969
         }
       },
       {
@@ -14867,9 +15106,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0093,
-          "excess_ret": 0.0327
+          "last_close_date": "2026-10-01",
+          "ret": 0.0067,
+          "excess_ret": 0.0186
         }
       },
       {
@@ -14909,9 +15148,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0154,
-          "excess_ret": 0.0462
+          "last_close_date": "2026-10-01",
+          "ret": 0.0012,
+          "excess_ret": 0.0314
         }
       },
       {
@@ -14951,9 +15190,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.334,
-          "excess_ret": -0.3106
+          "last_close_date": "2026-10-01",
+          "ret": 0.3354,
+          "excess_ret": -0.3102
         }
       },
       {
@@ -14993,9 +15232,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.3159,
-          "excess_ret": 0.3393
+          "last_close_date": "2026-10-01",
+          "ret": -0.3287,
+          "excess_ret": 0.3539
         }
       },
       {
@@ -15035,9 +15274,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0925,
-          "excess_ret": 0.1159
+          "last_close_date": "2026-10-01",
+          "ret": -0.0853,
+          "excess_ret": 0.1105
         }
       },
       {
@@ -15077,9 +15316,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.046,
-          "excess_ret": 0.0768
+          "last_close_date": "2026-10-01",
+          "ret": -0.0407,
+          "excess_ret": 0.0734
         }
       },
       {
@@ -15119,9 +15358,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0641,
-          "excess_ret": 0.0875
+          "last_close_date": "2026-10-01",
+          "ret": -0.1268,
+          "excess_ret": 0.1521
         }
       },
       {
@@ -15161,9 +15400,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.111,
-          "excess_ret": 0.1344
+          "last_close_date": "2026-10-01",
+          "ret": -0.1074,
+          "excess_ret": 0.1326
         }
       },
       {
@@ -15203,9 +15442,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2032,
-          "excess_ret": -0.1798
+          "last_close_date": "2026-10-01",
+          "ret": 0.1904,
+          "excess_ret": -0.1652
         }
       },
       {
@@ -15245,9 +15484,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0919,
-          "excess_ret": 0.1227
+          "last_close_date": "2026-10-01",
+          "ret": -0.1004,
+          "excess_ret": 0.133
         }
       },
       {
@@ -15287,9 +15526,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0883,
-          "excess_ret": 0.1191
+          "last_close_date": "2026-10-01",
+          "ret": -0.1102,
+          "excess_ret": 0.1428
         }
       },
       {
@@ -15329,9 +15568,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0004,
-          "excess_ret": 0.023
+          "last_close_date": "2026-10-01",
+          "ret": 0.0368,
+          "excess_ret": -0.0116
         }
       },
       {
@@ -15371,9 +15610,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0645,
-          "excess_ret": 0.0953
+          "last_close_date": "2026-10-01",
+          "ret": -0.0413,
+          "excess_ret": 0.0739
         }
       },
       {
@@ -15413,9 +15652,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0524,
-          "excess_ret": 0.0832
+          "last_close_date": "2026-10-01",
+          "ret": -0.0572,
+          "excess_ret": 0.0898
         }
       },
       {
@@ -15455,9 +15694,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0731,
-          "excess_ret": 0.0965
+          "last_close_date": "2026-10-01",
+          "ret": -0.0645,
+          "excess_ret": 0.0897
         }
       },
       {
@@ -15497,9 +15736,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0978,
-          "excess_ret": -0.0744
+          "last_close_date": "2026-10-01",
+          "ret": 0.0746,
+          "excess_ret": -0.0493
         }
       },
       {
@@ -15539,9 +15778,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1329,
-          "excess_ret": 0.1563
+          "last_close_date": "2026-10-01",
+          "ret": -0.1278,
+          "excess_ret": 0.153
         }
       },
       {
@@ -15581,9 +15820,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2944,
-          "excess_ret": -0.2853
+          "last_close_date": "2026-10-01",
+          "ret": 0.3144,
+          "excess_ret": -0.3035
         }
       },
       {
@@ -15623,9 +15862,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1294,
-          "excess_ret": 0.1528
+          "last_close_date": "2026-10-01",
+          "ret": -0.141,
+          "excess_ret": 0.1662
         }
       },
       {
@@ -15665,9 +15904,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1254,
-          "excess_ret": 0.1488
+          "last_close_date": "2026-10-01",
+          "ret": -0.1209,
+          "excess_ret": 0.1462
         }
       },
       {
@@ -15707,9 +15946,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1024,
-          "excess_ret": 0.1115
+          "last_close_date": "2026-10-01",
+          "ret": -0.1003,
+          "excess_ret": 0.1112
         }
       },
       {
@@ -15749,9 +15988,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1603,
-          "excess_ret": 0.1837
+          "last_close_date": "2026-10-01",
+          "ret": -0.1153,
+          "excess_ret": 0.1405
         }
       },
       {
@@ -15791,9 +16030,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0048,
-          "excess_ret": 0.0186
+          "last_close_date": "2026-10-01",
+          "ret": 0.0026,
+          "excess_ret": 0.0226
         }
       },
       {
@@ -15833,9 +16072,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0033,
-          "excess_ret": 0.0267
+          "last_close_date": "2026-10-01",
+          "ret": -0.009,
+          "excess_ret": 0.0343
         }
       },
       {
@@ -15875,9 +16114,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.6638,
-          "excess_ret": -0.6548
+          "last_close_date": "2026-10-01",
+          "ret": 0.7444,
+          "excess_ret": -0.7335
         }
       },
       {
@@ -15917,9 +16156,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1542,
-          "excess_ret": 0.1777
+          "last_close_date": "2026-10-01",
+          "ret": -0.1621,
+          "excess_ret": 0.1873
         }
       },
       {
@@ -15959,9 +16198,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0503,
-          "excess_ret": 0.0593
+          "last_close_date": "2026-10-01",
+          "ret": -0.0424,
+          "excess_ret": 0.0532
         }
       },
       {
@@ -16001,9 +16240,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0778,
-          "excess_ret": 0.0869
+          "last_close_date": "2026-10-01",
+          "ret": -0.0591,
+          "excess_ret": 0.0699
         }
       },
       {
@@ -16043,9 +16282,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.176,
-          "excess_ret": -0.1669
+          "last_close_date": "2026-10-01",
+          "ret": 0.1791,
+          "excess_ret": -0.1683
         }
       },
       {
@@ -16085,9 +16324,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0096,
-          "excess_ret": -0.0005
+          "last_close_date": "2026-10-01",
+          "ret": 0.0103,
+          "excess_ret": 0.0005
         }
       },
       {
@@ -16166,9 +16405,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.108,
-          "excess_ret": 0.1011
+          "last_close_date": "2026-10-01",
+          "ret": -0.0783,
+          "excess_ret": 0.0733
         }
       },
       {
@@ -16208,9 +16447,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0381,
-          "excess_ret": 0.0312
+          "last_close_date": "2026-10-01",
+          "ret": -0.0578,
+          "excess_ret": 0.0527
         }
       },
       {
@@ -16250,9 +16489,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1121,
-          "excess_ret": 0.1069
+          "last_close_date": "2026-10-01",
+          "ret": -0.1253,
+          "excess_ret": 0.1218
         }
       },
       {
@@ -16292,9 +16531,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2432,
-          "excess_ret": 0.2379
+          "last_close_date": "2026-10-01",
+          "ret": -0.2508,
+          "excess_ret": 0.2473
         }
       },
       {
@@ -16334,9 +16573,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0596,
-          "excess_ret": 0.0543
+          "last_close_date": "2026-10-01",
+          "ret": -0.0509,
+          "excess_ret": 0.0474
         }
       },
       {
@@ -16376,9 +16615,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0004,
-          "excess_ret": -0.0049
+          "last_close_date": "2026-10-01",
+          "ret": 0.0254,
+          "excess_ret": -0.0289
         }
       },
       {
@@ -16418,9 +16657,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1329,
-          "excess_ret": 0.1276
+          "last_close_date": "2026-10-01",
+          "ret": 0.0301,
+          "excess_ret": -0.0336
         }
       },
       {
@@ -16460,9 +16699,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0673,
-          "excess_ret": -0.0725
+          "last_close_date": "2026-10-01",
+          "ret": 0.0667,
+          "excess_ret": -0.0702
         }
       },
       {
@@ -16502,9 +16741,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1865,
-          "excess_ret": 0.1812
+          "last_close_date": "2026-10-01",
+          "ret": -0.1619,
+          "excess_ret": 0.1585
         }
       },
       {
@@ -16544,9 +16783,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0445,
-          "excess_ret": -0.0558
+          "last_close_date": "2026-10-01",
+          "ret": 0.0421,
+          "excess_ret": -0.0517
         }
       },
       {
@@ -16586,9 +16825,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0833,
-          "excess_ret": 0.072
+          "last_close_date": "2026-10-01",
+          "ret": -0.0565,
+          "excess_ret": 0.047
         }
       },
       {
@@ -16628,9 +16867,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0993,
-          "excess_ret": 0.0883
+          "last_close_date": "2026-10-01",
+          "ret": -0.1041,
+          "excess_ret": 0.0949
         }
       },
       {
@@ -16670,9 +16909,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.101,
-          "excess_ret": 0.09
+          "last_close_date": "2026-10-01",
+          "ret": -0.0937,
+          "excess_ret": 0.0845
         }
       },
       {
@@ -16712,9 +16951,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0095,
-          "excess_ret": -0.0015
+          "last_close_date": "2026-10-01",
+          "ret": -0.0041,
+          "excess_ret": -0.0051
         }
       },
       {
@@ -16754,9 +16993,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1417,
-          "excess_ret": -0.153
+          "last_close_date": "2026-10-01",
+          "ret": 0.1442,
+          "excess_ret": -0.1538
         }
       },
       {
@@ -16796,9 +17035,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0747,
-          "excess_ret": 0.0634
+          "last_close_date": "2026-10-01",
+          "ret": -0.0977,
+          "excess_ret": 0.0882
         }
       },
       {
@@ -16838,9 +17077,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0332,
-          "excess_ret": 0.0222
+          "last_close_date": "2026-10-01",
+          "ret": -0.0437,
+          "excess_ret": 0.0345
         }
       },
       {
@@ -16880,9 +17119,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0525,
-          "excess_ret": 0.0415
+          "last_close_date": "2026-10-01",
+          "ret": -0.0637,
+          "excess_ret": 0.0544
         }
       },
       {
@@ -16922,9 +17161,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1468,
-          "excess_ret": 0.1355
+          "last_close_date": "2026-10-01",
+          "ret": -0.1624,
+          "excess_ret": 0.1529
         }
       },
       {
@@ -16964,9 +17203,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0968,
-          "excess_ret": 0.0858
+          "last_close_date": "2026-10-01",
+          "ret": -0.102,
+          "excess_ret": 0.0928
         }
       },
       {
@@ -17006,8 +17245,8 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2463,
+          "last_close_date": "2026-10-01",
+          "ret": -0.2445,
           "excess_ret": 0.2353
         }
       },
@@ -17048,9 +17287,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1027,
-          "excess_ret": 0.0924
+          "last_close_date": "2026-10-01",
+          "ret": -0.0928,
+          "excess_ret": 0.0843
         }
       },
       {
@@ -17090,9 +17329,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.2117,
-          "excess_ret": 0.2014
+          "last_close_date": "2026-10-01",
+          "ret": -0.1984,
+          "excess_ret": 0.1898
         }
       },
       {
@@ -17132,9 +17371,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1375,
-          "excess_ret": 0.1272
+          "last_close_date": "2026-10-01",
+          "ret": -0.1704,
+          "excess_ret": 0.1618
         }
       },
       {
@@ -17174,9 +17413,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0708,
-          "excess_ret": 0.0605
+          "last_close_date": "2026-10-01",
+          "ret": -0.0523,
+          "excess_ret": 0.0437
         }
       },
       {
@@ -17216,9 +17455,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1513,
-          "excess_ret": 0.1342
+          "last_close_date": "2026-10-01",
+          "ret": -0.1483,
+          "excess_ret": 0.1329
         }
       },
       {
@@ -17258,9 +17497,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.191,
-          "excess_ret": 0.1805
+          "last_close_date": "2026-10-01",
+          "ret": -0.1661,
+          "excess_ret": 0.1573
         }
       },
       {
@@ -17300,9 +17539,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1019,
-          "excess_ret": -0.1039
+          "last_close_date": "2026-10-01",
+          "ret": 0.0901,
+          "excess_ret": -0.0903
         }
       },
       {
@@ -17342,9 +17581,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0417,
-          "excess_ret": 0.0332
+          "last_close_date": "2026-10-01",
+          "ret": -0.0097,
+          "excess_ret": 0.003
         }
       },
       {
@@ -17384,9 +17623,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.0524,
-          "excess_ret": -0.0586
+          "last_close_date": "2026-10-01",
+          "ret": 0.0459,
+          "excess_ret": -0.0504
         }
       },
       {
@@ -17426,9 +17665,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0828,
-          "excess_ret": 0.0765
+          "last_close_date": "2026-10-01",
+          "ret": -0.0549,
+          "excess_ret": 0.0504
         }
       },
       {
@@ -17468,9 +17707,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1054,
-          "excess_ret": 0.0991
+          "last_close_date": "2026-10-01",
+          "ret": -0.1022,
+          "excess_ret": 0.0977
         }
       },
       {
@@ -17510,9 +17749,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.0634,
-          "excess_ret": 0.0571
+          "last_close_date": "2026-10-01",
+          "ret": -0.0625,
+          "excess_ret": 0.058
         }
       },
       {
@@ -17552,9 +17791,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.2225,
-          "excess_ret": -0.2258
+          "last_close_date": "2026-10-01",
+          "ret": 0.2404,
+          "excess_ret": -0.2419
         }
       },
       {
@@ -17594,9 +17833,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": 0.1077,
-          "excess_ret": -0.111
+          "last_close_date": "2026-10-01",
+          "ret": 0.1501,
+          "excess_ret": -0.1516
         }
       },
       {
@@ -17633,9 +17872,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-09-30",
-          "ret": -0.1094,
-          "excess_ret": 0.1142
+          "last_close_date": "2026-10-01",
+          "ret": -0.109,
+          "excess_ret": 0.1156
         }
       }
     ]
@@ -17832,28 +18071,28 @@
         "max": 0.2644
       },
       "next_earn|long|all": {
-        "n": 3110,
-        "win_rate": 0.464,
-        "avg": -0.0017,
-        "median": -0.014,
+        "n": 3113,
+        "win_rate": 0.4635,
+        "avg": -0.0019,
+        "median": -0.0143,
         "std": 0.1883,
         "min": -0.5943,
         "max": 1.3821
       },
       "next_earn|long|high": {
-        "n": 1815,
-        "win_rate": 0.4689,
-        "avg": 0.0022,
-        "median": -0.0135,
+        "n": 1817,
+        "win_rate": 0.4684,
+        "avg": 0.002,
+        "median": -0.0136,
         "std": 0.1985,
         "min": -0.5943,
         "max": 1.3821
       },
       "next_earn|long|mid": {
-        "n": 1140,
-        "win_rate": 0.4649,
-        "avg": -0.0042,
-        "median": -0.0128,
+        "n": 1141,
+        "win_rate": 0.4645,
+        "avg": -0.0043,
+        "median": -0.0131,
         "std": 0.1759,
         "min": -0.586,
         "max": 1.1724
@@ -17895,9 +18134,9 @@
         "max": 0.3116
       }
     },
-    "n_rows": 4561,
-    "n_live": 412,
-    "n_active": 411
+    "n_rows": 4563,
+    "n_live": 414,
+    "n_active": 413
   },
   "drift_curve": [
     {
@@ -18324,25 +18563,6 @@
   "drift_curve_as_of": "2026-08-24",
   "rank_pool": {
     "days": {
-      "2026-06-24": {
-        "sue": [
-          0.001229,
-          0.000102
-        ],
-        "ear": [
-          -0.000829,
-          -0.016783
-        ],
-        "rue": [],
-        "avol": [
-          1.166175,
-          0.697697
-        ],
-        "nearness": [
-          0.921999,
-          0.668675
-        ]
-      },
       "2026-06-25": {
         "sue": [
           -0.003797,
@@ -23037,12 +23257,37 @@
           0.72105,
           0.743499
         ]
+      },
+      "2026-10-01": {
+        "sue": [
+          0.000545,
+          0.001671,
+          0.001614,
+          0.002371
+        ],
+        "ear": [
+          0.155985,
+          0.028523,
+          -0.035772,
+          -0.05049
+        ],
+        "rue": [],
+        "avol": [
+          1.66912,
+          0.403863,
+          1.149579,
+          1.164815
+        ],
+        "nearness": [
+          0.642924,
+          0.848824,
+          0.816508,
+          0.652366
+        ]
       }
     },
-    "window_start": "2026-06-24",
+    "window_start": "2026-06-25",
     "sue": [
-      0.001229,
-      0.000102,
       -0.003797,
       0.004197,
       0.000393,
@@ -23993,11 +24238,13 @@
       0.001061,
       0.000769,
       0.007077,
-      0.001631
+      0.001631,
+      0.000545,
+      0.001671,
+      0.001614,
+      0.002371
     ],
     "ear": [
-      -0.000829,
-      -0.016783,
       -0.09292,
       0.155968,
       0.174915,
@@ -25026,12 +25273,14 @@
       -0.011101,
       0.040444,
       -0.046778,
-      -0.098247
+      -0.098247,
+      0.155985,
+      0.028523,
+      -0.035772,
+      -0.05049
     ],
     "rue": [],
     "avol": [
-      1.166175,
-      0.697697,
       1.29311,
       0.536497,
       1.561367,
@@ -26060,11 +26309,13 @@
       0.772822,
       0.642662,
       1.18109,
-      1.594212
+      1.594212,
+      1.66912,
+      0.403863,
+      1.149579,
+      1.164815
     ],
     "nearness": [
-      0.921999,
-      0.668675,
       0.834069,
       0.863995,
       0.804702,
@@ -27127,7 +27378,11 @@
       0.694315,
       0.811189,
       0.72105,
-      0.743499
+      0.743499,
+      0.642924,
+      0.848824,
+      0.816508,
+      0.652366
     ]
   }
 }
