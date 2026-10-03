@@ -82,8 +82,7 @@ def _repo():
 
 def _db_error_text(url: str | None, exc: Exception) -> str:
     """Actionable, password-free explanation of a hosted-DB failure."""
-    raw = str(exc).replace("
-", " ").strip()
+    raw = " ".join(str(exc).split())
     if url and url in raw:
         raw = raw.replace(url, "<url>")
     diag = db_url_problem(url) if url else None
