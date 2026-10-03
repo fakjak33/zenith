@@ -847,6 +847,26 @@ FIRECRAWL_API_KEY = os.environ.get("FIRECRAWL_API_KEY", "").strip()
 FIRECRAWL_TIMEOUT = int(os.environ.get("FIRECRAWL_TIMEOUT", "45"))
 
 
+# --- EPHEMERIS (blind-chart tape-reading trainer) ----------------------------
+# Prices live OUTSIDE git: a nightly job builds Parquet and publishes it as a
+# rolling GitHub Release asset; the app downloads it once per container into
+# EPHEMERIS_PX_DIR (gitignored). Only small metadata is committed.
+EPHEMERIS_DIR = DATA_DIR / "ephemeris"
+EPHEMERIS_PX_DIR = EPHEMERIS_DIR / "px"
+EPHEMERIS_FILES = {
+    "universe": EPHEMERIS_DIR / "universe.json",        # tagged universe (class / sector / cap)
+    "base_rates": EPHEMERIS_DIR / "base_rates.json",    # P(up) by class x timeframe x horizon
+    "daily_schedule": EPHEMERIS_DIR / "daily_schedule.json",
+    "status": EPHEMERIS_DIR / "status.json",
+    "local_db": EPHEMERIS_DIR / "ephemeris.sqlite3",    # dev fallback when no hosted DB secret
+}
+EPHEMERIS_RELEASE_TAG = "ephemeris-px"
+EPHEMERIS_RELEASE_URL = ("https://github.com/fakjak33/zenith/releases/download/"
+                         f"{EPHEMERIS_RELEASE_TAG}/{{name}}")
+EPHEMERIS_PX_MAX_AGE_HOURS = 30.0      # re-download the release asset after this
+EPHEMERIS_DB_SECRET = "ephemeris_db_url"
+
+
 @dataclass(frozen=True)
 class Theme:
     bg: str = "#000000"

@@ -1,0 +1,183 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+  :root { --bg:__BG__; --panel:__PANEL__; --grid:__GRID__; --teal:__TEAL__; --coral:__CORAL__;
+          --mustard:__MUSTARD__; --muted:__MUTED__; --text:__TEXT__; }
+  html, body { margin:0; padding:0; background:transparent; color:var(--text);
+               font-family:'Space Mono', 'Courier New', monospace; overflow:hidden; }
+  #wrap { position:relative; border:2px solid #fff; background:var(--bg); }
+  #chart { width:100%; height:__HEIGHT__px; }
+  #hud { position:absolute; top:6px; left:10px; z-index:5; font-family:'VT323', monospace;
+         font-size:20px; letter-spacing:.12em; color:var(--muted); pointer-events:none; }
+  #hud b { color:var(--text); }
+  #pnl { position:absolute; top:4px; right:72px; z-index:5; font-family:'VT323', monospace;
+         font-size:30px; letter-spacing:.06em; display:none; text-shadow:0 0 12px currentColor; }
+  .ovl { position:absolute; top:0; bottom:0; pointer-events:none; z-index:3; }
+  #zone { background:repeating-linear-gradient(135deg, rgba(255,200,87,.06) 0 6px, rgba(255,200,87,.02) 6px 12px);
+          border-left:1px dashed rgba(255,200,87,.45); }
+  #now { width:0; border-left:2px solid var(--mustard); box-shadow:0 0 10px var(--mustard); }
+  #nowlbl { position:absolute; bottom:30px; z-index:4; font-family:'VT323', monospace; font-size:16px;
+            color:#000; background:var(--mustard); padding:0 5px; letter-spacing:.14em; pointer-events:none; }
+  #skip { position:absolute; bottom:34px; right:72px; z-index:6; display:none; cursor:pointer;
+          font-family:'VT323', monospace; font-size:18px; letter-spacing:.14em; color:var(--text);
+          background:#000; border:2px solid #fff; padding:0 10px; }
+  #card { position:absolute; top:40px; left:12px; z-index:7; display:none; max-width:380px; cursor:pointer;
+          background:rgba(0,0,0,.88); border:2px solid #fff; padding:10px 14px 12px;
+          animation:pop .25s ease-out; }
+  @keyframes pop { from { transform:translateY(6px); opacity:0 } to { transform:none; opacity:1 } }
+  .badge { font-family:'VT323', monospace; font-size:34px; letter-spacing:.14em; line-height:1;
+           padding:2px 10px; color:#000; display:inline-block; margin-bottom:6px; }
+  .tk { font-family:'VT323', monospace; font-size:28px; letter-spacing:.1em; }
+  .row { font-size:12px; color:#ddd; line-height:1.55; }
+  .row span { color:var(--muted); }
+  .why { font-size:11px; color:var(--muted); margin-top:6px; border-top:1px solid var(--grid); padding-top:5px; }
+</style></head>
+<body>
+<div id="wrap">
+  <div id="chart"></div>
+  <div id="zone" class="ovl"></div>
+  <div id="now" class="ovl"></div>
+  <div id="nowlbl">NOW</div>
+  <div id="hud"></div>
+  <div id="pnl"></div>
+  <div id="skip">SKIP ▸▸</div>
+  <div id="card"></div>
+</div>
+<script>
+const P = __PAYLOAD__;
+const T0 = 946684800, DAY = 86400;             // synthetic, blinded time axis
+const L = P.bars.length, H = P.horizon;
+const tOf = i => T0 + i * DAY;                 // i: 0..L-1 visible, L.. future
+const css = getComputedStyle(document.documentElement);
+const C = n => css.getPropertyValue('--' + n).trim();
+
+function label(i) {
+  if (P.dates && P.dates[i]) return P.dates[i];
+  const k = i - (L - 1);
+  return k === 0 ? 'NOW' : (k > 0 ? '+' + k : String(k));
+}
+const el = document.getElementById('chart');
+const chart = LightweightCharts.createChart(el, {
+  autoSize: true,
+  layout: { background: { type: 'solid', color: C('bg') }, textColor: C('muted'),
+            fontFamily: "'Space Mono', monospace", fontSize: 11 },
+  grid: { vertLines: { color: '#141414' }, horzLines: { color: '#1b1b1b' } },
+  rightPriceScale: { borderColor: '#444', scaleMargins: { top: 0.12, bottom: 0.08 } },
+  timeScale: { borderColor: '#444', rightOffset: 0,
+               tickMarkFormatter: t => label(Math.round((t - T0) / DAY)) },
+  localization: { timeFormatter: t => label(Math.round((t - T0) / DAY)),
+                  priceFormatter: p => P.rebased ? p.toFixed(2) : (Math.abs(p) < 10 ? p.toFixed(4) : p.toFixed(2)) },
+  crosshair: { mode: 0 },
+  handleScroll: false, handleScale: false,
+});
+const levels = [P.sl, P.tp].filter(v => v != null);
+const candles = chart.addCandlestickSeries({
+  upColor: C('teal'), downColor: C('coral'), borderUpColor: C('teal'), borderDownColor: C('coral'),
+  wickUpColor: C('teal'), wickDownColor: C('coral'), priceLineVisible: false, lastValueVisible: false,
+  autoscaleInfoProvider: orig => {
+    const r = orig();
+    if (r && levels.length) {
+      r.priceRange.minValue = Math.min(r.priceRange.minValue, ...levels);
+      r.priceRange.maxValue = Math.max(r.priceRange.maxValue, ...levels);
+    }
+    return r;
+  },
+});
+// invisible series carrying whitespace for the horizon, so the time axis
+// reserves the future zone before any future candle exists
+const spacer = chart.addLineSeries({ visible: false, lastValueVisible: false, priceLineVisible: false });
+spacer.setData(Array.from({ length: L + H }, (_, i) => ({ time: tOf(i) })));
+const toBar = (b, i) => ({ time: tOf(i), open: b[0], high: b[1], low: b[2], close: b[3] });
+candles.setData(P.bars.map(toBar));
+
+const entry = P.bars[L - 1][3];
+if (P.direction) {
+  candles.createPriceLine({ price: entry, color: '#ffffff', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'ENTRY' });
+}
+if (P.sl != null) candles.createPriceLine({ price: P.sl, color: C('coral'), lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: 'SL' });
+if (P.tp != null) candles.createPriceLine({ price: P.tp, color: C('teal'), lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: 'TP' });
+
+
+// ---- overlays: NOW marker + horizon zone --------------------------------
+const zone = document.getElementById('zone'), now = document.getElementById('now'),
+      nowlbl = document.getElementById('nowlbl');
+function place() {
+  const ts = chart.timeScale();
+  const x0 = ts.timeToCoordinate(tOf(L - 1)), x1 = ts.timeToCoordinate(tOf(L - 1 + H));
+  if (x0 == null || x1 == null) return;
+  const half = Math.max(2, (ts.timeToCoordinate(tOf(L)) - x0) / 2);
+  now.style.left = (x0 + half) + 'px';
+  nowlbl.style.left = (x0 + half + 4) + 'px';
+  zone.style.left = (x0 + half) + 'px';
+  zone.style.width = Math.max(0, x1 - x0) + 'px';
+}
+// frame the window + horizon exactly; re-applied on every resize because the
+// iframe can report zero width at creation (bar spacing would collapse)
+function frame() {
+  if (!el.clientWidth) return;
+  chart.timeScale().setVisibleLogicalRange({ from: -0.5, to: L + H + 0.5 });
+  place();
+}
+chart.timeScale().subscribeVisibleLogicalRangeChange(place);
+new ResizeObserver(() => requestAnimationFrame(frame)).observe(el);
+setTimeout(frame, 30);
+
+const hud = document.getElementById('hud');
+hud.innerHTML = (P.header || '');
+
+// ---- reveal ---------------------------------------------------------------
+const pnlEl = document.getElementById('pnl'), skip = document.getElementById('skip'),
+      card = document.getElementById('card');
+const fmtMoney = v => (v >= 0 ? '+$' : '−$') + Math.abs(v).toLocaleString(undefined, { maximumFractionDigits: 0 });
+const fmtPct = v => (v >= 0 ? '+' : '−') + Math.abs(v * 100).toFixed(2) + '%';
+
+function showPnl(v) {
+  pnlEl.style.display = 'block';
+  pnlEl.style.color = v >= 0 ? C('teal') : C('coral');
+  pnlEl.textContent = fmtMoney(v);
+}
+function finish() {
+  const R = P.result;
+  const color = R.win ? C('teal') : C('coral');
+  showPnl(R.pnl);
+  const ex = R.exit_index;
+  const mk = [{ time: tOf(L + ex), position: P.direction > 0 ? 'aboveBar' : 'belowBar', color: color,
+                shape: 'circle', text: R.exit_reason.toUpperCase() + (R.ambiguous ? ' ?' : '') }];
+  candles.setMarkers(mk);
+  const U = P.unblind || {};
+  const rows = (U.rows || []).map(([k, v]) => `<div class="row"><span>${k}</span> ${v}</div>`).join('');
+  card.innerHTML =
+    `<div class="badge" style="background:${color}">${R.win ? 'WIN' : 'LOSS'} ${fmtMoney(R.pnl)}</div>` +
+    `<div class="tk">${U.ticker || ''}</div><div class="row">${U.name || ''}</div>` + rows +
+    (U.why ? `<div class="why">${U.why}</div>` : '');
+  card.style.display = 'block';
+  card.title = 'click to hide';
+  card.onclick = () => { card.style.display = 'none'; };
+  skip.style.display = 'none';
+}
+if (P.future && P.future.length) {
+  const F = P.future, R = P.result, n = F.length;
+  const step = Math.max(18, Math.min(70, 2200 / n));
+  let i = 0, timer = null;
+  const mtm = k => {               // running PnL, frozen at the exit candle
+    const px = k >= R.exit_index ? R.exit_px : F[k][3];
+    return P.direction * (px / entry - 1) * P.stake;
+  };
+  const tick = () => {
+    candles.update(toBar(F[i], L + i));
+    showPnl(mtm(i));
+    i++;
+    if (i >= n) { clearInterval(timer); finish(); }
+  };
+  skip.onclick = () => {
+    clearInterval(timer);
+    for (; i < n; i++) candles.update(toBar(F[i], L + i));
+    finish();
+  };
+  if (P.animate) { skip.style.display = 'block'; timer = setInterval(tick, step); }
+  else { skip.onclick(); }
+}
+</script>
+</body></html>

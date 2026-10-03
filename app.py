@@ -83,7 +83,11 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "database, so it answers *who is doing interesting work, where do they work, and "
         "where do I read them*. Includes a traversable knowledge graph, a discovery "
         "surface for names your own list does not contain, and a CSV/Excel/JSON export.\n"
-        "15. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "15. **EPHEMERIS** — a *blind-chart tape-reading trainer*: a random historical chart with "
+        "ticker, dates and price level hidden; call UP or DOWN over the next N candles, watch the "
+        "future replay, and every call is scored against the base rate and a trend rule on the "
+        "same charts. Profiles are one click: type a handle, bookmark the URL.\n"
+        "16. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -170,10 +174,10 @@ def render_feature(module_path: str, feature: str) -> None:
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
  tab_nightday, tab_holdings, tab_mom, tab_etfmom, tab_trend, tab_beta, tab_ideas, tab_regimes,
- tab_index, tab_archive, tab_sources) = st.tabs(
+ tab_index, tab_ephemeris, tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
      "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM",
-     "TREND FOLLOWING", "CLEAN BETA", "IDEAS", "REGIMES", "INDEX", "ARCHIVE", "SOURCES"])
+     "TREND FOLLOWING", "CLEAN BETA", "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -204,6 +208,7 @@ with tab_today:
         ("IDEAS", "zenith.ideas.view"),
         ("REGIMES", "zenith.regimes.view"),
         ("INDEX", "zenith.index.view"),
+        ("EPHEMERIS", "zenith.ephemeris.view"),
     )
     _chips, _chip_failures = [], []
     for _label, _module in _BADGE_SOURCES:
@@ -299,6 +304,10 @@ with tab_index:
     st.markdown(section("INDEX — the Master List: financial intelligence directory", 5),
                 unsafe_allow_html=True)
     render_feature("zenith.index.view", "INDEX")
+
+with tab_ephemeris:
+    st.markdown(section("EPHEMERIS — blind-chart tape-reading trainer", 1), unsafe_allow_html=True)
+    render_feature("zenith.ephemeris.view", "EPHEMERIS")
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)
