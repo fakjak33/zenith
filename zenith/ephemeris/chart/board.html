@@ -9,22 +9,28 @@
                font-family:'Space Mono', 'Courier New', monospace; overflow:hidden; }
   #wrap { position:relative; border:2px solid #fff; background:var(--bg); }
   #chart { width:100%; height:__HEIGHT__px; }
+  .pane { width:100%; position:relative; border-top:1px solid #333; }
+  .plbl { position:absolute; top:3px; left:8px; z-index:5; font-family:'VT323', monospace; font-size:15px;
+          letter-spacing:.12em; color:var(--muted); pointer-events:none; }
   #hud { position:absolute; top:6px; left:10px; z-index:5; font-family:'VT323', monospace;
          font-size:20px; letter-spacing:.12em; color:var(--muted); pointer-events:none; }
   #hud b { color:var(--text); }
-  #pnl { position:absolute; top:4px; right:72px; z-index:5; font-family:'VT323', monospace;
+  #legend { position:absolute; top:30px; left:10px; z-index:5; font-size:10px; color:var(--muted);
+            pointer-events:none; letter-spacing:.06em; }
+  #legend i { display:inline-block; width:10px; height:2px; vertical-align:middle; margin:0 4px 0 8px; }
+  #pnl { position:absolute; top:4px; right:82px; z-index:5; font-family:'VT323', monospace;
          font-size:30px; letter-spacing:.06em; display:none; text-shadow:0 0 12px currentColor; }
   .ovl { position:absolute; top:0; bottom:0; pointer-events:none; z-index:3; }
   #zone { background:repeating-linear-gradient(135deg, rgba(255,200,87,.06) 0 6px, rgba(255,200,87,.02) 6px 12px);
           border-left:1px dashed rgba(255,200,87,.45); }
   #now { width:0; border-left:2px solid var(--mustard); box-shadow:0 0 10px var(--mustard); }
-  #nowlbl { position:absolute; bottom:30px; z-index:4; font-family:'VT323', monospace; font-size:16px;
+  #nowlbl { position:absolute; top:__NOWTOP__px; z-index:4; font-family:'VT323', monospace; font-size:16px;
             color:#000; background:var(--mustard); padding:0 5px; letter-spacing:.14em; pointer-events:none; }
-  #skip { position:absolute; bottom:34px; right:72px; z-index:6; display:none; cursor:pointer;
+  #skip { position:absolute; top:40px; right:82px; z-index:6; display:none; cursor:pointer;
           font-family:'VT323', monospace; font-size:18px; letter-spacing:.14em; color:var(--text);
           background:#000; border:2px solid #fff; padding:0 10px; }
-  #card { position:absolute; top:40px; left:12px; z-index:7; display:none; max-width:380px; cursor:pointer;
-          background:rgba(0,0,0,.88); border:2px solid #fff; padding:10px 14px 12px;
+  #card { position:absolute; top:40px; left:12px; z-index:7; display:none; max-width:400px; cursor:pointer;
+          background:rgba(0,0,0,.9); border:2px solid #fff; padding:10px 14px 12px;
           animation:pop .25s ease-out; }
   @keyframes pop { from { transform:translateY(6px); opacity:0 } to { transform:none; opacity:1 } }
   .badge { font-family:'VT323', monospace; font-size:34px; letter-spacing:.14em; line-height:1;
@@ -33,45 +39,59 @@
   .row { font-size:12px; color:#ddd; line-height:1.55; }
   .row span { color:var(--muted); }
   .why { font-size:11px; color:var(--muted); margin-top:6px; border-top:1px solid var(--grid); padding-top:5px; }
+  .hint { font-size:10px; color:#777; margin-top:6px; }
 </style></head>
 <body>
 <div id="wrap">
   <div id="chart"></div>
+  <div id="panes"></div>
   <div id="zone" class="ovl"></div>
   <div id="now" class="ovl"></div>
   <div id="nowlbl">NOW</div>
   <div id="hud"></div>
+  <div id="legend"></div>
   <div id="pnl"></div>
   <div id="skip">SKIP ▸▸</div>
   <div id="card"></div>
 </div>
 <script>
 const P = __PAYLOAD__;
+const PANE_H = __PANEH__;
 const T0 = 946684800, DAY = 86400;             // synthetic, blinded time axis
 const L = P.bars.length, H = P.horizon;
 const tOf = i => T0 + i * DAY;                 // i: 0..L-1 visible, L.. future
 const css = getComputedStyle(document.documentElement);
 const C = n => css.getPropertyValue('--' + n).trim();
+const PANES = P.panes || [], OVS = P.overlays || [];
 
 function label(i) {
   if (P.dates && P.dates[i]) return P.dates[i];
   const k = i - (L - 1);
   return k === 0 ? 'NOW' : (k > 0 ? '+' + k : String(k));
 }
+const fmtTick = t => label(Math.round((t - T0) / DAY));
+function baseOpts(showTime) {
+  return {
+    autoSize: true,
+    layout: { background: { type: 'solid', color: C('bg') }, textColor: C('muted'),
+              fontFamily: "'Space Mono', monospace", fontSize: 11, attributionLogo: false },
+    grid: { vertLines: { color: '#141414' }, horzLines: { color: '#1b1b1b' } },
+    rightPriceScale: { borderColor: '#444', minimumWidth: 72 },
+    timeScale: { borderColor: '#444', rightOffset: 0, visible: showTime, tickMarkFormatter: fmtTick },
+    localization: { timeFormatter: fmtTick },
+    crosshair: { mode: 0 },
+    handleScroll: false, handleScale: false,
+  };
+}
+// ---- main chart -----------------------------------------------------------
 const el = document.getElementById('chart');
-const chart = LightweightCharts.createChart(el, {
-  autoSize: true,
-  layout: { background: { type: 'solid', color: C('bg') }, textColor: C('muted'),
-            fontFamily: "'Space Mono', monospace", fontSize: 11 },
-  grid: { vertLines: { color: '#141414' }, horzLines: { color: '#1b1b1b' } },
-  rightPriceScale: { borderColor: '#444', scaleMargins: { top: 0.12, bottom: 0.08 } },
-  timeScale: { borderColor: '#444', rightOffset: 0,
-               tickMarkFormatter: t => label(Math.round((t - T0) / DAY)) },
-  localization: { timeFormatter: t => label(Math.round((t - T0) / DAY)),
-                  priceFormatter: p => P.rebased ? p.toFixed(2) : (Math.abs(p) < 10 ? p.toFixed(4) : p.toFixed(2)) },
-  crosshair: { mode: 0 },
-  handleScroll: false, handleScale: false,
-});
+const mainOpts = baseOpts(PANES.length === 0);
+mainOpts.rightPriceScale.scaleMargins = { top: 0.12, bottom: 0.08 };
+mainOpts.localization.priceFormatter = p => P.rebased ? p.toFixed(2) : (Math.abs(p) < 10 ? p.toFixed(4) : p.toFixed(2));
+mainOpts.layout.attributionLogo = true;      // TradingView attribution (license), once
+const chart = LightweightCharts.createChart(el, mainOpts);
+const charts = [chart];
+
 const levels = [P.sl, P.tp].filter(v => v != null);
 const candles = chart.addCandlestickSeries({
   upColor: C('teal'), downColor: C('coral'), borderUpColor: C('teal'), borderDownColor: C('coral'),
@@ -85,22 +105,70 @@ const candles = chart.addCandlestickSeries({
     return r;
   },
 });
-// invisible series carrying whitespace for the horizon, so the time axis
-// reserves the future zone before any future candle exists
-const spacer = chart.addLineSeries({ visible: false, lastValueVisible: false, priceLineVisible: false });
-spacer.setData(Array.from({ length: L + H }, (_, i) => ({ time: tOf(i) })));
+// whitespace so every time axis reserves the horizon before future bars exist
+function addSpacer(ch) {
+  const s = ch.addLineSeries({ visible: false, lastValueVisible: false, priceLineVisible: false });
+  s.setData(Array.from({ length: L + H }, (_, i) => ({ time: tOf(i) })));
+}
+addSpacer(chart);
 const toBar = (b, i) => ({ time: tOf(i), open: b[0], high: b[1], low: b[2], close: b[3] });
 candles.setData(P.bars.map(toBar));
 
+// overlays: [{name,color,style,step,values}] -- values cover visible (+future on reveal)
+const pt = (v, i) => v == null ? { time: tOf(i) } : { time: tOf(i), value: v };
+const ovSeries = OVS.map(o => {
+  const s = chart.addLineSeries({ color: o.color, lineWidth: 1, lineStyle: o.style || 0,
+    lineType: o.step ? 1 : 0, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false });
+  s.setData(o.values.slice(0, L).map(pt));
+  return s;
+});
+document.getElementById('legend').innerHTML =
+  OVS.filter(o => !/ (lo|mid)$/.test(o.name)).map(o => `<i style="background:${o.color}"></i>${o.name}`).join('');
+
+// ---- lower panes ------------------------------------------------------------
+const paneWrap = document.getElementById('panes');
+const paneSeries = [];
+PANES.forEach((pn, k) => {
+  const d = document.createElement('div');
+  d.className = 'pane';
+  d.style.height = PANE_H + 'px';
+  d.innerHTML = `<div class="plbl">${pn.name}</div>`;
+  paneWrap.appendChild(d);
+  const ch = LightweightCharts.createChart(d, baseOpts(k === PANES.length - 1));
+  ch.applyOptions({ rightPriceScale: { scaleMargins: { top: 0.18, bottom: 0.06 } } });
+  charts.push(ch);
+  addSpacer(ch);
+  pn.series.forEach((sr, j) => {
+    const fixed = pn.fixed;
+    const asi = fixed ? (() => ({ priceRange: { minValue: fixed[0], maxValue: fixed[1] } })) : undefined;
+    const s = sr.type === 'hist'
+      ? ch.addHistogramSeries({ priceLineVisible: false, lastValueVisible: false, base: 0, autoscaleInfoProvider: asi })
+      : ch.addLineSeries({ color: sr.color || '#fff', lineWidth: 1, priceLineVisible: false,
+                           lastValueVisible: false, crosshairMarkerVisible: false, autoscaleInfoProvider: asi });
+    if (j === 0) (pn.levels || []).forEach(lv => s.createPriceLine({ price: lv, color: '#555', lineWidth: 1,
+                                                                     lineStyle: 2, axisLabelVisible: false }));
+    const point = i => {
+      const v = sr.values[i];
+      if (v == null) return { time: tOf(i) };
+      if (sr.type !== 'hist') return { time: tOf(i), value: v };
+      const col = sr.updown ? (P.up[i] ? 'rgba(46,196,182,.55)' : 'rgba(255,90,60,.55)')
+                : sr.signed ? (v >= 0 ? 'rgba(46,196,182,.7)' : 'rgba(255,90,60,.7)') : '#666';
+      return { time: tOf(i), value: v, color: col };
+    };
+    s.setData(Array.from({ length: L }, (_, i) => point(i)));
+    paneSeries.push({ s, point });
+  });
+});
+
+// ---- entry / SL / TP --------------------------------------------------------
 const entry = P.bars[L - 1][3];
-if (P.direction) {
+if (P.direction || levels.length) {
   candles.createPriceLine({ price: entry, color: '#ffffff', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'ENTRY' });
 }
 if (P.sl != null) candles.createPriceLine({ price: P.sl, color: C('coral'), lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: 'SL' });
 if (P.tp != null) candles.createPriceLine({ price: P.tp, color: C('teal'), lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: 'TP' });
 
-
-// ---- overlays: NOW marker + horizon zone --------------------------------
+// ---- framing + overlays (the NOW marker spans every pane) -------------------------
 const zone = document.getElementById('zone'), now = document.getElementById('now'),
       nowlbl = document.getElementById('nowlbl');
 function place() {
@@ -113,47 +181,45 @@ function place() {
   zone.style.left = (x0 + half) + 'px';
   zone.style.width = Math.max(0, x1 - x0) + 'px';
 }
-// frame the window + horizon exactly; re-applied on every resize because the
-// iframe can report zero width at creation (bar spacing would collapse)
+// re-applied on every resize: the iframe can report zero width at creation
 function frame() {
   if (!el.clientWidth) return;
-  chart.timeScale().setVisibleLogicalRange({ from: -0.5, to: L + H + 0.5 });
+  charts.forEach(ch => ch.timeScale().setVisibleLogicalRange({ from: -0.5, to: L + H + 0.5 }));
   place();
 }
 chart.timeScale().subscribeVisibleLogicalRangeChange(place);
 new ResizeObserver(() => requestAnimationFrame(frame)).observe(el);
 setTimeout(frame, 30);
+document.getElementById('hud').innerHTML = (P.header || '');
 
-const hud = document.getElementById('hud');
-hud.innerHTML = (P.header || '');
-
-// ---- reveal ---------------------------------------------------------------
+// ---- reveal -----------------------------------------------------------------
 const pnlEl = document.getElementById('pnl'), skip = document.getElementById('skip'),
       card = document.getElementById('card');
 const fmtMoney = v => (v >= 0 ? '+$' : '−$') + Math.abs(v).toLocaleString(undefined, { maximumFractionDigits: 0 });
-const fmtPct = v => (v >= 0 ? '+' : '−') + Math.abs(v * 100).toFixed(2) + '%';
 
 function showPnl(v) {
   pnlEl.style.display = 'block';
   pnlEl.style.color = v >= 0 ? C('teal') : C('coral');
   pnlEl.textContent = fmtMoney(v);
 }
+function drawFuture(i) {
+  candles.update(toBar(P.future[i], L + i));
+  ovSeries.forEach((s, k) => s.update(pt(OVS[k].values[L + i], L + i)));
+  paneSeries.forEach(ps => ps.s.update(ps.point(L + i)));
+}
 function finish() {
   const R = P.result;
   const color = R.win ? C('teal') : C('coral');
   showPnl(R.pnl);
-  const ex = R.exit_index;
-  const mk = [{ time: tOf(L + ex), position: P.direction > 0 ? 'aboveBar' : 'belowBar', color: color,
-                shape: 'circle', text: R.exit_reason.toUpperCase() + (R.ambiguous ? ' ?' : '') }];
-  candles.setMarkers(mk);
+  candles.setMarkers([{ time: tOf(L + R.exit_index), position: P.direction > 0 ? 'aboveBar' : 'belowBar',
+                        color: color, shape: 'circle', text: R.exit_reason.toUpperCase() + (R.ambiguous ? ' ?' : '') }]);
   const U = P.unblind || {};
   const rows = (U.rows || []).map(([k, v]) => `<div class="row"><span>${k}</span> ${v}</div>`).join('');
   card.innerHTML =
     `<div class="badge" style="background:${color}">${R.win ? 'WIN' : 'LOSS'} ${fmtMoney(R.pnl)}</div>` +
     `<div class="tk">${U.ticker || ''}</div><div class="row">${U.name || ''}</div>` + rows +
-    (U.why ? `<div class="why">${U.why}</div>` : '');
+    (U.why ? `<div class="why">${U.why}</div>` : '') + `<div class="hint">click card to hide</div>`;
   card.style.display = 'block';
-  card.title = 'click to hide';
   card.onclick = () => { card.style.display = 'none'; };
   skip.style.display = 'none';
 }
@@ -166,14 +232,14 @@ if (P.future && P.future.length) {
     return P.direction * (px / entry - 1) * P.stake;
   };
   const tick = () => {
-    candles.update(toBar(F[i], L + i));
+    drawFuture(i);
     showPnl(mtm(i));
     i++;
     if (i >= n) { clearInterval(timer); finish(); }
   };
   skip.onclick = () => {
     clearInterval(timer);
-    for (; i < n; i++) candles.update(toBar(F[i], L + i));
+    for (; i < n; i++) drawFuture(i);
     finish();
   };
   if (P.animate) { skip.style.display = 'block'; timer = setInterval(tick, step); }

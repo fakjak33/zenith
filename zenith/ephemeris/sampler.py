@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 
 from . import MAX_BAR_MOVE, MAX_BAR_MOVE_DEFAULT, MIN_DOLLAR_VOLUME, NO_VOLUME_CLASSES, WARMUP
+from . import regime
 
 CRISES = {"2000–02 dot-com": ("2000-03-01", "2002-10-31"),
           "2008 GFC": ("2007-10-01", "2009-03-31"),
@@ -170,8 +171,10 @@ def draw(store, universe: list[dict], *, classes, tf: str = "Daily", lookback: i
         w0 = t - lookback + 1 - s0
         if not window_is_clean(o[w0:], h[w0:], l[w0:], c[w0:], v[w0:], ts[s0:s1][w0:], row["cls"], tf):
             continue
+        full = [df[k].to_numpy(np.float64) for k in ("open", "high", "low", "close")]
         return Chart(ticker=row["ticker"], name=row.get("name", row["ticker"]), cls=row["cls"],
                      sector=row.get("sector", ""), tf=tf, lookback=lookback, horizon=horizon,
-                     ts=ts[s0:s1], o=o, h=h, l=l, c=c, v=v, t=t - s0)
+                     ts=ts[s0:s1], o=o, h=h, l=l, c=c, v=v, t=t - s0,
+                     extra={"regime": regime.tags(*full, t, tf)})
     raise NoChartError("Could not find a clean, unseen chart for these settings — "
                        "widen the universe or the era filter.")
