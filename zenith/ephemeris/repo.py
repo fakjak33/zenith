@@ -421,5 +421,6 @@ class PostgresRepo(Repository):
 def get_repo(db_url: str | None = None, sqlite_path: str | Path | None = None) -> Repository:
     if db_url:
         return PostgresRepo(db_url)
+    import os
     from ..config import EPHEMERIS_FILES
-    return SqliteRepo(sqlite_path or EPHEMERIS_FILES["local_db"])
+    return SqliteRepo(sqlite_path or os.environ.get("EPHEMERIS_SQLITE") or EPHEMERIS_FILES["local_db"])
