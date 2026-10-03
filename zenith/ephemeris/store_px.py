@@ -26,7 +26,7 @@ SOURCES = {"Daily": ("daily.parquet", None), "Weekly": ("daily.parquet", "W-FRI"
            "Monthly": ("daily.parquet", "ME"), "1H": ("hourly.parquet", None),
            "4H": ("hourly.parquet", "4H")}
 # rough bars per source bar, for eligibility estimates before exact loading
-BAR_RATIO = {"Daily": 1.0, "Weekly": 1 / 5, "Monthly": 1 / 21, "1H": 1.0, "4H": 1 / 4}
+BAR_RATIO = {"Daily": 1.0, "Weekly": 1 / 5, "Monthly": 1 / 21, "1H": 1.0, "4H": 2 / 7}
 
 
 def _fresh(p: Path, max_age_h: float) -> bool:
@@ -55,8 +55,13 @@ def ensure_local(name: str, max_age_h: float = EPHEMERIS_PX_MAX_AGE_HOURS) -> Pa
 
 def resample(df: pd.DataFrame, rule: str) -> pd.DataFrame:
     if rule == "4H":
-        # RTH equities: 09:30-13:30 and 13:30-16:00 (short) -> anchor at 09:30.
-        g = df.resample("4h", offset="9h30min", label="left", closed="left")
+        # Hourly stamps are exchange wall-clock (US/Eastern). Session-only series
+        # (equities, ETFs, indices: 09:30..15:30) bin from the 09:30 open into
+        # 09:30-13:30 and 13:30-16:00 (a short bar). Round-the-clock series
+        # (crypto, FX) bin on plain 4-hour boundaries.
+        hours = df.index.hour
+        rth = len(hours) > 0 and hours.min() >= 9 and hours.max() <= 16
+        g = df.resample("4h", offset="9h30min" if rth else "0h", label="left", closed="left")
     else:
         g = df.resample(rule, label="right", closed="right")
     out = g.agg({"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"})

@@ -293,3 +293,13 @@ def test_indicator_payload_is_sliced_and_normalized(store):
     r = board.payload(ch, direction=1, stake=500, result=res, ind=data)
     assert all(len(o["values"]) == 130 for o in r["overlays"]) and len(r["up"]) == 130
     assert board.total_height(r) == board.HEIGHT + 2 * board.PANE_HEIGHT
+
+
+def test_volume_pane_dropped_when_instrument_has_no_volume(store):
+    from zenith.ephemeris import indicators as ind
+    ch = _chart(store)
+    ch.v[:] = 0.0                                                       # spot FX: no volume field
+    data = ind.compute([{"id": "volume", "params": {}}, {"id": "rsi", "params": {}}],
+                       ch.o, ch.h, ch.l, ch.c, ch.v, ch.vis0)
+    p = board.payload(ch, ind=data)
+    assert [pn["name"] for pn in p["panes"]] == ["RSI 14"]

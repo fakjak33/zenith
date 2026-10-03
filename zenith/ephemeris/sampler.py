@@ -125,6 +125,36 @@ def _era_ok(d: np.datetime64, min_year: int | None, crisis_only: bool) -> bool:
     return True
 
 
+def make_chart(df: pd.DataFrame, row: dict, tf: str, lookback: int, horizon: int, t: int,
+               check_clean: bool = True) -> Chart | None:
+    """Chart whose decision bar is df row t (warm-up kept for indicators), or
+    None when the window fails the bad-data filter."""
+    if t < lookback - 1 or t + horizon >= len(df):
+        return None
+    ts = df.index.values
+    s0 = max(0, t - lookback + 1 - WARMUP)
+    s1 = t + horizon + 1
+    o, h, l, c, v = (df[k].to_numpy(np.float64)[s0:s1] for k in ("open", "high", "low", "close", "volume"))
+    w0 = t - lookback + 1 - s0
+    if check_clean and not window_is_clean(o[w0:], h[w0:], l[w0:], c[w0:], v[w0:], ts[s0:s1][w0:],
+                                           row["cls"], tf):
+        return None
+    full = [df[k].to_numpy(np.float64) for k in ("open", "high", "low", "close")]
+    return Chart(ticker=row["ticker"], name=row.get("name", row["ticker"]), cls=row["cls"],
+                 sector=row.get("sector", ""), tf=tf, lookback=lookback, horizon=horizon,
+                 ts=ts[s0:s1], o=o, h=h, l=l, c=c, v=v, t=t - s0,
+                 extra={"regime": regime.tags(*full, t, tf)})
+
+
+def chart_at(store, row: dict, tf: str, lookback: int, horizon: int, decision) -> Chart | None:
+    """Rebuild the chart whose decision bar is at (or just before) `decision`."""
+    df = store.bars(row["ticker"], tf)
+    if df is None:
+        return None
+    t = int(np.searchsorted(df.index.values, np.datetime64(pd.Timestamp(decision)), side="right")) - 1
+    return make_chart(df, row, tf, lookback, horizon, t, check_clean=False)
+
+
 def eligible(universe: list[dict], counts: dict[str, int], classes, lookback: int,
              horizon: int) -> dict[str, list[dict]]:
     need = lookback + horizon + 1
@@ -165,16 +195,8 @@ def draw(store, universe: list[dict], *, classes, tf: str = "Daily", lookback: i
             pidx = np.searchsorted(ts, np.array(prior, dtype="datetime64[ns]"))
             if np.any(np.abs(pidx - t) < lookback):
                 continue
-        s0 = max(0, t - lookback + 1 - WARMUP)
-        s1 = t + horizon + 1
-        o, h, l, c, v = (df[k].to_numpy(np.float64)[s0:s1] for k in ("open", "high", "low", "close", "volume"))
-        w0 = t - lookback + 1 - s0
-        if not window_is_clean(o[w0:], h[w0:], l[w0:], c[w0:], v[w0:], ts[s0:s1][w0:], row["cls"], tf):
-            continue
-        full = [df[k].to_numpy(np.float64) for k in ("open", "high", "low", "close")]
-        return Chart(ticker=row["ticker"], name=row.get("name", row["ticker"]), cls=row["cls"],
-                     sector=row.get("sector", ""), tf=tf, lookback=lookback, horizon=horizon,
-                     ts=ts[s0:s1], o=o, h=h, l=l, c=c, v=v, t=t - s0,
-                     extra={"regime": regime.tags(*full, t, tf)})
+        ch = make_chart(df, row, tf, lookback, horizon, t)
+        if ch is not None:
+            return ch
     raise NoChartError("Could not find a clean, unseen chart for these settings — "
                        "widen the universe or the era filter.")
