@@ -27,6 +27,7 @@ import pandas as pd
 
 from ..config import EPHEMERIS_FILES, EPHEMERIS_PX_DIR
 from . import universe as uni
+from .benchmarks import build_base_rates
 
 PX_COLS = ("open", "high", "low", "close", "volume")
 BATCH = 40
@@ -122,6 +123,23 @@ def write_parquet(frames: dict[str, pd.DataFrame], path) -> int:
     return n
 
 
+def write_base_rates(frames: dict, rows: list[dict]) -> dict:
+    from .store_px import resample
+    table = build_base_rates({t: df.astype("float64") for t, df in frames.items()},
+                             {r["ticker"]: r["cls"] for r in rows}, resample)
+    EPHEMERIS_FILES["base_rates"].write_text(json.dumps(table, indent=0), encoding="utf-8")
+    return table
+
+
+def base_rates_from_store() -> dict:
+    """Rebuild base_rates.json from the local Parquet (no network)."""
+    from .store_px import PxStore
+    st = PxStore(root=EPHEMERIS_PX_DIR)
+    rows = uni.load()
+    frames = {r["ticker"]: st.bars(r["ticker"]) for r in rows}
+    return write_base_rates({t: df for t, df in frames.items() if df is not None}, rows)
+
+
 def run(limit: int | None = None) -> dict:
     rows = uni.write()
     tickers = [r["ticker"] for r in rows]
@@ -134,6 +152,7 @@ def run(limit: int | None = None) -> dict:
     t0 = time.time()
     frames = fetch(tickers, "1d", "max")
     n = write_parquet(frames, EPHEMERIS_PX_DIR / "daily.parquet")
+    write_base_rates(frames, rows)
     status = {"as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
               "daily": {"requested": len(tickers), "written": n,
                         "missing": sorted(set(tickers) - set(frames))[:200]},
@@ -147,4 +166,6 @@ def run(limit: int | None = None) -> dict:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
-    run(ap.parse_args().limit)
+    ap.add_argument("--base-rates-only", action="store_true", help="rebuild base rates from local Parquet")
+    a = ap.parse_args()
+    base_rates_from_store() if a.base_rates_only else run(a.limit)

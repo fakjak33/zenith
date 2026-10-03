@@ -275,3 +275,21 @@ def test_normalize_repairs_and_drops():
     df.iloc[6, df.columns.get_loc("close")] = np.nan
     out = prefetch._normalize(df.rename(columns=str.title))
     assert len(out) == 199 and (out["high"] >= out[["open", "close", "low"]].max(axis=1) - 1e-6).all()
+
+
+def test_indicator_payload_is_sliced_and_normalized(store):
+    from zenith.ephemeris import indicators as ind
+    ch = _chart(store)
+    data = ind.compute([{"id": "sma", "params": {"lengths": "20,200"}}, {"id": "volume", "params": {}},
+                        {"id": "rsi", "params": {}}], ch.o, ch.h, ch.l, ch.c, ch.v, ch.vis0)
+    p = board.payload(ch, ind=data)
+    assert all(len(o["values"]) == 120 for o in p["overlays"])          # no future in decision state
+    assert all(len(s["values"]) == 120 for pn in p["panes"] for s in pn["series"])
+    vol = [x for x in p["panes"][0]["series"][0]["values"] if x is not None]
+    assert np.median(vol) == pytest.approx(1.0, rel=1e-6)               # raw share counts never shipped
+    sma20 = p["overlays"][0]["values"]
+    assert sma20[-1] == pytest.approx(100 * ind.sma(ch.c, 20)[ch.t] / ch.c[ch.vis0], rel=1e-6)   # rebased
+    res = score_trade(direction=1, entry=ch.entry, stake=500, **ch.future())
+    r = board.payload(ch, direction=1, stake=500, result=res, ind=data)
+    assert all(len(o["values"]) == 130 for o in r["overlays"]) and len(r["up"]) == 130
+    assert board.total_height(r) == board.HEIGHT + 2 * board.PANE_HEIGHT

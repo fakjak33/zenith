@@ -21,6 +21,38 @@ from .sampler import Chart
 
 _TEMPLATE = Path(__file__).with_name("chart") / "board.html"
 HEIGHT = 470
+PANE_HEIGHT = 110
+
+
+def total_height(p: dict) -> int:
+    return HEIGHT + PANE_HEIGHT * len(p.get("panes") or [])
+
+
+def _vals(arr, s: slice, f: float = 1.0) -> list:
+    return [None if not np.isfinite(x) else _r(x * f) for x in np.asarray(arr, float)[s]]
+
+
+def _indicator_payload(ind: dict | None, s: slice, vis: slice, f: float) -> tuple[list, list]:
+    """Slice + rebase indicator series. Volume-type panes are divided by the
+    visible window's median volume so raw share counts never reach the page."""
+    if not ind:
+        return [], []
+    ovs = [{"name": o["name"], "color": o["color"], "style": o.get("style", 0), "step": o.get("step", False),
+            "values": _vals(o["values"], s, f)} for o in ind.get("overlays", [])]
+    panes = []
+    for pn in ind.get("panes", []):
+        norm = 1.0
+        if pn.get("volume"):
+            base = pn["series"][0]["values"] if pn["name"] == "VOL" else None
+            ref = np.asarray(base if base is not None else pn["series"][0]["values"], float)[vis]
+            ref = np.abs(ref[np.isfinite(ref)])
+            med = float(np.median(ref)) if ref.size and np.median(ref) > 0 else 1.0
+            norm = 1.0 / med
+        panes.append({"name": pn["name"], "levels": pn.get("levels", []), "fixed": pn.get("fixed"),
+                      "series": [{"name": sr["name"], "type": sr["type"], "color": sr.get("color"),
+                                  "updown": sr.get("updown", False), "signed": sr.get("signed", False),
+                                  "values": _vals(sr["values"], s, norm)} for sr in pn["series"]]})
+    return ovs, panes
 
 
 def _fmt_date(ts, tf: str) -> str:
@@ -34,7 +66,8 @@ def _r(x: float) -> float:
 
 def payload(ch: Chart, *, rebase: bool = True, hide_dates: bool = True, hide_ticker: bool = True,
             direction: int = 0, sl: float | None = None, tp: float | None = None,
-            stake: float = 0.0, result: dict | None = None, animate: bool = True) -> dict:
+            stake: float = 0.0, result: dict | None = None, animate: bool = True,
+            ind: dict | None = None) -> dict:
     """Dict for the board. `sl`/`tp` are RAW prices; result=None -> decision state."""
     f = 100.0 / ch.c[ch.vis0] if rebase else 1.0
     s = slice(ch.vis0, ch.t + 1)
@@ -48,8 +81,15 @@ def payload(ch: Chart, *, rebase: bool = True, hide_dates: bool = True, hide_tic
          "sl": _r(sl * f) if sl is not None else None, "tp": _r(tp * f) if tp is not None else None}
     if not hide_dates:
         p["dates"] = [_fmt_date(x, ch.tf) for x in ch.ts[ch.vis0:ch.t + 1]]
+    vis = slice(ch.vis0, ch.t + 1)
+    # updown colouring for volume bars needs candle direction
+    p["up"] = [bool(c >= o) for o, c in zip(ch.o[vis], ch.c[vis])]
     if result is None:
+        p["overlays"], p["panes"] = _indicator_payload(ind, vis, vis, f)
         return p
+    full = slice(ch.vis0, ch.t + 1 + ch.horizon)
+    p["overlays"], p["panes"] = _indicator_payload(ind, full, vis, f)
+    p["up"] = [bool(c >= o) for o, c in zip(ch.o[full], ch.c[full])]
 
     fs = slice(ch.t + 1, ch.t + 1 + ch.horizon)
     p["future"] = [[_r(o * f), _r(h * f), _r(l * f), _r(c * f)]
@@ -83,12 +123,13 @@ def board_html(p: dict, height: int = HEIGHT) -> str:
     subs = {"__BG__": THEME.bg, "__PANEL__": THEME.panel, "__GRID__": THEME.grid,
             "__TEAL__": THEME.teal, "__CORAL__": THEME.coral, "__MUSTARD__": THEME.mustard,
             "__MUTED__": THEME.muted, "__TEXT__": THEME.text, "__HEIGHT__": str(height),
+            "__PANEH__": str(PANE_HEIGHT), "__NOWTOP__": str(height - 52),
             "__PAYLOAD__": json.dumps(p, separators=(",", ":")).replace("</", "<\\/")}
     for k, v in subs.items():
         tpl = tpl.replace(k, v)
     return tpl
 
 
-def render(p: dict, height: int = HEIGHT) -> None:
+def render(p: dict) -> None:
     import streamlit.components.v1 as components
-    components.html(board_html(p, height), height=height + 8, scrolling=False)
+    components.html(board_html(p, HEIGHT), height=total_height(p) + 8, scrolling=False)
