@@ -46,6 +46,8 @@ def _indicator_payload(ind: dict | None, s: slice, vis: slice, f: float) -> tupl
             base = pn["series"][0]["values"] if pn["name"] == "VOL" else None
             ref = np.asarray(base if base is not None else pn["series"][0]["values"], float)[vis]
             ref = np.abs(ref[np.isfinite(ref)])
+            if not ref.size or not ref.any():
+                continue                  # spot FX etc. carry no volume -- skip the empty pane
             med = float(np.median(ref)) if ref.size and np.median(ref) > 0 else 1.0
             norm = 1.0 / med
         panes.append({"name": pn["name"], "levels": pn.get("levels", []), "fixed": pn.get("fixed"),

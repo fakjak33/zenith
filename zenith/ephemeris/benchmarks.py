@@ -35,11 +35,16 @@ def up_counts(c: np.ndarray, h: int) -> tuple[int, int]:
     return int((r > 0).sum()), int(r.size)
 
 
-def build_base_rates(frames: dict, classes: dict[str, str], resample) -> dict:
+DAILY_RULES = {"Daily": None, "Weekly": "W-FRI", "Monthly": "ME"}
+HOURLY_RULES = {"1H": None, "4H": "4H"}
+
+
+def build_base_rates(frames: dict, classes: dict[str, str], resample, rules: dict | None = None) -> dict:
     """{tf: {class: {h: {"p": share_up, "n": outcomes}}}} incl. class "ALL".
-    frames: ticker -> daily OHLCV DataFrame; resample(df, rule) for W/M."""
+    frames: ticker -> OHLCV DataFrame at the source frequency; `rules` maps each
+    timeframe to its resample rule (None = as-is). Defaults to Daily/Weekly/Monthly."""
     acc: dict = {}
-    rules = {"Daily": None, "Weekly": "W-FRI", "Monthly": "ME"}
+    rules = DAILY_RULES if rules is None else rules
     for t, df in frames.items():
         cls = classes.get(t)
         if cls is None:

@@ -21,6 +21,7 @@ import json
 import random
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -123,40 +124,85 @@ def write_parquet(frames: dict[str, pd.DataFrame], path) -> int:
     return n
 
 
-def write_base_rates(frames: dict, rows: list[dict]) -> dict:
+def write_base_rates(daily: dict, rows: list[dict], hourly: dict | None = None) -> dict:
+    from .benchmarks import HOURLY_RULES
     from .store_px import resample
-    table = build_base_rates({t: df.astype("float64") for t, df in frames.items()},
-                             {r["ticker"]: r["cls"] for r in rows}, resample)
+    classes = {r["ticker"]: r["cls"] for r in rows}
+    table = build_base_rates({t: df.astype("float64") for t, df in daily.items()}, classes, resample)
+    if hourly:
+        table.update(build_base_rates({t: df.astype("float64") for t, df in hourly.items()}, classes,
+                                      resample, HOURLY_RULES))
     EPHEMERIS_FILES["base_rates"].write_text(json.dumps(table, indent=0), encoding="utf-8")
     return table
 
 
+def read_parquet_frames(path) -> dict[str, pd.DataFrame]:
+    """Whole file -> {ticker: frame}, fully in memory (no open handle left behind,
+    so the same path can be rewritten afterwards -- matters on Windows)."""
+    import pyarrow.parquet as pq
+    if path is None or not Path(path).exists():
+        return {}
+    df = pq.read_table(path).to_pandas()
+    out = {}
+    for t, g in df.groupby("ticker", sort=False):
+        out[t] = g.drop(columns="ticker").set_index("ts").sort_index()
+    return out
+
+
+def merge_frames(old: dict, new: dict) -> dict:
+    """Append-only history: yfinance serves ~730 days of 1H bars, so keep the
+    older bars from the previous release and let the depth grow nightly."""
+    out = dict(old)
+    for t, df in new.items():
+        if t in out:
+            cat = pd.concat([out[t], df])
+            out[t] = cat[~cat.index.duplicated(keep="last")].sort_index().astype("float32")
+        else:
+            out[t] = df
+    return out
+
+
 def base_rates_from_store() -> dict:
     """Rebuild base_rates.json from the local Parquet (no network)."""
-    from .store_px import PxStore
-    st = PxStore(root=EPHEMERIS_PX_DIR)
     rows = uni.load()
-    frames = {r["ticker"]: st.bars(r["ticker"]) for r in rows}
-    return write_base_rates({t: df for t, df in frames.items() if df is not None}, rows)
+    return write_base_rates(read_parquet_frames(EPHEMERIS_PX_DIR / "daily.parquet"), rows,
+                            read_parquet_frames(EPHEMERIS_PX_DIR / "hourly.parquet"))
 
 
-def run(limit: int | None = None) -> dict:
+def _subset(rows: list[dict], limit: int | None) -> list[str]:
+    if not limit:
+        return [r["ticker"] for r in rows]
+    by_cls: dict[str, list[str]] = {}                  # balanced dev subset: a few per class
+    for r in rows:
+        by_cls.setdefault(r["cls"], []).append(r["ticker"])
+    per = max(2, limit // max(1, len(by_cls)))
+    return [t for ts in by_cls.values() for t in ts[:per]]
+
+
+def run(limit: int | None = None, hourly: bool = True) -> dict:
+    from .store_px import ensure_local
     rows = uni.write()
-    tickers = [r["ticker"] for r in rows]
-    if limit:                                          # balanced dev subset: a few per class
-        by_cls: dict[str, list[str]] = {}
-        for r in rows:
-            by_cls.setdefault(r["cls"], []).append(r["ticker"])
-        per = max(2, limit // max(1, len(by_cls)))
-        tickers = [t for ts in by_cls.values() for t in ts[:per]]
+    tickers = _subset(rows, limit)
     t0 = time.time()
-    frames = fetch(tickers, "1d", "max")
-    n = write_parquet(frames, EPHEMERIS_PX_DIR / "daily.parquet")
-    write_base_rates(frames, rows)
+    daily = fetch(tickers, "1d", "max")
+    n = write_parquet(daily, EPHEMERIS_PX_DIR / "daily.parquet")
     status = {"as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
               "daily": {"requested": len(tickers), "written": n,
-                        "missing": sorted(set(tickers) - set(frames))[:200]},
-              "seconds": round(time.time() - t0, 1)}
+                        "missing": sorted(set(tickers) - set(daily))[:200]}}
+    hourly_frames = None
+    if hourly:
+        prev = read_parquet_frames(ensure_local("hourly.parquet", max_age_h=1e9))
+        hourly_frames = merge_frames(prev, fetch(tickers, "1h", "730d"))
+        nh = write_parquet(hourly_frames, EPHEMERIS_PX_DIR / "hourly.parquet")
+        depth = [len(df) for df in hourly_frames.values()]
+        status["hourly"] = {"written": nh, "kept_from_previous": len(prev),
+                            "median_bars": int(np.median(depth)) if depth else 0}
+    write_base_rates(daily, rows, hourly_frames)
+    from . import daily as daily_five
+    from .store_px import PxStore
+    added = daily_five.extend_schedule(PxStore(root=EPHEMERIS_PX_DIR), rows)
+    status["daily_five_days_added"] = added
+    status["seconds"] = round(time.time() - t0, 1)
     (EPHEMERIS_PX_DIR / "manifest.json").write_text(json.dumps(status, indent=1), encoding="utf-8")
     EPHEMERIS_FILES["status"].write_text(json.dumps(status, indent=1), encoding="utf-8")
     print(json.dumps({k: v for k, v in status.items() if k != "daily"} | {"written": n}))
@@ -166,6 +212,7 @@ def run(limit: int | None = None) -> dict:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--no-hourly", action="store_true", help="skip the 1H download")
     ap.add_argument("--base-rates-only", action="store_true", help="rebuild base rates from local Parquet")
     a = ap.parse_args()
-    base_rates_from_store() if a.base_rates_only else run(a.limit)
+    base_rates_from_store() if a.base_rates_only else run(a.limit, hourly=not a.no_hourly)

@@ -20,8 +20,10 @@ concurrency:
 jobs:
   ephemeris:
     runs-on: ubuntu-latest
-    # ~1,900 tickers x full daily history, batches of 40 with backoff: ~6-10 min.
-    timeout-minutes: 45
+    # ~1,900 tickers x full daily history + 730 days of 1H (merged onto the previous
+    # release's hourly file so depth grows), batches of 40 with backoff: ~15-25 min.
+    # Also appends upcoming Daily Five days to data/ephemeris/daily_schedule.json.
+    timeout-minutes: 60
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -41,7 +43,7 @@ jobs:
           gh release view ephemeris-px >/dev/null 2>&1 || \
             gh release create ephemeris-px --title "EPHEMERIS price store" --latest=false \
               --notes "Rolling nightly Parquet price store for the EPHEMERIS tab. Overwritten every run."
-          gh release upload ephemeris-px data/ephemeris/px/daily.parquet data/ephemeris/px/manifest.json --clobber
+          gh release upload ephemeris-px data/ephemeris/px/daily.parquet data/ephemeris/px/hourly.parquet data/ephemeris/px/manifest.json --clobber
 
       - name: Commit EPHEMERIS metadata
         run: |
