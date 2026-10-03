@@ -37,12 +37,13 @@ live in `zenith/config.py` (CLEAN BETA block); this file says *why*.
 | 23 | DBMF/KMLM trend is computed from their own prices here, not read from TREND artefacts | Keeps the hedge job independent of trend.yml's run order |
 | 24 | Hedge history is one compact `hedge_history.json`, not yearly shards | ~250 small rows a year |
 | 25 | The basket's "β" includes the cash remainder; "invested names β" is shown alongside | The put ladder sizes on the dollar beta of the sleeve, which includes cash |
+| 26 | **ρ floor lowered from the spec's 0.55 to 0.50** (Jobe, 2026-10-03) | See below |
 
-## Open question for Jobe
+## Resolved: the correlation floor (2026-10-03)
 
-On the first live run (as of 2026-10-02) only **21 of 977** liquid names pass every filter, so the basket is
-short (19 names, 57% invested). The binding filter is **ρ ≥ 0.55**: among the top-quintile-beta names the
-median 252-day correlation to SPY is 0.49 right now. Pass counts by threshold:
+On the first live run (as of 2026-10-02) only **21 of 977** liquid names passed every filter at the spec's
+**ρ ≥ 0.55**. Among the top-quintile-beta names, the median 252-day correlation to SPY was 0.49. Pass counts
+by threshold:
 
 | ρ floor | IVOL cut at top tercile | IVOL cut at top quintile |
 |---|---|---|
@@ -50,5 +51,7 @@ median 252-day correlation to SPY is 0.49 right now. Pass counts by threshold:
 | 0.50 | 35 | 44 |
 | 0.55 (spec) | 21 | 25 |
 
-Options: keep the spec's absolute floor (current), lower it to 0.50, or make it a percentile so the basket
-size is stable across correlation regimes. One line in `config.py` either way.
+Jobe chose **0.50** (IVOL cut unchanged). Result: 35 pass. The basket seats 23 of them, 65% invested,
+β 1.06 including cash (1.64 for the invested names), effective bets 4.4. It is still below the 30-name floor
+because the passing names cluster in 5 sectors and the 15% sector cap seats at most 6 names per sector.
+A percentile-based floor (stable basket size across correlation regimes) remains an option if this recurs.

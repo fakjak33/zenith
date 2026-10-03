@@ -256,9 +256,10 @@ def _basket(art: dict) -> None:
          "sub": "share of basket variance per factor"},
     ]), unsafe_allow_html=True)
     if b.get("short"):
-        st.warning(f"Only {b['n']} names pass every filter — below the 30-name floor. The basket is not "
-                   "padded with failing names; it holds what passes, and the rest is uninvested "
-                   f"({1 - (b.get('invested') or 0):.0%}).")
+        st.warning(f"{b['n']} names seated of {b.get('n_candidates', 0)} that pass every filter — below the "
+                   "30-name floor. Passing names are concentrated in few sectors, and the 15% sector cap "
+                   "limits how many each sector can seat. The basket is not padded with failing names or "
+                   f"over-weighted sectors; the rest is uninvested ({1 - (b.get('invested') or 0):.0%}).")
     st.caption("Effective bets = (Σλ)²/Σλ² over the eigenvalues of the members' correlation matrix: how many "
                "independent names the basket behaves like. Correlated high-beta names are far fewer bets than "
                "names. Variance ENB (Meucci) asks how many factors drive the basket's VARIANCE — near 1 for any "

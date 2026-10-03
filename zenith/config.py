@@ -495,7 +495,7 @@ BETA_MIN_ADV_USD = 25e6
 # Filters. Percentiles are within the liquid universe.
 BETA_PCT_ENTER = 80.0                  # bswa β percentile to ENTER the basket
 BETA_PCT_EXIT = 60.0                   # ...an incumbent leaves only below this (buffer band)
-BETA_RHO_MIN = 0.55                    # correlation floor to the benchmark (252d)
+BETA_RHO_MIN = 0.50                    # correlation floor to the benchmark (252d); spec said 0.55 -- see DECISIONS #26
 BETA_IVOL_MAX_PCT = 200.0 / 3.0        # IVOL in the top tercile fails
 BETA_JUMP_SIGMA = 4.0                  # a residual beyond 4σ counts as an event day
 BETA_MAX_JUMP_DAYS = 3                 # more event days than this in 252d fails

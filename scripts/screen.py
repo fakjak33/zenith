@@ -784,7 +784,8 @@ def screen_beta() -> None:
     b = beta_load("basket", {})
     mem = b.get("members", [])
     check(len(mem) <= BETA_BASKET_MAX, f"beta: basket <= {BETA_BASKET_MAX} names ({len(mem)})")
-    warn(bool(b.get("short")), f"beta: basket short — only {len(mem)} names pass every filter")
+    warn(bool(b.get("short")), f"beta: basket short — {len(mem)} seated of {b.get('n_candidates')} passing "
+                               f"(sector caps)")
     check(all(m["weight"] <= BETA_NAME_CAP + 1e-9 for m in mem), "beta: single-name cap respected")
     check(all(w <= BETA_SECTOR_CAP + 1e-9 for w in (b.get("sectors") or {}).values()),
           f"beta: sector cap respected ({b.get('sectors')})")
