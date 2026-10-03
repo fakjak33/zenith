@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-03",
+  "checked": "2026-10-03",
+  "is_trading_day": true,
+  "action": "rebalance",
+  "screened": true,
+  "rebalanced": true,
+  "disclaimer": "CLEAN BETA screens the Russell 1000 for high beta that comes from market correlation rather than idiosyncratic noise, builds a diversified candidate basket, and monitors hedge conditions (trend gate, vol target, volatility risk premium, index put ladder). The basket and the put ladder are research output, not positions or recommendations. Decision-support and a research monitor, not investment advice.",
+  "segments": [
+    {
+      "segment": "universe",
+      "ok": true,
+      "n": 1007,
+      "source": "stale:vanguard_vone",
+      "weights_source": "vone",
+      "n_duplicates_dropped": 0
+    },
+    {
+      "segment": "prices",
+      "ok": true,
+      "n": 998,
+      "requested": 1008,
+      "missing": [
+        "AVB",
+        "BLD",
+        "EA",
+        "EQR",
+        "GTLS",
+        "JHG",
+        "JMKE",
+        "LBRDK",
+        "NSA",
+        "WBS"
+      ],
+      "error": ""
+    },
+    {
+      "segment": "fundamentals",
+      "ok": true,
+      "n": 1007,
+      "requested": 1007
+    },
+    {
+      "segment": "earnings",
+      "ok": true,
+      "n": 13
+    },
+    {
+      "segment": "basket",
+      "ok": true,
+      "n": 23,
+      "short": true,
+      "beta": 1.063,
+      "eff_dim": 4.39
+    },
+    {
+      "segment": "screen",
+      "ok": true,
+      "n": 1007,
+      "n_liquid": 977,
+      "n_pass": 35,
+      "as_of": "2026-10-02"
+    },
+    {
+      "segment": "hedge_prices",
+      "ok": true,
+      "n": 5,
+      "requested": 5,
+      "missing": [],
+      "error": ""
+    },
+    {
+      "segment": "basket_prices",
+      "ok": true,
+      "n": 23,
+      "requested": 23,
+      "missing": [],
+      "error": ""
+    },
+    {
+      "segment": "options",
+      "ok": true,
+      "n_expiries": 10
+    },
+    {
+      "segment": "hedge",
+      "ok": true,
+      "as_of": "2026-10-02",
+      "trend": "ON",
+      "n_alerts": 0
+    }
+  ]
+}

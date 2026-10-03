@@ -430,6 +430,38 @@ def test_index_export_buttons_present():
     assert "CSV" in labels and "Excel" in labels and "JSON" in labels
 
 
+def test_beta_view_renders_with_or_without_data():
+    at, text = _render("from zenith.beta import view\nview.render()\n")
+    low = text.lower()
+    assert "evidence strength" in low and "key findings" in low
+    assert "frazzini" in low
+    if not config.BETA_FILES["latest"].exists():
+        assert "no data yet" in " ".join(str(i.value) for i in at.info).lower()
+
+
+@pytest.mark.skipif(not config.BETA_FILES["latest"].exists(), reason="no committed beta data")
+@pytest.mark.parametrize("sub,needle", [
+    ("Screener", "quality-beta ranking"),
+    ("Basket", "effective bets"),
+    ("Hedge Monitor", "trend gate"),
+    ("Playbook", "hedge playbook"),
+])
+def test_beta_subviews_render(sub, needle):
+    at, text = _render("\n".join([
+        "from zenith.beta import view",
+        "import streamlit as st",
+        f"st.session_state['beta_sub'] = {sub!r}",
+        "view.render()",
+    ]))
+    assert needle in text.lower()
+
+
+def test_beta_today_badge_never_raises():
+    from zenith.beta import view
+    b = view.today_badge()
+    assert b is None or "CLEAN BETA" in b
+
+
 def test_full_app_renders_with_trend_following_tab():
     """app.py itself -- every tab in one run. Catches a broken app.py (which
     no per-view test imports) and confirms the new tab is registered."""
@@ -439,5 +471,6 @@ def test_full_app_renders_with_trend_following_tab():
     assert not at.exception, [e.value for e in at.exception]
     labels = [t.label for t in at.tabs]
     assert "TREND FOLLOWING" in labels and "MOMENTUM" in labels and "ETF MOMENTUM" in labels
+    assert "CLEAN BETA" in labels
     errors = " ".join(str(e.value) for e in at.error)
     assert "could not be loaded" not in errors, errors

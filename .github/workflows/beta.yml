@@ -1,0 +1,54 @@
+name: CLEAN BETA compute
+
+on:
+  schedule:
+    - cron: "15 5 * * 2-6"      # after trend.yml (04:45). Reads data/mom/meta.json (sector /
+                                # market cap, via the TREND universe loader) and
+                                # data/ideas/fundamentals.json, both read-only. Self-gates
+                                # on the trading calendar. `auto` re-screens when the stored
+                                # screen is from an earlier month, rebalances the basket at
+                                # each quarter-start month, and runs the hedge monitor daily.
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto | screen | rebalance | hedge"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: beta
+  cancel-in-progress: false
+
+jobs:
+  beta:
+    runs-on: ubuntu-latest
+    # ~1,000 Russell 1000 names x 2y of daily OHLC on screen days; a handful of
+    # hedge series + one SPY option-chain sweep on every other day.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run CLEAN BETA compute
+        run: python -m zenith.beta.compute --action ${{ github.event.inputs.action || 'auto' }}
+
+      - name: Commit CLEAN BETA data
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          # ONLY data/beta/. This job reads data/mom/ and data/ideas/ but must
+          # never write them -- those belong to mom.yml / ideas.yml.
+          git add -A data/beta/
+          if git diff --cached --quiet; then
+            echo "No CLEAN BETA changes."
+          else
+            git commit -m "beta: $(date -u +%Y-%m-%d) ${{ github.event.inputs.action || 'auto' }}"
+            git push
+          fi

@@ -462,6 +462,84 @@ TREND_CASH_LIKE_VOL = 0.015
 for _d in (TREND_DIR, *TREND_HISTORY_DIRS.values(), *TREND_EVENT_DIRS.values()):
     _d.mkdir(parents=True, exist_ok=True)
 
+# --- CLEAN BETA (quality high-beta screener + convex hedge monitor) ---------
+# Screens the Russell 1000 (MOMENTUM's universe) for high beta that comes from
+# market CORRELATION, not idiosyncratic noise (Liu, Stambaugh & Yuan 2018), then
+# monitors the cheapest ways to hedge it. Every threshold lives here; the
+# rationale for each is in zenith/beta/DECISIONS.md.
+BETA_DIR = DATA_DIR / "beta"
+BETA_EXPORT_DIR = BETA_DIR / "exports"          # point-in-time PARALLAX snapshots
+BETA_FILES = {
+    "latest": BETA_DIR / "latest.json",           # monthly screen: every ticker, every metric
+    "basket": BETA_DIR / "basket.json",           # quarterly basket (buffer-banded)
+    "hedge": BETA_DIR / "hedge.json",             # daily hedge-condition monitor
+    "hedge_history": BETA_DIR / "hedge_history.json",   # one compact row per day
+    "shares": BETA_DIR / "shares.json",           # monthly sharesOutstanding snapshots
+    "optionable": BETA_DIR / "optionable.json",   # {ticker: {optionable, asof}} TTL cache
+    "status": BETA_DIR / "status.json",
+}
+BETA_BENCHMARK = "SPY"                 # US universe. ACWI arrives with the ADR toggle.
+BETA_PRICE_PERIOD = "2y"               # ~500 bars per name: bswa's decay makes older data ~irrelevant
+BETA_HEDGE_PERIOD = "5y"               # SPY / VIX / BTAL history for percentiles
+BETA_LOOKBACK = 252                    # trading days for rho, R^2, IVOL, OLS beta
+BETA_MIN_BARS = 126                    # fewer than this -> not estimated at all
+# Welch (2022) "Simply Better Market Betas": winsorize r_i into the band
+# [(1-δ)·r_m, (1+δ)·r_m] (bounds the implied daily beta to [1-δ, 1+δ] = [-2, 4])
+# and weight observations by exp(-λ·age_in_years) (λ=2 -> half-life ~4 months).
+BETA_BSWA_DELTA = 3.0
+BETA_BSWA_LAMBDA = 2.0
+# Liquidity universe (US). ADV = 63-day mean of close × volume.
+BETA_MIN_PRICE = 5.0
+BETA_MIN_MKTCAP = 2e9
+BETA_MIN_ADV_USD = 25e6
+# Filters. Percentiles are within the liquid universe.
+BETA_PCT_ENTER = 80.0                  # bswa β percentile to ENTER the basket
+BETA_PCT_EXIT = 60.0                   # ...an incumbent leaves only below this (buffer band)
+BETA_RHO_MIN = 0.50                    # correlation floor to the benchmark (252d); spec said 0.55 -- see DECISIONS #26
+BETA_IVOL_MAX_PCT = 200.0 / 3.0        # IVOL in the top tercile fails
+BETA_JUMP_SIGMA = 4.0                  # a residual beyond 4σ counts as an event day
+BETA_MAX_JUMP_DAYS = 3                 # more event days than this in 252d fails
+BETA_EARNINGS_DAYS = 10                # earnings within N calendar days fails (at screen time)
+BETA_IPO_MIN_BARS = 250                # fewer bars than this = recent IPO, fails
+BETA_QUALITY_MIN_PCT = 20.0            # worst-quintile quality / mispricing fails
+# Hand-maintained binary-event flags (pending M&A, FDA date, litigation...).
+# {ticker: "reason"}. A flagged name fails the event filter.
+BETA_MANUAL_EVENT_FLAGS: dict[str, str] = {}
+# Quality-Beta Score (0-100): weighted mean of within-universe percentiles.
+BETA_SCORE_WEIGHTS = {"beta": 0.35, "rho": 0.25, "ivol": 0.15, "quality": 0.15, "events": 0.10}
+BETA_QUALITY_MIN_COMPONENTS = 3        # fewer usable fundamentals -> quality is [E] neutral 50
+BETA_ISSUANCE_MONTHS = 12              # share-count history needed before net issuance counts
+# Basket construction (greedy, equal-weight, capped).
+BETA_BASKET_TARGET = 40
+BETA_BASKET_MIN = 30
+BETA_BASKET_MAX = 50
+BETA_SECTOR_CAP = 0.15
+BETA_NAME_CAP = 0.04
+BETA_CORR_THRESHOLD = 0.70             # pairwise corr above this with a chosen name is penalized
+BETA_CORR_PENALTY = 60.0               # score points per unit of corr above the threshold
+BETA_SIZE_BUCKETS = (("Mega", 200e9), ("Large", 50e9), ("Mid", 10e9), ("Small", 0.0))
+BETA_MIN_PER_SIZE_BUCKET = 2           # each bucket gets this many names when candidates exist
+BETA_REBALANCE_MONTHS = (1, 4, 7, 10)  # quarterly basket rebalance; screen re-runs monthly
+BETA_OPTIONABLE_TTL_DAYS = 90
+# Hedge monitor.
+BETA_TREND_LOOKBACK = 252              # 12-1 month time-series momentum: P[t-21]/P[t-252]
+BETA_TREND_SKIP = 21
+BETA_TREND_MA = 210                    # 10-month moving average (~21 × 10 trading days)
+BETA_TREND_EXPOSURE = {"ON": 1.0, "PARTIAL": 0.75, "REDUCED": 0.5}
+BETA_VOL_TARGET = 0.20                 # annualized target vol for the sleeve
+BETA_VOL_SCALE_CAP = 1.0               # 1.5 if leverage is allowed
+BETA_VRP_PCT_WINDOW = 1260             # ~5 years of daily VRP for its percentile
+BETA_PUT_BUDGET = (0.005, 0.015)       # annual put-sleeve carry budget, low..high
+BETA_PUT_TENORS = (60, 90, 120)        # target DTE of the three ladder rungs
+BETA_PUT_LONG_DELTA = -0.25
+BETA_PUT_SHORT_DELTA = -0.10
+BETA_HARVEST_MULTIPLE = 2.5            # harvest a rung once it is worth >= this × entry
+BETA_VIX_HARVEST_PCT = 90.0            # ...or once VIX is at/above this percentile
+BETA_RISK_FREE = 0.04                  # Black-Scholes delta only; insensitive at these tenors
+
+for _d in (BETA_DIR, BETA_EXPORT_DIR):
+    _d.mkdir(parents=True, exist_ok=True)
+
 # --- IDEAS (discretionary-systematic opportunity engine) --------------------
 # Fusion layer over MOMENTUM/EDGE/PEAD/FMOM/CAS — not a new data pipeline (see
 # zenith/ideas/__init__.py for the full architecture note). Its own committed
