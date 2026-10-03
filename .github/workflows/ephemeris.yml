@@ -1,0 +1,58 @@
+name: EPHEMERIS prices
+
+on:
+  schedule:
+    - cron: "30 5 * * 2-6"      # after beta.yml (05:15). Reads data/etfmom/, data/pretom/ and
+                                # data/mom/meta.json read-only to build the universe.
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "dev subset size (blank = full universe)"
+        default: ""
+
+permissions:
+  contents: write               # commit data/ephemeris/ + publish the release asset
+
+concurrency:
+  group: ephemeris
+  cancel-in-progress: false
+
+jobs:
+  ephemeris:
+    runs-on: ubuntu-latest
+    # ~1,900 tickers x full daily history, batches of 40 with backoff: ~6-10 min.
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Prefetch prices -> Parquet
+        run: python -m zenith.ephemeris.prefetch ${{ github.event.inputs.limit && format('--limit {0}', github.event.inputs.limit) || '' }}
+
+      - name: Publish release asset (rolling tag ephemeris-px)
+        run: |
+          # Prices live in a release asset, never in git history (~150 MB, rebuilt nightly).
+          gh release view ephemeris-px >/dev/null 2>&1 || \
+            gh release create ephemeris-px --title "EPHEMERIS price store" --latest=false \
+              --notes "Rolling nightly Parquet price store for the EPHEMERIS tab. Overwritten every run."
+          gh release upload ephemeris-px data/ephemeris/px/daily.parquet data/ephemeris/px/manifest.json --clobber
+
+      - name: Commit EPHEMERIS metadata
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          # ONLY the small JSON under data/ephemeris/ (px/ is gitignored).
+          git add -A data/ephemeris/
+          if git diff --cached --quiet; then
+            echo "No EPHEMERIS changes."
+          else
+            git commit -m "ephemeris: $(date -u +%Y-%m-%d) prices"
+            git push
+          fi

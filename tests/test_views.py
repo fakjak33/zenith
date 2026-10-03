@@ -472,5 +472,19 @@ def test_full_app_renders_with_trend_following_tab():
     labels = [t.label for t in at.tabs]
     assert "TREND FOLLOWING" in labels and "MOMENTUM" in labels and "ETF MOMENTUM" in labels
     assert "CLEAN BETA" in labels
+    assert "EPHEMERIS" in labels
     errors = " ".join(str(e.value) for e in at.error)
     assert "could not be loaded" not in errors, errors
+
+
+def test_ephemeris_view_renders_without_player():
+    at, text = _render("from zenith.ephemeris import view\nview.render()\n")
+    low = text.lower()
+    assert "evidence strength" in low and "key findings" in low and "ericsson" in low
+    assert "no sign-up" in low                      # first-visit handle prompt
+
+
+def test_ephemeris_today_badge_never_raises():
+    from zenith.ephemeris import view
+    b = view.today_badge()
+    assert b is None or "EPHEMERIS" in b
