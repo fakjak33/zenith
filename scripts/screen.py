@@ -754,6 +754,51 @@ def screen_trend() -> None:
               f"history_years={trend_history.years(u)} breadth_days={len(breadth)}")
 
 
+def screen_beta() -> None:
+    print("[beta]")
+    from zenith.beta import load as beta_load
+    from zenith.config import BETA_BASKET_MAX, BETA_BSWA_DELTA, BETA_NAME_CAP, BETA_SECTOR_CAP
+
+    status = beta_load("status", {})
+    if not status:
+        warn(True, "beta: not yet run (no status) — skipping")
+        return
+    check(_days_old(status.get("checked") or status.get("date", "")) <= 5,
+          f"beta status fresh ({status.get('checked') or status.get('date')})")
+    doc = beta_load("latest", {})
+    rows = doc.get("rows", [])
+    check(bool(rows), "beta: screen has rows")
+    tks = [r["ticker"] for r in rows]
+    check(len(tks) == len(set(tks)), "beta: no duplicate tickers")
+    check(doc.get("n_priced", 0) >= 0.9 * max(1, doc.get("n", 0)),
+          f"beta: price coverage >= 90% ({doc.get('n_priced')}/{doc.get('n')})")
+    liq = [r for r in rows if r.get("f_liquid")]
+    lo, hi = 1 - BETA_BSWA_DELTA, 1 + BETA_BSWA_DELTA
+    check(all(lo - 1e-6 <= r["bswa"] <= hi + 1e-6 for r in liq), f"beta: bswa within [{lo:g}, {hi:g}]")
+    check(all(0 <= r["score"] <= 100 for r in liq), "beta: score within [0, 100]")
+    check(all(-1 <= r["rho"] <= 1 and r["ivol"] >= 0 for r in liq), "beta: rho in [-1,1], ivol >= 0")
+    check(all(r["passes"] == all(r[f] for f in ("f_beta", "f_rho", "f_ivol", "f_events", "f_quality"))
+              for r in liq), "beta: passes == all filters")
+    ranks = sorted(r["rank"] for r in liq if r.get("rank"))
+    check(ranks == list(range(1, len(ranks) + 1)), "beta: ranks contiguous")
+    b = beta_load("basket", {})
+    mem = b.get("members", [])
+    check(len(mem) <= BETA_BASKET_MAX, f"beta: basket <= {BETA_BASKET_MAX} names ({len(mem)})")
+    warn(bool(b.get("short")), f"beta: basket short — only {len(mem)} names pass every filter")
+    check(all(m["weight"] <= BETA_NAME_CAP + 1e-9 for m in mem), "beta: single-name cap respected")
+    check(all(w <= BETA_SECTOR_CAP + 1e-9 for w in (b.get("sectors") or {}).values()),
+          f"beta: sector cap respected ({b.get('sectors')})")
+    passing = {r["ticker"] for r in rows if r.get("passes")}
+    check(all(m["ticker"] in passing for m in mem), "beta: every basket member passes the screen")
+    h = beta_load("hedge", {})
+    check(bool(h.get("trend", {}).get("state")), "beta: hedge monitor has a trend-gate state")
+    v = h.get("vrp") or {}
+    check(v.get("vix") is None or 5 <= v["vix"] <= 90, f"beta: VIX plausible ({v.get('vix')})")
+    warn(not (h.get("puts") or {}).get("rungs"), "beta: no put-ladder rungs (option chain unavailable?)")
+    print(f"       screen as_of={doc.get('as_of')} liquid={doc.get('n_liquid')} pass={doc.get('n_pass')} "
+          f"basket={len(mem)} beta={b.get('beta')} eff_dim={b.get('eff_dim')} trend={h.get('trend', {}).get('state')}")
+
+
 def screen_mvt() -> None:
     print("[mom.mvt]")
     from zenith.mom.mvt import load as mvt_load
@@ -1258,6 +1303,7 @@ def main() -> None:
     screen_mvt()
     screen_etfmom()
     screen_trend()
+    screen_beta()
     screen_ideas()
     screen_regimes()
     screen_index()
