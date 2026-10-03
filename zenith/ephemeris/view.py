@@ -23,7 +23,7 @@ from . import chart as board
 from . import indicators as ind
 from . import profiles
 from . import universe as uni
-from .repo import get_repo
+from .repo import db_url_problem, get_repo
 from . import daily as daily_five
 from .sampler import NoChartError, chart_at, draw
 from .benchmarks import TREND_RULE_DEFAULT, base_rate, trend_rule_call, trend_rule_label
@@ -77,13 +77,25 @@ def _repo():
     try:
         return _repo_for(url), None
     except Exception as exc:              # hosted DB down/misconfigured -> keep playing locally
-        msg = f"{type(exc).__name__}: {str(exc)[:140]}"
-        if url and "@db." in url and ".supabase.co" in url:
-            # Supabase "Direct connection" hosts are IPv6-only; Community Cloud has no IPv6.
-            msg += (" — this is Supabase's *Direct connection* string. Use the **Session pooler** URI "
-                    "instead (Connect → Connection string → Method: Session pooler; host ends in "
-                    "pooler.supabase.com).")
-        return _repo_for(None), msg
+        return _repo_for(None), _db_error_text(url, exc)
+
+
+def _db_error_text(url: str | None, exc: Exception) -> str:
+    """Actionable, password-free explanation of a hosted-DB failure."""
+    raw = str(exc).replace("
+", " ").strip()
+    if url and url in raw:
+        raw = raw.replace(url, "<url>")
+    diag = db_url_problem(url) if url else None
+    if diag:
+        return f"{diag}. Fix the `ephemeris_db_url` secret."
+    if "password authentication failed" in raw:
+        return ("Supabase rejected the database password. In Supabase: Project Settings → Database → "
+                "Reset database password, choose one with only letters and digits, then paste the Session "
+                "pooler URI with that password (no [ ] brackets) into the `ephemeris_db_url` secret.")
+    if "could not translate host name" in raw:
+        return "the database host name does not resolve — copy the Session pooler URI again."
+    return f"{type(exc).__name__}: {raw[:300]}"
 
 
 # ================================================================ badge ====

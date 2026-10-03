@@ -303,3 +303,23 @@ def test_volume_pane_dropped_when_instrument_has_no_volume(store):
                        ch.o, ch.h, ch.l, ch.c, ch.v, ch.vis0)
     p = board.payload(ch, ind=data)
     assert [pn["name"] for pn in p["panes"]] == ["RSI 14"]
+
+
+def test_parse_db_url_tolerates_real_world_pastes():
+    from zenith.ephemeris.repo import db_url_problem, parse_db_url
+    base = "postgresql://postgres.abcref:{pw}@aws-0-us-west-2.pooler.supabase.com:5432/postgres"
+    kw = parse_db_url(base.format(pw="pa@ss:w/rd#1?"))                  # specials, unencoded
+    assert kw["password"] == "pa@ss:w/rd#1?" and kw["user"] == "postgres.abcref"
+    assert kw["host"] == "aws-0-us-west-2.pooler.supabase.com" and kw["port"] == 5432
+    assert kw["dbname"] == "postgres" and kw["sslmode"] == "require"
+    assert parse_db_url(base.format(pw="[secret123]"))["password"] == "secret123"   # brackets left in
+    enc = parse_db_url(base.format(pw="p%40ss"))                        # already percent-encoded
+    assert enc["password"] == "p%40ss" and enc["password_alt"] == "p@ss"
+    assert parse_db_url('"' + base.format(pw="x") + '"')["password"] == "x"         # quoted paste
+    assert db_url_problem(base.format(pw="[YOUR-PASSWORD]")) == "the password placeholder was not replaced"
+    assert "Direct connection" in db_url_problem("postgresql://postgres:pw@db.abc.supabase.co:5432/postgres")
+    assert "postgres.<project-ref>" in db_url_problem(
+        "postgresql://postgres:pw@aws-0-us-west-2.pooler.supabase.com:5432/postgres")
+    assert db_url_problem(base.format(pw="fine")) is None
+    with pytest.raises(ValueError):
+        parse_db_url("mysql://x:y@h/db")

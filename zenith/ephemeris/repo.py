@@ -311,11 +311,56 @@ class SqliteRepo(Repository):
         return "local SQLite"
 
 
+def parse_db_url(url: str) -> dict:
+    """Postgres URI -> psycopg2 keyword args, tolerant of how people paste
+    Supabase strings: the password is taken LITERALLY (everything between the
+    first ':' after the scheme and the LAST '@'), so '@ # / : ?' need no
+    percent-encoding, and leftover [brackets] from '[YOUR-PASSWORD]' are
+    stripped. `password_alt` is the percent-decoded form, tried second."""
+    from urllib.parse import unquote
+    u = (url or "").strip().strip('"').strip("'")
+    scheme, sep, rest = u.partition("://")
+    if not sep or scheme not in ("postgres", "postgresql"):
+        raise ValueError("ephemeris_db_url must start with postgresql://")
+    creds, at, hostpart = rest.rpartition("@")
+    if not at:
+        raise ValueError("ephemeris_db_url has no user:password@ part")
+    user, _, password = creds.partition(":")
+    if len(password) > 2 and password.startswith("[") and password.endswith("]"):
+        password = password[1:-1]
+    hostport, _, tail = hostpart.partition("/")
+    dbname = (tail.split("?", 1)[0] or "postgres")
+    host, _, port = hostport.rpartition(":") if hostport.count(":") == 1 else (hostport, "", "")
+    out = {"host": host or hostport, "port": int(port) if port.isdigit() else 5432, "user": unquote(user),
+           "password": password, "dbname": dbname, "sslmode": "require"}
+    alt = unquote(password)
+    if alt != password:
+        out["password_alt"] = alt
+    return out
+
+
+def db_url_problem(url: str) -> str | None:
+    """A plain-English diagnosis of a Supabase URL, never echoing the password."""
+    try:
+        kw = parse_db_url(url)
+    except ValueError as exc:
+        return str(exc)
+    if "[YOUR-PASSWORD]" in url or kw["password"] in ("YOUR-PASSWORD", ""):
+        return "the password placeholder was not replaced"
+    if "@db." in url and ".supabase.co" in url:
+        return ("this is Supabase's Direct connection string (IPv6-only); use the Session pooler URI "
+                "(host ends in pooler.supabase.com)")
+    if "pooler.supabase.com" in kw["host"] and "." not in kw["user"]:
+        return "pooler user must be postgres.<project-ref>, not plain 'postgres'"
+    return None
+
+
 class PostgresRepo(Repository):
     dialect, ph = "postgres", "%s"
 
     def __init__(self, url: str):
         self.url = url
+        self._kw = parse_db_url(url)
         self._con = None
         self._lock = threading.Lock()
         self.init()
@@ -323,7 +368,16 @@ class PostgresRepo(Repository):
     def _conn(self):
         import psycopg2
         if self._con is None or self._con.closed:
-            self._con = psycopg2.connect(self.url, connect_timeout=10)
+            kw = {k: v for k, v in self._kw.items() if k != "password_alt"}
+            try:
+                self._con = psycopg2.connect(connect_timeout=10, **kw)
+            except psycopg2.OperationalError as exc:
+                alt = self._kw.get("password_alt")
+                if not alt or "password authentication failed" not in str(exc):
+                    raise
+                # the pasted password was percent-encoded -> try the decoded form
+                self._con = psycopg2.connect(connect_timeout=10, **(kw | {"password": alt}))
+                self._kw["password"] = alt
         return self._con
 
     def _run(self, fn):
