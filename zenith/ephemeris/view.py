@@ -76,7 +76,13 @@ def _repo():
     try:
         return _repo_for(url), None
     except Exception as exc:              # hosted DB down/misconfigured -> keep playing locally
-        return _repo_for(None), f"{type(exc).__name__}: {str(exc)[:140]}"
+        msg = f"{type(exc).__name__}: {str(exc)[:140]}"
+        if url and "@db." in url and ".supabase.co" in url:
+            # Supabase "Direct connection" hosts are IPv6-only; Community Cloud has no IPv6.
+            msg += (" — this is Supabase's *Direct connection* string. Use the **Session pooler** URI "
+                    "instead (Connect → Connection string → Method: Session pooler; host ends in "
+                    "pooler.supabase.com).")
+        return _repo_for(None), msg
 
 
 # ================================================================ badge ====
