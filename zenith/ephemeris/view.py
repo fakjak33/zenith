@@ -20,6 +20,7 @@ from ..ui_theme import evidence_rating, key_findings, section
 from . import (CLASSES, CONVICTION, TIMEFRAMES, DEFAULT_CONVICTION, DEFAULT_HORIZON, DEFAULT_LOOKBACK, DISCLAIMER,
                HORIZONS, LOOKBACKS, START_BALANCE, SURVIVORSHIP_NOTE, stake_for)
 from . import chart as board
+from . import dashboard
 from . import indicators as ind
 from . import profiles
 from . import universe as uni
@@ -31,7 +32,7 @@ from .regime import summary as regime_summary
 from .scoring import InvalidLevels, level_from_spec, score_trade
 from .store_px import PxStore
 
-SUBVIEWS = ["Play", "Daily Five", "History"]
+SUBVIEWS = ["Play", "Daily Five", "Stats", "Read", "History"]
 
 _EVIDENCE_NOTE = ("Deliberate practice — many repetitions, immediate feedback, a measurable score — is the "
                   "best-supported route to perceptual expertise. Whether chart reading itself carries an edge "
@@ -667,8 +668,7 @@ def _history(repo, player: dict) -> None:
     st.dataframe(out.style.format({"Move": "{:+.2%}", "Trade": "{:+.2%}", "PnL": lambda v: f"{'+' if v >= 0 else '−'}${abs(v):,.0f}"})
                  .map(lambda v: uc.grad_diverging(v, 0.05), subset=["Trade"]),
                  use_container_width=True, height=460, hide_index=True)
-    st.download_button("Download history (CSV)", df.to_csv(index=False).encode(),
-                       file_name=f"ephemeris_{player['handle']}.csv", mime="text/csv")
+    dashboard.export_buttons(df, player, "history")
 
 
 # ================================================================= main ====
@@ -700,11 +700,16 @@ def _body(repo, player: dict) -> None:
     executes all tabs and takes tens of seconds."""
     sub = st.radio("View", SUBVIEWS, horizontal=True, key="eph_sub", label_visibility="collapsed")
     title = {"Play": "PRACTICE — call the next candles", "Daily Five": "DAILY FIVE — the same five charts "
-             "for everyone today", "History": "YOUR CALLS"}[sub]
+             "for everyone today", "Stats": "STATS — are you beating the base rate and the rule?",
+             "Read": "THE READ — strengths, weaknesses, next drill", "History": "YOUR CALLS"}[sub]
     st.markdown(section(title, 1), unsafe_allow_html=True)
     if sub == "Play":
         _play(repo, player)
     elif sub == "Daily Five":
         _daily(repo, player)
+    elif sub == "Stats":
+        dashboard.render_stats(repo, player)
+    elif sub == "Read":
+        dashboard.render_read(repo, player)
     else:
         _history(repo, player)
