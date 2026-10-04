@@ -323,3 +323,33 @@ def test_parse_db_url_tolerates_real_world_pastes():
     assert db_url_problem(base.format(pw="fine")) is None
     with pytest.raises(ValueError):
         parse_db_url("mysql://x:y@h/db")
+
+
+def test_db_params_are_plain_python_for_postgres(store):
+    """Regression: numpy scalars rendered as `np.float64(...)` SQL -> InvalidSchemaName on Supabase."""
+    import psycopg2.extensions as pge
+    from zenith.ephemeris.repo import GUESS_FIELDS, clean_params
+    ch = _chart(store)
+    res = score_trade(direction=1, entry=ch.entry, stake=500, sl=ch.entry * 0.97, **ch.future())
+    row = {k: None for k in GUESS_FIELDS} | {k: res[k] for k in ("market_ret", "trade_ret", "pnl", "mfe", "mae",
+                                                                 "r_mult", "exit_price")
+                                             if k in GUESS_FIELDS} | {
+        "entry": ch.entry, "base_rate": np.float64(0.55), "rule_call": np.int64(1), "rule_ret": np.float64(np.nan),
+        "candles_held": np.int64(3), "win": np.bool_(True)}
+    params = clean_params(tuple(row[k] for k in GUESS_FIELDS))
+    for v in params:
+        assert v is None or type(v) in (int, float, str, bool), type(v)
+        assert b"np." not in pge.adapt(v).getquoted()
+    assert params[GUESS_FIELDS.index("rule_ret")] is None                # NaN -> NULL
+    assert params[GUESS_FIELDS.index("rule_call")] == 1
+
+
+def test_sqlite_accepts_numpy_heavy_guess():
+    repo = SqliteRepo(":memory:")
+    p = repo.get_or_create_player("np")
+    gid = repo.log_guess({"player_id": np.int64(p["id"]), "mode": "practice", "ticker": "X", "timeframe": "Daily",
+                          "horizon": np.int64(10), "lookback": 120, "decision_date": "2020-01-01",
+                          "chart_key": "k", "direction": np.int64(-1), "pnl": np.float64(1.5),
+                          "base_rate": np.float64("nan"), "win": np.bool_(True)})
+    df = repo.guesses_df(p["id"])
+    assert gid and df["pnl"].iloc[0] == 1.5 and pd.isna(df["base_rate"].iloc[0])

@@ -148,6 +148,26 @@ def valid_handle(handle: str) -> str | None:
     return None
 
 
+def clean_params(params) -> tuple:
+    """Plain Python values only. numpy scalars must not reach a driver: with
+    numpy 2, psycopg2 renders np.float64(0.1) as the SQL text
+    `np.float64(0.1)`, which Postgres parses as a function in schema "np"
+    (InvalidSchemaName). NaN/inf become NULL."""
+    import math
+
+    out = []
+    for v in params:
+        if hasattr(v, "item") and not isinstance(v, (str, bytes)):
+            try:
+                v = v.item()
+            except (ValueError, AttributeError):
+                pass
+        if isinstance(v, float) and not math.isfinite(v):
+            v = None
+        out.append(v)
+    return tuple(out)
+
+
 def _pin_hash(pin: str, salt: str) -> str:
     return hashlib.sha256(f"{salt}:{pin}".encode()).hexdigest()
 
@@ -297,14 +317,14 @@ class SqliteRepo(Repository):
 
     def _exec(self, sql, params=(), returning=False):
         with self._lock:
-            cur = self._con.execute(self._sql(sql), params)
+            cur = self._con.execute(self._sql(sql), clean_params(params))
             out = cur.fetchone()[0] if returning else None
             self._con.commit()
             return out
 
     def _query(self, sql, params=()):
         with self._lock:
-            return [dict(r) for r in self._con.execute(self._sql(sql), params).fetchall()]
+            return [dict(r) for r in self._con.execute(self._sql(sql), clean_params(params)).fetchall()]
 
     @property
     def label(self) -> str:
@@ -402,13 +422,13 @@ class PostgresRepo(Repository):
 
     def _exec(self, sql, params=(), returning=False):
         def fn(cur):
-            cur.execute(self._sql(sql), params)
+            cur.execute(self._sql(sql), clean_params(params))
             return cur.fetchone()[0] if returning else None
         return self._run(fn)
 
     def _query(self, sql, params=()):
         def fn(cur):
-            cur.execute(self._sql(sql), params)
+            cur.execute(self._sql(sql), clean_params(params))
             cols = [d[0] for d in cur.description]
             return [dict(zip(cols, r)) for r in cur.fetchall()]
         return self._run(fn)

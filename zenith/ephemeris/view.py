@@ -555,7 +555,7 @@ def _daily(repo, player: dict) -> None:
         st.info("Today's Daily Five is being prepared by the nightly job — check back soon, or practise meanwhile.")
         return
     st.caption("Same five charts for every player today. Fixed settings so days compare: Daily candles, "
-               "120 visible, call 10 ahead, SMA 20/50/200 + volume, no stops. One attempt.")
+               "120 visible, call 10 ahead, SMA 20/50/200 + volume, no stops. One attempt per chart.")
 
     if rnd and rnd["state"] == "revealed":
         ch = rnd["chart"]
@@ -593,7 +593,7 @@ def _daily(repo, player: dict) -> None:
             conv = st.radio("Conviction", list(CONVICTION), index=list(CONVICTION).index(DEFAULT_CONVICTION),
                             horizontal=True, key="eph_d_conv", help="Stake = $1,000 × 25% / 50% / 100%.")
         with c2:
-            note = st.text_input("Why is the opposite move unlikely? (required)", key="eph_d_note",
+            note = st.text_input("Why is the opposite move unlikely? (optional)", key="eph_d_note",
                                  max_chars=200, placeholder="one sentence, before you see the answer")
         u, d = st.columns(2)
         with u:
@@ -601,15 +601,12 @@ def _daily(repo, player: dict) -> None:
         with d:
             down = st.button("▼  DOWN / SHORT", use_container_width=True, key="eph_d_down")
         if up or down:
-            if len((note or "").strip()) < 3:
-                st.warning("Write one sentence first — why is the opposite move unlikely?")
-            else:
-                gid = _commit(repo, player, rnd, _DAILY_S, 1 if up else -1, conv, note, {"on": False},
-                              None, None, mode="daily")
-                if gid and not repo.save_daily(player["id"], day.isoformat(), nxt["slot"], gid):
-                    st.warning("This chart was already played (another tab?) — the first call stands.")
-                    st.session_state["eph_daily_round"] = None
-                st.rerun(scope="fragment")
+            gid = _commit(repo, player, rnd, _DAILY_S, 1 if up else -1, conv, note, {"on": False},
+                          None, None, mode="daily")
+            if gid and not repo.save_daily(player["id"], day.isoformat(), nxt["slot"], gid):
+                st.warning("This chart was already played (another tab?) — the first call stands.")
+                st.session_state["eph_daily_round"] = None
+            st.rerun(scope="fragment")
 
     _yesterday(repo, played, sched, day)
 
