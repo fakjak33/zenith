@@ -56,6 +56,13 @@
 </div>
 <script>
 const P = __PAYLOAD__;
+// forward shortcut keys to the page (keys.py listens there) so they work after clicking the chart
+window.addEventListener('keydown', e => {
+  if (['ArrowUp', 'ArrowDown', 'n', 'N', 's', 'S'].includes(e.key)) {
+    e.preventDefault();
+    try { window.parent.document.dispatchEvent(new KeyboardEvent('keydown', { key: e.key, bubbles: true })); } catch (err) {}
+  }
+});
 const PANE_H = __PANEH__;
 const T0 = 946684800, DAY = 86400;             // synthetic, blinded time axis
 const L = P.bars.length, H = P.horizon;

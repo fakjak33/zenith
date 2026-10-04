@@ -800,6 +800,55 @@ def screen_beta() -> None:
           f"basket={len(mem)} beta={b.get('beta')} eff_dim={b.get('eff_dim')} trend={h.get('trend', {}).get('state')}")
 
 
+def screen_ephemeris() -> None:
+    print("[ephemeris]")
+    import json
+    from datetime import timedelta
+    from collections import Counter
+    from zenith.config import EPHEMERIS_FILES
+    from zenith.ephemeris import CLASSES, HORIZONS
+    from zenith.ephemeris import daily as eph_daily
+
+    def _load(k):
+        try:
+            return json.loads(EPHEMERIS_FILES[k].read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    status = _load("status")
+    if not status:
+        warn(True, "ephemeris: not yet run (no status) — skipping")
+        return
+    check(_days_old((status.get("as_of") or "")[:10]) <= 5, f"ephemeris status fresh ({status.get('as_of')})")
+    rows = _load("universe").get("rows", [])
+    tks = [r["ticker"] for r in rows]
+    check(len(tks) == len(set(tks)), "ephemeris: no duplicate tickers in universe")
+    by = Counter(r["cls"] for r in rows)
+    check(all(by.get(c, 0) > 0 for c in CLASSES), f"ephemeris: every class populated ({dict(by)})")
+    wr = (status.get("daily") or {}).get("written", 0)
+    check(wr >= 0.95 * max(1, len(rows)), f"ephemeris: daily price coverage >= 95% ({wr}/{len(rows)})")
+    br = _load("base_rates")
+    for tf in ("Daily", "Weekly", "Monthly", "1H", "4H"):
+        allc = (br.get(tf) or {}).get("ALL") or {}
+        ok = all(str(h) in allc and 0.3 <= allc[str(h)]["p"] <= 0.85 and allc[str(h)]["n"] > 0 for h in HORIZONS)
+        (check if tf in ("Daily", "Weekly", "Monthly") else warn)(ok if tf in ("Daily", "Weekly", "Monthly")
+                                                                  else not ok,
+                                                                  f"ephemeris: {tf} base rates plausible")
+    sch = eph_daily.load_schedule().get("days", {})
+    today = eph_daily.today_utc()
+    ahead = [(today + timedelta(days=k)).isoformat() for k in range(8)]
+    check(all(d in sch for d in ahead[:2]), "ephemeris: Daily Five scheduled for today and tomorrow")
+    warn(not all(d in sch for d in ahead), "ephemeris: Daily Five schedule < 7 days ahead")
+    known = set(tks)
+    bad = [d for d, slots in sch.items()
+           if len(slots) != 5 or len({x["ticker"] for x in slots}) != 5
+           or any(x["ticker"] not in known for x in slots)
+           or max(Counter(x["cls"] for x in slots).values()) > eph_daily.MAX_PER_CLASS]
+    check(not bad, f"ephemeris: every Daily Five day has 5 unique, known tickers, <= {eph_daily.MAX_PER_CLASS}/class"
+                   + (f" (bad: {bad[:5]})" if bad else ""))
+    print(f"       as_of={status.get('as_of')} universe={len(rows)} daily={wr} "
+          f"hourly={(status.get('hourly') or {}).get('written')} schedule_days={len(sch)}")
+
+
 def screen_mvt() -> None:
     print("[mom.mvt]")
     from zenith.mom.mvt import load as mvt_load
@@ -1308,6 +1357,7 @@ def main() -> None:
     screen_ideas()
     screen_regimes()
     screen_index()
+    screen_ephemeris()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")

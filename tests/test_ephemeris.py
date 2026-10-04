@@ -353,3 +353,20 @@ def test_sqlite_accepts_numpy_heavy_guess():
                           "base_rate": np.float64("nan"), "win": np.bool_(True)})
     df = repo.guesses_df(p["id"])
     assert gid and df["pnl"].iloc[0] == 1.5 and pd.isna(df["base_rate"].iloc[0])
+
+
+def test_account_summary_respects_resets():
+    repo = SqliteRepo(":memory:")
+    p = repo.get_or_create_player("acct")
+    def g(ts, pnl, win):
+        repo.log_guess({"player_id": p["id"], "mode": "practice", "ts": ts, "ticker": "X", "timeframe": "Daily",
+                        "horizon": 10, "lookback": 120, "decision_date": ts, "chart_key": ts, "direction": 1,
+                        "pnl": pnl, "win": win})
+    g("2026-01-01T00:00:00Z", 100.0, True)
+    g("2026-01-02T00:00:00Z", -40.0, False)
+    assert repo.account_summary(p["id"], "practice") == {"n": 2, "pnl": 60.0, "wins": 1}
+    repo._exec("INSERT INTO account_resets (player_id, mode, ts) VALUES (?, ?, ?)",
+               (p["id"], "practice", "2026-01-02T12:00:00Z"))
+    g("2026-01-03T00:00:00Z", 25.0, True)
+    assert repo.account_summary(p["id"], "practice") == {"n": 1, "pnl": 25.0, "wins": 1}
+    assert repo.account_summary(p["id"], "daily") == {"n": 0, "pnl": 0.0, "wins": 0}

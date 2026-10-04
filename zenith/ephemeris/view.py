@@ -21,6 +21,7 @@ from . import (CLASSES, CONVICTION, TIMEFRAMES, DEFAULT_CONVICTION, DEFAULT_HORI
                HORIZONS, LOOKBACKS, START_BALANCE, SURVIVORSHIP_NOTE, stake_for)
 from . import chart as board
 from . import dashboard
+from . import keys
 from . import indicators as ind
 from . import profiles
 from . import universe as uni
@@ -48,6 +49,28 @@ _FINDINGS = [
     {"stat": "Fewer than 1% of day traders are predictably profitable after fees.",
      "cite": "Barber, Lee, Liu & Odean (2014)"},
 ]
+
+
+_HOW = """
+**Play.** A random historical chart, blinded (no ticker, dates or price level; rebased to 100). Call
+UP or DOWN for the next N candles; the future replays and is scored. Keys: ↑ UP · ↓ DOWN · N next · S skip.
+
+**Scoring.** Entry = close of the last visible candle. Without stops, return = close[t+N] / close[t] − 1,
+P&L = direction × return × stake (stake = $1,000 × conviction 25 / 50 / 100%). With a stop / target the
+trade walks forward on OHLC: first level touched exits; a gap through a level fills at the open; stop and
+target in the same candle = stop (flagged ambiguous). A flat result counts as a miss.
+
+**Benchmarks, on the same charts.** Coin flip (50%, with a Wilson band) · always-long **base rate** (share
+of UP outcomes for that class × timeframe × horizon, from the data) · a **trend rule** (long above a rising
+SMA, short below a falling one). Skill = beating the base rate and the rule — not beating 50%.
+
+**Stats guardrails.** Cells with fewer than 30 calls are greyed and never claimed; every claim shows its n
+and 95% interval. Indicators are computed without lookahead (verified by a truncation test).
+
+**Data.** ~1,870 instruments (Russell 1000, ZENITH's ETF universe, spot FX / crypto, indices), yfinance
+split- and dividend-adjusted prices, refreshed nightly. Survivorship bias: current constituents only.
+Full detail: `EPHEMERIS_README.md` in the repo.
+"""
 
 
 # ================================================================ resources ====
@@ -113,15 +136,26 @@ def today_badge() -> str | None:
 
 # ================================================================ helpers ====
 def _account(repo, player_id: int, mode: str = "practice") -> dict:
-    df = repo.guesses_df(player_id, mode)
-    resets = repo.resets(player_id, mode)
-    if resets and not df.empty:
-        cut = pd.Timestamp(resets[-1]["ts"])
-        df = df[df["ts"] > cut]
-    pnl = float(df["pnl"].astype(float).sum()) if not df.empty else 0.0
-    n = len(df)
-    wins = int(df["win"].astype(int).sum()) if n else 0
-    return {"balance": START_BALANCE + pnl, "n": n, "wins": wins}
+    """Balance / calls / wins since the last reset, cached per session and
+    invalidated on every commit or reset (one aggregate query, not the history)."""
+    key = f"eph_acct_{player_id}_{mode}"
+    if key not in st.session_state:
+        a = repo.account_summary(player_id, mode)
+        st.session_state[key] = {"balance": START_BALANCE + a["pnl"], "n": a["n"], "wins": a["wins"]}
+    return dict(st.session_state[key])
+
+
+def _invalidate_account(player_id: int) -> None:
+    for k in [k for k in st.session_state if str(k).startswith(f"eph_acct_{player_id}_")]:
+        del st.session_state[k]
+
+
+def _seen(repo, player_id: int) -> dict:
+    """Charts already played (no-repeat), loaded once per session, appended on commit."""
+    key = f"eph_seen_{player_id}"
+    if key not in st.session_state:
+        st.session_state[key] = repo.seen_charts(player_id)
+    return st.session_state[key]
 
 
 ERA_YEARS = ["Any", 1990, 2000, 2010, 2015, 2020]
@@ -325,7 +359,7 @@ def _sig(s: dict) -> tuple:
 def _new_round(repo, player: dict, s: dict) -> dict | None:
     try:
         ch = draw(_store(), _universe(), classes=s["classes"], tf=s["tf"], lookback=s["lookback"],
-                  horizon=s["horizon"], seen=repo.seen_charts(player["id"]), rng=random.Random(),
+                  horizon=s["horizon"], seen=_seen(repo, player["id"]), rng=random.Random(),
                   min_year=s["min_year"], crisis_only=s["crisis"])
     except NoChartError as exc:
         st.warning(str(exc))
@@ -389,7 +423,7 @@ def _play(repo, player: dict) -> None:
         {"label": "Practice account", "value": f"${acct['balance']:,.0f}", "color": bal_c,
          "sub": f"started ${START_BALANCE:,.0f}"},
         {"label": "Calls", "value": f"{acct['n']:,}"},
-        {"label": "Hit rate", "value": hit, "sub": "full benchmark read in STATS (phase 4)"},
+        {"label": "Hit rate", "value": hit, "sub": "judge it vs the base rate in STATS"},
     ], min_width=140), unsafe_allow_html=True)
 
     blind = {k: s[k] for k in ("rebase", "hide_dates", "hide_ticker")}
@@ -430,9 +464,15 @@ def _play(repo, player: dict) -> None:
                           sl=rnd.get("sl"), tp=rnd.get("tp"), ind=ind_data)
         board.render(p)
         if st.button("NEXT CHART  ▸", type="primary", use_container_width=True, key="eph_next"):
-            st.session_state["eph_round"] = None
+            nxt = st.session_state.pop("eph_prefetch", None)
+            st.session_state["eph_round"] = (dict(nxt, t0=time.time()) if nxt and nxt["sig"] == _sig(s)
+                                             else None)
             st.session_state.pop("eph_note", None)
             st.rerun(scope="fragment")
+        # draw the next chart now, while the reveal animates, so NEXT is instant
+        pf = st.session_state.get("eph_prefetch")
+        if pf is None or pf["sig"] != _sig(s):
+            st.session_state["eph_prefetch"] = _new_round(repo, player, s)
 
     st.caption(f"{SURVIVORSHIP_NOTE} Prices: yfinance, split- & dividend-adjusted (total-return style, "
                f"so long-run drift is upward). Entry = close of the last visible candle.")
@@ -487,6 +527,8 @@ def _commit(repo, player, rnd, s, direction: int, conv: str, note: str, stops: d
                                "ambiguous", "gap_fill")},
     })
     rnd.update(state="revealed", result=res, direction=direction, stake=stake, sl=sl, tp=tp)
+    _invalidate_account(player["id"])
+    _seen(repo, player["id"]).setdefault((ch.ticker, ch.tf), []).append(ch.decision_date)
     return gid
 
 
@@ -677,6 +719,8 @@ def render() -> None:
     st.markdown(evidence_rating("B", "practice method well supported; chart-reading edge is contested",
                                 _EVIDENCE_NOTE), unsafe_allow_html=True)
     st.markdown(key_findings(_FINDINGS), unsafe_allow_html=True)
+    with st.expander("How it works — scoring, benchmarks, data"):
+        st.markdown(_HOW)
 
     repo, db_err = _repo()
     if db_err:
@@ -699,6 +743,9 @@ def _body(repo, player: dict) -> None:
     """Everything interactive reruns only this fragment -- a full ZENITH rerun
     executes all tabs and takes tens of seconds."""
     sub = st.radio("View", SUBVIEWS, horizontal=True, key="eph_sub", label_visibility="collapsed")
+    if sub in ("Play", "Daily Five"):
+        keys.install()
+        st.caption(keys.HINT)
     title = {"Play": "PRACTICE — call the next candles", "Daily Five": "DAILY FIVE — the same five charts "
              "for everyone today", "Stats": "STATS — are you beating the base rate and the rule?",
              "Read": "THE READ — strengths, weaknesses, next drill", "History": "YOUR CALLS"}[sub]
