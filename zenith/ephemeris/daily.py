@@ -2,7 +2,7 @@
 
 Fairness and comparability:
   * Fixed settings (Daily candles, 120 visible, 10-candle horizon, default
-    indicators, no stops, pre-commit note required) so days compare.
+    indicators, no stops; the pre-commit note is optional) so days compare.
   * Each day's charts come from a seed derived from the date (sha256), drawn
     class-balanced with at most 2 per class and no ticker repeated within 30
     days, then ordered easy / medium x3 / hard by how decisive the move was
