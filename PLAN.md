@@ -1,5 +1,13 @@
 # EPHEMERIS — Tape-Reading Trainer tab for ZENITH
 
+
+> **Status (2026-10-03): all five phases complete.** User guide, scoring definitions, data
+> caveats, operations, known limitations and next features: see [EPHEMERIS_README.md](EPHEMERIS_README.md).
+> Open questions resolved: Supabase (Session pooler URI in `ephemeris_db_url`), $1,000 base stake,
+> RTH-only 4H for US sessions / 4-hour blocks for 24h assets, rolling `ephemeris-px` release.
+> Changes vs this plan: the Daily Five note became optional (user request, for flow); Daily Five
+> charts are frozen in a committed append-only schedule rather than re-derived from the seed each day.
+
 ## Context
 You want a blind-chart prediction game inside ZENITH for deliberate practice in tape reading. Each guess is logged per player and feeds an analytics report that rigorously answers one question: am I beating the base rate and a simple trend rule?
 

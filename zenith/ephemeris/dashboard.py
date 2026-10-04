@@ -135,7 +135,7 @@ def _heatmap(t: pd.DataFrame) -> None:
                      alt.Tooltip("base:Q", format=".1%"), alt.Tooltip("edge_pp:Q", format="+.1f", title="edge pp"),
                      alt.Tooltip("exp_ret:Q", format="+.2%", title="avg return"), "small_n"])
         txt = base.mark_text(fontSize=12, color="#fff", lineBreak="\n", lineHeight=15).encode(text="label:N")
-        return (rect + txt).properties(height=64 * rows)
+        return (rect + txt).properties(height=84 * rows)
     uc.render_chart(build, fallback=t)
 
 
@@ -281,6 +281,8 @@ def render_stats(repo, player: dict) -> None:
         m = st.radio("Account", ["practice", "daily"], horizontal=True, key="eph_reset_mode")
         if st.button("RESET", key="eph_reset_go"):
             repo.reset_account(player["id"], m)
+            for k in [k for k in st.session_state if str(k).startswith(f"eph_acct_{player['id']}_")]:
+                del st.session_state[k]
             st.success(f"{m} account reset.")
 
 

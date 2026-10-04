@@ -260,6 +260,15 @@ class Repository:
         return out
 
     # ---------------------------------------------------------- account -----
+    def account_summary(self, player_id: int, mode: str) -> dict:
+        """{n, pnl, wins} since the last reset -- one aggregate query, not the history."""
+        rs = self._query("SELECT MAX(ts) AS ts FROM account_resets WHERE player_id = ? AND mode = ?",
+                         (player_id, mode))
+        cut = (rs[0]["ts"] if rs and rs[0]["ts"] else "") or ""
+        r = self._query("SELECT COUNT(*) AS n, COALESCE(SUM(pnl), 0) AS pnl, COALESCE(SUM(win), 0) AS wins "
+                        "FROM guesses WHERE player_id = ? AND mode = ? AND ts > ?", (player_id, mode, cut))[0]
+        return {"n": int(r["n"]), "pnl": float(r["pnl"]), "wins": int(r["wins"])}
+
     def reset_account(self, player_id: int, mode: str) -> None:
         self._exec("INSERT INTO account_resets (player_id, mode, ts) VALUES (?, ?, ?)",
                    (player_id, mode, now_iso()))
