@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-03",
-  "checked": "2026-10-03",
+  "date": "2026-10-06",
+  "checked": "2026-10-06",
   "is_trading_day": true,
-  "action": "hedge",
+  "action": "auto",
   "screened": false,
   "rebalanced": false,
   "disclaimer": "CLEAN BETA screens the Russell 1000 for high beta that comes from market correlation rather than idiosyncratic noise, builds a diversified candidate basket, and monitors hedge conditions (trend gate, vol target, volatility risk premium, index put ladder). The basket and the put ladder are research output, not positions or recommendations. Decision-support and a research monitor, not investment advice.",
@@ -10,9 +10,11 @@
     {
       "segment": "hedge_prices",
       "ok": true,
-      "n": 5,
+      "n": 4,
       "requested": 5,
-      "missing": [],
+      "missing": [
+        "^VIX"
+      ],
       "error": ""
     },
     {
@@ -25,13 +27,13 @@
     },
     {
       "segment": "options",
-      "ok": true,
-      "n_expiries": 10
+      "ok": false,
+      "n_expiries": 11
     },
     {
       "segment": "hedge",
       "ok": true,
-      "as_of": "2026-10-02",
+      "as_of": "2026-10-05",
       "trend": "ON",
       "n_alerts": 0
     }
