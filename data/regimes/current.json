@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-05",
+  "as_of": "2026-10-06",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-10-31",
   "regime": "Goldilocks / Reflation",
@@ -12,7 +12,7 @@
     "breadth": 0.45454545454545453,
     "n_rising": 5,
     "n_total": 11,
-    "z": 0.262,
+    "z": 0.296,
     "indicators": [
       {
         "id": "CFNAI",
@@ -40,15 +40,15 @@
         "raw_value": 0.0,
         "z": -0.059,
         "direction": 1,
-        "rising": false,
+        "rising": true,
         "lag_days": 5,
         "freq": "M"
       },
       {
         "id": "UNRATE",
         "label": "Unemployment Rate",
-        "raw_value": 4.1,
-        "z": 0.247,
+        "raw_value": 4.2,
+        "z": 0.19,
         "direction": -1,
         "rising": false,
         "lag_days": 5,
@@ -97,8 +97,8 @@
       {
         "id": "NEWORDER",
         "label": "Core Capital Goods New Orders",
-        "raw_value": 12.9371,
-        "z": 1.351,
+        "raw_value": 12.9512,
+        "z": 1.353,
         "direction": 1,
         "rising": false,
         "lag_days": 35,
@@ -107,8 +107,8 @@
       {
         "id": "AWHMAN",
         "label": "Avg Weekly Hours, Manufacturing",
-        "raw_value": 41.7,
-        "z": 0.665,
+        "raw_value": 42.0,
+        "z": 1.139,
         "direction": 1,
         "rising": true,
         "lag_days": 5,
@@ -117,10 +117,10 @@
       {
         "id": "SAHMREALTIME",
         "label": "Sahm Rule Recession Indicator",
-        "raw_value": -0.07,
-        "z": 0.382,
+        "raw_value": 0.0,
+        "z": 0.341,
         "direction": -1,
-        "rising": true,
+        "rising": false,
         "lag_days": 5,
         "freq": "M"
       }
@@ -131,7 +131,7 @@
     "breadth": 0.25,
     "n_rising": 3,
     "n_total": 12,
-    "z": -0.061,
+    "z": -0.045,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -186,8 +186,8 @@
       {
         "id": "CES0500000003",
         "label": "Avg Hourly Earnings (wage growth)",
-        "raw_value": 2.4423,
-        "z": -1.367,
+        "raw_value": 2.6052,
+        "z": -1.22,
         "direction": 1,
         "rising": false,
         "lag_days": 5,
@@ -206,8 +206,8 @@
       {
         "id": "T5YIFR",
         "label": "5y5y Forward Inflation Expectation",
-        "raw_value": 2.35,
-        "z": 0.979,
+        "raw_value": 2.36,
+        "z": 1.021,
         "direction": 1,
         "rising": true,
         "lag_days": 0,
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 4.0,
-    "growth_slope": 0.0116,
-    "growth_r2": 0.291,
-    "infl_slope": -0.0874,
-    "infl_r2": 0.873,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.29) while inflation signals have moderated (trend R²=0.87)."
+    "score": 4.2,
+    "growth_slope": 0.0196,
+    "growth_r2": 0.612,
+    "infl_slope": -0.084,
+    "infl_r2": 0.851,
+    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.61) while inflation signals have moderated (trend R²=0.85)."
   }
 }
