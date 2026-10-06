@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-02",
+  "as_of": "2026-10-06",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence.",
   "upcoming": [
@@ -13,7 +13,7 @@
       "eps_consensus": 3.62,
       "n_estimates": 7,
       "cap_tier": "mid",
-      "mktcap": 19308210200.0,
+      "mktcap": 19275761700.0,
       "past_avg_excess": -0.008441,
       "past_n": 9,
       "in_window": true
@@ -28,7 +28,7 @@
       "eps_consensus": 1.95,
       "n_estimates": 7,
       "cap_tier": "mid",
-      "mktcap": 12604245000.0,
+      "mktcap": 12670670800.0,
       "past_avg_excess": 0.026776,
       "past_n": 9,
       "in_window": true
@@ -43,7 +43,7 @@
       "eps_consensus": 0.59,
       "n_estimates": 5,
       "cap_tier": "mid",
-      "mktcap": 5731583500.0,
+      "mktcap": 5994171900.0,
       "past_avg_excess": -0.031413,
       "past_n": 9,
       "in_window": true
@@ -58,7 +58,7 @@
       "eps_consensus": -0.25,
       "n_estimates": 4,
       "cap_tier": "mid",
-      "mktcap": 7288929800.0,
+      "mktcap": 7591015400.0,
       "past_avg_excess": -0.031843,
       "past_n": 7,
       "in_window": true
@@ -73,7 +73,7 @@
       "eps_consensus": 2.29,
       "n_estimates": 7,
       "cap_tier": "large",
-      "mktcap": 172959056000.0,
+      "mktcap": 171826201000.0,
       "past_avg_excess": -0.000483,
       "past_n": 9,
       "in_window": true
@@ -88,28 +88,133 @@
       "eps_consensus": 1.96,
       "n_estimates": 6,
       "cap_tier": "large",
-      "mktcap": 54885216000.0,
+      "mktcap": 55299523000.0,
       "past_avg_excess": 0.025417,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "JPM",
+      "name": "J P Morgan Chase & Co",
+      "report_date": "2026-10-13",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-13",
+      "entry_date": "2026-10-06",
+      "eps_consensus": 5.88,
+      "n_estimates": 6,
+      "cap_tier": "large",
+      "mktcap": 883527910000.0,
+      "past_avg_excess": 0.006405,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "JNJ",
+      "name": "Johnson & Johnson",
+      "report_date": "2026-10-13",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-13",
+      "entry_date": "2026-10-06",
+      "eps_consensus": 2.9,
+      "n_estimates": 7,
+      "cap_tier": "large",
+      "mktcap": 617006370000.0,
+      "past_avg_excess": -0.004326,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "UNH",
+      "name": "UnitedHealth Group Incorporated",
+      "report_date": "2026-10-13",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-13",
+      "entry_date": "2026-10-06",
+      "eps_consensus": 4.12,
+      "n_estimates": 8,
+      "cap_tier": "large",
+      "mktcap": 333815513000.0,
+      "past_avg_excess": -0.053541,
+      "past_n": 8,
+      "in_window": true
+    },
+    {
+      "ticker": "GS",
+      "name": "The Goldman Sachs Group, Inc.",
+      "report_date": "2026-10-13",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-13",
+      "entry_date": "2026-10-06",
+      "eps_consensus": 14.05,
+      "n_estimates": 7,
+      "cap_tier": "large",
+      "mktcap": 262799671000.0,
+      "past_avg_excess": 0.028832,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "C",
+      "name": "Citigroup Inc.",
+      "report_date": "2026-10-13",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-13",
+      "entry_date": "2026-10-06",
+      "eps_consensus": 2.66,
+      "n_estimates": 7,
+      "cap_tier": "large",
+      "mktcap": 215550624000.0,
+      "past_avg_excess": 0.006565,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "DPZ",
+      "name": "Domino's Pizza Inc",
+      "report_date": "2026-10-13",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-13",
+      "entry_date": "2026-10-06",
+      "eps_consensus": 4.34,
+      "n_estimates": 9,
+      "cap_tier": "mid",
+      "mktcap": 9845620700.0,
+      "past_avg_excess": -0.019164,
+      "past_n": 9,
+      "in_window": true
+    },
+    {
+      "ticker": "ACI",
+      "name": "Albertsons Companies, Inc.",
+      "report_date": "2026-10-13",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-13",
+      "entry_date": "2026-10-06",
+      "eps_consensus": 0.31,
+      "n_estimates": 6,
+      "cap_tier": "mid",
+      "mktcap": 5702576600.0,
+      "past_avg_excess": -0.049699,
       "past_n": 9,
       "in_window": true
     }
   ],
   "summary": {
-    "n_rows": 8965,
+    "n_rows": 8966,
     "n_gated": 35,
     "pre": {
       "overall": {
-        "n": 8908,
-        "avg": 0.000404,
-        "median": -7.7e-05,
-        "win_rate": 0.4991
+        "n": 8909,
+        "avg": 0.000403,
+        "median": -8e-05,
+        "win_rate": 0.499
       },
       "by_cap_tier": {
         "large": {
-          "n": 398,
-          "avg": -0.000766,
-          "median": -0.003942,
-          "win_rate": 0.4573
+          "n": 399,
+          "avg": -0.000783,
+          "median": -0.004015,
+          "win_rate": 0.4561
         },
         "mid": {
           "n": 531,
@@ -127,17 +232,17 @@
     },
     "through": {
       "overall": {
-        "n": 8910,
-        "avg": 0.003124,
-        "median": -0.000531,
+        "n": 8911,
+        "avg": 0.003118,
+        "median": -0.000542,
         "win_rate": 0.4965
       },
       "by_cap_tier": {
         "large": {
-          "n": 398,
-          "avg": -0.004161,
-          "median": -0.007108,
-          "win_rate": 0.4523
+          "n": 399,
+          "avg": -0.004277,
+          "median": -0.007337,
+          "win_rate": 0.4511
         },
         "mid": {
           "n": 531,
@@ -359,10 +464,10 @@
       },
       {
         "month": "2026-10",
-        "n": 3,
-        "avg": 0.033106,
-        "median": -0.028707,
-        "win_rate": 0.3333
+        "n": 4,
+        "avg": 0.012236,
+        "median": -0.039539,
+        "win_rate": 0.25
       }
     ]
   }
