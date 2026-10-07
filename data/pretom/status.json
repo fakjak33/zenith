@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-06",
+  "date": "2026-10-07",
   "state": "FORMING",
   "month": "2026-10",
-  "tau_offset": -18,
-  "days_to_open": 9,
-  "days_to_close_classic": 14,
-  "days_to_close_t1": 15,
+  "tau_offset": -17,
+  "days_to_open": 8,
+  "days_to_close_classic": 13,
+  "days_to_close_t1": 14,
   "schedule": {
     "tau": "2026-10-30",
     "lock_by": "2026-10-16",
@@ -17,7 +17,7 @@
     "tom_start": "2026-10-30",
     "tom_end": "2026-11-04"
   },
-  "calendar_check": "ok",
+  "calendar_check": "n/a",
   "n_months": 27,
   "segments": [
     {
@@ -26,18 +26,6 @@
       "source": "stale:vanguard_vone",
       "n": 1024,
       "weights_source": "vone"
-    },
-    {
-      "segment": "prices(2026-09)",
-      "ok": true,
-      "n": 100,
-      "requested": 101,
-      "error": ""
-    },
-    {
-      "segment": "reconcile(2026-09)",
-      "ok": true,
-      "state": "final"
     },
     {
       "segment": "prices(spy-max)",
