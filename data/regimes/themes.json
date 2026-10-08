@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-10-07",
+  "as_of": "2026-10-08",
   "themes": {
     "dollar": {
       "signal_score": 59.5,
       "composite_z": 0.758,
-      "real_yield_z": 1.952,
+      "real_yield_z": 1.917,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 75.4,
+      "signal_score": 75.3,
       "components": {
-        "DGS30": 2.01,
+        "DGS30": 1.993,
         "THREEFYTP10": 2.455,
         "GFDEBTN": 1.625
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Low",
       "usdjpy_z": 1.522,
       "usdjpy_pct_move_3m": -0.0085,
-      "us_real_yield_z": 1.952,
+      "us_real_yield_z": 1.917,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": 0.0018,
+      "semis_relative_strength_3m": -0.0091,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -34,6 +34,15 @@
           "published": "Wed, 23 Sep 2026 12:00:39 +0000",
           "archive_date": "2026-09-24",
           "summary": "On today's show we discuss the interconnected hyperscalers, AI's risk to the economy, the chart of the year, Nvidia's valuation, Meta's personal assisstant, $186 trillion in household wealth, 10 year return projections, the case for owning bonds, why the Fed raised rates, Bitcoin's comeback, fixing the housing crisis i…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "Animal Spirits: Sudden Wealth Syndrome",
+          "source": "A Wealth of Common Sense",
+          "link": "https://awealthofcommonsense.com/2026/10/animal-spirits-sudden-wealth-syndrome/",
+          "published": "Wed, 07 Oct 2026 12:00:13 +0000",
+          "archive_date": "2026-10-08",
+          "summary": "On today's show we discuss what can stop the hyperscalers from spending, why the stock market is neat all-time highs again, speedball capitalism, how capex cycles work, it's a high beta decade, how to lie with statistics, young people are going to be fine, the top 0.1% is really rich, the problem with getting rich youn…",
           "category": "Interpretation"
         },
         {
@@ -62,6 +71,15 @@
           "archive_date": "2026-09-11",
           "summary": "Just as debt markets fueled the global financial near-meltdown that followed the 2007–08 subprime-mortgage crisis, their exposure to AI will drive developments now. The problem is that we possess only very limited public information about those markets, and regulators are not making that information any easier to obtai…",
           "category": "Fact"
+        },
+        {
+          "title": "Hyperscaler Cloud Revenue Backlogs",
+          "source": "ISABELNET (bank chart-of-the-day mirror)",
+          "link": "https://www.isabelnet.com/percent-of-sp-500-companies-beating-revenue-and-eps-estimates/",
+          "published": "Thu, 08 Oct 2026 08:30:04 +0000",
+          "archive_date": "2026-10-08",
+          "summary": "Hyperscaler Cloud Revenue Backlogs Hyperscalers’ backlogs keep growing as cloud and AI demand accelerates. For now, the orders are there, but that’s not proof the spending will pay off. Image: Goldman Sachs Global Investment Research",
+          "category": "Interpretation"
         },
         {
           "title": "Estimated Contribution of Hyperscaler Capex to S&P 500 EPS Growth",
@@ -98,29 +116,11 @@
           "archive_date": "2026-09-15",
           "summary": "Pricing equity punters’ collective histrionics in a credit context",
           "category": "Fact"
-        },
-        {
-          "title": "How big is the open-model threat to AI hyperscalers?",
-          "source": "FT Alphaville",
-          "link": "https://www.ft.com/content/48588acb-8026-4c8e-aac7-8b5588294dbf",
-          "published": "Fri, 11 Sep 2026 05:00:09 GMT",
-          "archive_date": "2026-09-11",
-          "summary": "Games without frontiers",
-          "category": "Fact"
-        },
-        {
-          "title": "Model Portfolios Municipal Bonds and AI Data Center Financing Sep 29, 2026 | By BlackRock Explore how municipal bonds can help finance the power, grid, water and other infrastructure supporting the buildout of AI data centers.",
-          "source": "BlackRock Investment Institute",
-          "link": "https://www.blackrock.com/us/individual/insights/munis-ai-data-center-financing",
-          "published": "",
-          "archive_date": "2026-09-30",
-          "summary": "",
-          "category": "Interpretation"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.3001,
+      "btc_trend_3m": 0.2712,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },

@@ -1,28 +1,28 @@
 {
-  "as_of": "2026-10-07",
+  "as_of": "2026-10-08",
   "trends": {
     "SPY": {
-      "trend_3m": 0.039,
+      "trend_3m": 0.0321,
       "direction": "up"
     },
     "TLT": {
-      "trend_3m": -0.0744,
+      "trend_3m": -0.0758,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": 0.0108,
-      "direction": "up"
+      "trend_3m": -0.003,
+      "direction": "down"
     },
     "DBC": {
-      "trend_3m": 0.1853,
+      "trend_3m": 0.1813,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.019,
+      "trend_3m": 0.0229,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": -0.051,
+      "trend_3m": -0.0593,
       "direction": "down"
     }
   },
@@ -50,8 +50,8 @@
       {
         "check": "Gold trend (inflation-hedge proxy)",
         "expects": "falling",
-        "observed": "rising",
-        "confirms": false
+        "observed": "falling",
+        "confirms": true
       },
       {
         "check": "Long Treasuries (rate-expectation proxy)",
@@ -60,21 +60,15 @@
         "confirms": false
       }
     ],
-    "n_confirming": 1,
+    "n_confirming": 2,
     "n_total": 4,
-    "confirmation_ratio": 0.25
+    "confirmation_ratio": 0.5
   },
   "divergences": [
     {
       "flag": "Cyclicals vs Defensives (MOMENTUM sector breadth)",
       "classifier_expects": "defensives leading",
       "market_shows": "cyclicals leading",
-      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
-    },
-    {
-      "flag": "Gold trend (inflation-hedge proxy)",
-      "classifier_expects": "falling",
-      "market_shows": "rising",
       "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
     },
     {

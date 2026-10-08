@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-07",
+  "as_of": "2026-10-08",
   "dimensions": {
     "monetary": {
       "composite_z": -0.299,
@@ -40,7 +40,7 @@
       ]
     },
     "liquidity": {
-      "composite_z": -0.199,
+      "composite_z": -0.202,
       "coverage_n": 2,
       "min_coverage": 3,
       "state": "Insufficient coverage",
@@ -48,8 +48,8 @@
         {
           "id": "NET_LIQ",
           "label": "Fed Net Liquidity (WALCL - RRP - TGA)",
-          "raw_value": -32.395,
-          "z": -0.21,
+          "raw_value": -34.319,
+          "z": -0.215,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -126,26 +126,26 @@
       ]
     },
     "financial_conditions": {
-      "composite_z": 0.541,
+      "composite_z": 0.289,
       "coverage_n": 4,
       "min_coverage": 3,
-      "state": "Loose",
+      "state": "Neutral",
       "indicators": [
         {
           "id": "NFCI",
           "label": "Chicago Fed Financial Conditions Index",
-          "raw_value": -0.548,
-          "z": 0.533,
+          "raw_value": -0.494,
+          "z": 0.216,
           "direction": -1,
-          "rising": true,
+          "rising": false,
           "lag_days": 5,
           "freq": "W"
         },
         {
           "id": "ANFCI",
           "label": "Adjusted Financial Conditions Index",
-          "raw_value": -0.574,
-          "z": 0.523,
+          "raw_value": -0.504,
+          "z": 0.246,
           "direction": -1,
           "rising": false,
           "lag_days": 5,
@@ -154,8 +154,8 @@
         {
           "id": "STLFSI4",
           "label": "St. Louis Fed Financial Stress Index",
-          "raw_value": -0.8074,
-          "z": 0.655,
+          "raw_value": -0.4681,
+          "z": 0.171,
           "direction": -1,
           "rising": false,
           "lag_days": 5,
@@ -164,8 +164,8 @@
         {
           "id": "VIXCLS",
           "label": "VIX",
-          "raw_value": 15.52,
-          "z": 0.452,
+          "raw_value": 15.01,
+          "z": 0.525,
           "direction": -1,
           "rising": true,
           "lag_days": 0,
@@ -222,7 +222,7 @@
       ]
     },
     "volatility": {
-      "composite_z": 0.341,
+      "composite_z": 0.329,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Neutral",
@@ -230,8 +230,8 @@
         {
           "id": "OVXCLS",
           "label": "Oil Volatility (OVX)",
-          "raw_value": 48.65,
-          "z": 0.429,
+          "raw_value": 48.79,
+          "z": 0.437,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -240,8 +240,8 @@
         {
           "id": "GVZCLS",
           "label": "Gold Volatility (GVZ)",
-          "raw_value": 23.18,
-          "z": 1.108,
+          "raw_value": 22.97,
+          "z": 1.071,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -250,8 +250,8 @@
         {
           "id": "TLT_RVOL",
           "label": "TLT Realized Volatility (MOVE proxy)",
-          "raw_value": 10.2658,
-          "z": -0.514,
+          "raw_value": 10.23,
+          "z": -0.52,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
