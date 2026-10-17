@@ -1,12 +1,20 @@
 {
-  "as_of": "2026-10-16",
+  "as_of": "2026-10-17",
   "alerts": [
+    {
+      "id": "confidence_crossed_30",
+      "severity": "medium",
+      "title": "Confidence crossed below 30",
+      "description": "Regime confidence moved from 47 to 13 over 30 days.",
+      "what_changed": "47 → 13",
+      "watch_next": "Check whether breadth is genuinely broadening or concentrated in a few indicators."
+    },
     {
       "id": "transition_underway",
       "severity": "high",
-      "title": "Transition underway toward Deflation / Slowdown",
+      "title": "Transition underway toward Stagflation",
       "description": "The raw (unpersisted) regime signal has newly diverged from the declared regime.",
-      "what_changed": "raw regime now reads Deflation / Slowdown",
+      "what_changed": "raw regime now reads Stagflation",
       "watch_next": "If this persists 2 more monthly readings it will become the new declared regime."
     }
   ]
