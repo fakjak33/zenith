@@ -1,55 +1,98 @@
 {
-  "total": 2171,
+  "total": 2175,
   "by_entity_type": {
-    "person": 2036,
+    "person": 2040,
     "organisation": 88,
     "tool": 19,
     "academic_source": 14,
     "podcast": 14
   },
   "by_primary_category": {
-    "institutional": 2134,
+    "institutional": 2138,
     "academic": 19,
     "tool": 18
   },
   "by_lifecycle_state": {
-    "needs_review": 2017,
-    "verified": 129,
+    "needs_review": 2023,
+    "verified": 127,
     "new": 25
   },
   "by_confidence": {
-    "high": 1829,
+    "high": 1833,
     "low": 231,
     "medium": 111
   },
   "by_link_status": {
-    "missing": 2014,
-    "ok": 128,
-    "blocked": 29
+    "missing": 2018,
+    "ok": 127,
+    "blocked": 28,
+    "error": 2
   },
-  "verified": 129,
-  "needs_review": 2017,
-  "link_ok": 128,
-  "link_blocked": 29,
-  "link_broken": 0,
-  "missing_url": 2014,
-  "relationships": 2758,
+  "verified": 127,
+  "needs_review": 2023,
+  "link_ok": 127,
+  "link_blocked": 28,
+  "link_broken": 2,
+  "missing_url": 2018,
+  "relationships": 2765,
   "orphan_edges": 0,
   "mean_completeness": 0.867,
   "incomplete": 0,
-  "oldest_verification_days": 28,
-  "never_verified": 2039,
+  "oldest_verification_days": 35,
+  "never_verified": 2043,
   "undeclared_tags": {
     "investment_approach": [
       "institutional_investing",
       "manager_selection"
     ]
   },
-  "as_of": "2026-10-11",
-  "date": "2026-10-11",
+  "as_of": "2026-10-18",
+  "date": "2026-10-18",
   "action": "links",
   "disclaimer": "INDEX is a curated DIRECTORY of financial research resources -- institutions, people, academic sources, podcasts and tools -- not a signal engine and not investment advice. Inclusion is not endorsement, and the descriptive tags (strategy, asset class, insight type) are editorial classifications, not claims about performance. Every entry carries its provenance, a confidence level and the date its link was last verified; entries we could not confirm are flagged 'needs review' with the field left empty rather than filled with a guess.",
   "dedupe_report": [
+    {
+      "action": "kept_separate",
+      "primary": "COMPLEXITY",
+      "other": "Santa Fe Institute",
+      "reason": "related, not duplicate — an explicit relationship ties it to another entity in this group (parent/brand or publisher)"
+    },
+    {
+      "action": "kept_separate",
+      "primary": "CME Group",
+      "other": "CME FedWatch",
+      "reason": "related, not duplicate — an explicit relationship ties it to another entity in this group (parent/brand or publisher)"
+    },
+    {
+      "action": "kept_separate",
+      "primary": "J.P. Morgan Asset Management",
+      "other": "JPMorgan Chase",
+      "reason": "related, not duplicate — an explicit relationship ties it to another entity in this group (parent/brand or publisher)"
+    },
+    {
+      "action": "kept_separate",
+      "primary": "Man AHL",
+      "other": "Man Group",
+      "reason": "related, not duplicate — an explicit relationship ties it to another entity in this group (parent/brand or publisher)"
+    },
+    {
+      "action": "kept_separate",
+      "primary": "Man AHL",
+      "other": "Man Institute",
+      "reason": "related, not duplicate — an explicit relationship ties it to another entity in this group (parent/brand or publisher)"
+    },
+    {
+      "action": "kept_separate",
+      "primary": "Morningstar",
+      "other": "The Long View",
+      "reason": "related, not duplicate — an explicit relationship ties it to another entity in this group (parent/brand or publisher)"
+    },
+    {
+      "action": "kept_separate",
+      "primary": "SPDR ETFs",
+      "other": "State Street Global Advisors",
+      "reason": "related, not duplicate — an explicit relationship ties it to another entity in this group (parent/brand or publisher)"
+    },
     {
       "action": "kept_separate",
       "primary": "COMPLEXITY",
@@ -1312,6 +1355,20 @@
     {
       "name": "Allan Jean-Baptiste",
       "id": "e7b7d2425e3c",
+      "entity_type": "person",
+      "confidence": "high",
+      "lifecycle_state": "needs_review",
+      "link_status": "missing",
+      "url": "",
+      "completeness": 0.857,
+      "issues": [
+        "no URL recorded",
+        "person with no current affiliation"
+      ]
+    },
+    {
+      "name": "Allan Maymin",
+      "id": "313404b55daa",
       "entity_type": "person",
       "confidence": "high",
       "lifecycle_state": "needs_review",
@@ -3198,35 +3255,22 @@
         "no URL recorded",
         "person with no current affiliation"
       ]
-    },
-    {
-      "name": "Bob Reif",
-      "id": "769a675e03c2",
-      "entity_type": "person",
-      "confidence": "high",
-      "lifecycle_state": "needs_review",
-      "link_status": "missing",
-      "url": "",
-      "completeness": 0.857,
-      "issues": [
-        "no URL recorded",
-        "person with no current affiliation"
-      ]
     }
   ],
   "links": {
     "checked": 138,
     "by_status": {
-      "ok": 112,
-      "blocked": 26
+      "ok": 111,
+      "blocked": 26,
+      "error": 1
     },
-    "ok": 112,
+    "ok": 111,
     "blocked": 26,
-    "error": 0
+    "error": 1
   },
   "zenith_sources_linked": 31,
   "podcasts": {
-    "date": "2026-10-11",
+    "date": "2026-10-18",
     "shows": [
       {
         "podcast": "Odd Lots",
@@ -3238,12 +3282,12 @@
           "Tracy Alloway"
         ],
         "note": "Deepest archive of any monitored show (1,265 episodes). Titles are editorial rather than structured, so guest yield is lower here than elsewhere and leans on the description.",
-        "episodes": 1285,
+        "episodes": 1289,
         "earliest": "2015-11-04",
-        "latest": "2026-10-09",
-        "episodes_with_guest": 247,
+        "latest": "2026-10-17",
+        "episodes_with_guest": 248,
         "coverage": 0.192,
-        "unique_guests": 202,
+        "unique_guests": 203,
         "cross_show_guests": 51
       },
       {
@@ -3262,10 +3306,10 @@
           "Moritz Seibert"
         ],
         "note": "Site feed toptradersunplugged.com/feed/ returns only 10 posts; the Captivate host feed carries all 961.",
-        "episodes": 973,
+        "episodes": 975,
         "earliest": "2014-05-26",
-        "latest": "2026-10-10",
-        "episodes_with_guest": 567,
+        "latest": "2026-10-17",
+        "episodes_with_guest": 568,
         "coverage": 0.583,
         "unique_guests": 343,
         "cross_show_guests": 105
@@ -3279,10 +3323,10 @@
           "Ted Seides"
         ],
         "note": "",
-        "episodes": 830,
+        "episodes": 831,
         "earliest": "2017-04-01",
-        "latest": "2026-10-08",
-        "episodes_with_guest": 645,
+        "latest": "2026-10-12",
+        "episodes_with_guest": 646,
         "coverage": 0.777,
         "unique_guests": 460,
         "cross_show_guests": 62
@@ -3296,11 +3340,11 @@
           "Meb Faber"
         ],
         "note": "",
-        "episodes": 721,
+        "episodes": 722,
         "earliest": "2016-06-27",
-        "latest": "2026-10-09",
+        "latest": "2026-10-16",
         "episodes_with_guest": 534,
-        "coverage": 0.741,
+        "coverage": 0.74,
         "unique_guests": 499,
         "cross_show_guests": 160
       },
@@ -3315,11 +3359,11 @@
           "Matt Zeigler"
         ],
         "note": "",
-        "episodes": 572,
+        "episodes": 576,
         "earliest": "2019-11-25",
-        "latest": "2026-10-08",
-        "episodes_with_guest": 333,
-        "coverage": 0.582,
+        "latest": "2026-10-17",
+        "episodes_with_guest": 334,
+        "coverage": 0.58,
         "unique_guests": 185,
         "cross_show_guests": 96
       },
@@ -3335,11 +3379,11 @@
           "Dan Bortolotti"
         ],
         "note": "",
-        "episodes": 453,
+        "episodes": 454,
         "earliest": "2018-08-02",
-        "latest": "2026-10-08",
+        "latest": "2026-10-15",
         "episodes_with_guest": 185,
-        "coverage": 0.408,
+        "coverage": 0.407,
         "unique_guests": 174,
         "cross_show_guests": 44
       },
@@ -3355,12 +3399,12 @@
           "Amy Arnott"
         ],
         "note": "",
-        "episodes": 394,
+        "episodes": 395,
         "earliest": "2019-05-01",
-        "latest": "2026-10-06",
-        "episodes_with_guest": 365,
-        "coverage": 0.926,
-        "unique_guests": 303,
+        "latest": "2026-10-13",
+        "episodes_with_guest": 366,
+        "coverage": 0.927,
+        "unique_guests": 305,
         "cross_show_guests": 85
       },
       {
@@ -3372,13 +3416,13 @@
           "Jack Farley"
         ],
         "note": "",
-        "episodes": 311,
+        "episodes": 313,
         "earliest": "2024-09-17",
-        "latest": "2026-10-08",
-        "episodes_with_guest": 212,
-        "coverage": 0.682,
-        "unique_guests": 188,
-        "cross_show_guests": 111
+        "latest": "2026-10-14",
+        "episodes_with_guest": 214,
+        "coverage": 0.684,
+        "unique_guests": 190,
+        "cross_show_guests": 113
       },
       {
         "podcast": "Alpha Exchange",
@@ -3407,11 +3451,11 @@
           "Will Campion"
         ],
         "note": "",
-        "episodes": 244,
+        "episodes": 245,
         "earliest": "2020-03-25",
-        "latest": "2026-09-25",
+        "latest": "2026-10-15",
         "episodes_with_guest": 170,
-        "coverage": 0.697,
+        "coverage": 0.694,
         "unique_guests": 150,
         "cross_show_guests": 24
       },
@@ -3424,12 +3468,12 @@
           "Jeff Malec"
         ],
         "note": "",
-        "episodes": 241,
+        "episodes": 242,
         "earliest": "2020-01-27",
-        "latest": "2026-10-08",
-        "episodes_with_guest": 145,
-        "coverage": 0.602,
-        "unique_guests": 149,
+        "latest": "2026-10-15",
+        "episodes_with_guest": 146,
+        "coverage": 0.603,
+        "unique_guests": 150,
         "cross_show_guests": 50
       },
       {
@@ -3441,12 +3485,12 @@
           "Corey Hoffstein"
         ],
         "note": "",
-        "episodes": 127,
+        "episodes": 128,
         "earliest": "2018-06-26",
-        "latest": "2026-09-14",
-        "episodes_with_guest": 107,
-        "coverage": 0.843,
-        "unique_guests": 103,
+        "latest": "2026-10-12",
+        "episodes_with_guest": 108,
+        "coverage": 0.844,
+        "unique_guests": 104,
         "cross_show_guests": 42
       },
       {
@@ -3476,23 +3520,23 @@
           "Max Wiethe"
         ],
         "note": "",
-        "episodes": 80,
+        "episodes": 82,
         "earliest": "2024-10-28",
-        "latest": "2026-09-27",
-        "episodes_with_guest": 66,
-        "coverage": 0.825,
-        "unique_guests": 62,
-        "cross_show_guests": 62
+        "latest": "2026-10-14",
+        "episodes_with_guest": 68,
+        "coverage": 0.829,
+        "unique_guests": 64,
+        "cross_show_guests": 64
       }
     ],
     "promotion": {
-      "promoted": 2005,
-      "matched_existing": 2002,
-      "created_people": 3,
+      "promoted": 2009,
+      "matched_existing": 2005,
+      "created_people": 4,
       "created_firms": 0,
       "works_at_edges": 0,
-      "appeared_on_edges": 4,
-      "skipped_low_confidence": 509,
+      "appeared_on_edges": 7,
+      "skipped_low_confidence": 511,
       "skipped_type_conflict": 1
     },
     "prior_compilation": {
@@ -3501,119 +3545,131 @@
       "enriched": 228,
       "works_at_edges": 0
     },
-    "episodes": 6625,
-    "records": 4225,
-    "guests_total": 2515,
-    "guests_promoted": 2006
+    "episodes": 6646,
+    "records": 4237,
+    "guests_total": 2521,
+    "guests_promoted": 2010
   },
   "new_episodes": [
     {
       "podcast": "Top Traders Unplugged",
-      "title": "SI421: Taking CTAs Mainstream ft. Andrew Beer",
-      "published": "2026-10-10",
-      "url": "http://localhost:8888/TopTradersUnplugged/ttu-2021/homepage/si421-what-if-the-market-is-more-fragile-than-it-looks-ft-andrew-beer"
+      "title": "SI422: Why Trend Following Rewards Patience ft. Katy Kaminski",
+      "published": "2026-10-17",
+      "url": "http://localhost:8888/TopTradersUnplugged/ttu-2021/homepage/si422-why-trend-following-rewards-patience-ft-katy-kaminski"
     },
     {
       "podcast": "Top Traders Unplugged",
-      "title": "IL54: Why Smart Investors Keep Making Crazy Decisions ft. Alex Edmans",
-      "published": "2026-10-07",
-      "url": "http://localhost:8888/TopTradersUnplugged/ttu-2021/homepage/il54-why-smart-investors-keep-making-crazy-decisions-ft-alex-edmans"
+      "title": "UGO13: How Much Longer Can AI Carry the Market ft. Christian Mueller-Glissmann",
+      "published": "2026-10-14",
+      "url": "http://localhost:8888/TopTradersUnplugged/ttu-2021/homepage/ugo13-how-much-longer-can-ai-carry-the-market-ft-christian-mueller-glissmann"
+    },
+    {
+      "podcast": "Flirting with Models",
+      "title": "Philip & Allan Maymin – Compounding Through Risk, Not Return (S7E35)",
+      "published": "2026-10-12",
+      "url": "http://www.flirtingwithmodels.com/"
     },
     {
       "podcast": "The Derivative",
-      "title": "The Fall Solo Six-Pack: Sports Games, the Return of Discretionary Macro, & AI Coming for Your Job",
-      "published": "2026-10-08",
-      "url": "https://podcasters.spotify.com/pod/show/rcm-alts-the-derivative/episodes/The-Fall-Solo-Six-Pack-Sports-Games--the-Return-of-Discretionary-Macro---AI-Coming-for-Your-Job-e3q6ae1"
-    },
-    {
-      "podcast": "Alpha Exchange",
-      "title": "Chris Hentemann, Founder and CIO, 400 Capital Management",
-      "published": "2026-10-09",
-      "url": "https://alphaexchange.simplecast.com/episodes/chris-hentemann-founder-and-cio-400-capital-management-YAVpWs3a"
-    },
-    {
-      "podcast": "Alpha Exchange",
-      "title": "Harley Bassman, The Convexity Maven",
-      "published": "2026-10-06",
-      "url": "https://alphaexchange.simplecast.com/episodes/harley-bassman-the-convexity-maven-O2myXI53-IqtGCeH6"
+      "title": "Running an \"Old Fashioned\" Hedge Fund with Adrian Keevil of Plustick Partners",
+      "published": "2026-10-15",
+      "url": "https://podcasters.spotify.com/pod/show/rcm-alts-the-derivative/episodes/Running-an-Old-Fashioned-Hedge-Fund-with-Adrian-Keevil-of-Plustick-Partners-e3qid2f"
     },
     {
       "podcast": "Excess Returns",
-      "title": "Katie Stockton Still Sees a Bull Market. So Why Is Her ETF Only 50% in Stocks?",
-      "published": "2026-10-08",
-      "url": "https://podcasters.spotify.com/pod/show/excess-returns/episodes/Katie-Stockton-Still-Sees-a-Bull-Market--So-Why-Is-Her-ETF-Only-50-in-Stocks-e3q6277"
+      "title": "We Asked T. Rowe Price's $17B International Manager Why Value is Winning Again — and What the S&P 500 Leaves Out",
+      "published": "2026-10-17",
+      "url": "https://podcasters.spotify.com/pod/show/excess-returns/episodes/We-Asked-T--Rowe-Prices-17B-International-Manager-Why-Value-is-Winning-Again--and-What-the-SP-500-Leaves-Out-e3ql3ig"
     },
     {
       "podcast": "Excess Returns",
-      "title": "Tom Maher on Small-Cap Investing, AI Infrastructure and Opportunities Beyond Big Tech",
-      "published": "2026-10-07",
-      "url": "https://podcasters.spotify.com/pod/show/excess-returns/episodes/Tom-Maher-on-Small-Cap-Investing--AI-Infrastructure-and-Opportunities-Beyond-Big-Tech-e3q37c8"
+      "title": "Tech Is Rolling Over. Yields Are Falling. Why Jim Paulsen is Watching the Walmart Recession Signal",
+      "published": "2026-10-16",
+      "url": "https://podcasters.spotify.com/pod/show/excess-returns/episodes/Tech-Is-Rolling-Over--Yields-Are-Falling--Why-Jim-Paulsen-is-Watching-the-Walmart-Recession-Signal-e3qk07r"
     },
     {
       "podcast": "Excess Returns",
-      "title": "Ed Yardeni Still Sees S&P 10,000 by 2029. So Why Is He Getting More Cautious?",
-      "published": "2026-10-04",
-      "url": "https://podcasters.spotify.com/pod/show/excess-returns/episodes/Ed-Yardeni-Still-Sees-SP-10-000-by-2029--So-Why-Is-He-Getting-More-Cautious-e3pshvk"
+      "title": "AI Productivity Is Real. 83% of Stocks Are 10% Off Highs. Why Does Barry Ritholtz Like Bonds Again?",
+      "published": "2026-10-14",
+      "url": "https://podcasters.spotify.com/pod/show/excess-returns/episodes/AI-Productivity-Is-Real--83-of-Stocks-Are-10-Off-Highs--Why-Does-Barry-Ritholtz-Like-Bonds-Again-e3qgcas"
+    },
+    {
+      "podcast": "Excess Returns",
+      "title": "The Winners That Get Away | Chris Davis and Robert Hagstrom on Holding Great Businesses",
+      "published": "2026-10-11",
+      "url": "https://podcasters.spotify.com/pod/show/excess-returns/episodes/The-Winners-That-Get-Away--Chris-Davis-and-Robert-Hagstrom-on-Holding-Great-Businesses-e3qb3ek"
     },
     {
       "podcast": "Capital Allocators",
-      "title": "Real Estate Credit Over Yield at Invesco – Charlie Rose (EP.519)",
-      "published": "2026-10-08",
-      "url": "https://tedseides.libsyn.com/real-estate-credit-over-yield-at-invesco-charlie-rose-ep519"
+      "title": "Senior Decision Makers: Erlina Yeo Terwelp, Columbia Investment Management Company (EP.520)",
+      "published": "2026-10-12",
+      "url": "https://tedseides.libsyn.com/senior-decision-makers-erlina-yeo-terwelp-columbia-investment-management-ep520"
     },
     {
-      "podcast": "Capital Allocators",
-      "title": "Building the Total Portfolio at Ontario Teachers – Stephen McLennan (EP.518)",
-      "published": "2026-10-05",
-      "url": "https://tedseides.libsyn.com/building-the-total-portfolio-at-ontario-teachers-stephen-mclennan-ep518"
+      "podcast": "Other People's Money",
+      "title": "The AI Bubble Will Pop from Equity Supply Says This $80 Billion Asset Manager | Ben Inker | GMO",
+      "published": "2026-10-14",
+      "url": ""
+    },
+    {
+      "podcast": "Other People's Money",
+      "title": "Top Performing Value Investor Explains Why the Market Isn’t Overvalued and Hasn’t Hit the Blowoff Top Phase | Charles Lemonides | ValueWorks LLC",
+      "published": "2026-10-12",
+      "url": ""
     },
     {
       "podcast": "Rational Reminder",
-      "title": "The Truth About Leveraged ETFs | #430",
-      "published": "2026-10-08",
-      "url": "https://rationalreminder.libsyn.com/the-truth-about-leveraged-etfs-430"
+      "title": "The Madness of Markets (Alex Edmans) | #431",
+      "published": "2026-10-15",
+      "url": "https://rationalreminder.libsyn.com/the-madness-of-markets-alex-edmans-431"
     },
     {
       "podcast": "The Meb Faber Show",
-      "title": "Andrew Ang: Should AI Agents Run Your Asset Allocation? | #653",
-      "published": "2026-10-09",
+      "title": "Citi's Dirk Willer on Why You Buy the Bubble | #654",
+      "published": "2026-10-16",
+      "url": ""
+    },
+    {
+      "podcast": "Money Maze Podcast",
+      "title": "The Black Box Dilemma: Who Controls What AI Can Say? With CTGT’s Founder & CEO, Cyril Gorlla.",
+      "published": "2026-10-15",
+      "url": "https://audioboom.com/posts/8964196"
+    },
+    {
+      "podcast": "Monetary Matters",
+      "title": "The AI Bubble Will Pop from Equity Supply Says This $80 Billion Asset Manager | Ben Inker | GMO",
+      "published": "2026-10-14",
       "url": ""
     },
     {
       "podcast": "Monetary Matters",
-      "title": "Stacy Rasgon: “Demand Is Off The Charts” in Semiconductors… And Set To Double Again Soon",
-      "published": "2026-10-08",
-      "url": ""
-    },
-    {
-      "podcast": "Monetary Matters",
-      "title": "The Most Extreme Shipping Market in History, Explained | J Mintzmyer on Why Oil Tanker Rates Are Up 25x and Why It Can’t Last (and Why Dry Bulk, not Tankers, is the Next Shipping Boom)",
-      "published": "2026-10-06",
+      "title": "Top Performing Value Investor Explains Why the Market Isn’t Overvalued and Hasn’t Hit the Blowoff Top Phase | Charles Lemonides | ValueWorks LLC",
+      "published": "2026-10-12",
       "url": ""
     },
     {
       "podcast": "Odd Lots",
-      "title": "How AI Is Upending the World of Mathematics",
-      "published": "2026-10-09",
-      "url": "https://omny.fm/shows/odd-lots/how-ai-is-upending-the-world-of-mathematics"
+      "title": "David Byrne Explains How Forgotten Ideas Come Back to Life",
+      "published": "2026-10-17",
+      "url": "https://omny.fm/shows/odd-lots/odd-lots-david-byrne-v1"
     },
     {
       "podcast": "Odd Lots",
-      "title": "What Everyone Gets Wrong About the Economic Problems in Europe",
-      "published": "2026-10-08",
-      "url": "https://omny.fm/shows/odd-lots/what-everyone-gets-wrong-about-the-economic-problems-in-europe"
+      "title": "The French Political Crisis That's Turning Into a Debt Crisis",
+      "published": "2026-10-16",
+      "url": "https://omny.fm/shows/odd-lots/the-french-political-crisis-thats-turning-into-a-debt-crisis"
     },
     {
       "podcast": "Odd Lots",
-      "title": "Why Treasuries Are 'Risky' Again",
-      "published": "2026-10-05",
-      "url": "https://omny.fm/shows/odd-lots/why-treasuries-became-risky-again"
+      "title": "Jeff Yan's Plan to Bring the Entire Financial Industry Onto Hyperliquid",
+      "published": "2026-10-15",
+      "url": "https://omny.fm/shows/odd-lots/jeff-yans-plan-to-bring-the-entire-financial-industry-onto-hyperliquid"
     },
     {
-      "podcast": "The Long View",
-      "title": "Erin Moriarity: My Dad Lost About $1.5 Million on Bad Investments. Here’s How to Avoid His Mistakes",
-      "published": "2026-10-06",
-      "url": "https://the-long-view.simplecast.com/episodes/erin-moriarity-my-dad-lost-about-15-million-on-bad-investments-heres-how-to-avoid-his-mistakes-tkKrqXfb"
+      "podcast": "Odd Lots",
+      "title": "Nate Soares on How AI Really Could Kill Us All",
+      "published": "2026-10-12",
+      "url": "https://omny.fm/shows/odd-lots/nate-soares-on-how-ai-really-could-kill-us-all"
     }
   ],
   "seed_files": [
