@@ -1,12 +1,68 @@
 {
-  "date": "2026-10-17",
-  "is_trading_day": false,
+  "date": "2026-10-20",
+  "is_trading_day": true,
   "disclaimer": "IDEAS fuses MOMENTUM/EDGE/PEAD/FMOM/CAS signals (free/best-effort data) into a daily BUY/SELL idea list with conviction, unusualness and confluence scores. This composite is novel and carries NO out-of-sample track record yet — see its evidence-strength badge and the accumulating diagnostics on the Diagnostics tab. Decision-support and a research prompt, not investment advice, and not a promise of forward returns.",
   "segments": [
     {
-      "segment": "gate",
+      "segment": "universe",
       "ok": true,
-      "note": "non-trading day"
+      "n": 1621
+    },
+    {
+      "segment": "etf_prices",
+      "ok": true,
+      "n": 584,
+      "requested": 597,
+      "error": ""
+    },
+    {
+      "segment": "fundamentals",
+      "ok": true,
+      "checked": 1621,
+      "stale": 0,
+      "refreshed": 0
+    },
+    {
+      "segment": "regime",
+      "ok": true,
+      "label": "risk-off",
+      "risk_score": -0.357,
+      "vix_percentile": 0.821,
+      "hy_oas_percentile": 0.992,
+      "curve_10y2y": 0.38,
+      "spy_trend": 0.489
+    },
+    {
+      "segment": "panel",
+      "ok": true,
+      "n": 1604
+    },
+    {
+      "segment": "valuation_history",
+      "ok": true,
+      "added": 0
+    },
+    {
+      "segment": "candidates",
+      "ok": true,
+      "n": 29
+    },
+    {
+      "segment": "candidate_prices",
+      "ok": true,
+      "n": 29,
+      "requested": 29,
+      "error": ""
+    },
+    {
+      "segment": "select",
+      "ok": true,
+      "n_buy": 3,
+      "n_sell": 4,
+      "thin_day": {
+        "long": true,
+        "short": true
+      }
     }
   ]
 }
