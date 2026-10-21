@@ -1,7 +1,14 @@
 {
-  "as_of": "2026-10-20",
+  "as_of": "2026-10-21",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "recent_days": [
+    {
+      "day": "2026-10-20",
+      "n_reporters": 27,
+      "n_eligible": 16,
+      "n_long": 14,
+      "n_short": 2
+    },
     {
       "day": "2026-10-19",
       "n_reporters": 2,
@@ -64,16 +71,1163 @@
       "n_eligible": 1,
       "n_long": 1,
       "n_short": 0
-    },
-    {
-      "day": "2026-10-06",
-      "n_reporters": 2,
-      "n_eligible": 2,
-      "n_long": 2,
-      "n_short": 0
     }
   ],
   "signals": [
+    {
+      "ticker": "HAS",
+      "name": "Hasbro, Inc.",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 2.9,
+      "eps_consensus": 1.86,
+      "n_estimates": 5,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.010559,
+        "ear": 0.108638,
+        "rue": null,
+        "avol": 1.686676,
+        "nearness": 0.941591
+      },
+      "context": {
+        "close_pre": 98.49,
+        "cap_tier": "mid",
+        "mktcap": 13891469300.0,
+        "adv_usd": 136008061.869812,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 97.2,
+        "ear": 92.2,
+        "rue": 50.0,
+        "avol": 96.6,
+        "anchor": 76.7
+      },
+      "composite": 87.8,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "RLI",
+      "name": "RLI Corp.",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 0.86,
+      "eps_consensus": 0.58,
+      "n_estimates": 4,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.004575,
+        "ear": 0.02132,
+        "rue": null,
+        "avol": 0.81717,
+        "nearness": 0.915997
+      },
+      "context": {
+        "close_pre": 61.2,
+        "cap_tier": "mid",
+        "mktcap": 5616505900.0,
+        "adv_usd": 39011000.579071045,
+        "next_earn_date": "2027-01-20",
+        "td_to_next_earn": 62
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 90.3,
+        "ear": 66.6,
+        "rue": 50.0,
+        "avol": 62.5,
+        "anchor": 67.5
+      },
+      "composite": 71.6,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "KEY",
+      "name": "KeyCorp",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 0.51,
+      "eps_consensus": 0.46,
+      "n_estimates": 7,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.00251,
+        "ear": 0.041326,
+        "rue": null,
+        "avol": 1.005589,
+        "nearness": 0.835512
+      },
+      "context": {
+        "close_pre": 19.92,
+        "cap_tier": "mid",
+        "mktcap": 21257201700.0,
+        "adv_usd": 255830288.08641434,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 81.9,
+        "ear": 78.4,
+        "rue": 50.0,
+        "avol": 77.4,
+        "anchor": 44.0
+      },
+      "composite": 71.3,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "GPC",
+      "name": "Genuine Parts Company",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "short",
+      "eps_actual": 2.07,
+      "eps_consensus": 2.09,
+      "n_estimates": 5,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": -0.000154,
+        "ear": -0.054513,
+        "rue": null,
+        "avol": 0.838741,
+        "nearness": 0.883008
+      },
+      "context": {
+        "close_pre": 130.18,
+        "cap_tier": "mid",
+        "mktcap": 17946583000.0,
+        "adv_usd": 123756775.0289917,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": false,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 81.7,
+        "ear": 81.5,
+        "rue": 50.0,
+        "avol": 64.5,
+        "anchor": 43.4
+      },
+      "composite": 70.1,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "ZION",
+      "name": "Zions Bancorporation N.A.",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 1.78,
+      "eps_consensus": 1.64,
+      "n_estimates": 10,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.002217,
+        "ear": 0.019612,
+        "rue": null,
+        "avol": 0.896619,
+        "nearness": 0.866706
+      },
+      "context": {
+        "close_pre": 63.14,
+        "cap_tier": "mid",
+        "mktcap": 9215495200.0,
+        "adv_usd": 89899613.322258,
+        "next_earn_date": "2027-01-21",
+        "td_to_next_earn": 63
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 79.7,
+        "ear": 65.5,
+        "rue": 50.0,
+        "avol": 68.7,
+        "anchor": 51.9
+      },
+      "composite": 66.6,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "RTX",
+      "name": "RTX Corporation",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 2.26,
+      "eps_consensus": 1.78,
+      "n_estimates": 5,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.002499,
+        "ear": 0.00305,
+        "rue": null,
+        "avol": 0.935106,
+        "nearness": 0.848505
+      },
+      "context": {
+        "close_pre": 192.11,
+        "cap_tier": "large",
+        "mktcap": 258917810000.0,
+        "adv_usd": 803096540.247345,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": "weak_reaction",
+      "ranks": {
+        "sue": 81.5,
+        "ear": 54.0,
+        "rue": 50.0,
+        "avol": 72.0,
+        "anchor": 47.3
+      },
+      "composite": 63.5,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "NOC",
+      "name": "Northrop Grumman Corporation",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 7.89,
+      "eps_consensus": 7.22,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.001312,
+        "ear": 0.042373,
+        "rue": null,
+        "avol": 1.00512,
+        "nearness": 0.665672
+      },
+      "context": {
+        "close_pre": 510.65,
+        "cap_tier": "large",
+        "mktcap": 72544485000.0,
+        "adv_usd": 407328391.4581299,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": false,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 66.6,
+        "ear": 78.6,
+        "rue": 50.0,
+        "avol": 77.4,
+        "anchor": 18.1
+      },
+      "composite": 62.9,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "STLD",
+      "name": "Steel Dynamics, Inc.",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "short",
+      "eps_actual": 5.26,
+      "eps_consensus": 5.42,
+      "n_estimates": 3,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": -0.000653,
+        "ear": -0.006616,
+        "rue": null,
+        "avol": 0.5987,
+        "nearness": 0.853066
+      },
+      "context": {
+        "close_pre": 245.17,
+        "cap_tier": "large",
+        "mktcap": 35139748000.0,
+        "adv_usd": 229340220.49713135,
+        "next_earn_date": "2027-01-25",
+        "td_to_next_earn": 65
+      },
+      "flags": {
+        "gap_held": false,
+        "momentum_aligned": false,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 86.6,
+        "ear": 55.1,
+        "rue": 50.0,
+        "avol": 42.8,
+        "anchor": 51.2
+      },
+      "composite": 61.6,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "MMM",
+      "name": "3M Company",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 2.46,
+      "eps_consensus": 2.41,
+      "n_estimates": 5,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000309,
+        "ear": 0.054421,
+        "rue": null,
+        "avol": 1.0406,
+        "nearness": 0.880039
+      },
+      "context": {
+        "close_pre": 162.01,
+        "cap_tier": "large",
+        "mktcap": 83552190000.0,
+        "adv_usd": 477786997.5578308,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 35.3,
+        "ear": 82.9,
+        "rue": 50.0,
+        "avol": 79.4,
+        "anchor": 55.9
+      },
+      "composite": 60.8,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "EFX",
+      "name": "Equifax, Inc.",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 2.26,
+      "eps_consensus": 2.19,
+      "n_estimates": 9,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000441,
+        "ear": 0.109972,
+        "rue": null,
+        "avol": 1.013943,
+        "nearness": 0.671225
+      },
+      "context": {
+        "close_pre": 158.57,
+        "cap_tier": "mid",
+        "mktcap": 18629580800.0,
+        "adv_usd": 233195658.75091553,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": false,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 40.7,
+        "ear": 92.5,
+        "rue": 50.0,
+        "avol": 77.6,
+        "anchor": 18.5
+      },
+      "composite": 59.4,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "CCK",
+      "name": "Crown Holdings, Inc.",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 2.39,
+      "eps_consensus": 2.25,
+      "n_estimates": 4,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.001219,
+        "ear": -0.00962,
+        "rue": null,
+        "avol": 0.919083,
+        "nearness": 0.934749
+      },
+      "context": {
+        "close_pre": 114.89,
+        "cap_tier": "mid",
+        "mktcap": 12495495200.0,
+        "adv_usd": 92221210.82496643,
+        "next_earn_date": "2027-02-03",
+        "td_to_next_earn": 72
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 65.5,
+        "ear": 42.6,
+        "rue": 50.0,
+        "avol": 70.8,
+        "anchor": 74.5
+      },
+      "composite": 59.2,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "MSCI",
+      "name": "MSCI Inc.",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 5.11,
+      "eps_consensus": 4.98,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000231,
+        "ear": 0.046692,
+        "rue": null,
+        "avol": 0.937725,
+        "nearness": 0.877065
+      },
+      "context": {
+        "close_pre": 563.49,
+        "cap_tier": "large",
+        "mktcap": 40965722000.0,
+        "adv_usd": 318987810.7513428,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": false,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 32.4,
+        "ear": 80.0,
+        "rue": 50.0,
+        "avol": 72.1,
+        "anchor": 54.8
+      },
+      "composite": 57.8,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "BOKF",
+      "name": "BOK Financial Corporation",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 2.64,
+      "eps_consensus": 2.54,
+      "n_estimates": 3,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000814,
+        "ear": 0.025949,
+        "rue": null,
+        "avol": 0.713877,
+        "nearness": 0.840344
+      },
+      "context": {
+        "close_pre": 122.86,
+        "cap_tier": "mid",
+        "mktcap": 7465817100.0,
+        "adv_usd": 30337892.96646118,
+        "next_earn_date": "2027-01-21",
+        "td_to_next_earn": 63
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 55.5,
+        "ear": 69.5,
+        "rue": 50.0,
+        "avol": 52.9,
+        "anchor": 45.0
+      },
+      "composite": 57.2,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "WTFC",
+      "name": "Wintrust Financial Corporation",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 3.37,
+      "eps_consensus": 3.29,
+      "n_estimates": 7,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000562,
+        "ear": 0.023606,
+        "rue": null,
+        "avol": 0.780643,
+        "nearness": 0.854724
+      },
+      "context": {
+        "close_pre": 142.44,
+        "cap_tier": "mid",
+        "mktcap": 9609851900.0,
+        "adv_usd": 70575799.21722412,
+        "next_earn_date": "2027-01-21",
+        "td_to_next_earn": 63
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 45.4,
+        "ear": 67.9,
+        "rue": 50.0,
+        "avol": 59.0,
+        "anchor": 49.3
+      },
+      "composite": 55.2,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "GM",
+      "name": "General Motors Company",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 3.7,
+      "eps_consensus": 3.55,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.001813,
+        "ear": -0.071752,
+        "rue": null,
+        "avol": 1.376356,
+        "nearness": 0.902789
+      },
+      "context": {
+        "close_pre": 82.75,
+        "cap_tier": "large",
+        "mktcap": 72609112000.0,
+        "adv_usd": 513846826.2966156,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 75.4,
+        "ear": 13.7,
+        "rue": 50.0,
+        "avol": 90.9,
+        "anchor": 63.1
+      },
+      "composite": 54.8,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "SYF",
+      "name": "Synchrony Financial",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 2.68,
+      "eps_consensus": 2.48,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.002694,
+        "ear": -0.015206,
+        "rue": null,
+        "avol": 0.565328,
+        "nearness": 0.846771
+      },
+      "context": {
+        "close_pre": 74.24,
+        "cap_tier": "large",
+        "mktcap": 27621552100.0,
+        "adv_usd": 219729045.82214355,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 83.3,
+        "ear": 39.2,
+        "rue": 50.0,
+        "avol": 40.1,
+        "anchor": 46.8
+      },
+      "composite": 54.8,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "VMI",
+      "name": "Valmont Industries, Inc.",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 6.24,
+      "eps_consensus": 5.71,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.001172,
+        "ear": -0.006825,
+        "rue": null,
+        "avol": 0.810345,
+        "nearness": 0.774441
+      },
+      "context": {
+        "close_pre": 452.25,
+        "cap_tier": "mid",
+        "mktcap": 8730622000.0,
+        "adv_usd": 81202221.05407715,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 64.7,
+        "ear": 44.6,
+        "rue": 50.0,
+        "avol": 62.0,
+        "anchor": 34.0
+      },
+      "composite": 52.2,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "HAL",
+      "name": "Halliburton Company",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 0.6,
+      "eps_consensus": 0.58,
+      "n_estimates": 9,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000606,
+        "ear": 0.015143,
+        "rue": null,
+        "avol": 0.69043,
+        "nearness": 0.763341
+      },
+      "context": {
+        "close_pre": 32.98,
+        "cap_tier": "large",
+        "mktcap": 27476639700.0,
+        "adv_usd": 337396076.3109207,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 46.8,
+        "ear": 62.1,
+        "rue": 50.0,
+        "avol": 50.2,
+        "anchor": 31.8
+      },
+      "composite": 50.0,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "ALLY",
+      "name": "Ally Financial Inc.",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 1.34,
+      "eps_consensus": 1.32,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000532,
+        "ear": 0.006756,
+        "rue": null,
+        "avol": 0.781386,
+        "nearness": 0.800405
+      },
+      "context": {
+        "close_pre": 37.59,
+        "cap_tier": "mid",
+        "mktcap": 11434866700.0,
+        "adv_usd": 139846688.20323944,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 44.2,
+        "ear": 57.2,
+        "rue": 50.0,
+        "avol": 59.1,
+        "anchor": 38.1
+      },
+      "composite": 50.0,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "WRB",
+      "name": "W.R. Berkley Corporation",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 1.17,
+      "eps_consensus": 1.14,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000405,
+        "ear": -0.015907,
+        "rue": null,
+        "avol": 0.707667,
+        "nearness": 0.957857
+      },
+      "context": {
+        "close_pre": 74.08,
+        "cap_tier": "large",
+        "mktcap": 27500535800.0,
+        "adv_usd": 142393827.6939392,
+        "next_earn_date": "2027-01-25",
+        "td_to_next_earn": 65
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 39.2,
+        "ear": 38.5,
+        "rue": 50.0,
+        "avol": 52.2,
+        "anchor": 83.2
+      },
+      "composite": 48.6,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "VICR",
+      "name": "Vicor Corporation",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 1.33,
+      "eps_consensus": 1.38,
+      "n_estimates": 2,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": -0.000262,
+        "ear": 0.067237,
+        "rue": null,
+        "avol": 0.919545,
+        "nearness": 0.498314
+      },
+      "context": {
+        "close_pre": 190.68,
+        "cap_tier": "mid",
+        "mktcap": 8791631900.0,
+        "adv_usd": 193365784.96398926,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 16.6,
+        "ear": 86.6,
+        "rue": 50.0,
+        "avol": 70.9,
+        "anchor": 5.4
+      },
+      "composite": 47.4,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "GE",
+      "name": "GE Aerospace",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 2.25,
+      "eps_consensus": 2.02,
+      "n_estimates": 7,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000739,
+        "ear": -0.040008,
+        "rue": null,
+        "avol": 0.919711,
+        "nearness": 0.801752
+      },
+      "context": {
+        "close_pre": 311.28,
+        "cap_tier": "large",
+        "mktcap": 322972451000.0,
+        "adv_usd": 1205920031.1447144,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 53.1,
+        "ear": 24.8,
+        "rue": 50.0,
+        "avol": 70.9,
+        "anchor": 38.4
+      },
+      "composite": 44.8,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "WAL",
+      "name": "Western Alliance Bancorporation",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 2.45,
+      "eps_consensus": 2.43,
+      "n_estimates": 8,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000272,
+        "ear": 0.019328,
+        "rue": null,
+        "avol": 0.415353,
+        "nearness": 0.768976
+      },
+      "context": {
+        "close_pre": 73.63,
+        "cap_tier": "mid",
+        "mktcap": 8033096700.0,
+        "adv_usd": 75767498.56452942,
+        "next_earn_date": "2027-01-26",
+        "td_to_next_earn": 66
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 34.3,
+        "ear": 65.2,
+        "rue": 50.0,
+        "avol": 28.3,
+        "anchor": 32.7
+      },
+      "composite": 44.0,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "CBSH",
+      "name": "Commerce Bancshares, Inc.",
+      "sector": "",
+      "report_date": "2026-10-20",
+      "time": "time-pre-market",
+      "reaction_day": "2026-10-20",
+      "side": "long",
+      "eps_actual": 1.08,
+      "eps_consensus": 1.07,
+      "n_estimates": 8,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.000181,
+        "ear": 0.005175,
+        "rue": null,
+        "avol": 0.229501,
+        "nearness": 0.908911
+      },
+      "context": {
+        "close_pre": 55.11,
+        "cap_tier": "mid",
+        "mktcap": 7904547300.0,
+        "adv_usd": 51723625.39138794,
+        "next_earn_date": null,
+        "td_to_next_earn": null
+      },
+      "flags": {
+        "gap_held": true,
+        "momentum_aligned": true,
+        "rue_missing": true
+      },
+      "excluded_reason": null,
+      "ranks": {
+        "sue": 29.4,
+        "ear": 55.9,
+        "rue": 50.0,
+        "avol": 15.9,
+        "anchor": 65.5
+      },
+      "composite": 42.8,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "AGNC",
+      "name": "AGNC Investment Corp.",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 0.37,
+      "eps_consensus": 0.39,
+      "n_estimates": 4,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": -0.00237,
+        "ear": 0.039301,
+        "rue": null,
+        "avol": 0.38868,
+        "nearness": 0.763297
+      },
+      "context": {
+        "close_pre": 8.44,
+        "cap_tier": "mid",
+        "mktcap": 10005463000.0,
+        "adv_usd": 247233913.3644104,
+        "next_earn_date": "2027-01-25",
+        "td_to_next_earn": 65
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 6.0,
+        "ear": 76.8,
+        "rue": 50.0,
+        "avol": 26.1,
+        "anchor": 31.8
+      },
+      "composite": 38.5,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "SMMT",
+      "name": "Summit Therapeutics Inc.",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-not-supplied",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": -0.31,
+      "eps_consensus": -0.28,
+      "n_estimates": 3,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": -0.001927,
+        "ear": 0.030045,
+        "rue": null,
+        "avol": 0.200025,
+        "nearness": 0.532672
+      },
+      "context": {
+        "close_pre": 15.57,
+        "cap_tier": "mid",
+        "mktcap": 12451740700.0,
+        "adv_usd": 80347705.4397583,
+        "next_earn_date": "2026-10-27",
+        "td_to_next_earn": 5
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null,
+        "rue_missing": true
+      },
+      "excluded_reason": "mixed",
+      "ranks": {
+        "sue": 7.3,
+        "ear": 71.5,
+        "rue": 50.0,
+        "avol": 14.7,
+        "anchor": 7.3
+      },
+      "composite": 31.9,
+      "rank_pool_n": 919
+    },
+    {
+      "ticker": "FNB",
+      "name": "F.N.B. Corporation",
+      "sector": "",
+      "report_date": "2026-10-19",
+      "time": "time-after-hours",
+      "reaction_day": "2026-10-20",
+      "side": "mixed",
+      "eps_actual": 0.43,
+      "eps_consensus": 0.43,
+      "n_estimates": 6,
+      "sue_source": "nasdaq",
+      "raw": {
+        "sue": 0.0,
+        "ear": 0.037921,
+        "rue": null,
+        "avol": 0.624331,
+        "nearness": 0.871966
+      },
+      "context": {
+        "close_pre": 16.96,
+        "cap_tier": "mid",
+        "mktcap": 5986896400.0,
+        "adv_usd": 76887756.05802536,
+        "next_earn_date": "2027-01-19",
+        "td_to_next_earn": 61
+      },
+      "flags": {
+        "gap_held": null,
+        "momentum_aligned": null
+      },
+      "excluded_reason": "zero_surprise",
+      "ranks": {},
+      "composite": null,
+      "rank_pool_n": 0
+    },
     {
       "ticker": "CLF",
       "name": "Cleveland-Cliffs Inc.",
@@ -1113,396 +2267,10 @@
       "ranks": {},
       "composite": null,
       "rank_pool_n": 0
-    },
-    {
-      "ticker": "GS",
-      "name": "The Goldman Sachs Group, Inc.",
-      "sector": "",
-      "report_date": "2026-10-13",
-      "time": "time-pre-market",
-      "reaction_day": "2026-10-13",
-      "side": "mixed",
-      "eps_actual": 17.01,
-      "eps_consensus": 12.9,
-      "n_estimates": 7,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.004598,
-        "ear": -0.002166,
-        "rue": null,
-        "avol": 0.982194,
-        "nearness": 0.778454
-      },
-      "context": {
-        "close_pre": 893.95,
-        "cap_tier": "large",
-        "mktcap": 260292674000.0,
-        "adv_usd": 1816647577.4932861,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 90.4,
-        "ear": 49.4,
-        "rue": 50.0,
-        "avol": 75.8,
-        "anchor": 34.7
-      },
-      "composite": 63.5,
-      "rank_pool_n": 942
-    },
-    {
-      "ticker": "ACI",
-      "name": "Albertsons Companies, Inc.",
-      "sector": "",
-      "report_date": "2026-10-13",
-      "time": "time-pre-market",
-      "reaction_day": "2026-10-13",
-      "side": "long",
-      "eps_actual": 0.36,
-      "eps_consensus": 0.31,
-      "n_estimates": 6,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.003987,
-        "ear": 0.01447,
-        "rue": null,
-        "avol": 0.875805,
-        "nearness": 0.653708
-      },
-      "context": {
-        "close_pre": 12.54,
-        "cap_tier": "mid",
-        "mktcap": 6085984300.0,
-        "adv_usd": 84058639.7767067,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": true,
-        "momentum_aligned": false,
-        "rue_missing": true
-      },
-      "excluded_reason": null,
-      "ranks": {
-        "sue": 89.2,
-        "ear": 61.8,
-        "rue": 50.0,
-        "avol": 66.7,
-        "anchor": 16.9
-      },
-      "composite": 62.8,
-      "rank_pool_n": 942
-    },
-    {
-      "ticker": "JPM",
-      "name": "J P Morgan Chase & Co",
-      "sector": "",
-      "report_date": "2026-10-13",
-      "time": "time-pre-market",
-      "reaction_day": "2026-10-13",
-      "side": "short",
-      "eps_actual": 5.75,
-      "eps_consensus": 5.94,
-      "n_estimates": 6,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": -0.000568,
-        "ear": -0.008469,
-        "rue": null,
-        "avol": 0.755941,
-        "nearness": 0.916692
-      },
-      "context": {
-        "close_pre": 334.3,
-        "cap_tier": "large",
-        "mktcap": 888631660000.0,
-        "adv_usd": 2249673875.0045776,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": true,
-        "momentum_aligned": false,
-        "rue_missing": true
-      },
-      "excluded_reason": null,
-      "ranks": {
-        "sue": 86.3,
-        "ear": 55.9,
-        "rue": 50.0,
-        "avol": 57.0,
-        "anchor": 34.1
-      },
-      "composite": 61.3,
-      "rank_pool_n": 942
-    },
-    {
-      "ticker": "UNH",
-      "name": "UnitedHealth Group Incorporated",
-      "sector": "",
-      "report_date": "2026-10-13",
-      "time": "time-pre-market",
-      "reaction_day": "2026-10-13",
-      "side": "mixed",
-      "eps_actual": 4.69,
-      "eps_consensus": 4.12,
-      "n_estimates": 8,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.001506,
-        "ear": -0.001892,
-        "rue": null,
-        "avol": 1.003547,
-        "nearness": 0.825031
-      },
-      "context": {
-        "close_pre": 378.52,
-        "cap_tier": "large",
-        "mktcap": 339757597000.0,
-        "adv_usd": 1762418864.9505615,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 70.6,
-        "ear": 49.6,
-        "rue": 50.0,
-        "avol": 76.9,
-        "anchor": 41.7
-      },
-      "composite": 58.8,
-      "rank_pool_n": 942
-    },
-    {
-      "ticker": "C",
-      "name": "Citigroup Inc.",
-      "sector": "",
-      "report_date": "2026-10-13",
-      "time": "time-pre-market",
-      "reaction_day": "2026-10-13",
-      "side": "mixed",
-      "eps_actual": 2.83,
-      "eps_consensus": 2.66,
-      "n_estimates": 7,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.001289,
-        "ear": -0.055903,
-        "rue": null,
-        "avol": 0.784545,
-        "nearness": 0.896125
-      },
-      "context": {
-        "close_pre": 131.92,
-        "cap_tier": "large",
-        "mktcap": 221287465000.0,
-        "adv_usd": 1233186010.2714539,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 66.1,
-        "ear": 18.5,
-        "rue": 50.0,
-        "avol": 59.7,
-        "anchor": 58.8
-      },
-      "composite": 48.2,
-      "rank_pool_n": 942
-    },
-    {
-      "ticker": "DPZ",
-      "name": "Domino's Pizza Inc",
-      "sector": "",
-      "report_date": "2026-10-13",
-      "time": "time-pre-market",
-      "reaction_day": "2026-10-13",
-      "side": "mixed",
-      "eps_actual": 4.6,
-      "eps_consensus": 4.33,
-      "n_estimates": 9,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.000868,
-        "ear": -0.047488,
-        "rue": null,
-        "avol": 0.980894,
-        "nearness": 0.71515
-      },
-      "context": {
-        "close_pre": 310.9,
-        "cap_tier": "mid",
-        "mktcap": 10285111300.0,
-        "adv_usd": 244161137.42218018,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 57.1,
-        "ear": 21.7,
-        "rue": 50.0,
-        "avol": 75.7,
-        "anchor": 23.8
-      },
-      "composite": 43.6,
-      "rank_pool_n": 942
-    },
-    {
-      "ticker": "JNJ",
-      "name": "Johnson & Johnson",
-      "sector": "",
-      "report_date": "2026-10-13",
-      "time": "time-pre-market",
-      "reaction_day": "2026-10-13",
-      "side": "mixed",
-      "eps_actual": 2.59,
-      "eps_consensus": 2.53,
-      "n_estimates": 5,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.000228,
-        "ear": -0.057216,
-        "rue": null,
-        "avol": 0.962773,
-        "nearness": 0.938307
-      },
-      "context": {
-        "close_pre": 263.73,
-        "cap_tier": "large",
-        "mktcap": 635562560000.0,
-        "adv_usd": 1671784712.487793,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 31.1,
-        "ear": 17.9,
-        "rue": 50.0,
-        "avol": 74.5,
-        "anchor": 73.5
-      },
-      "composite": 41.9,
-      "rank_pool_n": 942
-    },
-    {
-      "ticker": "WFC",
-      "name": "Wells Fargo & Company",
-      "sector": "",
-      "report_date": "2026-10-13",
-      "time": "time-pre-market",
-      "reaction_day": "2026-10-13",
-      "side": "mixed",
-      "eps_actual": 1.87,
-      "eps_consensus": 1.85,
-      "n_estimates": 8,
-      "sue_source": "nasdaq",
-      "raw": {
-        "sue": 0.00024,
-        "ear": -0.030849,
-        "rue": null,
-        "avol": 0.668197,
-        "nearness": 0.866322
-      },
-      "context": {
-        "close_pre": 83.32,
-        "cap_tier": "large",
-        "mktcap": 251959624000.0,
-        "adv_usd": 1135937881.3236237,
-        "next_earn_date": null,
-        "td_to_next_earn": null
-      },
-      "flags": {
-        "gap_held": null,
-        "momentum_aligned": null,
-        "rue_missing": true
-      },
-      "excluded_reason": "mixed",
-      "ranks": {
-        "sue": 31.7,
-        "ear": 30.6,
-        "rue": 50.0,
-        "avol": 48.3,
-        "anchor": 50.7
-      },
-      "composite": 38.5,
-      "rank_pool_n": 942
     }
   ],
   "active_book": {
     "long": [
-      {
-        "ticker": "BKR",
-        "report_date": "2026-07-26",
-        "reaction_day": "2026-07-27",
-        "side": "long",
-        "composite": 64.3,
-        "score_tercile": "high",
-        "sue_source": "nasdaq",
-        "cap_tier": "large",
-        "backfilled": false,
-        "entry_date": "2026-07-28",
-        "entry_open": 60.38,
-        "entry_proxy": false,
-        "delisted": false,
-        "next_earn_date": "2026-10-27",
-        "horizons": {
-          "h5": {
-            "evaluated": true,
-            "exit_date": "2026-08-03",
-            "ret": 0.0071,
-            "excess_ret": -0.0156
-          },
-          "h20": {
-            "evaluated": true,
-            "exit_date": "2026-08-24",
-            "ret": 0.0266,
-            "excess_ret": -0.0039
-          },
-          "h60": {
-            "evaluated": false
-          },
-          "next_earn": {
-            "evaluated": false
-          }
-        },
-        "active": true,
-        "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0757,
-          "excess_ret": -0.1128
-        }
-      },
       {
         "ticker": "NUE",
         "report_date": "2026-07-27",
@@ -1540,9 +2308,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0305,
-          "excess_ret": -0.0839
+          "last_close_date": "2026-10-20",
+          "ret": -0.0277,
+          "excess_ret": -0.0846
         }
       },
       {
@@ -1582,9 +2350,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0537,
-          "excess_ret": -0.107
+          "last_close_date": "2026-10-20",
+          "ret": -0.0441,
+          "excess_ret": -0.101
         }
       },
       {
@@ -1624,9 +2392,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0952,
-          "excess_ret": -0.1486
+          "last_close_date": "2026-10-20",
+          "ret": -0.0754,
+          "excess_ret": -0.1323
         }
       },
       {
@@ -1666,9 +2434,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0551,
-          "excess_ret": -0.1084
+          "last_close_date": "2026-10-20",
+          "ret": -0.04,
+          "excess_ret": -0.0968
         }
       },
       {
@@ -1708,9 +2476,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1009,
-          "excess_ret": 0.0475
+          "last_close_date": "2026-10-20",
+          "ret": 0.1209,
+          "excess_ret": 0.064
         }
       },
       {
@@ -1750,9 +2518,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0451,
-          "excess_ret": -0.0985
+          "last_close_date": "2026-10-20",
+          "ret": -0.0331,
+          "excess_ret": -0.09
         }
       },
       {
@@ -1792,9 +2560,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0472,
-          "excess_ret": -0.1006
+          "last_close_date": "2026-10-20",
+          "ret": -0.0453,
+          "excess_ret": -0.1022
         }
       },
       {
@@ -1834,9 +2602,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2136,
-          "excess_ret": -0.2496
+          "last_close_date": "2026-10-20",
+          "ret": -0.1983,
+          "excess_ret": -0.2378
         }
       },
       {
@@ -1876,9 +2644,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0584,
-          "excess_ret": -0.0944
+          "last_close_date": "2026-10-20",
+          "ret": -0.044,
+          "excess_ret": -0.0835
         }
       },
       {
@@ -1918,9 +2686,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0009,
-          "excess_ret": -0.0524
+          "last_close_date": "2026-10-20",
+          "ret": 0.0087,
+          "excess_ret": -0.0482
         }
       },
       {
@@ -1960,9 +2728,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0066,
-          "excess_ret": -0.0294
+          "last_close_date": "2026-10-20",
+          "ret": 0.0039,
+          "excess_ret": -0.0356
         }
       },
       {
@@ -2002,9 +2770,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1159,
-          "excess_ret": 0.0799
+          "last_close_date": "2026-10-20",
+          "ret": 0.1468,
+          "excess_ret": 0.1073
         }
       },
       {
@@ -2044,9 +2812,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0959,
-          "excess_ret": -0.1319
+          "last_close_date": "2026-10-20",
+          "ret": -0.0771,
+          "excess_ret": -0.1166
         }
       },
       {
@@ -2086,9 +2854,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.206,
-          "excess_ret": -0.242
+          "last_close_date": "2026-10-20",
+          "ret": -0.208,
+          "excess_ret": -0.2474
         }
       },
       {
@@ -2128,9 +2896,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1212,
-          "excess_ret": -0.1746
+          "last_close_date": "2026-10-20",
+          "ret": -0.0951,
+          "excess_ret": -0.1519
         }
       },
       {
@@ -2170,9 +2938,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0996,
-          "excess_ret": 0.0463
+          "last_close_date": "2026-10-20",
+          "ret": 0.1078,
+          "excess_ret": 0.0509
         }
       },
       {
@@ -2212,9 +2980,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0952,
-          "excess_ret": -0.1486
+          "last_close_date": "2026-10-20",
+          "ret": -0.0791,
+          "excess_ret": -0.136
         }
       },
       {
@@ -2254,9 +3022,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0538,
-          "excess_ret": 0.0004
+          "last_close_date": "2026-10-20",
+          "ret": 0.0546,
+          "excess_ret": -0.0023
         }
       },
       {
@@ -2296,9 +3064,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1561,
-          "excess_ret": 0.1201
+          "last_close_date": "2026-10-20",
+          "ret": 0.1942,
+          "excess_ret": 0.1547
         }
       },
       {
@@ -2338,9 +3106,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0081,
-          "excess_ret": -0.0441
+          "last_close_date": "2026-10-20",
+          "ret": 0.002,
+          "excess_ret": -0.0374
         }
       },
       {
@@ -2380,9 +3148,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2128,
-          "excess_ret": -0.2661
+          "last_close_date": "2026-10-20",
+          "ret": -0.2008,
+          "excess_ret": -0.2577
         }
       },
       {
@@ -2422,9 +3190,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2074,
-          "excess_ret": -0.2607
+          "last_close_date": "2026-10-20",
+          "ret": -0.2054,
+          "excess_ret": -0.2623
         }
       },
       {
@@ -2464,9 +3232,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0277,
-          "excess_ret": -0.0811
+          "last_close_date": "2026-10-20",
+          "ret": -0.0169,
+          "excess_ret": -0.0738
         }
       },
       {
@@ -2506,9 +3274,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1094,
-          "excess_ret": -0.1627
+          "last_close_date": "2026-10-20",
+          "ret": -0.0909,
+          "excess_ret": -0.1478
         }
       },
       {
@@ -2548,9 +3316,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.2232,
-          "excess_ret": 0.1698
+          "last_close_date": "2026-10-20",
+          "ret": 0.2402,
+          "excess_ret": 0.1833
         }
       },
       {
@@ -2590,9 +3358,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1379,
-          "excess_ret": -0.1913
+          "last_close_date": "2026-10-20",
+          "ret": -0.1175,
+          "excess_ret": -0.1744
         }
       },
       {
@@ -2632,9 +3400,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0579,
-          "excess_ret": -0.1113
+          "last_close_date": "2026-10-20",
+          "ret": -0.0454,
+          "excess_ret": -0.1023
         }
       },
       {
@@ -2674,9 +3442,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0356,
-          "excess_ret": -0.0715
+          "last_close_date": "2026-10-20",
+          "ret": -0.0325,
+          "excess_ret": -0.072
         }
       },
       {
@@ -2716,9 +3484,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0073,
-          "excess_ret": -0.0433
+          "last_close_date": "2026-10-20",
+          "ret": -0.002,
+          "excess_ret": -0.0415
         }
       },
       {
@@ -2758,9 +3526,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1383,
-          "excess_ret": -0.1917
+          "last_close_date": "2026-10-20",
+          "ret": -0.0781,
+          "excess_ret": -0.135
         }
       },
       {
@@ -2800,9 +3568,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1039,
-          "excess_ret": 0.0679
+          "last_close_date": "2026-10-20",
+          "ret": 0.1139,
+          "excess_ret": 0.0744
         }
       },
       {
@@ -2842,9 +3610,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.031,
-          "excess_ret": -0.005
+          "last_close_date": "2026-10-20",
+          "ret": 0.0401,
+          "excess_ret": 0.0007
         }
       },
       {
@@ -2884,9 +3652,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.159,
-          "excess_ret": -0.2123
+          "last_close_date": "2026-10-20",
+          "ret": -0.1469,
+          "excess_ret": -0.2038
         }
       },
       {
@@ -2926,9 +3694,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0806,
-          "excess_ret": 0.0446
+          "last_close_date": "2026-10-20",
+          "ret": 0.1021,
+          "excess_ret": 0.0627
         }
       },
       {
@@ -3010,9 +3778,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1196,
-          "excess_ret": 0.0836
+          "last_close_date": "2026-10-20",
+          "ret": 0.1423,
+          "excess_ret": 0.1028
         }
       },
       {
@@ -3052,9 +3820,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1424,
-          "excess_ret": 0.1064
+          "last_close_date": "2026-10-20",
+          "ret": 0.1895,
+          "excess_ret": 0.15
         }
       },
       {
@@ -3094,9 +3862,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0049,
-          "excess_ret": -0.0408
+          "last_close_date": "2026-10-20",
+          "ret": 0.0068,
+          "excess_ret": -0.0326
         }
       },
       {
@@ -3136,9 +3904,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1104,
-          "excess_ret": -0.1464
+          "last_close_date": "2026-10-20",
+          "ret": -0.0869,
+          "excess_ret": -0.1263
         }
       },
       {
@@ -3178,9 +3946,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0319,
-          "excess_ret": -0.0679
+          "last_close_date": "2026-10-20",
+          "ret": -0.0329,
+          "excess_ret": -0.0724
         }
       },
       {
@@ -3220,9 +3988,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2139,
-          "excess_ret": -0.2424
+          "last_close_date": "2026-10-20",
+          "ret": -0.2191,
+          "excess_ret": -0.2512
         }
       },
       {
@@ -3262,9 +4030,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0509,
-          "excess_ret": -0.0795
+          "last_close_date": "2026-10-20",
+          "ret": -0.0141,
+          "excess_ret": -0.0461
         }
       },
       {
@@ -3304,9 +4072,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0987,
-          "excess_ret": -0.1273
+          "last_close_date": "2026-10-20",
+          "ret": -0.0733,
+          "excess_ret": -0.1053
         }
       },
       {
@@ -3346,9 +4114,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0782,
-          "excess_ret": -0.1068
+          "last_close_date": "2026-10-20",
+          "ret": -0.0672,
+          "excess_ret": -0.0992
         }
       },
       {
@@ -3388,9 +4156,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0835,
-          "excess_ret": -0.112
+          "last_close_date": "2026-10-20",
+          "ret": -0.0909,
+          "excess_ret": -0.1229
         }
       },
       {
@@ -3430,9 +4198,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0153,
-          "excess_ret": -0.0439
+          "last_close_date": "2026-10-20",
+          "ret": -0.0373,
+          "excess_ret": -0.0693
         }
       },
       {
@@ -3472,9 +4240,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0243,
-          "excess_ret": -0.0603
+          "last_close_date": "2026-10-20",
+          "ret": -0.0178,
+          "excess_ret": -0.0572
         }
       },
       {
@@ -3514,9 +4282,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0398,
-          "excess_ret": -0.0758
+          "last_close_date": "2026-10-20",
+          "ret": -0.0334,
+          "excess_ret": -0.0729
         }
       },
       {
@@ -3556,9 +4324,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0232,
-          "excess_ret": -0.0592
+          "last_close_date": "2026-10-20",
+          "ret": -0.0089,
+          "excess_ret": -0.0484
         }
       },
       {
@@ -3598,9 +4366,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2522,
-          "excess_ret": -0.2882
+          "last_close_date": "2026-10-20",
+          "ret": -0.2325,
+          "excess_ret": -0.272
         }
       },
       {
@@ -3640,9 +4408,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0125,
-          "excess_ret": -0.0235
+          "last_close_date": "2026-10-20",
+          "ret": 0.0094,
+          "excess_ret": -0.03
         }
       },
       {
@@ -3682,9 +4450,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0291,
-          "excess_ret": -0.0069
+          "last_close_date": "2026-10-20",
+          "ret": 0.0271,
+          "excess_ret": -0.0123
         }
       },
       {
@@ -3724,9 +4492,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.303,
-          "excess_ret": -0.3389
+          "last_close_date": "2026-10-20",
+          "ret": -0.2878,
+          "excess_ret": -0.3273
         }
       },
       {
@@ -3766,9 +4534,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1211,
-          "excess_ret": -0.1571
+          "last_close_date": "2026-10-20",
+          "ret": -0.1223,
+          "excess_ret": -0.1618
         }
       },
       {
@@ -3808,9 +4576,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1369,
-          "excess_ret": -0.1655
+          "last_close_date": "2026-10-20",
+          "ret": -0.1646,
+          "excess_ret": -0.1967
         }
       },
       {
@@ -3850,9 +4618,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2555,
-          "excess_ret": -0.2841
+          "last_close_date": "2026-10-20",
+          "ret": -0.2698,
+          "excess_ret": -0.3018
         }
       },
       {
@@ -3892,9 +4660,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1856,
-          "excess_ret": 0.157
+          "last_close_date": "2026-10-20",
+          "ret": 0.1819,
+          "excess_ret": 0.1499
         }
       },
       {
@@ -3934,9 +4702,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0428,
-          "excess_ret": -0.0788
+          "last_close_date": "2026-10-20",
+          "ret": -0.0417,
+          "excess_ret": -0.0812
         }
       },
       {
@@ -3976,9 +4744,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1035,
-          "excess_ret": -0.1395
+          "last_close_date": "2026-10-20",
+          "ret": -0.09,
+          "excess_ret": -0.1295
         }
       },
       {
@@ -4018,9 +4786,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0781,
-          "excess_ret": 0.0495
+          "last_close_date": "2026-10-20",
+          "ret": 0.1286,
+          "excess_ret": 0.0966
         }
       },
       {
@@ -4060,9 +4828,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1186,
-          "excess_ret": -0.1546
+          "last_close_date": "2026-10-20",
+          "ret": -0.1045,
+          "excess_ret": -0.144
         }
       },
       {
@@ -4102,9 +4870,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.253,
-          "excess_ret": -0.2815
+          "last_close_date": "2026-10-20",
+          "ret": -0.2476,
+          "excess_ret": -0.2796
         }
       },
       {
@@ -4144,9 +4912,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1603,
-          "excess_ret": -0.1889
+          "last_close_date": "2026-10-20",
+          "ret": -0.1367,
+          "excess_ret": -0.1687
         }
       },
       {
@@ -4186,9 +4954,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0751,
-          "excess_ret": -0.1111
+          "last_close_date": "2026-10-20",
+          "ret": -0.067,
+          "excess_ret": -0.1064
         }
       },
       {
@@ -4228,9 +4996,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0443,
-          "excess_ret": -0.0803
+          "last_close_date": "2026-10-20",
+          "ret": -0.0618,
+          "excess_ret": -0.1013
         }
       },
       {
@@ -4270,9 +5038,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0569,
-          "excess_ret": -0.0711
+          "last_close_date": "2026-10-20",
+          "ret": -0.0563,
+          "excess_ret": -0.0738
         }
       },
       {
@@ -4312,9 +5080,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0191,
-          "excess_ret": -0.0095
+          "last_close_date": "2026-10-20",
+          "ret": 0.034,
+          "excess_ret": 0.0019
         }
       },
       {
@@ -4354,9 +5122,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0717,
-          "excess_ret": -0.1003
+          "last_close_date": "2026-10-20",
+          "ret": -0.0895,
+          "excess_ret": -0.1216
         }
       },
       {
@@ -4396,9 +5164,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0949,
-          "excess_ret": -0.1235
+          "last_close_date": "2026-10-20",
+          "ret": -0.0511,
+          "excess_ret": -0.0831
         }
       },
       {
@@ -4438,9 +5206,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0327,
-          "excess_ret": -0.0613
+          "last_close_date": "2026-10-20",
+          "ret": -0.0404,
+          "excess_ret": -0.0724
         }
       },
       {
@@ -4480,9 +5248,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0368,
-          "excess_ret": 0.0227
+          "last_close_date": "2026-10-20",
+          "ret": 0.0581,
+          "excess_ret": 0.0405
         }
       },
       {
@@ -4522,9 +5290,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.008,
-          "excess_ret": -0.0062
+          "last_close_date": "2026-10-20",
+          "ret": 0.0052,
+          "excess_ret": -0.0124
         }
       },
       {
@@ -4564,9 +5332,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1456,
-          "excess_ret": -0.1741
+          "last_close_date": "2026-10-20",
+          "ret": -0.1626,
+          "excess_ret": -0.1947
         }
       },
       {
@@ -4606,9 +5374,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2583,
-          "excess_ret": -0.2724
+          "last_close_date": "2026-10-20",
+          "ret": -0.2377,
+          "excess_ret": -0.2553
         }
       },
       {
@@ -4648,9 +5416,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.212,
-          "excess_ret": -0.2261
+          "last_close_date": "2026-10-20",
+          "ret": -0.1999,
+          "excess_ret": -0.2175
         }
       },
       {
@@ -4690,9 +5458,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1652,
-          "excess_ret": -0.1938
+          "last_close_date": "2026-10-20",
+          "ret": -0.1572,
+          "excess_ret": -0.1892
         }
       },
       {
@@ -4732,9 +5500,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1594,
-          "excess_ret": -0.188
+          "last_close_date": "2026-10-20",
+          "ret": -0.1417,
+          "excess_ret": -0.1738
         }
       },
       {
@@ -4774,9 +5542,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0207,
-          "excess_ret": -0.0078
+          "last_close_date": "2026-10-20",
+          "ret": 0.0345,
+          "excess_ret": 0.0025
         }
       },
       {
@@ -4816,9 +5584,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1461,
-          "excess_ret": -0.1747
+          "last_close_date": "2026-10-20",
+          "ret": -0.1402,
+          "excess_ret": -0.1723
         }
       },
       {
@@ -4858,9 +5626,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1059,
-          "excess_ret": -0.12
+          "last_close_date": "2026-10-20",
+          "ret": -0.0897,
+          "excess_ret": -0.1072
         }
       },
       {
@@ -4900,9 +5668,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0858,
-          "excess_ret": 0.0572
+          "last_close_date": "2026-10-20",
+          "ret": 0.0929,
+          "excess_ret": 0.0609
         }
       },
       {
@@ -4942,9 +5710,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0944,
-          "excess_ret": -0.1085
+          "last_close_date": "2026-10-20",
+          "ret": -0.0696,
+          "excess_ret": -0.0872
         }
       },
       {
@@ -4984,9 +5752,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1158,
-          "excess_ret": -0.1299
+          "last_close_date": "2026-10-20",
+          "ret": -0.1192,
+          "excess_ret": -0.1368
         }
       },
       {
@@ -5003,7 +5771,7 @@
         "entry_open": 190.28,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-10-27",
+        "next_earn_date": "2026-11-02",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -5026,9 +5794,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0606,
-          "excess_ret": -0.0748
+          "last_close_date": "2026-10-20",
+          "ret": -0.0424,
+          "excess_ret": -0.06
         }
       },
       {
@@ -5068,9 +5836,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1533,
-          "excess_ret": 0.1392
+          "last_close_date": "2026-10-20",
+          "ret": 0.1592,
+          "excess_ret": 0.1417
         }
       },
       {
@@ -5110,9 +5878,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0894,
-          "excess_ret": -0.118
+          "last_close_date": "2026-10-20",
+          "ret": -0.1224,
+          "excess_ret": -0.1545
         }
       },
       {
@@ -5152,9 +5920,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0762,
-          "excess_ret": 0.0476
+          "last_close_date": "2026-10-20",
+          "ret": 0.1112,
+          "excess_ret": 0.0791
         }
       },
       {
@@ -5194,9 +5962,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1486,
-          "excess_ret": -0.1628
+          "last_close_date": "2026-10-20",
+          "ret": -0.1377,
+          "excess_ret": -0.1553
         }
       },
       {
@@ -5236,9 +6004,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.237,
-          "excess_ret": -0.2511
+          "last_close_date": "2026-10-20",
+          "ret": -0.2474,
+          "excess_ret": -0.2649
         }
       },
       {
@@ -5278,9 +6046,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1457,
-          "excess_ret": -0.1598
+          "last_close_date": "2026-10-20",
+          "ret": -0.1281,
+          "excess_ret": -0.1457
         }
       },
       {
@@ -5320,9 +6088,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.3873,
-          "excess_ret": 0.3588
+          "last_close_date": "2026-10-20",
+          "ret": 0.3877,
+          "excess_ret": 0.3557
         }
       },
       {
@@ -5362,9 +6130,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0319,
-          "excess_ret": -0.0605
+          "last_close_date": "2026-10-20",
+          "ret": -0.0329,
+          "excess_ret": -0.0649
         }
       },
       {
@@ -5404,9 +6172,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0548,
-          "excess_ret": -0.0834
+          "last_close_date": "2026-10-20",
+          "ret": -0.042,
+          "excess_ret": -0.074
         }
       },
       {
@@ -5446,9 +6214,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2462,
-          "excess_ret": -0.2603
+          "last_close_date": "2026-10-20",
+          "ret": -0.2407,
+          "excess_ret": -0.2582
         }
       },
       {
@@ -5488,9 +6256,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.052,
-          "excess_ret": -0.0806
+          "last_close_date": "2026-10-20",
+          "ret": -0.0408,
+          "excess_ret": -0.0728
         }
       },
       {
@@ -5530,9 +6298,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0999,
-          "excess_ret": -0.1141
+          "last_close_date": "2026-10-20",
+          "ret": -0.0844,
+          "excess_ret": -0.1019
         }
       },
       {
@@ -5572,9 +6340,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.013,
-          "excess_ret": -0.0011
+          "last_close_date": "2026-10-20",
+          "ret": 0.0412,
+          "excess_ret": 0.0237
         }
       },
       {
@@ -5614,9 +6382,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1484,
-          "excess_ret": 0.1342
+          "last_close_date": "2026-10-20",
+          "ret": 0.1552,
+          "excess_ret": 0.1377
         }
       },
       {
@@ -5656,9 +6424,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0542,
-          "excess_ret": -0.0684
+          "last_close_date": "2026-10-20",
+          "ret": -0.0772,
+          "excess_ret": -0.0947
         }
       },
       {
@@ -5698,9 +6466,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0834,
-          "excess_ret": -0.0976
+          "last_close_date": "2026-10-20",
+          "ret": -0.0774,
+          "excess_ret": -0.095
         }
       },
       {
@@ -5740,9 +6508,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.6698,
-          "excess_ret": -0.6839
+          "last_close_date": "2026-10-20",
+          "ret": -0.6823,
+          "excess_ret": -0.6998
         }
       },
       {
@@ -5782,9 +6550,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0261,
-          "excess_ret": 0.012
+          "last_close_date": "2026-10-20",
+          "ret": 0.0301,
+          "excess_ret": 0.0126
         }
       },
       {
@@ -5824,9 +6592,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0717,
-          "excess_ret": -0.0858
+          "last_close_date": "2026-10-20",
+          "ret": -0.0834,
+          "excess_ret": -0.101
         }
       },
       {
@@ -5866,9 +6634,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.3018,
-          "excess_ret": -0.3
+          "last_close_date": "2026-10-20",
+          "ret": -0.3053,
+          "excess_ret": -0.3069
         }
       },
       {
@@ -5908,9 +6676,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0989,
-          "excess_ret": -0.0971
+          "last_close_date": "2026-10-20",
+          "ret": -0.1079,
+          "excess_ret": -0.1094
         }
       },
       {
@@ -5950,9 +6718,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1876,
-          "excess_ret": -0.1858
+          "last_close_date": "2026-10-20",
+          "ret": -0.1697,
+          "excess_ret": -0.1712
         }
       },
       {
@@ -5992,9 +6760,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0905,
-          "excess_ret": -0.0867
+          "last_close_date": "2026-10-20",
+          "ret": -0.0797,
+          "excess_ret": -0.0792
         }
       },
       {
@@ -6034,9 +6802,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0256,
-          "excess_ret": 0.0294
+          "last_close_date": "2026-10-20",
+          "ret": 0.0548,
+          "excess_ret": 0.0553
         }
       },
       {
@@ -6076,9 +6844,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1981,
-          "excess_ret": 0.1999
+          "last_close_date": "2026-10-20",
+          "ret": 0.1885,
+          "excess_ret": 0.187
         }
       },
       {
@@ -6118,9 +6886,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1844,
-          "excess_ret": -0.1826
+          "last_close_date": "2026-10-20",
+          "ret": -0.1657,
+          "excess_ret": -0.1672
         }
       },
       {
@@ -6160,9 +6928,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0108,
-          "excess_ret": -0.0089
+          "last_close_date": "2026-10-20",
+          "ret": -0.0222,
+          "excess_ret": -0.0237
         }
       },
       {
@@ -6202,9 +6970,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2151,
-          "excess_ret": -0.2132
+          "last_close_date": "2026-10-20",
+          "ret": -0.1926,
+          "excess_ret": -0.1942
         }
       },
       {
@@ -6244,9 +7012,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0137,
-          "excess_ret": 0.0139
+          "last_close_date": "2026-10-20",
+          "ret": 0.0216,
+          "excess_ret": 0.0185
         }
       },
       {
@@ -6286,9 +7054,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0678,
-          "excess_ret": -0.0675
+          "last_close_date": "2026-10-20",
+          "ret": -0.0576,
+          "excess_ret": -0.0607
         }
       },
       {
@@ -6328,9 +7096,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0243,
-          "excess_ret": 0.0245
+          "last_close_date": "2026-10-20",
+          "ret": 0.058,
+          "excess_ret": 0.0549
         }
       },
       {
@@ -6370,9 +7138,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0492,
-          "excess_ret": -0.0489
+          "last_close_date": "2026-10-20",
+          "ret": -0.0583,
+          "excess_ret": -0.0614
         }
       },
       {
@@ -6412,9 +7180,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0225,
-          "excess_ret": 0.0227
+          "last_close_date": "2026-10-20",
+          "ret": 0.0274,
+          "excess_ret": 0.0243
         }
       },
       {
@@ -6454,9 +7222,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2145,
-          "excess_ret": -0.2143
+          "last_close_date": "2026-10-20",
+          "ret": -0.2081,
+          "excess_ret": -0.2112
         }
       },
       {
@@ -6473,7 +7241,7 @@
         "entry_open": 51.38,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-11-03",
+        "next_earn_date": "2026-11-04",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -6496,9 +7264,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0777,
-          "excess_ret": 0.0779
+          "last_close_date": "2026-10-20",
+          "ret": 0.0886,
+          "excess_ret": 0.0854
         }
       },
       {
@@ -6538,9 +7306,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0241,
-          "excess_ret": 0.0243
+          "last_close_date": "2026-10-20",
+          "ret": 0.0402,
+          "excess_ret": 0.0371
         }
       },
       {
@@ -6580,9 +7348,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1249,
-          "excess_ret": -0.1247
+          "last_close_date": "2026-10-20",
+          "ret": -0.1004,
+          "excess_ret": -0.1035
         }
       },
       {
@@ -6622,9 +7390,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1629,
-          "excess_ret": -0.1626
+          "last_close_date": "2026-10-20",
+          "ret": -0.1465,
+          "excess_ret": -0.1496
         }
       },
       {
@@ -6664,9 +7432,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2364,
-          "excess_ret": -0.2362
+          "last_close_date": "2026-10-20",
+          "ret": -0.2572,
+          "excess_ret": -0.2604
         }
       },
       {
@@ -6706,9 +7474,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.023,
-          "excess_ret": -0.0228
+          "last_close_date": "2026-10-20",
+          "ret": -0.0235,
+          "excess_ret": -0.0266
         }
       },
       {
@@ -6748,9 +7516,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0192,
-          "excess_ret": 0.0194
+          "last_close_date": "2026-10-20",
+          "ret": 0.0078,
+          "excess_ret": 0.0046
         }
       },
       {
@@ -6790,9 +7558,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0324,
-          "excess_ret": 0.0327
+          "last_close_date": "2026-10-20",
+          "ret": 0.0489,
+          "excess_ret": 0.0458
         }
       },
       {
@@ -6832,9 +7600,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0674,
-          "excess_ret": -0.0672
+          "last_close_date": "2026-10-20",
+          "ret": -0.0595,
+          "excess_ret": -0.0627
         }
       },
       {
@@ -6874,9 +7642,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.047,
-          "excess_ret": 0.0472
+          "last_close_date": "2026-10-20",
+          "ret": 0.0498,
+          "excess_ret": 0.0467
         }
       },
       {
@@ -6916,9 +7684,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0607,
-          "excess_ret": -0.0604
+          "last_close_date": "2026-10-20",
+          "ret": -0.0413,
+          "excess_ret": -0.0444
         }
       },
       {
@@ -6958,9 +7726,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2781,
-          "excess_ret": -0.2779
+          "last_close_date": "2026-10-20",
+          "ret": -0.282,
+          "excess_ret": -0.2851
         }
       },
       {
@@ -7000,9 +7768,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1208,
-          "excess_ret": -0.1205
+          "last_close_date": "2026-10-20",
+          "ret": -0.1068,
+          "excess_ret": -0.1099
         }
       },
       {
@@ -7042,9 +7810,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2209,
-          "excess_ret": -0.2206
+          "last_close_date": "2026-10-20",
+          "ret": -0.2235,
+          "excess_ret": -0.2266
         }
       },
       {
@@ -7084,9 +7852,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1214,
-          "excess_ret": 0.1216
+          "last_close_date": "2026-10-20",
+          "ret": 0.1477,
+          "excess_ret": 0.1445
         }
       },
       {
@@ -7126,9 +7894,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1319,
-          "excess_ret": 0.1321
+          "last_close_date": "2026-10-20",
+          "ret": 0.1576,
+          "excess_ret": 0.1545
         }
       },
       {
@@ -7168,9 +7936,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0589,
-          "excess_ret": -0.0587
+          "last_close_date": "2026-10-20",
+          "ret": -0.0516,
+          "excess_ret": -0.0547
         }
       },
       {
@@ -7210,9 +7978,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.3213,
-          "excess_ret": 0.3215
+          "last_close_date": "2026-10-20",
+          "ret": 0.3656,
+          "excess_ret": 0.3625
         }
       },
       {
@@ -7252,9 +8020,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0401,
-          "excess_ret": -0.0399
+          "last_close_date": "2026-10-20",
+          "ret": -0.0248,
+          "excess_ret": -0.0279
         }
       },
       {
@@ -7294,9 +8062,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0965,
-          "excess_ret": -0.0963
+          "last_close_date": "2026-10-20",
+          "ret": -0.0621,
+          "excess_ret": -0.0652
         }
       },
       {
@@ -7336,9 +8104,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0913,
-          "excess_ret": 0.0915
+          "last_close_date": "2026-10-20",
+          "ret": 0.1128,
+          "excess_ret": 0.1097
         }
       },
       {
@@ -7378,9 +8146,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2488,
-          "excess_ret": -0.2486
+          "last_close_date": "2026-10-20",
+          "ret": -0.2343,
+          "excess_ret": -0.2374
         }
       },
       {
@@ -7420,9 +8188,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2678,
-          "excess_ret": -0.2615
+          "last_close_date": "2026-10-20",
+          "ret": -0.259,
+          "excess_ret": -0.2561
         }
       },
       {
@@ -7462,9 +8230,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0928,
-          "excess_ret": -0.0865
+          "last_close_date": "2026-10-20",
+          "ret": -0.0815,
+          "excess_ret": -0.0785
         }
       },
       {
@@ -7504,9 +8272,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.383,
-          "excess_ret": 0.3893
+          "last_close_date": "2026-10-20",
+          "ret": 0.3869,
+          "excess_ret": 0.3899
         }
       },
       {
@@ -7546,9 +8314,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0136,
-          "excess_ret": -0.0073
+          "last_close_date": "2026-10-20",
+          "ret": -0.0276,
+          "excess_ret": -0.0246
         }
       },
       {
@@ -7588,9 +8356,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.4807,
-          "excess_ret": 0.487
+          "last_close_date": "2026-10-20",
+          "ret": 0.5,
+          "excess_ret": 0.503
         }
       },
       {
@@ -7630,9 +8398,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0285,
-          "excess_ret": -0.0222
+          "last_close_date": "2026-10-20",
+          "ret": -0.0013,
+          "excess_ret": 0.0017
         }
       },
       {
@@ -7672,9 +8440,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0102,
-          "excess_ret": 0.0165
+          "last_close_date": "2026-10-20",
+          "ret": 0.0248,
+          "excess_ret": 0.0277
         }
       },
       {
@@ -7691,7 +8459,7 @@
         "entry_open": 32.37,
         "entry_proxy": false,
         "delisted": false,
-        "next_earn_date": "2026-11-04",
+        "next_earn_date": "2026-11-09",
         "horizons": {
           "h5": {
             "evaluated": true,
@@ -7714,9 +8482,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0871,
-          "excess_ret": -0.0808
+          "last_close_date": "2026-10-20",
+          "ret": -0.0658,
+          "excess_ret": -0.0628
         }
       },
       {
@@ -7756,9 +8524,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0118,
-          "excess_ret": 0.0181
+          "last_close_date": "2026-10-20",
+          "ret": 0.0358,
+          "excess_ret": 0.0387
         }
       },
       {
@@ -7798,9 +8566,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0185,
-          "excess_ret": -0.0122
+          "last_close_date": "2026-10-20",
+          "ret": -0.0188,
+          "excess_ret": -0.0158
         }
       },
       {
@@ -7840,9 +8608,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.2293,
-          "excess_ret": 0.2356
+          "last_close_date": "2026-10-20",
+          "ret": 0.243,
+          "excess_ret": 0.246
         }
       },
       {
@@ -7882,9 +8650,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.239,
-          "excess_ret": -0.2327
+          "last_close_date": "2026-10-20",
+          "ret": -0.2244,
+          "excess_ret": -0.2215
         }
       },
       {
@@ -7924,9 +8692,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0185,
-          "excess_ret": -0.0122
+          "last_close_date": "2026-10-20",
+          "ret": 0.0169,
+          "excess_ret": 0.0199
         }
       },
       {
@@ -7966,9 +8734,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0009,
-          "excess_ret": 0.0072
+          "last_close_date": "2026-10-20",
+          "ret": 0.017,
+          "excess_ret": 0.02
         }
       },
       {
@@ -8008,9 +8776,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0406,
-          "excess_ret": -0.0343
+          "last_close_date": "2026-10-20",
+          "ret": -0.0311,
+          "excess_ret": -0.0281
         }
       },
       {
@@ -8050,9 +8818,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1942,
-          "excess_ret": 0.2005
+          "last_close_date": "2026-10-20",
+          "ret": 0.1954,
+          "excess_ret": 0.1984
         }
       },
       {
@@ -8092,9 +8860,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0237,
-          "excess_ret": -0.0174
+          "last_close_date": "2026-10-20",
+          "ret": -0.0089,
+          "excess_ret": -0.0059
         }
       },
       {
@@ -8134,9 +8902,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0218,
-          "excess_ret": 0.0281
+          "last_close_date": "2026-10-20",
+          "ret": 0.0418,
+          "excess_ret": 0.0448
         }
       },
       {
@@ -8176,9 +8944,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.125,
-          "excess_ret": 0.1313
+          "last_close_date": "2026-10-20",
+          "ret": 0.1286,
+          "excess_ret": 0.1316
         }
       },
       {
@@ -8218,9 +8986,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1662,
-          "excess_ret": 0.1725
+          "last_close_date": "2026-10-20",
+          "ret": 0.2092,
+          "excess_ret": 0.2122
         }
       },
       {
@@ -8260,9 +9028,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.2394,
-          "excess_ret": 0.2457
+          "last_close_date": "2026-10-20",
+          "ret": 0.2414,
+          "excess_ret": 0.2444
         }
       },
       {
@@ -8302,9 +9070,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1339,
-          "excess_ret": -0.1276
+          "last_close_date": "2026-10-20",
+          "ret": -0.1222,
+          "excess_ret": -0.1192
         }
       },
       {
@@ -8344,9 +9112,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.3053,
-          "excess_ret": -0.299
+          "last_close_date": "2026-10-20",
+          "ret": -0.3034,
+          "excess_ret": -0.3004
         }
       },
       {
@@ -8386,9 +9154,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2946,
-          "excess_ret": -0.2883
+          "last_close_date": "2026-10-20",
+          "ret": -0.3201,
+          "excess_ret": -0.3171
         }
       },
       {
@@ -8428,9 +9196,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-16",
-          "ret": -0.2203,
-          "excess_ret": -0.2099
+          "last_close_date": "2026-10-19",
+          "ret": -0.2404,
+          "excess_ret": -0.2341
         }
       },
       {
@@ -8470,9 +9238,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1612,
-          "excess_ret": -0.1548
+          "last_close_date": "2026-10-20",
+          "ret": -0.1671,
+          "excess_ret": -0.1642
         }
       },
       {
@@ -8512,9 +9280,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0506,
-          "excess_ret": -0.0443
+          "last_close_date": "2026-10-20",
+          "ret": -0.0477,
+          "excess_ret": -0.0447
         }
       },
       {
@@ -8554,9 +9322,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.4488,
-          "excess_ret": -0.4428
+          "last_close_date": "2026-10-20",
+          "ret": -0.4591,
+          "excess_ret": -0.4565
         }
       },
       {
@@ -8596,9 +9364,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0181,
-          "excess_ret": -0.0121
+          "last_close_date": "2026-10-20",
+          "ret": -0.0098,
+          "excess_ret": -0.0072
         }
       },
       {
@@ -8638,9 +9406,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.075,
-          "excess_ret": -0.0689
+          "last_close_date": "2026-10-20",
+          "ret": -0.0413,
+          "excess_ret": -0.0386
         }
       },
       {
@@ -8680,9 +9448,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1522,
-          "excess_ret": -0.1459
+          "last_close_date": "2026-10-20",
+          "ret": -0.18,
+          "excess_ret": -0.177
         }
       },
       {
@@ -8722,9 +9490,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0883,
-          "excess_ret": 0.0946
+          "last_close_date": "2026-10-20",
+          "ret": 0.1058,
+          "excess_ret": 0.1088
         }
       },
       {
@@ -8764,9 +9532,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1434,
-          "excess_ret": -0.1374
+          "last_close_date": "2026-10-20",
+          "ret": -0.1156,
+          "excess_ret": -0.113
         }
       },
       {
@@ -8806,9 +9574,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.2563,
-          "excess_ret": 0.2626
+          "last_close_date": "2026-10-20",
+          "ret": 0.2624,
+          "excess_ret": 0.2654
         }
       },
       {
@@ -8848,9 +9616,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0533,
-          "excess_ret": 0.0596
+          "last_close_date": "2026-10-20",
+          "ret": 0.0789,
+          "excess_ret": 0.0819
         }
       },
       {
@@ -8890,9 +9658,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0464,
-          "excess_ret": 0.0527
+          "last_close_date": "2026-10-20",
+          "ret": 0.0741,
+          "excess_ret": 0.0771
         }
       },
       {
@@ -8932,9 +9700,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1792,
-          "excess_ret": -0.1732
+          "last_close_date": "2026-10-20",
+          "ret": -0.1639,
+          "excess_ret": -0.1612
         }
       },
       {
@@ -8974,9 +9742,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0731,
-          "excess_ret": -0.0671
+          "last_close_date": "2026-10-20",
+          "ret": -0.0326,
+          "excess_ret": -0.0299
         }
       },
       {
@@ -9016,9 +9784,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1918,
-          "excess_ret": 0.1978
+          "last_close_date": "2026-10-20",
+          "ret": 0.2099,
+          "excess_ret": 0.2126
         }
       },
       {
@@ -9058,9 +9826,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2941,
-          "excess_ret": -0.2878
+          "last_close_date": "2026-10-20",
+          "ret": -0.2913,
+          "excess_ret": -0.2884
         }
       },
       {
@@ -9100,9 +9868,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0886,
-          "excess_ret": -0.0823
+          "last_close_date": "2026-10-20",
+          "ret": -0.099,
+          "excess_ret": -0.0961
         }
       },
       {
@@ -9142,9 +9910,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1659,
-          "excess_ret": -0.1598
+          "last_close_date": "2026-10-20",
+          "ret": -0.1365,
+          "excess_ret": -0.1338
         }
       },
       {
@@ -9184,9 +9952,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.4177,
-          "excess_ret": -0.4116
+          "last_close_date": "2026-10-20",
+          "ret": -0.3984,
+          "excess_ret": -0.3957
         }
       },
       {
@@ -9226,9 +9994,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.084,
-          "excess_ret": 0.0903
+          "last_close_date": "2026-10-20",
+          "ret": 0.0717,
+          "excess_ret": 0.0747
         }
       },
       {
@@ -9268,9 +10036,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.13,
-          "excess_ret": -0.124
+          "last_close_date": "2026-10-20",
+          "ret": -0.1134,
+          "excess_ret": -0.1107
         }
       },
       {
@@ -9310,9 +10078,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0308,
-          "excess_ret": -0.0245
+          "last_close_date": "2026-10-20",
+          "ret": -0.0205,
+          "excess_ret": -0.0175
         }
       },
       {
@@ -9352,9 +10120,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1426,
-          "excess_ret": -0.1363
+          "last_close_date": "2026-10-20",
+          "ret": -0.1518,
+          "excess_ret": -0.1488
         }
       },
       {
@@ -9394,9 +10162,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2839,
-          "excess_ret": -0.2779
+          "last_close_date": "2026-10-20",
+          "ret": -0.305,
+          "excess_ret": -0.3023
         }
       },
       {
@@ -9436,9 +10204,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1044,
-          "excess_ret": -0.0981
+          "last_close_date": "2026-10-20",
+          "ret": -0.1244,
+          "excess_ret": -0.1215
         }
       },
       {
@@ -9478,9 +10246,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0882,
-          "excess_ret": 0.0942
+          "last_close_date": "2026-10-20",
+          "ret": 0.0906,
+          "excess_ret": 0.0933
         }
       },
       {
@@ -9520,9 +10288,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0349,
-          "excess_ret": -0.0286
+          "last_close_date": "2026-10-20",
+          "ret": -0.0433,
+          "excess_ret": -0.0404
         }
       },
       {
@@ -9562,9 +10330,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0329,
-          "excess_ret": -0.0266
+          "last_close_date": "2026-10-20",
+          "ret": -0.0268,
+          "excess_ret": -0.0238
         }
       },
       {
@@ -9604,9 +10372,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0199,
-          "excess_ret": 0.0259
+          "last_close_date": "2026-10-20",
+          "ret": 0.0332,
+          "excess_ret": 0.0359
         }
       },
       {
@@ -9646,9 +10414,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0681,
-          "excess_ret": 0.0741
+          "last_close_date": "2026-10-20",
+          "ret": 0.0865,
+          "excess_ret": 0.0892
         }
       },
       {
@@ -9688,9 +10456,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1086,
-          "excess_ret": -0.1022
+          "last_close_date": "2026-10-20",
+          "ret": -0.0939,
+          "excess_ret": -0.0909
         }
       },
       {
@@ -9730,9 +10498,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0689,
-          "excess_ret": -0.0626
+          "last_close_date": "2026-10-20",
+          "ret": -0.0483,
+          "excess_ret": -0.0453
         }
       },
       {
@@ -9772,9 +10540,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.4413,
-          "excess_ret": 0.4473
+          "last_close_date": "2026-10-20",
+          "ret": 0.484,
+          "excess_ret": 0.4866
         }
       },
       {
@@ -9814,9 +10582,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0621,
-          "excess_ret": -0.0558
+          "last_close_date": "2026-10-20",
+          "ret": -0.0514,
+          "excess_ret": -0.0485
         }
       },
       {
@@ -9856,9 +10624,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1101,
-          "excess_ret": 0.1164
+          "last_close_date": "2026-10-20",
+          "ret": 0.1095,
+          "excess_ret": 0.1125
         }
       },
       {
@@ -9898,9 +10666,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0523,
-          "excess_ret": 0.0583
+          "last_close_date": "2026-10-20",
+          "ret": 0.058,
+          "excess_ret": 0.0607
         }
       },
       {
@@ -9940,9 +10708,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0461,
-          "excess_ret": -0.0398
+          "last_close_date": "2026-10-20",
+          "ret": -0.0559,
+          "excess_ret": -0.053
         }
       },
       {
@@ -9982,9 +10750,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0563,
-          "excess_ret": -0.05
+          "last_close_date": "2026-10-20",
+          "ret": -0.0317,
+          "excess_ret": -0.0287
         }
       },
       {
@@ -10024,9 +10792,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0566,
-          "excess_ret": -0.0503
+          "last_close_date": "2026-10-20",
+          "ret": -0.0333,
+          "excess_ret": -0.0303
         }
       },
       {
@@ -10108,9 +10876,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0214,
-          "excess_ret": 0.0277
+          "last_close_date": "2026-10-20",
+          "ret": 0.0272,
+          "excess_ret": 0.0302
         }
       },
       {
@@ -10150,9 +10918,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0066,
-          "excess_ret": 0.0094
+          "last_close_date": "2026-10-20",
+          "ret": 0.0209,
+          "excess_ret": 0.0204
         }
       },
       {
@@ -10192,9 +10960,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1267,
-          "excess_ret": 0.132
+          "last_close_date": "2026-10-20",
+          "ret": 0.157,
+          "excess_ret": 0.159
         }
       },
       {
@@ -10234,9 +11002,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0839,
-          "excess_ret": -0.0785
+          "last_close_date": "2026-10-20",
+          "ret": -0.0773,
+          "excess_ret": -0.0753
         }
       },
       {
@@ -10276,9 +11044,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0538,
-          "excess_ret": 0.0591
+          "last_close_date": "2026-10-20",
+          "ret": 0.0742,
+          "excess_ret": 0.0762
         }
       },
       {
@@ -10318,9 +11086,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1809,
-          "excess_ret": -0.1687
+          "last_close_date": "2026-10-20",
+          "ret": -0.1873,
+          "excess_ret": -0.1784
         }
       },
       {
@@ -10360,9 +11128,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.4301,
-          "excess_ret": -0.4179
+          "last_close_date": "2026-10-20",
+          "ret": -0.4207,
+          "excess_ret": -0.4118
         }
       },
       {
@@ -10402,9 +11170,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1263,
-          "excess_ret": -0.1141
+          "last_close_date": "2026-10-20",
+          "ret": -0.1072,
+          "excess_ret": -0.0983
         }
       },
       {
@@ -10444,9 +11212,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0988,
-          "excess_ret": -0.0866
+          "last_close_date": "2026-10-20",
+          "ret": -0.1118,
+          "excess_ret": -0.1029
         }
       },
       {
@@ -10486,9 +11254,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1617,
-          "excess_ret": -0.1495
+          "last_close_date": "2026-10-20",
+          "ret": -0.152,
+          "excess_ret": -0.1431
         }
       },
       {
@@ -10528,9 +11296,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0723,
-          "excess_ret": -0.0621
+          "last_close_date": "2026-10-20",
+          "ret": -0.0807,
+          "excess_ret": -0.0738
         }
       },
       {
@@ -10570,9 +11338,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0578,
-          "excess_ret": -0.0522
+          "last_close_date": "2026-10-20",
+          "ret": -0.0201,
+          "excess_ret": -0.0179
         }
       },
       {
@@ -10612,9 +11380,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.8633,
-          "excess_ret": 0.8642
+          "last_close_date": "2026-10-20",
+          "ret": 0.9298,
+          "excess_ret": 0.9273
         }
       },
       {
@@ -10654,9 +11422,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1076,
-          "excess_ret": -0.1067
+          "last_close_date": "2026-10-20",
+          "ret": -0.1067,
+          "excess_ret": -0.1092
         }
       },
       {
@@ -10696,9 +11464,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0924,
-          "excess_ret": -0.0915
+          "last_close_date": "2026-10-20",
+          "ret": -0.0771,
+          "excess_ret": -0.0795
         }
       },
       {
@@ -10738,9 +11506,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0644,
-          "excess_ret": -0.072
+          "last_close_date": "2026-10-20",
+          "ret": -0.0527,
+          "excess_ret": -0.0636
         }
       },
       {
@@ -10780,9 +11548,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1009,
-          "excess_ret": -0.1085
+          "last_close_date": "2026-10-20",
+          "ret": -0.0708,
+          "excess_ret": -0.0818
         }
       },
       {
@@ -10822,9 +11590,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0858,
-          "excess_ret": 0.0782
+          "last_close_date": "2026-10-20",
+          "ret": 0.0892,
+          "excess_ret": 0.0783
         }
       },
       {
@@ -10864,9 +11632,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0928,
-          "excess_ret": -0.1004
+          "last_close_date": "2026-10-20",
+          "ret": -0.0807,
+          "excess_ret": -0.0917
         }
       },
       {
@@ -10906,9 +11674,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0419,
-          "excess_ret": -0.0454
+          "last_close_date": "2026-10-20",
+          "ret": -0.0327,
+          "excess_ret": -0.0395
         }
       },
       {
@@ -10948,9 +11716,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0236,
-          "excess_ret": -0.0312
+          "last_close_date": "2026-10-20",
+          "ret": -0.0191,
+          "excess_ret": -0.0301
         }
       },
       {
@@ -10990,9 +11758,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0025,
-          "excess_ret": -0.004
+          "last_close_date": "2026-10-20",
+          "ret": -0.0035,
+          "excess_ret": -0.0133
         }
       },
       {
@@ -11032,9 +11800,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0576,
-          "excess_ret": 0.0512
+          "last_close_date": "2026-10-20",
+          "ret": 0.0547,
+          "excess_ret": 0.0449
         }
       },
       {
@@ -11074,9 +11842,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0481,
-          "excess_ret": -0.0445
+          "last_close_date": "2026-10-20",
+          "ret": -0.0884,
+          "excess_ret": -0.0882
         }
       },
       {
@@ -11116,9 +11884,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.089,
-          "excess_ret": 0.0902
+          "last_close_date": "2026-10-20",
+          "ret": 0.1089,
+          "excess_ret": 0.1068
         }
       },
       {
@@ -11158,9 +11926,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0615,
-          "excess_ret": 0.0651
+          "last_close_date": "2026-10-20",
+          "ret": 0.0995,
+          "excess_ret": 0.0997
         }
       },
       {
@@ -11200,9 +11968,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.032,
-          "excess_ret": -0.0308
+          "last_close_date": "2026-10-20",
+          "ret": -0.0321,
+          "excess_ret": -0.0342
         }
       },
       {
@@ -11242,9 +12010,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0663,
-          "excess_ret": -0.0628
+          "last_close_date": "2026-10-20",
+          "ret": -0.0633,
+          "excess_ret": -0.0631
         }
       },
       {
@@ -11284,9 +12052,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0297,
-          "excess_ret": -0.0285
+          "last_close_date": "2026-10-20",
+          "ret": -0.0201,
+          "excess_ret": -0.0222
         }
       },
       {
@@ -11326,9 +12094,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0452,
-          "excess_ret": -0.0439
+          "last_close_date": "2026-10-20",
+          "ret": -0.0479,
+          "excess_ret": -0.05
         }
       },
       {
@@ -11368,9 +12136,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.103,
-          "excess_ret": 0.1042
+          "last_close_date": "2026-10-20",
+          "ret": 0.1267,
+          "excess_ret": 0.1246
         }
       },
       {
@@ -11410,9 +12178,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0247,
-          "excess_ret": -0.0212
+          "last_close_date": "2026-10-20",
+          "ret": -0.0048,
+          "excess_ret": -0.0046
         }
       },
       {
@@ -11452,9 +12220,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0157,
-          "excess_ret": -0.0145
+          "last_close_date": "2026-10-20",
+          "ret": -0.0308,
+          "excess_ret": -0.0329
         }
       },
       {
@@ -11494,9 +12262,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1314,
-          "excess_ret": 0.1327
+          "last_close_date": "2026-10-20",
+          "ret": 0.1381,
+          "excess_ret": 0.136
         }
       },
       {
@@ -11536,9 +12304,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0549,
-          "excess_ret": 0.0584
+          "last_close_date": "2026-10-20",
+          "ret": 0.0742,
+          "excess_ret": 0.0744
         }
       },
       {
@@ -11578,9 +12346,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0375,
-          "excess_ret": -0.0393
+          "last_close_date": "2026-10-20",
+          "ret": -0.0237,
+          "excess_ret": -0.0288
         }
       },
       {
@@ -11620,9 +12388,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0347,
-          "excess_ret": -0.0364
+          "last_close_date": "2026-10-20",
+          "ret": -0.0242,
+          "excess_ret": -0.0293
         }
       },
       {
@@ -11662,9 +12430,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0244,
-          "excess_ret": 0.0226
+          "last_close_date": "2026-10-20",
+          "ret": 0.0213,
+          "excess_ret": 0.0162
         }
       },
       {
@@ -11704,9 +12472,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0295,
-          "excess_ret": -0.0313
+          "last_close_date": "2026-10-20",
+          "ret": 0.0141,
+          "excess_ret": 0.009
         }
       },
       {
@@ -11746,9 +12514,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0056,
-          "excess_ret": 0.0014
+          "last_close_date": "2026-10-20",
+          "ret": 0.0258,
+          "excess_ret": 0.0182
         }
       },
       {
@@ -11788,9 +12556,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0187,
-          "excess_ret": 0.0155
+          "last_close_date": "2026-10-20",
+          "ret": 0.0715,
+          "excess_ret": 0.065
         }
       },
       {
@@ -11830,9 +12598,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0631,
-          "excess_ret": 0.0532
+          "last_close_date": "2026-10-20",
+          "ret": 0.0619,
+          "excess_ret": 0.0486
         }
       },
       {
@@ -11869,9 +12637,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.077,
-          "excess_ret": 0.0758
+          "last_close_date": "2026-10-20",
+          "ret": 0.076,
+          "excess_ret": 0.0715
         }
       },
       {
@@ -11908,9 +12676,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0467,
-          "excess_ret": 0.0416
+          "last_close_date": "2026-10-20",
+          "ret": 0.0497,
+          "excess_ret": 0.0413
         }
       },
       {
@@ -11947,9 +12715,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0417,
-          "excess_ret": 0.0367
+          "last_close_date": "2026-10-20",
+          "ret": 0.0658,
+          "excess_ret": 0.0574
         }
       },
       {
@@ -11986,9 +12754,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1266,
-          "excess_ret": -0.1317
+          "last_close_date": "2026-10-20",
+          "ret": -0.09,
+          "excess_ret": -0.0984
         }
       },
       {
@@ -12025,9 +12793,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0945,
-          "excess_ret": 0.0912
+          "last_close_date": "2026-10-20",
+          "ret": 0.1272,
+          "excess_ret": 0.1206
         }
       },
       {
@@ -12064,9 +12832,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1828,
-          "excess_ret": -0.1787
+          "last_close_date": "2026-10-20",
+          "ret": -0.1908,
+          "excess_ret": -0.19
         }
       },
       {
@@ -12103,9 +12871,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1228,
-          "excess_ret": 0.1269
+          "last_close_date": "2026-10-20",
+          "ret": 0.1332,
+          "excess_ret": 0.1339
         }
       },
       {
@@ -12142,9 +12910,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0919,
-          "excess_ret": 0.1058
+          "last_close_date": "2026-10-20",
+          "ret": 0.0989,
+          "excess_ret": 0.1094
         }
       },
       {
@@ -12181,9 +12949,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0141,
-          "excess_ret": 0.0279
+          "last_close_date": "2026-10-20",
+          "ret": 0.0206,
+          "excess_ret": 0.0311
         }
       },
       {
@@ -12220,9 +12988,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.122,
-          "excess_ret": 0.1316
+          "last_close_date": "2026-10-20",
+          "ret": 0.1363,
+          "excess_ret": 0.1426
         }
       },
       {
@@ -12259,9 +13027,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0542,
-          "excess_ret": 0.0698
+          "last_close_date": "2026-10-20",
+          "ret": 0.0578,
+          "excess_ret": 0.07
         }
       },
       {
@@ -12281,7 +13049,10 @@
         "next_earn_date": "2027-01-06",
         "horizons": {
           "h5": {
-            "evaluated": false
+            "evaluated": true,
+            "exit_date": "2026-10-20",
+            "ret": 0.0707,
+            "excess_ret": 0.0715
           },
           "h20": {
             "evaluated": false
@@ -12295,9 +13066,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0445,
-          "excess_ret": 0.0486
+          "last_close_date": "2026-10-20",
+          "ret": 0.0707,
+          "excess_ret": 0.0715
         }
       },
       {
@@ -12331,9 +13102,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0229,
-          "excess_ret": 0.0298
+          "last_close_date": "2026-10-20",
+          "ret": 0.0266,
+          "excess_ret": 0.0302
         }
       },
       {
@@ -12367,9 +13138,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0029,
-          "excess_ret": -0.0029
+          "last_close_date": "2026-10-20",
+          "ret": -0.0239,
+          "excess_ret": -0.0273
         }
       },
       {
@@ -12403,9 +13174,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0056,
-          "excess_ret": -0.0098
+          "last_close_date": "2026-10-20",
+          "ret": 0.0071,
+          "excess_ret": -0.0005
         }
       },
       {
@@ -12439,9 +13210,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0048,
-          "excess_ret": 0.0006
+          "last_close_date": "2026-10-20",
+          "ret": 0.0195,
+          "excess_ret": 0.0119
         }
       },
       {
@@ -12475,9 +13246,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0041,
-          "excess_ret": -0.0084
+          "last_close_date": "2026-10-20",
+          "ret": 0.0172,
+          "excess_ret": 0.0096
         }
       },
       {
@@ -12511,9 +13282,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0032,
-          "excess_ret": -0.0032
+          "last_close_date": "2026-10-20",
+          "ret": 0.02,
+          "excess_ret": 0.0167
         }
       },
       {
@@ -12547,9 +13318,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0073,
-          "excess_ret": -0.0073
+          "last_close_date": "2026-10-20",
+          "ret": 0.0164,
+          "excess_ret": 0.0131
         }
       },
       {
@@ -12583,10 +13354,41 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.004,
-          "excess_ret": -0.004
+          "last_close_date": "2026-10-20",
+          "ret": 0.0226,
+          "excess_ret": 0.0192
         }
+      },
+      {
+        "ticker": "BOKF",
+        "report_date": "2026-10-19",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 57.2,
+        "score_tercile": "mid",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2027-01-21",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
       },
       {
         "ticker": "CLF",
@@ -12597,6 +13399,414 @@
         "score_tercile": "high",
         "sue_source": "nasdaq",
         "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": "2026-10-20",
+        "entry_open": 13.68,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2027-02-08",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true,
+        "running": {
+          "last_close_date": "2026-10-20",
+          "ret": -0.0022,
+          "excess_ret": -0.0022
+        }
+      },
+      {
+        "ticker": "RLI",
+        "report_date": "2026-10-19",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 71.6,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2027-01-20",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "WAL",
+        "report_date": "2026-10-19",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 44.0,
+        "score_tercile": "low",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2027-01-26",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "WTFC",
+        "report_date": "2026-10-19",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 55.2,
+        "score_tercile": "mid",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2027-01-21",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "ZION",
+        "report_date": "2026-10-19",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 66.6,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2027-01-21",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "ALLY",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 50.0,
+        "score_tercile": "mid",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "CBSH",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 42.8,
+        "score_tercile": "low",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "EFX",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 59.4,
+        "score_tercile": "mid",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "HAL",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 50.0,
+        "score_tercile": "mid",
+        "sue_source": "nasdaq",
+        "cap_tier": "large",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "HAS",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 87.8,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "KEY",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 71.3,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "MMM",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 60.8,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "large",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "MSCI",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 57.8,
+        "score_tercile": "mid",
+        "sue_source": "nasdaq",
+        "cap_tier": "large",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "NOC",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "long",
+        "composite": 62.9,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "large",
         "backfilled": false,
         "entry_date": null,
         "entry_open": null,
@@ -12658,9 +13868,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0596,
-          "excess_ret": 0.1129
+          "last_close_date": "2026-10-20",
+          "ret": -0.0475,
+          "excess_ret": 0.1044
         }
       },
       {
@@ -12700,9 +13910,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.05,
-          "excess_ret": 0.086
+          "last_close_date": "2026-10-20",
+          "ret": -0.0423,
+          "excess_ret": 0.0818
         }
       },
       {
@@ -12742,9 +13952,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.3313,
-          "excess_ret": 0.3673
+          "last_close_date": "2026-10-20",
+          "ret": -0.3309,
+          "excess_ret": 0.3703
         }
       },
       {
@@ -12784,9 +13994,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1492,
-          "excess_ret": 0.1852
+          "last_close_date": "2026-10-20",
+          "ret": -0.1047,
+          "excess_ret": 0.1442
         }
       },
       {
@@ -12826,9 +14036,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0415,
-          "excess_ret": 0.0775
+          "last_close_date": "2026-10-20",
+          "ret": -0.0321,
+          "excess_ret": 0.0715
         }
       },
       {
@@ -12868,9 +14078,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1277,
-          "excess_ret": 0.1563
+          "last_close_date": "2026-10-20",
+          "ret": -0.1189,
+          "excess_ret": 0.1509
         }
       },
       {
@@ -12910,9 +14120,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0496,
-          "excess_ret": 0.0782
+          "last_close_date": "2026-10-20",
+          "ret": -0.0459,
+          "excess_ret": 0.078
         }
       },
       {
@@ -12952,9 +14162,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
+          "last_close_date": "2026-10-20",
           "ret": 0.0904,
-          "excess_ret": -0.0618
+          "excess_ret": -0.0584
         }
       },
       {
@@ -12994,9 +14204,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0251,
-          "excess_ret": 0.0611
+          "last_close_date": "2026-10-20",
+          "ret": -0.0262,
+          "excess_ret": 0.0657
         }
       },
       {
@@ -13036,9 +14246,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0162,
-          "excess_ret": 0.0448
+          "last_close_date": "2026-10-20",
+          "ret": -0.0035,
+          "excess_ret": 0.0355
         }
       },
       {
@@ -13078,9 +14288,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1878,
-          "excess_ret": 0.2238
+          "last_close_date": "2026-10-20",
+          "ret": -0.1742,
+          "excess_ret": 0.2137
         }
       },
       {
@@ -13120,9 +14330,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1914,
-          "excess_ret": 0.22
+          "last_close_date": "2026-10-20",
+          "ret": -0.2181,
+          "excess_ret": 0.2501
         }
       },
       {
@@ -13162,9 +14372,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0036,
-          "excess_ret": 0.0322
+          "last_close_date": "2026-10-20",
+          "ret": 0.022,
+          "excess_ret": 0.0101
         }
       },
       {
@@ -13204,9 +14414,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.023,
-          "excess_ret": 0.013
+          "last_close_date": "2026-10-20",
+          "ret": 0.0218,
+          "excess_ret": 0.0176
         }
       },
       {
@@ -13246,9 +14456,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.2977,
-          "excess_ret": -0.2691
+          "last_close_date": "2026-10-20",
+          "ret": 0.2771,
+          "excess_ret": -0.2451
         }
       },
       {
@@ -13288,9 +14498,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.3728,
-          "excess_ret": 0.4014
+          "last_close_date": "2026-10-20",
+          "ret": -0.3633,
+          "excess_ret": 0.3953
         }
       },
       {
@@ -13330,9 +14540,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0165,
-          "excess_ret": 0.0451
+          "last_close_date": "2026-10-20",
+          "ret": -0.0015,
+          "excess_ret": 0.0336
         }
       },
       {
@@ -13372,9 +14582,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0187,
-          "excess_ret": 0.0547
+          "last_close_date": "2026-10-20",
+          "ret": -0.0015,
+          "excess_ret": 0.0409
         }
       },
       {
@@ -13414,9 +14624,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0114,
-          "excess_ret": 0.04
+          "last_close_date": "2026-10-20",
+          "ret": -0.0222,
+          "excess_ret": 0.0542
         }
       },
       {
@@ -13456,9 +14666,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0706,
-          "excess_ret": 0.0992
+          "last_close_date": "2026-10-20",
+          "ret": -0.0515,
+          "excess_ret": 0.0836
         }
       },
       {
@@ -13498,9 +14708,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1345,
-          "excess_ret": -0.1059
+          "last_close_date": "2026-10-20",
+          "ret": 0.1487,
+          "excess_ret": -0.1167
         }
       },
       {
@@ -13540,9 +14750,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0525,
-          "excess_ret": 0.0885
+          "last_close_date": "2026-10-20",
+          "ret": -0.0289,
+          "excess_ret": 0.0683
         }
       },
       {
@@ -13582,9 +14792,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1557,
-          "excess_ret": 0.1917
+          "last_close_date": "2026-10-20",
+          "ret": -0.1484,
+          "excess_ret": 0.1879
         }
       },
       {
@@ -13624,9 +14834,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1307,
-          "excess_ret": -0.1021
+          "last_close_date": "2026-10-20",
+          "ret": 0.1844,
+          "excess_ret": -0.1523
         }
       },
       {
@@ -13666,9 +14876,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1404,
-          "excess_ret": -0.1044
+          "last_close_date": "2026-10-20",
+          "ret": 0.1617,
+          "excess_ret": -0.1222
         }
       },
       {
@@ -13708,9 +14918,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0796,
-          "excess_ret": 0.1156
+          "last_close_date": "2026-10-20",
+          "ret": -0.055,
+          "excess_ret": 0.0945
         }
       },
       {
@@ -13750,9 +14960,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0256,
-          "excess_ret": 0.0542
+          "last_close_date": "2026-10-20",
+          "ret": -0.0061,
+          "excess_ret": 0.0381
         }
       },
       {
@@ -13792,9 +15002,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0185,
-          "excess_ret": 0.0471
+          "last_close_date": "2026-10-20",
+          "ret": 0.0058,
+          "excess_ret": 0.0263
         }
       },
       {
@@ -13834,9 +15044,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1947,
-          "excess_ret": 0.2233
+          "last_close_date": "2026-10-20",
+          "ret": -0.1799,
+          "excess_ret": 0.212
         }
       },
       {
@@ -13876,9 +15086,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1696,
-          "excess_ret": -0.1555
+          "last_close_date": "2026-10-20",
+          "ret": 0.1863,
+          "excess_ret": -0.1688
         }
       },
       {
@@ -13918,9 +15128,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1254,
-          "excess_ret": 0.154
+          "last_close_date": "2026-10-20",
+          "ret": -0.104,
+          "excess_ret": 0.136
         }
       },
       {
@@ -13960,9 +15170,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
+          "last_close_date": "2026-10-20",
           "ret": -0.1034,
-          "excess_ret": 0.132
+          "excess_ret": 0.1354
         }
       },
       {
@@ -14002,9 +15212,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0979,
-          "excess_ret": 0.1121
+          "last_close_date": "2026-10-20",
+          "ret": -0.0845,
+          "excess_ret": 0.102
         }
       },
       {
@@ -14044,9 +15254,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0755,
-          "excess_ret": 0.1041
+          "last_close_date": "2026-10-20",
+          "ret": -0.0594,
+          "excess_ret": 0.0914
         }
       },
       {
@@ -14086,9 +15296,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0528,
-          "excess_ret": 0.0814
+          "last_close_date": "2026-10-20",
+          "ret": -0.0524,
+          "excess_ret": 0.0844
         }
       },
       {
@@ -14128,9 +15338,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0967,
-          "excess_ret": -0.0681
+          "last_close_date": "2026-10-20",
+          "ret": 0.1048,
+          "excess_ret": -0.0728
         }
       },
       {
@@ -14170,9 +15380,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.4783,
-          "excess_ret": -0.4642
+          "last_close_date": "2026-10-20",
+          "ret": 0.5511,
+          "excess_ret": -0.5336
         }
       },
       {
@@ -14212,9 +15422,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1229,
-          "excess_ret": 0.1515
+          "last_close_date": "2026-10-20",
+          "ret": -0.1124,
+          "excess_ret": 0.1445
         }
       },
       {
@@ -14254,9 +15464,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.027,
-          "excess_ret": 0.0412
+          "last_close_date": "2026-10-20",
+          "ret": -0.0177,
+          "excess_ret": 0.0353
         }
       },
       {
@@ -14296,9 +15506,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0372,
-          "excess_ret": 0.0513
+          "last_close_date": "2026-10-20",
+          "ret": -0.0294,
+          "excess_ret": 0.0469
         }
       },
       {
@@ -14338,9 +15548,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1456,
-          "excess_ret": -0.1314
+          "last_close_date": "2026-10-20",
+          "ret": 0.1369,
+          "excess_ret": -0.1194
         }
       },
       {
@@ -14380,9 +15590,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0133,
-          "excess_ret": 0.0009
+          "last_close_date": "2026-10-20",
+          "ret": 0.014,
+          "excess_ret": 0.0035
         }
       },
       {
@@ -14461,9 +15671,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1985,
-          "excess_ret": 0.1966
+          "last_close_date": "2026-10-20",
+          "ret": -0.2024,
+          "excess_ret": 0.2039
         }
       },
       {
@@ -14503,9 +15713,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0674,
-          "excess_ret": 0.0656
+          "last_close_date": "2026-10-20",
+          "ret": -0.0385,
+          "excess_ret": 0.04
         }
       },
       {
@@ -14545,9 +15755,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1512,
-          "excess_ret": 0.151
+          "last_close_date": "2026-10-20",
+          "ret": -0.1492,
+          "excess_ret": 0.1523
         }
       },
       {
@@ -14587,9 +15797,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.3382,
-          "excess_ret": 0.338
+          "last_close_date": "2026-10-20",
+          "ret": -0.3187,
+          "excess_ret": 0.3218
         }
       },
       {
@@ -14629,9 +15839,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.025,
-          "excess_ret": 0.0247
+          "last_close_date": "2026-10-20",
+          "ret": 0.0096,
+          "excess_ret": -0.0065
         }
       },
       {
@@ -14671,9 +15881,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1348,
-          "excess_ret": 0.1346
+          "last_close_date": "2026-10-20",
+          "ret": -0.1453,
+          "excess_ret": 0.1484
         }
       },
       {
@@ -14713,9 +15923,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1562,
-          "excess_ret": -0.1564
+          "last_close_date": "2026-10-20",
+          "ret": 0.1637,
+          "excess_ret": -0.1606
         }
       },
       {
@@ -14755,9 +15965,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.189,
-          "excess_ret": -0.1892
+          "last_close_date": "2026-10-20",
+          "ret": 0.2368,
+          "excess_ret": -0.2337
         }
       },
       {
@@ -14797,9 +16007,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0379,
-          "excess_ret": 0.0377
+          "last_close_date": "2026-10-20",
+          "ret": -0.0103,
+          "excess_ret": 0.0135
         }
       },
       {
@@ -14839,9 +16049,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0902,
-          "excess_ret": 0.0839
+          "last_close_date": "2026-10-20",
+          "ret": -0.1021,
+          "excess_ret": 0.0991
         }
       },
       {
@@ -14881,9 +16091,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.021,
-          "excess_ret": -0.0273
+          "last_close_date": "2026-10-20",
+          "ret": 0.1428,
+          "excess_ret": -0.1457
         }
       },
       {
@@ -14923,9 +16133,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0438,
-          "excess_ret": 0.0377
+          "last_close_date": "2026-10-20",
+          "ret": -0.0309,
+          "excess_ret": 0.0282
         }
       },
       {
@@ -14965,8 +16175,8 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0739,
+          "last_close_date": "2026-10-20",
+          "ret": -0.0706,
           "excess_ret": 0.0679
         }
       },
@@ -15007,9 +16217,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1874,
-          "excess_ret": 0.1814
+          "last_close_date": "2026-10-20",
+          "ret": -0.1652,
+          "excess_ret": 0.1625
         }
       },
       {
@@ -15049,9 +16259,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.2407,
-          "excess_ret": -0.247
+          "last_close_date": "2026-10-20",
+          "ret": 0.2507,
+          "excess_ret": -0.2537
         }
       },
       {
@@ -15091,9 +16301,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0113,
-          "excess_ret": 0.005
+          "last_close_date": "2026-10-20",
+          "ret": 0.0102,
+          "excess_ret": -0.0132
         }
       },
       {
@@ -15133,9 +16343,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0309,
-          "excess_ret": 0.0248
+          "last_close_date": "2026-10-20",
+          "ret": -0.0123,
+          "excess_ret": 0.0096
         }
       },
       {
@@ -15175,9 +16385,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0447,
-          "excess_ret": 0.0387
+          "last_close_date": "2026-10-20",
+          "ret": -0.0209,
+          "excess_ret": 0.0183
         }
       },
       {
@@ -15217,9 +16427,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1244,
-          "excess_ret": 0.1181
+          "last_close_date": "2026-10-20",
+          "ret": -0.1074,
+          "excess_ret": 0.1044
         }
       },
       {
@@ -15259,9 +16469,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0902,
-          "excess_ret": 0.0842
+          "last_close_date": "2026-10-20",
+          "ret": -0.0612,
+          "excess_ret": 0.0585
         }
       },
       {
@@ -15301,9 +16511,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1792,
-          "excess_ret": 0.1731
+          "last_close_date": "2026-10-20",
+          "ret": -0.1842,
+          "excess_ret": 0.1815
         }
       },
       {
@@ -15343,9 +16553,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1169,
-          "excess_ret": 0.1116
+          "last_close_date": "2026-10-20",
+          "ret": -0.1021,
+          "excess_ret": 0.1001
         }
       },
       {
@@ -15385,9 +16595,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1861,
-          "excess_ret": 0.1807
+          "last_close_date": "2026-10-20",
+          "ret": -0.1907,
+          "excess_ret": 0.1887
         }
       },
       {
@@ -15427,9 +16637,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0145,
-          "excess_ret": 0.0092
+          "last_close_date": "2026-10-20",
+          "ret": -0.0298,
+          "excess_ret": 0.0278
         }
       },
       {
@@ -15469,9 +16679,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1113,
-          "excess_ret": -0.1166
+          "last_close_date": "2026-10-20",
+          "ret": 0.1116,
+          "excess_ret": -0.1135
         }
       },
       {
@@ -15511,9 +16721,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1124,
-          "excess_ret": 0.1002
+          "last_close_date": "2026-10-20",
+          "ret": -0.0923,
+          "excess_ret": 0.0834
         }
       },
       {
@@ -15553,9 +16763,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.2983,
-          "excess_ret": 0.2927
+          "last_close_date": "2026-10-20",
+          "ret": -0.2761,
+          "excess_ret": 0.2739
         }
       },
       {
@@ -15595,9 +16805,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.1797,
-          "excess_ret": -0.1767
+          "last_close_date": "2026-10-20",
+          "ret": 0.174,
+          "excess_ret": -0.1677
         }
       },
       {
@@ -15637,9 +16847,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0303,
-          "excess_ret": -0.0338
+          "last_close_date": "2026-10-20",
+          "ret": 0.0289,
+          "excess_ret": -0.0291
         }
       },
       {
@@ -15679,9 +16889,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0868,
-          "excess_ret": -0.0881
+          "last_close_date": "2026-10-20",
+          "ret": 0.1197,
+          "excess_ret": -0.1176
         }
       },
       {
@@ -15721,9 +16931,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.098,
-          "excess_ret": 0.0968
+          "last_close_date": "2026-10-20",
+          "ret": -0.1114,
+          "excess_ret": 0.1135
         }
       },
       {
@@ -15763,9 +16973,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0337,
-          "excess_ret": 0.0325
+          "last_close_date": "2026-10-20",
+          "ret": -0.0195,
+          "excess_ret": 0.0216
         }
       },
       {
@@ -15805,9 +17015,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0442,
-          "excess_ret": 0.0429
+          "last_close_date": "2026-10-20",
+          "ret": -0.0366,
+          "excess_ret": 0.0387
         }
       },
       {
@@ -15847,9 +17057,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.097,
-          "excess_ret": -0.0952
+          "last_close_date": "2026-10-20",
+          "ret": 0.1124,
+          "excess_ret": -0.1073
         }
       },
       {
@@ -15889,9 +17099,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0121,
-          "excess_ret": -0.0104
+          "last_close_date": "2026-10-20",
+          "ret": 0.0256,
+          "excess_ret": -0.0205
         }
       },
       {
@@ -15931,9 +17141,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.1019,
-          "excess_ret": 0.1117
+          "last_close_date": "2026-10-20",
+          "ret": -0.0914,
+          "excess_ret": 0.1047
         }
       },
       {
@@ -15970,9 +17180,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0792,
-          "excess_ret": 0.0643
+          "last_close_date": "2026-10-20",
+          "ret": -0.0542,
+          "excess_ret": 0.0425
         }
       },
       {
@@ -15992,7 +17202,10 @@
         "next_earn_date": "2027-01-14",
         "horizons": {
           "h5": {
-            "evaluated": false
+            "evaluated": true,
+            "exit_date": "2026-10-20",
+            "ret": 0.0247,
+            "excess_ret": -0.0254
           },
           "h20": {
             "evaluated": false
@@ -16006,9 +17219,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": 0.0194,
-          "excess_ret": -0.0235
+          "last_close_date": "2026-10-20",
+          "ret": 0.0247,
+          "excess_ret": -0.0254
         }
       },
       {
@@ -16042,9 +17255,9 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0208,
-          "excess_ret": 0.0139
+          "last_close_date": "2026-10-20",
+          "ret": -0.0159,
+          "excess_ret": 0.0124
         }
       },
       {
@@ -16078,18 +17291,80 @@
         },
         "active": true,
         "running": {
-          "last_close_date": "2026-10-19",
-          "ret": -0.0311,
-          "excess_ret": 0.0353
+          "last_close_date": "2026-10-20",
+          "ret": -0.0047,
+          "excess_ret": 0.0123
         }
+      },
+      {
+        "ticker": "STLD",
+        "report_date": "2026-10-19",
+        "reaction_day": "2026-10-20",
+        "side": "short",
+        "composite": 61.6,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "large",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": "2027-01-25",
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
+      },
+      {
+        "ticker": "GPC",
+        "report_date": "2026-10-20",
+        "reaction_day": "2026-10-20",
+        "side": "short",
+        "composite": 70.1,
+        "score_tercile": "high",
+        "sue_source": "nasdaq",
+        "cap_tier": "mid",
+        "backfilled": false,
+        "entry_date": null,
+        "entry_open": null,
+        "entry_proxy": false,
+        "delisted": false,
+        "next_earn_date": null,
+        "horizons": {
+          "h5": {
+            "evaluated": false
+          },
+          "h20": {
+            "evaluated": false
+          },
+          "h60": {
+            "evaluated": false
+          },
+          "next_earn": {
+            "evaluated": false
+          }
+        },
+        "active": true
       }
     ]
   },
   "summary": {
     "cells": {
       "h5|long|all": {
-        "n": 3444,
-        "win_rate": 0.4605,
+        "n": 3445,
+        "win_rate": 0.4607,
         "avg": -0.0041,
         "median": -0.0042,
         "std": 0.0514,
@@ -16097,8 +17372,8 @@
         "max": 0.547
       },
       "h5|long|high": {
-        "n": 2024,
-        "win_rate": 0.4457,
+        "n": 2025,
+        "win_rate": 0.4459,
         "avg": -0.0054,
         "median": -0.006,
         "std": 0.0526,
@@ -16124,17 +17399,17 @@
         "max": 0.1309
       },
       "h5|short|all": {
-        "n": 1124,
-        "win_rate": 0.5285,
+        "n": 1125,
+        "win_rate": 0.528,
         "avg": 0.0005,
-        "median": 0.0032,
-        "std": 0.0615,
+        "median": 0.0031,
+        "std": 0.0614,
         "min": -0.49,
         "max": 0.296
       },
       "h5|short|high": {
-        "n": 996,
-        "win_rate": 0.5271,
+        "n": 997,
+        "win_rate": 0.5266,
         "avg": 0.0008,
         "median": 0.003,
         "std": 0.0635,
@@ -16214,29 +17489,29 @@
         "max": 0.2023
       },
       "h60|long|all": {
-        "n": 3162,
-        "win_rate": 0.4431,
-        "avg": -0.0037,
+        "n": 3164,
+        "win_rate": 0.4428,
+        "avg": -0.0038,
         "median": -0.0178,
         "std": 0.1823,
         "min": -0.6647,
         "max": 2.1858
       },
       "h60|long|high": {
-        "n": 1852,
-        "win_rate": 0.4546,
-        "avg": 0.0016,
+        "n": 1853,
+        "win_rate": 0.4544,
+        "avg": 0.0015,
         "median": -0.0147,
         "std": 0.1975,
         "min": -0.6647,
         "max": 2.1858
       },
       "h60|long|mid": {
-        "n": 1153,
-        "win_rate": 0.4302,
-        "avg": -0.0089,
-        "median": -0.0199,
-        "std": 0.1611,
+        "n": 1154,
+        "win_rate": 0.4298,
+        "avg": -0.0092,
+        "median": -0.02,
+        "std": 0.1613,
         "min": -0.5201,
         "max": 0.9904
       },
@@ -16277,28 +17552,28 @@
         "max": 0.2644
       },
       "next_earn|long|all": {
-        "n": 3133,
-        "win_rate": 0.4612,
-        "avg": -0.0026,
+        "n": 3138,
+        "win_rate": 0.4608,
+        "avg": -0.0027,
         "median": -0.0152,
-        "std": 0.1881,
+        "std": 0.188,
         "min": -0.5943,
         "max": 1.3821
       },
       "next_earn|long|high": {
-        "n": 1836,
-        "win_rate": 0.4646,
-        "avg": 0.0008,
-        "median": -0.0149,
-        "std": 0.1981,
+        "n": 1840,
+        "win_rate": 0.4641,
+        "avg": 0.0007,
+        "median": -0.0151,
+        "std": 0.198,
         "min": -0.5943,
         "max": 1.3821
       },
       "next_earn|long|mid": {
-        "n": 1142,
-        "win_rate": 0.4641,
-        "avg": -0.0044,
-        "median": -0.0133,
+        "n": 1143,
+        "win_rate": 0.4637,
+        "avg": -0.0045,
+        "median": -0.0134,
         "std": 0.1758,
         "min": -0.586,
         "max": 1.1724
@@ -16313,20 +17588,20 @@
         "max": 0.582
       },
       "next_earn|short|all": {
-        "n": 1030,
-        "win_rate": 0.5699,
-        "avg": -0.0061,
+        "n": 1032,
+        "win_rate": 0.5698,
+        "avg": -0.0062,
         "median": 0.0244,
-        "std": 0.2095,
+        "std": 0.2097,
         "min": -1.8323,
         "max": 0.6898
       },
       "next_earn|short|high": {
-        "n": 920,
-        "win_rate": 0.575,
-        "avg": -0.0061,
+        "n": 922,
+        "win_rate": 0.5748,
+        "avg": -0.0063,
         "median": 0.0253,
-        "std": 0.214,
+        "std": 0.2142,
         "min": -1.8323,
         "max": 0.6898
       },
@@ -16340,9 +17615,9 @@
         "max": 0.3116
       }
     },
-    "n_rows": 4581,
-    "n_live": 432,
-    "n_active": 351
+    "n_rows": 4597,
+    "n_live": 448,
+    "n_active": 366
   },
   "drift_curve": [
     {
@@ -16769,132 +18044,6 @@
   "drift_curve_as_of": "2026-08-24",
   "rank_pool": {
     "days": {
-      "2026-07-22": {
-        "sue": [
-          -0.001616,
-          0.002695,
-          0.005828,
-          0.000493,
-          -0.00064,
-          0.008376,
-          0.001776,
-          0.000772,
-          0.000851,
-          -0.001482,
-          0.001766,
-          0.000591,
-          0.000805,
-          0.000492,
-          0.004655,
-          0.000902,
-          -0.000131,
-          -0.000402,
-          -0.000682,
-          0.000897,
-          0.00053,
-          0.0011,
-          0.000337,
-          0.00015,
-          0.000213,
-          -0.001366,
-          -0.004441,
-          0.000139
-        ],
-        "ear": [
-          -0.158824,
-          0.036203,
-          0.027653,
-          0.101607,
-          -0.085766,
-          -0.033421,
-          -0.031447,
-          0.005827,
-          0.034454,
-          -0.006881,
-          -0.008992,
-          0.004904,
-          0.021201,
-          0.059274,
-          -0.022404,
-          0.023067,
-          0.008524,
-          0.085701,
-          0.031838,
-          -0.001017,
-          -0.008581,
-          -0.023034,
-          0.051125,
-          -0.01233,
-          0.040895,
-          0.037312,
-          0.04665,
-          -0.020241,
-          0.004938
-        ],
-        "rue": [],
-        "avol": [
-          1.955557,
-          1.400996,
-          0.911663,
-          1.427262,
-          0.506355,
-          1.06155,
-          1.067459,
-          1.206115,
-          0.522739,
-          -0.126263,
-          0.186741,
-          0.746597,
-          0.598268,
-          0.707733,
-          0.551641,
-          0.332166,
-          0.902042,
-          0.950556,
-          0.836138,
-          0.272731,
-          0.279991,
-          0.75559,
-          0.266527,
-          0.527332,
-          -0.088826,
-          0.661868,
-          0.688845,
-          0.87694,
-          0.236487
-        ],
-        "nearness": [
-          0.455337,
-          0.774258,
-          0.783473,
-          0.924959,
-          0.90206,
-          0.965866,
-          0.971283,
-          0.933802,
-          0.964802,
-          0.826163,
-          0.964651,
-          0.95487,
-          0.863593,
-          0.802245,
-          0.800715,
-          0.87221,
-          0.979148,
-          0.731834,
-          0.920852,
-          0.901485,
-          0.965045,
-          0.690043,
-          0.742238,
-          0.979154,
-          0.852586,
-          0.836452,
-          0.736368,
-          0.765462,
-          0.733952
-        ]
-      },
       "2026-07-23": {
         "sue": [
           -0.006164,
@@ -21345,38 +22494,129 @@
           0.725748,
           0.853588
         ]
+      },
+      "2026-10-20": {
+        "sue": [
+          0.010559,
+          0.004575,
+          0.00251,
+          -0.000154,
+          0.002217,
+          0.002499,
+          0.001312,
+          -0.000653,
+          0.000309,
+          0.000441,
+          0.001219,
+          0.000231,
+          0.000814,
+          0.000562,
+          0.001813,
+          0.002694,
+          0.001172,
+          0.000606,
+          0.000532,
+          0.000405,
+          -0.000262,
+          0.000739,
+          0.000272,
+          0.000181,
+          -0.00237,
+          -0.001927,
+          0.0
+        ],
+        "ear": [
+          0.108638,
+          0.02132,
+          0.041326,
+          -0.054513,
+          0.019612,
+          0.00305,
+          0.042373,
+          -0.006616,
+          0.054421,
+          0.109972,
+          -0.00962,
+          0.046692,
+          0.025949,
+          0.023606,
+          -0.071752,
+          -0.015206,
+          -0.006825,
+          0.015143,
+          0.006756,
+          -0.015907,
+          0.067237,
+          -0.040008,
+          0.019328,
+          0.005175,
+          0.039301,
+          0.030045,
+          0.037921
+        ],
+        "rue": [],
+        "avol": [
+          1.686676,
+          0.81717,
+          1.005589,
+          0.838741,
+          0.896619,
+          0.935106,
+          1.00512,
+          0.5987,
+          1.0406,
+          1.013943,
+          0.919083,
+          0.937725,
+          0.713877,
+          0.780643,
+          1.376356,
+          0.565328,
+          0.810345,
+          0.69043,
+          0.781386,
+          0.707667,
+          0.919545,
+          0.919711,
+          0.415353,
+          0.229501,
+          0.38868,
+          0.200025,
+          0.624331
+        ],
+        "nearness": [
+          0.941591,
+          0.915997,
+          0.835512,
+          0.883008,
+          0.866706,
+          0.848505,
+          0.665672,
+          0.853066,
+          0.880039,
+          0.671225,
+          0.934749,
+          0.877065,
+          0.840344,
+          0.854724,
+          0.902789,
+          0.846771,
+          0.774441,
+          0.763341,
+          0.800405,
+          0.957857,
+          0.498314,
+          0.801752,
+          0.768976,
+          0.908911,
+          0.763297,
+          0.532672,
+          0.871966
+        ]
       }
     },
-    "window_start": "2026-07-22",
+    "window_start": "2026-07-23",
     "sue": [
-      -0.001616,
-      0.002695,
-      0.005828,
-      0.000493,
-      -0.00064,
-      0.008376,
-      0.001776,
-      0.000772,
-      0.000851,
-      -0.001482,
-      0.001766,
-      0.000591,
-      0.000805,
-      0.000492,
-      0.004655,
-      0.000902,
-      -0.000131,
-      -0.000402,
-      -0.000682,
-      0.000897,
-      0.00053,
-      0.0011,
-      0.000337,
-      0.00015,
-      0.000213,
-      -0.001366,
-      -0.004441,
-      0.000139,
       -0.006164,
       -0.00046,
       0.008009,
@@ -22267,38 +23507,36 @@
       0.0,
       0.0,
       0.0033,
-      -0.003772
+      -0.003772,
+      0.010559,
+      0.004575,
+      0.00251,
+      -0.000154,
+      0.002217,
+      0.002499,
+      0.001312,
+      -0.000653,
+      0.000309,
+      0.000441,
+      0.001219,
+      0.000231,
+      0.000814,
+      0.000562,
+      0.001813,
+      0.002694,
+      0.001172,
+      0.000606,
+      0.000532,
+      0.000405,
+      -0.000262,
+      0.000739,
+      0.000272,
+      0.000181,
+      -0.00237,
+      -0.001927,
+      0.0
     ],
     "ear": [
-      -0.158824,
-      0.036203,
-      0.027653,
-      0.101607,
-      -0.085766,
-      -0.033421,
-      -0.031447,
-      0.005827,
-      0.034454,
-      -0.006881,
-      -0.008992,
-      0.004904,
-      0.021201,
-      0.059274,
-      -0.022404,
-      0.023067,
-      0.008524,
-      0.085701,
-      0.031838,
-      -0.001017,
-      -0.008581,
-      -0.023034,
-      0.051125,
-      -0.01233,
-      0.040895,
-      0.037312,
-      0.04665,
-      -0.020241,
-      0.004938,
       -0.204089,
       -0.080358,
       0.077425,
@@ -23267,39 +24505,37 @@
       -0.027758,
       0.01194,
       0.159135,
-      -0.001452
+      -0.001452,
+      0.108638,
+      0.02132,
+      0.041326,
+      -0.054513,
+      0.019612,
+      0.00305,
+      0.042373,
+      -0.006616,
+      0.054421,
+      0.109972,
+      -0.00962,
+      0.046692,
+      0.025949,
+      0.023606,
+      -0.071752,
+      -0.015206,
+      -0.006825,
+      0.015143,
+      0.006756,
+      -0.015907,
+      0.067237,
+      -0.040008,
+      0.019328,
+      0.005175,
+      0.039301,
+      0.030045,
+      0.037921
     ],
     "rue": [],
     "avol": [
-      1.955557,
-      1.400996,
-      0.911663,
-      1.427262,
-      0.506355,
-      1.06155,
-      1.067459,
-      1.206115,
-      0.522739,
-      -0.126263,
-      0.186741,
-      0.746597,
-      0.598268,
-      0.707733,
-      0.551641,
-      0.332166,
-      0.902042,
-      0.950556,
-      0.836138,
-      0.272731,
-      0.279991,
-      0.75559,
-      0.266527,
-      0.527332,
-      -0.088826,
-      0.661868,
-      0.688845,
-      0.87694,
-      0.236487,
       2.088174,
       1.482234,
       1.058661,
@@ -24268,38 +25504,36 @@
       0.605642,
       0.591264,
       1.774861,
-      0.626675
+      0.626675,
+      1.686676,
+      0.81717,
+      1.005589,
+      0.838741,
+      0.896619,
+      0.935106,
+      1.00512,
+      0.5987,
+      1.0406,
+      1.013943,
+      0.919083,
+      0.937725,
+      0.713877,
+      0.780643,
+      1.376356,
+      0.565328,
+      0.810345,
+      0.69043,
+      0.781386,
+      0.707667,
+      0.919545,
+      0.919711,
+      0.415353,
+      0.229501,
+      0.38868,
+      0.200025,
+      0.624331
     ],
     "nearness": [
-      0.455337,
-      0.774258,
-      0.783473,
-      0.924959,
-      0.90206,
-      0.965866,
-      0.971283,
-      0.933802,
-      0.964802,
-      0.826163,
-      0.964651,
-      0.95487,
-      0.863593,
-      0.802245,
-      0.800715,
-      0.87221,
-      0.979148,
-      0.731834,
-      0.920852,
-      0.901485,
-      0.965045,
-      0.690043,
-      0.742238,
-      0.979154,
-      0.852586,
-      0.836452,
-      0.736368,
-      0.765462,
-      0.733952,
       0.726077,
       0.661485,
       0.932676,
@@ -25302,7 +26536,34 @@
       0.871979,
       0.870906,
       0.725748,
-      0.853588
+      0.853588,
+      0.941591,
+      0.915997,
+      0.835512,
+      0.883008,
+      0.866706,
+      0.848505,
+      0.665672,
+      0.853066,
+      0.880039,
+      0.671225,
+      0.934749,
+      0.877065,
+      0.840344,
+      0.854724,
+      0.902789,
+      0.846771,
+      0.774441,
+      0.763341,
+      0.800405,
+      0.957857,
+      0.498314,
+      0.801752,
+      0.768976,
+      0.908911,
+      0.763297,
+      0.532672,
+      0.871966
     ]
   }
 }
