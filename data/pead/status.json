@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-21",
+  "date": "2026-10-22",
   "is_trading_day": true,
   "reaction_days_processed": [
-    "2026-10-20",
-    "2026-10-21"
+    "2026-10-21",
+    "2026-10-22"
   ],
-  "n_history_rows": 4597,
-  "n_active": 366,
+  "n_history_rows": 4606,
+  "n_active": 349,
   "universe": {
     "n": 1024,
     "source": "stale:vanguard_vone"
@@ -21,19 +21,9 @@
       "weights_source": "vone"
     },
     {
-      "segment": "nasdaq(2026-10-19)",
-      "ok": true,
-      "n": 32
-    },
-    {
       "segment": "nasdaq(2026-10-20)",
       "ok": true,
-      "n": 53
-    },
-    {
-      "segment": "nasdaq(2026-10-20)",
-      "ok": true,
-      "n": 53
+      "n": 61
     },
     {
       "segment": "nasdaq(2026-10-21)",
@@ -41,49 +31,59 @@
       "n": 91
     },
     {
+      "segment": "nasdaq(2026-10-21)",
+      "ok": true,
+      "n": 91
+    },
+    {
+      "segment": "nasdaq(2026-10-22)",
+      "ok": true,
+      "n": 138
+    },
+    {
       "segment": "upcoming_calendar",
       "ok": true,
-      "n": 271
+      "n": 349
     },
     {
       "segment": "prices",
       "ok": true,
-      "n": 411,
-      "requested": 416,
+      "n": 456,
+      "requested": 460,
       "error": ""
     },
     {
-      "segment": "sheet(2026-10-20)",
+      "segment": "sheet(2026-10-21)",
       "ok": true,
-      "n": 27,
-      "eligible": 16,
-      "picks_added": 16
+      "n": 29,
+      "eligible": 9,
+      "picks_added": 9
     },
     {
-      "segment": "sheet(2026-10-21)",
+      "segment": "sheet(2026-10-22)",
       "ok": false,
       "error": "no reaction bars yet — retry tomorrow"
     },
     {
       "segment": "evaluate",
       "ok": true,
-      "n": 11
+      "n": 50
     },
     {
       "segment": "eap_evaluate",
       "ok": true,
-      "n": 27
+      "n": 28
     },
     {
       "segment": "next_earn_refresh",
       "ok": true,
-      "n": 4
+      "n": 12
     },
     {
       "segment": "eap_refresh",
       "ok": true,
-      "n": 271,
-      "tracked": 9030
+      "n": 349,
+      "tracked": 9058
     }
   ]
 }
