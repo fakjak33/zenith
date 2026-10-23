@@ -2,7 +2,7 @@
   "as_of": "2026-10-23",
   "disclaimer": "MOMENTUM scores every current Russell 1000 constituent on six documented momentum dimensions (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend) and blends them into a transparent -20..+20 composite. Momentum is well-replicated academically but crashes hard in panic states and is most crowded in large caps (this universe). Decision-support and a research monitor, not investment advice.",
   "correlation": {
-    "n": 978,
+    "n": 979,
     "matrix": {
       "ts": {
         "ts": 1.0,
@@ -10,7 +10,7 @@
         "xsec": 0.999,
         "speed": 0.801,
         "strength": 0.844,
-        "mvt": 0.579
+        "mvt": 0.58
       },
       "breakout": {
         "ts": 0.717,
@@ -42,14 +42,14 @@
         "xsec": 0.844,
         "speed": 0.837,
         "strength": 1.0,
-        "mvt": 0.576
+        "mvt": 0.577
       },
       "mvt": {
-        "ts": 0.579,
+        "ts": 0.58,
         "breakout": 0.542,
         "xsec": 0.586,
         "speed": 0.532,
-        "strength": 0.576,
+        "strength": 0.577,
         "mvt": 1.0
       }
     },
@@ -67,17 +67,17 @@
     ]
   },
   "distribution": {
-    "n": 978,
+    "n": 979,
     "mean": 0.667,
-    "median": 0.698,
-    "std": 5.506,
-    "pct_bullish": 0.2188,
-    "pct_bearish": 0.1646,
+    "median": 0.697,
+    "std": 5.504,
+    "pct_bullish": 0.2186,
+    "pct_bearish": 0.1645,
     "n_extreme_bullish": 1,
     "n_extreme_bearish": 0
   },
   "ic_by_horizon": {
-    "20": -0.3127,
+    "20": -0.2036,
     "60": null,
     "126": null
   },
@@ -110,19 +110,19 @@
   "hit_rate": {
     "20": {
       "long": {
-        "n": 98,
-        "avg": -0.024817,
-        "win_rate": 0.2755
+        "n": 1814,
+        "avg": -0.00615,
+        "win_rate": 0.3837
       },
       "short": {
-        "n": 93,
-        "avg": 0.054635,
-        "win_rate": 0.7849
+        "n": 1826,
+        "avg": 0.038575,
+        "win_rate": 0.7037
       },
       "all": {
-        "n": 191,
-        "avg": 0.013869,
-        "win_rate": 0.5236
+        "n": 3640,
+        "avg": 0.016286,
+        "win_rate": 0.5442
       }
     }
   }
