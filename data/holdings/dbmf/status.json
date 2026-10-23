@@ -1,21 +1,35 @@
 {
-  "date": "2026-10-22",
-  "ran_at": "2026-10-22T06:54:13Z",
+  "date": "2026-10-23",
+  "ran_at": "2026-10-23T06:48:00Z",
   "action": "auto",
   "fund": "dbmf",
-  "state": "unavailable",
-  "as_of": "2026-10-20",
-  "n_snapshots": 74,
+  "state": "updated",
+  "as_of": "2026-10-22",
+  "n_snapshots": 75,
   "n_positions": 11,
-  "gaps": [],
-  "error": "no html returned",
+  "gaps": [
+    "2026-10-21"
+  ],
+  "error": "",
   "segments": [
     {
       "segment": "fetch(dbmf)",
-      "ok": false,
-      "n": 0,
-      "via": "blocked",
-      "error": "no html returned"
+      "ok": true,
+      "n": 19,
+      "via": "direct",
+      "error": ""
+    },
+    {
+      "segment": "validate(dbmf)",
+      "ok": true,
+      "n": 11,
+      "warnings": []
+    },
+    {
+      "segment": "publish(dbmf)",
+      "ok": true,
+      "as_of": "2026-10-22",
+      "n": 11
     }
   ]
 }
