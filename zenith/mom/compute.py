@@ -125,7 +125,9 @@ def _spearman_ic(pairs: list[tuple]) -> float | None:
     if len(pairs) < 8:
         return None
     df = pd.DataFrame(pairs, columns=["score", "excess"])
-    ic = df["score"].corr(df["excess"], method="spearman")
+    # Spearman = Pearson on ranks. (Series.corr(method="spearman") imports
+    # scipy, which is not a Zenith dependency.)
+    ic = df["score"].rank().corr(df["excess"].rank())
     return None if pd.isna(ic) else round(float(ic), 4)
 
 
@@ -373,11 +375,18 @@ def run_auto(force: bool = False) -> dict:
     status.append({"segment": "history", "ok": True, "history_added": result["history_added"],
                    "picks_added": result["picks_added"], "evaluated": n_eval})
 
-    diag = _diagnostics([r for r in rows if r.get("composite") is not None], result["picks_rows"])
-    save("diagnostics", _scrub(diag))
-    status.append({"segment": "diagnostics", "ok": True, "flagged_pairs": len(diag["correlation"].get("flagged_pairs", []))})
+    # Diagnostics are a research lens, not the scores: a failure here must not
+    # fail the job, or the already-written artefacts never get committed.
+    corr_doc: dict = {}
+    try:
+        diag = _diagnostics([r for r in rows if r.get("composite") is not None], result["picks_rows"])
+        save("diagnostics", _scrub(diag))
+        corr_doc = diag["correlation"]
+        status.append({"segment": "diagnostics", "ok": True, "flagged_pairs": len(corr_doc.get("flagged_pairs", []))})
+    except Exception as exc:  # noqa: BLE001
+        status.append({"segment": "diagnostics", "ok": False, "error": f"{type(exc).__name__}: {exc}"})
 
-    weighting_doc = _weighting_comparison(rows, diag["correlation"].get("matrix", {}), active_weights)
+    weighting_doc = _weighting_comparison(rows, corr_doc.get("matrix", {}), active_weights)
     mvt_save("weighting", _scrub(weighting_doc))
     status.append({"segment": "weighting", "ok": bool(weighting_doc.get("factor_erc_weights")),
                    "mode": MOM_WEIGHT_MODE})

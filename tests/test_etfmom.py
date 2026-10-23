@@ -367,3 +367,14 @@ def test_vocabulary_is_reexported_from_mom_not_redefined():
     assert em.FACTORS is mom.FACTORS
     assert em.FACTOR_LABELS is mom.FACTOR_LABELS
     assert em.HORIZONS is mom.HORIZONS
+
+
+def test_spearman_ic_needs_no_scipy(monkeypatch):
+    # Series.corr(method="spearman") imports scipy, which is not a Zenith
+    # dependency; that crashed the nightly job once picks matured.
+    import sys
+    monkeypatch.setitem(sys.modules, "scipy", None)
+    pairs = [(float(i), float(i) * 0.5 + (i % 3)) for i in range(12)]
+    ic = ec._spearman_ic(pairs)
+    assert ic is not None and -1.0 <= ic <= 1.0
+    assert ec._spearman_ic(pairs[:5]) is None

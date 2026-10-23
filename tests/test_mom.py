@@ -303,3 +303,14 @@ def test_run_auto_gates_on_non_trading_day(tmp_mom_store, monkeypatch):
     assert result == {"ok": True, "gated": True}
     status = mom.load("status", {})
     assert status["is_trading_day"] is False
+
+
+def test_spearman_ic_needs_no_scipy(monkeypatch):
+    # Series.corr(method="spearman") imports scipy, which is not a Zenith
+    # dependency; that crashed the nightly job once picks matured.
+    import sys
+    monkeypatch.setitem(sys.modules, "scipy", None)
+    pairs = [(float(i), float(i) * 0.5 + (i % 3)) for i in range(12)]
+    ic = mc._spearman_ic(pairs)
+    assert ic is not None and -1.0 <= ic <= 1.0
+    assert mc._spearman_ic(pairs[:5]) is None

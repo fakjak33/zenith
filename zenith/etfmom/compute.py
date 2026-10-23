@@ -194,7 +194,9 @@ def _spearman_ic(pairs: list[tuple]) -> float | None:
     if len(pairs) < 8:
         return None
     df = pd.DataFrame(pairs, columns=["score", "excess"])
-    ic = df["score"].corr(df["excess"], method="spearman")
+    # Spearman = Pearson on ranks. (Series.corr(method="spearman") imports
+    # scipy, which is not a Zenith dependency.)
+    ic = df["score"].rank().corr(df["excess"].rank())
     return None if pd.isna(ic) else round(float(ic), 4)
 
 
@@ -353,10 +355,16 @@ def run_auto(force: bool = False) -> dict:
                    "history_added": result["history_added"],
                    "picks_added": result["picks_added"], "evaluated": n_eval})
 
-    diag = _diagnostics([r for r in rows if r.get("composite") is not None], result["picks_rows"])
-    save("diagnostics", _scrub(diag))
-    status.append({"segment": "diagnostics", "ok": True,
-                   "flagged_pairs": len(diag["correlation"].get("flagged_pairs", []))})
+    # Diagnostics are a research lens, not the scores: a failure here must not
+    # fail the job, or the already-written artefacts never get committed.
+    try:
+        diag = _diagnostics([r for r in rows if r.get("composite") is not None], result["picks_rows"])
+        save("diagnostics", _scrub(diag))
+        status.append({"segment": "diagnostics", "ok": True,
+                       "flagged_pairs": len(diag["correlation"].get("flagged_pairs", []))})
+    except Exception as exc:  # noqa: BLE001
+        status.append({"segment": "diagnostics", "ok": False,
+                       "error": f"{type(exc).__name__}: {exc}"})
 
     save("status", {"date": today.isoformat(), "is_trading_day": True, "disclaimer": DISCLAIMER,
                     "mvt_as_of": mvt_status.get("mvt_as_of"),
