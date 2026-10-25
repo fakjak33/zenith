@@ -1,0 +1,2454 @@
+{
+  "terms": [
+    {
+      "term": "0DTE",
+      "slug": "0dte",
+      "definition": "An option on its final trading day, expiring at the end of the same session. Time decay and price swings are extremely compressed.",
+      "tasty_usage": "",
+      "related": [
+        "zero-dte"
+      ],
+      "sources": [
+        "page:concepts-how-to-trade-0dte-options",
+        "page:concepts-zero-days-0dte-options-explained"
+      ]
+    },
+    {
+      "term": "American option",
+      "slug": "american-option",
+      "definition": "An option you can exercise at any point up to and including expiration.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-american-vs-european-options"
+      ]
+    },
+    {
+      "term": "Anchor put",
+      "slug": "anchor-put",
+      "definition": "The long-dated put in a poor man's covered put; shorter-term puts are sold against it again and again for income.",
+      "tasty_usage": "",
+      "related": [
+        "poor-mans-covered-call"
+      ],
+      "sources": [
+        "page:concepts-poor-man-covered-put"
+      ]
+    },
+    {
+      "term": "Assignment",
+      "slug": "assignment",
+      "definition": "What happens to the option seller when the buyer exercises: the seller must fulfil the contract, buying or selling shares at the strike.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:concepts-assignment",
+        "page:concepts-put-options"
+      ]
+    },
+    {
+      "term": "ATM (at the money)",
+      "slug": "atm-at-the-money",
+      "definition": "An option whose strike is at or very near the current price of the underlying.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-moneyness"
+      ]
+    },
+    {
+      "term": "Automatic exercise",
+      "slug": "automatic-exercise",
+      "definition": "The clearing house's practice of exercising expiring in-the-money options for the holder. The OCC's trigger is an option at least $0.01 in the money; your broker's rule may differ.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:def-automatic-exercise"
+      ]
+    },
+    {
+      "term": "Back ratio spread",
+      "slug": "back-ratio-spread",
+      "definition": "A spread with more long options than short, usually opened for a debit. It has large profit potential on one side.",
+      "tasty_usage": "",
+      "related": [
+        "ratio-spread"
+      ],
+      "sources": [
+        "page:concepts-ratio-spread"
+      ]
+    },
+    {
+      "term": "Backwardation",
+      "slug": "backwardation",
+      "definition": "A futures curve where later-dated contracts trade below nearer ones or below spot. Rolling into the cheaper contract can earn a gain.",
+      "tasty_usage": "",
+      "related": [
+        "term-structure",
+        "vix-behaviour"
+      ],
+      "sources": [
+        "page:concepts-backwardation",
+        "page:concepts-contango"
+      ]
+    },
+    {
+      "term": "Basis (futures)",
+      "slug": "basis-futures",
+      "definition": "In futures, the gap between the cash price of a commodity and its futures price. Elsewhere, basis can mean your cost for tax reporting.",
+      "tasty_usage": "",
+      "related": [
+        "futures-options"
+      ],
+      "sources": [
+        "page:def-basis-futures-cash"
+      ]
+    },
+    {
+      "term": "Basis point",
+      "slug": "basis-point",
+      "definition": "One hundredth of one percent, used to describe small percentage differences.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:def-basis-point"
+      ]
+    },
+    {
+      "term": "Bear call spread",
+      "slug": "bear-call-spread",
+      "definition": "A defined-risk credit spread: sell a call and buy a higher-strike call, profiting if the stock stays below the short strike. Also called a short call vertical.",
+      "tasty_usage": "",
+      "related": [
+        "call-credit-spread"
+      ],
+      "sources": [
+        "page:concepts-bear-call-spread"
+      ]
+    },
+    {
+      "term": "Bear put spread",
+      "slug": "bear-put-spread",
+      "definition": "A bearish debit spread: buy a higher-strike put and sell a lower-strike put, paying a net debit for a moderate decline.",
+      "tasty_usage": "",
+      "related": [
+        "debit-spread"
+      ],
+      "sources": [
+        "page:concepts-bear-put-spread",
+        "page:concepts-debit-spreads"
+      ]
+    },
+    {
+      "term": "Beta",
+      "slug": "beta",
+      "definition": "How strongly a security's returns move with the market, which is set at 1.0. Higher means more market risk.",
+      "tasty_usage": "",
+      "related": [
+        "beta-weighted-delta"
+      ],
+      "sources": [
+        "page:concepts-beta"
+      ]
+    },
+    {
+      "term": "Beta weighting",
+      "slug": "beta-weighting",
+      "definition": "Converting all positions into one benchmark's terms, such as SPY deltas, so you can see how the whole portfolio reacts to a market move.",
+      "tasty_usage": "",
+      "related": [
+        "beta-weighted-delta"
+      ],
+      "sources": [
+        "page:concepts-beta-weight"
+      ]
+    },
+    {
+      "term": "Bid-ask spread",
+      "slug": "bid-ask-spread",
+      "definition": "The gap between the best price a buyer offers and the best price a seller asks. A narrow gap signals a liquid option.",
+      "tasty_usage": "",
+      "related": [
+        "liquidity",
+        "costs-slippage"
+      ],
+      "sources": [
+        "page:concepts-options-liquidity"
+      ]
+    },
+    {
+      "term": "Big Boy Iron Condor",
+      "slug": "big-boy-iron-condor",
+      "definition": "An iron condor with very wide spreads, approximating a short strangle while keeping risk defined. Neutral outlook, best in high IV.",
+      "tasty_usage": "Enters like a regular iron condor aiming for a credit of one third of the spread width; closes at a wider 25-50% of max profit; manages by rolling the untested side.",
+      "related": [
+        "iron-condor",
+        "short-strangle"
+      ],
+      "sources": [
+        "page:def-big-boy-iron-condor"
+      ]
+    },
+    {
+      "term": "Big Dawg Butterfly",
+      "slug": "big-dawg-butterfly",
+      "definition": "A long butterfly with very wide wings: more reward potential and more max loss, but lower probability. Neutral, defined risk, best in high IV.",
+      "tasty_usage": "Rarely traded; buys when volatility is very high, often financed by high-probability trades or turned into a broken wing; manages at 25-50% of max profit.",
+      "related": [
+        "butterfly"
+      ],
+      "sources": [
+        "page:def-big-dawg-butterfly"
+      ]
+    },
+    {
+      "term": "Black swan",
+      "slug": "black-swan",
+      "definition": "A rare, unpredictable event with severe and widespread market consequences, a term popularised by Nassim Taleb.",
+      "tasty_usage": "",
+      "related": [
+        "tail-risk"
+      ],
+      "sources": [
+        "page:concepts-black-swan-event"
+      ]
+    },
+    {
+      "term": "Black-Scholes",
+      "slug": "black-scholes",
+      "definition": "A closed-form formula that produces theoretical prices for European options.",
+      "tasty_usage": "",
+      "related": [
+        "implied-volatility"
+      ],
+      "sources": [
+        "page:concepts-option-pricing"
+      ]
+    },
+    {
+      "term": "Body (butterfly)",
+      "slug": "body-butterfly",
+      "definition": "The two middle-strike contracts of a butterfly, where maximum profit sits.",
+      "tasty_usage": "",
+      "related": [
+        "butterfly"
+      ],
+      "sources": [
+        "page:concepts-long-butterfly-spread"
+      ]
+    },
+    {
+      "term": "Broken-wing butterfly",
+      "slug": "broken-wing-butterfly",
+      "definition": "A butterfly with one wing wider than the other, which lets it be opened for a credit. Also called a skip-strike butterfly.",
+      "tasty_usage": "",
+      "related": [
+        "broken-wing-butterfly",
+        "butterfly"
+      ],
+      "sources": [
+        "page:concepts-broken-wing-butterfly"
+      ]
+    },
+    {
+      "term": "Bull call spread",
+      "slug": "bull-call-spread",
+      "definition": "A defined-risk bullish debit spread: buy a lower-strike call and sell a higher-strike call.",
+      "tasty_usage": "",
+      "related": [
+        "debit-spread"
+      ],
+      "sources": [
+        "page:concepts-bull-call-spread",
+        "page:concepts-debit-spreads"
+      ]
+    },
+    {
+      "term": "Bull put spread",
+      "slug": "bull-put-spread",
+      "definition": "A defined-risk credit spread: sell a put and buy a lower-strike put, profiting if the stock stays above the short strike. Also called a short put vertical.",
+      "tasty_usage": "",
+      "related": [
+        "put-credit-spread"
+      ],
+      "sources": [
+        "page:concepts-bull-put-spread"
+      ]
+    },
+    {
+      "term": "Buy to close",
+      "slug": "buy-to-close",
+      "definition": "Buying back an option you previously sold, ending your obligation.",
+      "tasty_usage": "",
+      "related": [
+        "order-entry"
+      ],
+      "sources": [
+        "page:concepts-cash-secured-put"
+      ]
+    },
+    {
+      "term": "Buying power reduction (BPR)",
+      "slug": "buying-power-reduction-bpr",
+      "definition": "The amount of account capital a position ties up while it is open.",
+      "tasty_usage": "",
+      "related": [
+        "margin",
+        "capital-efficiency",
+        "position-sizing"
+      ],
+      "sources": [
+        "page:concepts-notional-value"
+      ]
+    },
+    {
+      "term": "Calendar spread",
+      "slug": "calendar-spread",
+      "definition": "Same strike and option type in two expirations, one bought and one sold. Profits from time decay differences and volatility changes.",
+      "tasty_usage": "Tends to buy calendars when IV is at extreme lows.",
+      "related": [
+        "calendar",
+        "term-structure"
+      ],
+      "sources": [
+        "page:concepts-calendar-spread"
+      ]
+    },
+    {
+      "term": "Calendarized vertical",
+      "slug": "calendarized-vertical",
+      "definition": "A vertical debit spread whose long leg expires later than the short leg.",
+      "tasty_usage": "",
+      "related": [
+        "diagonal"
+      ],
+      "sources": [
+        "page:concepts-diagonal-spread"
+      ]
+    },
+    {
+      "term": "Call option",
+      "slug": "call-option",
+      "definition": "A contract giving its buyer the right to buy 100 shares at the strike price any time up to expiration.",
+      "tasty_usage": "",
+      "related": [
+        "long-call"
+      ],
+      "sources": [
+        "page:concepts-call-options"
+      ]
+    },
+    {
+      "term": "Cash settlement",
+      "slug": "cash-settlement",
+      "definition": "Settling an option or future by paying the cash difference rather than delivering the underlying. Cash-settled index options follow European exercise rules.",
+      "tasty_usage": "Prefers trading ETFs over cash-settled indexes, citing more efficient pricing, strike choice and volume.",
+      "related": [
+        "futures-options"
+      ],
+      "sources": [
+        "page:concepts-american-vs-european-options",
+        "page:concepts-cash-settlement",
+        "page:concepts-cash-settled-options",
+        "page:def-cash-settled"
+      ]
+    },
+    {
+      "term": "Cash-secured put",
+      "slug": "cash-secured-put",
+      "definition": "A short put backed by enough cash to buy the shares if assigned.",
+      "tasty_usage": "",
+      "related": [
+        "cash-secured-put",
+        "short-put"
+      ],
+      "sources": [
+        "page:concepts-cash-secured-put"
+      ]
+    },
+    {
+      "term": "Cash-settled option",
+      "slug": "cash-settled-option",
+      "definition": "Option that settles in cash based on strike versus underlying, with no asset delivery.",
+      "tasty_usage": "",
+      "related": [
+        "futures-options"
+      ],
+      "sources": [
+        "page:concepts-cash-settled-options"
+      ]
+    },
+    {
+      "term": "Charm",
+      "slug": "charm",
+      "definition": "How an option's delta changes as time passes.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks"
+      ]
+    },
+    {
+      "term": "Chicken Iron Condor",
+      "slug": "chicken-iron-condor",
+      "definition": "An iron condor collecting about half the strike width in credit instead of a third: bigger payout if right, smaller max loss if the stock overshoots. Common for earnings.",
+      "tasty_usage": "Typically used for earnings; closes at 50% of max profit, usually at the next morning's open; manages by rolling the untested side.",
+      "related": [
+        "iron-condor",
+        "earnings-trade"
+      ],
+      "sources": [
+        "page:def-chicken-iron-condor"
+      ]
+    },
+    {
+      "term": "Collar",
+      "slug": "collar",
+      "definition": "Owning shares, buying a protective put and selling an out-of-the-money call to help pay for it. Limits both downside and upside.",
+      "tasty_usage": "",
+      "related": [
+        "collar",
+        "protective-put"
+      ],
+      "sources": [
+        "page:concepts-10-options-strategies-every-trader-should-know",
+        "page:concepts-collar-option"
+      ]
+    },
+    {
+      "term": "Color (greek)",
+      "slug": "color-greek",
+      "definition": "How an option's gamma changes as time passes.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks"
+      ]
+    },
+    {
+      "term": "Contango",
+      "slug": "contango",
+      "definition": "The usual futures curve shape, with later contracts above spot or nearer contracts. Rolling VIX-linked products in contango bleeds value.",
+      "tasty_usage": "",
+      "related": [
+        "term-structure",
+        "vix-behaviour"
+      ],
+      "sources": [
+        "page:concepts-backwardation",
+        "page:concepts-contango",
+        "page:concepts-vxx",
+        "page:def-drag"
+      ]
+    },
+    {
+      "term": "Correlation coefficient",
+      "slug": "correlation-coefficient",
+      "definition": "A statistic from -1 to +1 showing how closely two assets move together.",
+      "tasty_usage": "",
+      "related": [
+        "correlation-diversification"
+      ],
+      "sources": [
+        "page:concepts-positive-correlation"
+      ]
+    },
+    {
+      "term": "Cost basis",
+      "slug": "cost-basis",
+      "definition": "What you originally paid for a stock, including commissions and fees.",
+      "tasty_usage": "",
+      "related": [
+        "taxes"
+      ],
+      "sources": [
+        "page:def-cost-basis"
+      ]
+    },
+    {
+      "term": "Cost basis reduction",
+      "slug": "cost-basis-reduction",
+      "definition": "Lowering the effective price of shares by collecting option premium against them, such as selling covered calls. It limits upside but raises the chance of profit.",
+      "tasty_usage": "Reduces cost basis whenever possible, for example with monthly covered calls or by using spreads instead of naked long calls.",
+      "related": [
+        "covered-call"
+      ],
+      "sources": [
+        "page:def-cost-basis-reduction"
+      ]
+    },
+    {
+      "term": "Costless collar",
+      "slug": "costless-collar",
+      "definition": "A collar where the credit from the short call roughly pays for the long put.",
+      "tasty_usage": "",
+      "related": [
+        "collar"
+      ],
+      "sources": [
+        "page:concepts-collar-option"
+      ]
+    },
+    {
+      "term": "Covered call",
+      "slug": "covered-call",
+      "definition": "Owning 100 shares and selling one call against them, collecting income in exchange for capping upside.",
+      "tasty_usage": "",
+      "related": [
+        "covered-call"
+      ],
+      "sources": [
+        "page:concepts-10-options-strategies-every-trader-should-know",
+        "page:concepts-covered-call"
+      ]
+    },
+    {
+      "term": "Covered option",
+      "slug": "covered-option",
+      "definition": "A short option backed by owned shares or an offsetting option position.",
+      "tasty_usage": "",
+      "related": [
+        "defined-vs-undefined"
+      ],
+      "sources": [
+        "page:concepts-naked-options"
+      ]
+    },
+    {
+      "term": "Credit spread",
+      "slug": "credit-spread",
+      "definition": "A vertical spread where the sold option is worth more than the bought one, so you receive a net credit.",
+      "tasty_usage": "",
+      "related": [
+        "put-credit-spread",
+        "call-credit-spread"
+      ],
+      "sources": [
+        "page:concepts-vertical-spread"
+      ]
+    },
+    {
+      "term": "Day trade margin call",
+      "slug": "day-trade-margin-call",
+      "definition": "A notice that a pattern day trader account has fallen below its required minimum balance and needs funding.",
+      "tasty_usage": "",
+      "related": [
+        "margin"
+      ],
+      "sources": [
+        "page:concepts-pattern-day-trader-pdt-rule"
+      ]
+    },
+    {
+      "term": "Debit spread",
+      "slug": "debit-spread",
+      "definition": "A spread where the bought options cost more than the sold ones, so cash leaves your account up front.",
+      "tasty_usage": "Prefers debit spreads over credit spreads for directional trades in low IV.",
+      "related": [
+        "debit-spread"
+      ],
+      "sources": [
+        "page:concepts-debit-spreads",
+        "page:concepts-vertical-spread",
+        "page:def-debit-spread"
+      ]
+    },
+    {
+      "term": "Delta",
+      "slug": "delta",
+      "definition": "The expected change in an option's price for a $1 move in the underlying; also used as a rough measure of directional exposure.",
+      "tasty_usage": "",
+      "related": [
+        "greeks",
+        "delta-as-probability"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks",
+        "page:concepts-delta"
+      ]
+    },
+    {
+      "term": "Delta-neutral",
+      "slug": "delta-neutral",
+      "definition": "A position whose net delta is near zero, so small price moves barely change its value. Isolates volatility edge from direction.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-delta-neutral-hedging",
+        "page:concepts-delta",
+        "page:def-delta-neutral"
+      ]
+    },
+    {
+      "term": "Derivative",
+      "slug": "derivative",
+      "definition": "A security whose price depends on an underlying asset, such as options and futures.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:def-derivative"
+      ]
+    },
+    {
+      "term": "Diagonal spread",
+      "slug": "diagonal-spread",
+      "definition": "Options of the same type at different strikes and different expirations, one long and one short.",
+      "tasty_usage": "",
+      "related": [
+        "diagonal",
+        "calendar"
+      ],
+      "sources": [
+        "page:concepts-diagonal-spread",
+        "page:concepts-calendar-spread"
+      ]
+    },
+    {
+      "term": "Dividend yield",
+      "slug": "dividend-yield",
+      "definition": "Annual dividends per share divided by the current share price.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:concepts-dividend"
+      ]
+    },
+    {
+      "term": "DNE request",
+      "slug": "dne-request",
+      "definition": "A Do Not Exercise instruction to your broker for a long in-the-money option you want to let expire.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:concepts-options-expiration"
+      ]
+    },
+    {
+      "term": "Drag",
+      "slug": "drag",
+      "definition": "The long-run underperformance of funds that rebalance daily, such as VXX, because futures in contango are sold for less than the next contract costs.",
+      "tasty_usage": "",
+      "related": [
+        "vix-behaviour",
+        "term-structure"
+      ],
+      "sources": [
+        "page:def-drag"
+      ]
+    },
+    {
+      "term": "Duration (days to expiration)",
+      "slug": "duration-days-to-expiration",
+      "definition": "Number of days until an option expires. Also called duration; sets how much time decay and time to be right.",
+      "tasty_usage": "Targets 25-50 DTE at entry, with 45 days the sweet spot; duration is the first thing to change when managing.",
+      "related": [
+        "entry-dte",
+        "dte-21-management",
+        "theta-nlv"
+      ],
+      "sources": [
+        "page:def-days-to-expiration-dte",
+        "page:def-duration-time-decay"
+      ]
+    },
+    {
+      "term": "Earnings announcement",
+      "slug": "earnings-announcement",
+      "definition": "A company's periodic public report of results, usually quarterly and quoted as earnings per share.",
+      "tasty_usage": "",
+      "related": [
+        "earnings-trade"
+      ],
+      "sources": [
+        "page:concepts-earnings",
+        "page:concepts-company-earnings"
+      ]
+    },
+    {
+      "term": "Earnings per share (EPS)",
+      "slug": "earnings-per-share-eps",
+      "definition": "Net profit attributable to common shares divided by shares outstanding.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-company-earnings",
+        "page:def-earnings-per-share"
+      ]
+    },
+    {
+      "term": "Earnings surprise",
+      "slug": "earnings-surprise",
+      "definition": "The gap between a company's actual results and analyst expectations.",
+      "tasty_usage": "",
+      "related": [
+        "post-earnings-drift"
+      ],
+      "sources": [
+        "page:concepts-company-earnings"
+      ]
+    },
+    {
+      "term": "Earnings volatility",
+      "slug": "earnings-volatility",
+      "definition": "Implied volatility inflated by an earnings release. It peaks just before the announcement and collapses right after.",
+      "tasty_usage": "Sells premium into earnings and closes at the open after the announcement.",
+      "related": [
+        "earnings-iv-crush",
+        "earnings-trade"
+      ],
+      "sources": [
+        "page:def-earnings-volatility"
+      ]
+    },
+    {
+      "term": "ETN (exchange-traded note)",
+      "slug": "etn-exchange-traded-note",
+      "definition": "Unsecured debt issued by a bank that tracks a benchmark and trades like a stock; it owns none of the underlying assets.",
+      "tasty_usage": "",
+      "related": [
+        "vix-behaviour"
+      ],
+      "sources": [
+        "page:def-exchange-traded-note-etn"
+      ]
+    },
+    {
+      "term": "European option",
+      "slug": "european-option",
+      "definition": "An option that can be exercised only at expiration.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-american-vs-european-options",
+        "page:def-european-style-option"
+      ]
+    },
+    {
+      "term": "Event risk",
+      "slug": "event-risk",
+      "definition": "The risk of sudden large moves from unforeseeable occurrences, including binary outcomes.",
+      "tasty_usage": "",
+      "related": [
+        "tail-risk",
+        "macro-events"
+      ],
+      "sources": [
+        "page:concepts-risk-management"
+      ]
+    },
+    {
+      "term": "Ex-dividend date",
+      "slug": "ex-dividend-date",
+      "definition": "The first day a stock trades without the right to the upcoming dividend. Buy before it to receive the payout.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:concepts-dividend",
+        "page:def-ex-dividend-date"
+      ]
+    },
+    {
+      "term": "Expected move",
+      "slug": "expected-move",
+      "definition": "The one-standard-deviation range a stock is expected to trade in, derived from its price, implied volatility and days to expiration.",
+      "tasty_usage": "For binary events such as earnings, estimates it as 85% of the front-month ATM straddle price.",
+      "related": [
+        "expected-move",
+        "implied-volatility"
+      ],
+      "sources": [
+        "page:concepts-implied-volatility",
+        "page:def-calculating-expected-move"
+      ]
+    },
+    {
+      "term": "Expiration",
+      "slug": "expiration",
+      "definition": "The date an option stops trading, after which it is exercised or becomes worthless.",
+      "tasty_usage": "",
+      "related": [
+        "entry-dte"
+      ],
+      "sources": [
+        "page:def-expiration",
+        "page:concepts-options-expiration"
+      ]
+    },
+    {
+      "term": "Extrinsic value",
+      "slug": "extrinsic-value",
+      "definition": "The part of an option's price above intrinsic value, reflecting time and implied volatility. Also called time value; it decays to zero by expiration.",
+      "tasty_usage": "",
+      "related": [
+        "greeks",
+        "implied-volatility"
+      ],
+      "sources": [
+        "page:concepts-call-options",
+        "page:concepts-extrinsic-value",
+        "page:concepts-intrinsic-value",
+        "page:concepts-moneyness",
+        "page:concepts-option-pricing",
+        "page:concepts-option-value",
+        "page:concepts-options-premium",
+        "page:concepts-strike-price",
+        "page:concepts-theta"
+      ]
+    },
+    {
+      "term": "Forward guidance",
+      "slug": "forward-guidance",
+      "definition": "A company's own projections of its future performance.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-company-earnings"
+      ]
+    },
+    {
+      "term": "Forward skew",
+      "slug": "forward-skew",
+      "definition": "Differences in implied volatility across expiration dates, also called term structure skew.",
+      "tasty_usage": "",
+      "related": [
+        "skew",
+        "term-structure"
+      ],
+      "sources": [
+        "page:concepts-volatility-skew"
+      ]
+    },
+    {
+      "term": "Front month",
+      "slug": "front-month",
+      "definition": "The nearest regular monthly expiration, also called near or spot month.",
+      "tasty_usage": "",
+      "related": [
+        "entry-dte"
+      ],
+      "sources": [
+        "page:concepts-options-expiration"
+      ]
+    },
+    {
+      "term": "Front ratio spread",
+      "slug": "front-ratio-spread",
+      "definition": "A vertical spread with an extra short option at the short strike, opened for a net credit.",
+      "tasty_usage": "",
+      "related": [
+        "ratio-spread"
+      ],
+      "sources": [
+        "page:concepts-ratio-spread"
+      ]
+    },
+    {
+      "term": "Futures option",
+      "slug": "futures-option",
+      "definition": "An option giving the right, not the obligation, to enter a specific futures contract at a set strike. Futures gains and losses are settled daily.",
+      "tasty_usage": "",
+      "related": [
+        "futures-options"
+      ],
+      "sources": [
+        "page:concepts-futures-options"
+      ]
+    },
+    {
+      "term": "Gamma",
+      "slug": "gamma",
+      "definition": "How fast an option's delta changes for each $1 move in the underlying.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks",
+        "page:concepts-gamma"
+      ]
+    },
+    {
+      "term": "Gamma hedging",
+      "slug": "gamma-hedging",
+      "definition": "Repeatedly adjusting stock hedges to keep a position delta-neutral as delta drifts.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-gamma"
+      ]
+    },
+    {
+      "term": "GTC (good til cancelled)",
+      "slug": "gtc-good-til-cancelled",
+      "definition": "An order that stays active until it fills, expires or you cancel it.",
+      "tasty_usage": "",
+      "related": [
+        "order-entry"
+      ],
+      "sources": [
+        "page:concepts-order-types",
+        "page:def-time-in-force"
+      ]
+    },
+    {
+      "term": "Hedge",
+      "slug": "hedge",
+      "definition": "A position taken to offset or reduce risk in another position or the portfolio.",
+      "tasty_usage": "",
+      "related": [
+        "tail-hedge"
+      ],
+      "sources": [
+        "page:concepts-hedging"
+      ]
+    },
+    {
+      "term": "Hedge ratio",
+      "slug": "hedge-ratio",
+      "definition": "The number of shares needed to offset an options position's delta: contracts times delta times the multiplier.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-delta",
+        "page:concepts-delta-neutral-hedging"
+      ]
+    },
+    {
+      "term": "High-IV strategies",
+      "slug": "high-iv-strategies",
+      "definition": "Trades used when implied volatility is high, such as strangles, iron condors, verticals, covered calls and naked puts, aiming to profit from volatility falling back.",
+      "tasty_usage": "Sells premium when IV is high; for binary events uses tasty strategies like the beef n' cheddar or super bull.",
+      "related": [
+        "iv-rank",
+        "implied-volatility",
+        "short-premium-general"
+      ],
+      "sources": [
+        "page:def-high-implied-volatility-strategies"
+      ]
+    },
+    {
+      "term": "Imperfect hedge",
+      "slug": "imperfect-hedge",
+      "definition": "A hedge whose price moves do not fully offset the risk it targets.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-hedging"
+      ]
+    },
+    {
+      "term": "Implied volatility",
+      "slug": "implied-volatility",
+      "definition": "The market's expected annualised one-standard-deviation move in the underlying, backed out of option prices.",
+      "tasty_usage": "Looks at IV rank rather than raw IV for context; sells premium when IV is high and may buy debit or calendar spreads when low.",
+      "related": [
+        "implied-volatility",
+        "iv-rank"
+      ],
+      "sources": [
+        "page:concepts-implied-volatility",
+        "page:concepts-implied-vs-realized-volatility",
+        "page:concepts-option-value",
+        "page:def-high-iv-low-iv"
+      ]
+    },
+    {
+      "term": "Intrinsic value",
+      "slug": "intrinsic-value",
+      "definition": "How far an option is in the money; zero if out of the money.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-extrinsic-value",
+        "page:concepts-intrinsic-value",
+        "page:concepts-moneyness",
+        "page:concepts-option-value",
+        "page:concepts-options-premium",
+        "page:concepts-strike-price"
+      ]
+    },
+    {
+      "term": "Inversion",
+      "slug": "inversion",
+      "definition": "Selling puts above calls (or calls below puts) in a short position, usually the result of adjustments after a big move rather than an opening setup.",
+      "tasty_usage": "Avoids opening inverted trades; uses inversion only if necessary to reduce a loss or break even.",
+      "related": [
+        "inverting",
+        "short-strangle"
+      ],
+      "sources": [
+        "page:def-inversion"
+      ]
+    },
+    {
+      "term": "Iron butterfly",
+      "slug": "iron-butterfly",
+      "definition": "A bull put spread and bear call spread sharing the same short strike. Pays more credit than an iron condor but has a narrower profit range.",
+      "tasty_usage": "",
+      "related": [
+        "iron-fly"
+      ],
+      "sources": [
+        "page:concepts-iron-butterfly",
+        "page:concepts-iron-condor"
+      ]
+    },
+    {
+      "term": "Iron condor",
+      "slug": "iron-condor",
+      "definition": "A neutral, defined-risk trade combining a short put spread and a short call spread, profiting if the stock stays between the short strikes.",
+      "tasty_usage": "Aims to collect about a third of the strike width in credit and closes at 50% of max profit.",
+      "related": [
+        "iron-condor"
+      ],
+      "sources": [
+        "page:concepts-iron-condor",
+        "page:def-big-boy-iron-condor",
+        "page:def-chicken-iron-condor",
+        "page:def-skewed-iron-condor"
+      ]
+    },
+    {
+      "term": "ITM (in the money)",
+      "slug": "itm-in-the-money",
+      "definition": "An option with intrinsic value: a call whose strike is below the stock price, or a put whose strike is above it.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-moneyness"
+      ]
+    },
+    {
+      "term": "IV crush",
+      "slug": "iv-crush",
+      "definition": "A sharp drop in implied volatility, typically right after an anticipated event like earnings resolves.",
+      "tasty_usage": "",
+      "related": [
+        "earnings-iv-crush"
+      ],
+      "sources": [
+        "page:concepts-how-to-trade-earnings-with-options",
+        "page:concepts-iv-crush"
+      ]
+    },
+    {
+      "term": "IV expansion and contraction",
+      "slug": "iv-expansion-and-contraction",
+      "definition": "Implied volatility reverting toward its average: high IV tends to contract, low IV tends to expand. Option prices rise and fall with it.",
+      "tasty_usage": "Bases trades on IV mean reversion, using IV rank to choose credit or debit strategies.",
+      "related": [
+        "implied-volatility",
+        "iv-rank"
+      ],
+      "sources": [
+        "page:def-iv-expansion-contraction"
+      ]
+    },
+    {
+      "term": "IV percentile",
+      "slug": "iv-percentile",
+      "definition": "The share of days in the past year when implied volatility was below today's level.",
+      "tasty_usage": "",
+      "related": [
+        "iv-rank"
+      ],
+      "sources": [
+        "page:concepts-implied-volatility-rank-percentile"
+      ]
+    },
+    {
+      "term": "IV rank",
+      "slug": "iv-rank",
+      "definition": "Where current implied volatility sits between its 52-week low and high, on a 0 to 100 scale.",
+      "tasty_usage": "Prefers IV rank over raw IV when deciding to sell or buy premium.",
+      "related": [
+        "iv-rank"
+      ],
+      "sources": [
+        "page:concepts-implied-volatility-rank-percentile",
+        "page:concepts-iv-crush",
+        "page:concepts-mean-reversion-explained",
+        "page:concepts-options-premium"
+      ]
+    },
+    {
+      "term": "Jade lizard",
+      "slug": "jade-lizard",
+      "definition": "A short put combined with a short call spread for a net credit, with no upside risk when credit exceeds the call spread width.",
+      "tasty_usage": "",
+      "related": [
+        "jade-lizard"
+      ],
+      "sources": [
+        "page:concepts-jade-lizard"
+      ]
+    },
+    {
+      "term": "Lambda",
+      "slug": "lambda",
+      "definition": "The percentage change in an option's price per 1% move in the underlying; a measure of leverage.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks"
+      ]
+    },
+    {
+      "term": "LEAPS",
+      "slug": "leaps",
+      "definition": "Long-dated options, with expirations a year or more out, up to two or three years.",
+      "tasty_usage": "",
+      "related": [
+        "leaps-stock-replacement"
+      ],
+      "sources": [
+        "page:concepts-leaps",
+        "page:concepts-options-expiration",
+        "page:concepts-poor-man-covered-call"
+      ]
+    },
+    {
+      "term": "Leg",
+      "slug": "leg",
+      "definition": "One component of a multi-part position, such as the call or put in a straddle.",
+      "tasty_usage": "",
+      "related": [
+        "order-entry"
+      ],
+      "sources": [
+        "page:def-leg"
+      ]
+    },
+    {
+      "term": "Legging",
+      "slug": "legging",
+      "definition": "Opening or closing each leg of a spread in separate transactions rather than as one order. It can improve fills but adds risk.",
+      "tasty_usage": "Tries to avoid legging in and out; may leg out to exit quickly, such as after earnings.",
+      "related": [
+        "order-entry"
+      ],
+      "sources": [
+        "page:def-legging-into-and-out-of-trades"
+      ]
+    },
+    {
+      "term": "Leverage",
+      "slug": "leverage",
+      "definition": "Using a small amount of capital to control a large amount of securities.",
+      "tasty_usage": "",
+      "related": [
+        "capital-efficiency"
+      ],
+      "sources": [
+        "page:def-leverage",
+        "page:concepts-options-leverage"
+      ]
+    },
+    {
+      "term": "Leverage ratio",
+      "slug": "leverage-ratio",
+      "definition": "The value of underlying exposure divided by the capital spent on the option.",
+      "tasty_usage": "",
+      "related": [
+        "capital-efficiency"
+      ],
+      "sources": [
+        "page:concepts-options-leverage"
+      ]
+    },
+    {
+      "term": "Leveraged products",
+      "slug": "leveraged-products",
+      "definition": "Funds that amplify an underlying's daily move by a multiplier, some inversely. Daily rebalancing causes long-term drag.",
+      "tasty_usage": "Avoids them long term, using them only for short-term speculation.",
+      "related": [
+        "vix-behaviour"
+      ],
+      "sources": [
+        "page:def-leveraged-products"
+      ]
+    },
+    {
+      "term": "Limiting profitability",
+      "slug": "limiting-profitability",
+      "definition": "Capping potential profit, for example with spreads or covered calls, in exchange for a higher probability of success.",
+      "tasty_usage": "Deliberately limits profit to raise probability of profit, and trades small.",
+      "related": [
+        "win-rate-vs-pnl",
+        "probability-of-profit"
+      ],
+      "sources": [
+        "page:def-limiting-profitability"
+      ]
+    },
+    {
+      "term": "Liquidity risk",
+      "slug": "liquidity-risk",
+      "definition": "The risk of having to accept a poor price because you cannot sell quickly.",
+      "tasty_usage": "",
+      "related": [
+        "liquidity"
+      ],
+      "sources": [
+        "page:concepts-risk-management"
+      ]
+    },
+    {
+      "term": "Long hedge",
+      "slug": "long-hedge",
+      "definition": "Buying futures to lock in a purchase price for an asset you plan to buy.",
+      "tasty_usage": "",
+      "related": [
+        "futures-options"
+      ],
+      "sources": [
+        "page:concepts-hedging"
+      ]
+    },
+    {
+      "term": "Long straddle",
+      "slug": "long-straddle",
+      "definition": "Buying a call and a put at the same strike and expiration to profit from a large move in either direction.",
+      "tasty_usage": "",
+      "related": [
+        "long-straddle"
+      ],
+      "sources": [
+        "page:concepts-straddle"
+      ]
+    },
+    {
+      "term": "Low-IV strategies",
+      "slug": "low-iv-strategies",
+      "definition": "Trades used when implied volatility is low: calendars, debit spreads and other plays that benefit from volatility expanding.",
+      "tasty_usage": "Still hunts for high-IV underlyings, since premium selling is the main edge.",
+      "related": [
+        "iv-rank",
+        "implied-volatility",
+        "debit-spread",
+        "calendar"
+      ],
+      "sources": [
+        "page:def-low-implied-volatility-strategies"
+      ]
+    },
+    {
+      "term": "Managing winners",
+      "slug": "managing-winners",
+      "definition": "Closing a trade before expiration and before reaching max profit.",
+      "tasty_usage": "Manages at a set percent of max profit, a mechanical closing point.",
+      "related": [
+        "profit-target",
+        "hold-vs-manage"
+      ],
+      "sources": [
+        "page:concepts-managing-winners",
+        "page:concepts-how-to-start-trading-options-entry-checklist"
+      ]
+    },
+    {
+      "term": "Margin",
+      "slug": "margin",
+      "definition": "The capital a broker requires you to hold to open and carry a trade. Portfolio margin reflects actual account risk instead of fixed percentages.",
+      "tasty_usage": "",
+      "related": [
+        "margin"
+      ],
+      "sources": [
+        "page:def-margin-trading"
+      ]
+    },
+    {
+      "term": "Margin call",
+      "slug": "margin-call",
+      "definition": "A broker demand for more funds when account equity falls below the required level.",
+      "tasty_usage": "",
+      "related": [
+        "margin"
+      ],
+      "sources": [
+        "page:concepts-mark-to-market-mtm"
+      ]
+    },
+    {
+      "term": "Mark to market",
+      "slug": "mark-to-market",
+      "definition": "Valuing a position at its current market price; futures gains and losses are credited or debited to the account daily.",
+      "tasty_usage": "",
+      "related": [
+        "margin",
+        "futures-options"
+      ],
+      "sources": [
+        "page:concepts-mark-to-market-mtm",
+        "page:concepts-futures-options"
+      ]
+    },
+    {
+      "term": "Market assumption",
+      "slug": "market-assumption",
+      "definition": "Your hypothesis about how an asset or market will behave, which determines the trade you choose.",
+      "tasty_usage": "",
+      "related": [
+        "trade-selection",
+        "directional-bias"
+      ],
+      "sources": [
+        "page:concepts-how-to-start-trading-options-entry-checklist"
+      ]
+    },
+    {
+      "term": "Market order",
+      "slug": "market-order",
+      "definition": "An order that fills immediately at current prices when counterparties exist, trading price certainty for execution certainty.",
+      "tasty_usage": "",
+      "related": [
+        "order-entry"
+      ],
+      "sources": [
+        "page:def-market-order"
+      ]
+    },
+    {
+      "term": "Married call",
+      "slug": "married-call",
+      "definition": "100 short shares plus a long out-of-the-money call for protection.",
+      "tasty_usage": "",
+      "related": [
+        "short-stock"
+      ],
+      "sources": [
+        "page:concepts-zebra"
+      ]
+    },
+    {
+      "term": "Married put",
+      "slug": "married-put",
+      "definition": "100 shares plus a long put to define downside, acting like a stop loss.",
+      "tasty_usage": "",
+      "related": [
+        "protective-put"
+      ],
+      "sources": [
+        "page:concepts-10-options-strategies-every-trader-should-know",
+        "page:concepts-zebra"
+      ]
+    },
+    {
+      "term": "Mean reversion",
+      "slug": "mean-reversion",
+      "definition": "The tendency of prices or volatility to drift back toward a long-term average. Volatility is the most reliable example.",
+      "tasty_usage": "Is a contrarian mean-reversion trader: rolls losers while the assumption holds and sells into strength.",
+      "related": [
+        "iv-rank",
+        "implied-volatility"
+      ],
+      "sources": [
+        "page:concepts-mean-reversion-explained",
+        "page:def-mean-reversion-contrarian"
+      ]
+    },
+    {
+      "term": "Moneyness",
+      "slug": "moneyness",
+      "definition": "Whether an option is in, at or out of the money, based on strike versus the underlying price.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-how-to-pick-the-right-strike-price",
+        "page:concepts-moneyness"
+      ]
+    },
+    {
+      "term": "Naked option",
+      "slug": "naked-option",
+      "definition": "A short option not hedged by shares or an offsetting option.",
+      "tasty_usage": "",
+      "related": [
+        "defined-vs-undefined",
+        "short-put",
+        "short-call"
+      ],
+      "sources": [
+        "page:concepts-naked-options"
+      ]
+    },
+    {
+      "term": "Negative beta",
+      "slug": "negative-beta",
+      "definition": "An asset that tends to move opposite to the market, useful for hedging or diversification.",
+      "tasty_usage": "",
+      "related": [
+        "correlation-diversification"
+      ],
+      "sources": [
+        "page:concepts-beta"
+      ]
+    },
+    {
+      "term": "Negative correlation",
+      "slug": "negative-correlation",
+      "definition": "Two assets tending to move in opposite directions; coefficient between -1 and 0.",
+      "tasty_usage": "",
+      "related": [
+        "correlation-diversification"
+      ],
+      "sources": [
+        "page:concepts-correlation",
+        "page:concepts-negative-correlation"
+      ]
+    },
+    {
+      "term": "Negative gamma",
+      "slug": "negative-gamma",
+      "definition": "Short-option exposure where delta moves against the seller as price moves.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-gamma"
+      ]
+    },
+    {
+      "term": "Negative skew",
+      "slug": "negative-skew",
+      "definition": "A volatility skew where out-of-the-money puts carry higher implied volatility than at- or in-the-money options.",
+      "tasty_usage": "",
+      "related": [
+        "skew"
+      ],
+      "sources": [
+        "page:concepts-volatility-skew"
+      ]
+    },
+    {
+      "term": "Notional value",
+      "slug": "notional-value",
+      "definition": "The total value of the underlying a position controls, regardless of the amount paid to open it.",
+      "tasty_usage": "",
+      "related": [
+        "position-sizing"
+      ],
+      "sources": [
+        "page:concepts-notional-value"
+      ]
+    },
+    {
+      "term": "Number of occurrences",
+      "slug": "number-of-occurrences",
+      "definition": "How many repeated trades are needed for realized results to approach the true odds. More small trades make outcomes more reliable.",
+      "tasty_usage": "",
+      "related": [
+        "number-of-occurrences",
+        "position-sizing"
+      ],
+      "sources": [
+        "page:concepts-number-of-occurrences"
+      ]
+    },
+    {
+      "term": "Open interest",
+      "slug": "open-interest",
+      "definition": "The total number of outstanding option contracts not yet closed, exercised or expired.",
+      "tasty_usage": "",
+      "related": [
+        "liquidity"
+      ],
+      "sources": [
+        "page:concepts-open-interest",
+        "page:concepts-options-liquidity"
+      ]
+    },
+    {
+      "term": "Option premium",
+      "slug": "option-premium",
+      "definition": "The price paid by the buyer and received by the seller of an option.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-option-pricing",
+        "page:concepts-options-premium",
+        "page:concepts-put-options"
+      ]
+    },
+    {
+      "term": "Options Clearing Corporation (OCC)",
+      "slug": "options-clearing-corporation-occ",
+      "definition": "The clearing house that guarantees options contracts and randomly assigns exercise notices to sellers.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:concepts-assignment",
+        "page:def-options-clearing-corporation-occ"
+      ]
+    },
+    {
+      "term": "Options multiplier",
+      "slug": "options-multiplier",
+      "definition": "The number of shares one contract controls, normally 100 for equity options.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-options-leverage"
+      ]
+    },
+    {
+      "term": "OTM (out of the money)",
+      "slug": "otm-out-of-the-money",
+      "definition": "An option with no intrinsic value.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-moneyness"
+      ]
+    },
+    {
+      "term": "Pairs trading",
+      "slug": "pairs-trading",
+      "definition": "Trading a temporary breakdown in the relationship between two correlated underlyings, such as selling the one that rose and buying the one that lagged.",
+      "tasty_usage": "Checks that correlations have not detached before trading a pair.",
+      "related": [
+        "pairs-trade",
+        "correlation-diversification"
+      ],
+      "sources": [
+        "page:def-pairs-trading"
+      ]
+    },
+    {
+      "term": "Pattern day trader",
+      "slug": "pattern-day-trader",
+      "definition": "A margin account holder who makes four or more day trades in a rolling five-day period, and must keep a $25,000 minimum balance.",
+      "tasty_usage": "tastylive's page predates the change: FINRA replaced the PDT rule and its $25,000 minimum with intraday margin standards effective 2026-06-04 [lit:finra-rn26-10-2026].",
+      "related": [
+        "margin",
+        "account-size"
+      ],
+      "sources": [
+        "page:concepts-pattern-day-trader-pdt-rule",
+        "lit:finra-rn26-10-2026"
+      ]
+    },
+    {
+      "term": "Perfect positive correlation",
+      "slug": "perfect-positive-correlation",
+      "definition": "A correlation coefficient of exactly +1.",
+      "tasty_usage": "",
+      "related": [
+        "correlation-diversification"
+      ],
+      "sources": [
+        "page:concepts-positive-correlation"
+      ]
+    },
+    {
+      "term": "Physical delivery",
+      "slug": "physical-delivery",
+      "definition": "Settlement where the underlying asset is actually transferred on exercise.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:concepts-cash-settled-options",
+        "page:concepts-cash-settlement"
+      ]
+    },
+    {
+      "term": "Pin risk",
+      "slug": "pin-risk",
+      "definition": "The risk that the stock closes right at your strike at expiration, making assignment uncertain and possibly leaving unwanted exposure after expiration.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:def-pin-risk"
+      ]
+    },
+    {
+      "term": "PMCC (poor man's covered call)",
+      "slug": "pmcc-poor-mans-covered-call",
+      "definition": "A long call diagonal that replaces the shares in a covered call with a long-dated call, paired with a short near-term call.",
+      "tasty_usage": "",
+      "related": [
+        "poor-mans-covered-call",
+        "diagonal"
+      ],
+      "sources": [
+        "page:concepts-poor-man-covered-call"
+      ]
+    },
+    {
+      "term": "Poor man's covered put",
+      "slug": "poor-mans-covered-put",
+      "definition": "A long-dated put used instead of short stock, paired with near-term short puts for income.",
+      "tasty_usage": "",
+      "related": [
+        "poor-mans-covered-call",
+        "short-stock"
+      ],
+      "sources": [
+        "page:concepts-poor-man-covered-put"
+      ]
+    },
+    {
+      "term": "POP (probability of profit)",
+      "slug": "pop-probability-of-profit",
+      "definition": "The estimated chance a trade makes at least $0.01. For a credit spread, roughly one minus credit divided by width.",
+      "tasty_usage": "Entry POP above 50%; closer to 50% pays more credit, closer to 100% pays less.",
+      "related": [
+        "probability-of-profit",
+        "delta-as-probability"
+      ],
+      "sources": [
+        "page:concepts-probability-of-profit",
+        "page:def-probability-of-profit-success"
+      ]
+    },
+    {
+      "term": "Positive correlation",
+      "slug": "positive-correlation",
+      "definition": "Two assets tending to move together; coefficient between 0 and +1.",
+      "tasty_usage": "",
+      "related": [
+        "correlation-diversification"
+      ],
+      "sources": [
+        "page:concepts-correlation",
+        "page:concepts-negative-correlation"
+      ]
+    },
+    {
+      "term": "Positive gamma",
+      "slug": "positive-gamma",
+      "definition": "Long-option exposure where delta moves in the holder's favour as price moves.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-gamma"
+      ]
+    },
+    {
+      "term": "Positive skew",
+      "slug": "positive-skew",
+      "definition": "A reverse skew in which out-of-the-money calls carry higher implied volatility than other options.",
+      "tasty_usage": "",
+      "related": [
+        "skew"
+      ],
+      "sources": [
+        "page:concepts-volatility-skew"
+      ]
+    },
+    {
+      "term": "Positive theta",
+      "slug": "positive-theta",
+      "definition": "A position that gains value as time passes, typical of short options.",
+      "tasty_usage": "",
+      "related": [
+        "theta-nlv",
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-theta"
+      ]
+    },
+    {
+      "term": "Positive vega",
+      "slug": "positive-vega",
+      "definition": "A position that gains when implied volatility rises, as with owned options.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-vega"
+      ]
+    },
+    {
+      "term": "Pot odds",
+      "slug": "pot-odds",
+      "definition": "The relationship between expected reward and risk. Good pot odds mean risking less than you stand to make.",
+      "tasty_usage": "Alters pot odds in its favour through IV reversion, rolling and managing winners.",
+      "related": [
+        "win-rate-vs-pnl",
+        "probability-of-profit"
+      ],
+      "sources": [
+        "page:def-pot-odds"
+      ]
+    },
+    {
+      "term": "Protective put",
+      "slug": "protective-put",
+      "definition": "A put bought against owned shares to set a floor on the sale price.",
+      "tasty_usage": "",
+      "related": [
+        "protective-put"
+      ],
+      "sources": [
+        "page:concepts-protective-put"
+      ]
+    },
+    {
+      "term": "Put option",
+      "slug": "put-option",
+      "definition": "A contract giving its buyer the right to sell 100 shares at the strike price by expiration.",
+      "tasty_usage": "",
+      "related": [
+        "long-put"
+      ],
+      "sources": [
+        "page:concepts-put-options"
+      ]
+    },
+    {
+      "term": "Put-call parity",
+      "slug": "put-call-parity",
+      "definition": "The pricing link between a call, a put with the same strike and expiry, and the stock.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-put-call-parity"
+      ]
+    },
+    {
+      "term": "Realized volatility",
+      "slug": "realized-volatility",
+      "definition": "How much an underlying actually moved over a past period, also called historical volatility.",
+      "tasty_usage": "",
+      "related": [
+        "realized-volatility",
+        "vrp"
+      ],
+      "sources": [
+        "page:concepts-implied-volatility",
+        "page:concepts-implied-vs-realized-volatility"
+      ]
+    },
+    {
+      "term": "Rebalancing (hedge)",
+      "slug": "rebalancing-hedge",
+      "definition": "Re-adjusting a hedge as delta drifts.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-delta-neutral-hedging"
+      ]
+    },
+    {
+      "term": "Return on capital (ROC)",
+      "slug": "return-on-capital-roc",
+      "definition": "Max potential profit on a short position divided by the capital it uses. Puts different trades on one scale.",
+      "tasty_usage": "Weighs ROC against POP to use capital efficiently.",
+      "related": [
+        "capital-efficiency"
+      ],
+      "sources": [
+        "page:def-return-on-capital"
+      ]
+    },
+    {
+      "term": "Reverse iron condor",
+      "slug": "reverse-iron-condor",
+      "definition": "A net-debit long version made of a long put spread and a long call spread, profiting from a big move either way.",
+      "tasty_usage": "",
+      "related": [
+        "iron-condor"
+      ],
+      "sources": [
+        "page:concepts-iron-condor"
+      ]
+    },
+    {
+      "term": "Rho",
+      "slug": "rho",
+      "definition": "An option's sensitivity to a 1% change in interest rates.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks"
+      ]
+    },
+    {
+      "term": "Roll",
+      "slug": "roll",
+      "definition": "Closing an existing option and opening a new one, changing strike, expiration or both.",
+      "tasty_usage": "Rolls defensively for duration, only if the assumption is unchanged, ideally for a credit; does not double size.",
+      "related": [
+        "rolling"
+      ],
+      "sources": [
+        "page:concepts-protective-put",
+        "page:def-rolling-options"
+      ]
+    },
+    {
+      "term": "Roll yield",
+      "slug": "roll-yield",
+      "definition": "Gain from rolling an expiring futures position into a cheaper later contract in backwardation.",
+      "tasty_usage": "",
+      "related": [
+        "term-structure"
+      ],
+      "sources": [
+        "page:concepts-backwardation"
+      ]
+    },
+    {
+      "term": "Scaling",
+      "slug": "scaling",
+      "definition": "Adjusting trade size and structure as the account grows or shrinks, for instance by widening spreads rather than adding contracts.",
+      "tasty_usage": "Scales by widening wings, adding positions and going further OTM; scales down after a bad run.",
+      "related": [
+        "position-sizing",
+        "account-size"
+      ],
+      "sources": [
+        "page:def-scaling"
+      ]
+    },
+    {
+      "term": "Scalping",
+      "slug": "scalping",
+      "definition": "Buying and selling the same underlying several times in one day for small gains. Needs high liquidity.",
+      "tasty_usage": "",
+      "related": [
+        "intraday-timing",
+        "liquidity"
+      ],
+      "sources": [
+        "page:def-scalp-scalper"
+      ]
+    },
+    {
+      "term": "Section 1256 contract",
+      "slug": "section-1256-contract",
+      "definition": "A non-equity option category taxed on a blended 60/40 long-term and short-term basis.",
+      "tasty_usage": "",
+      "related": [
+        "taxes"
+      ],
+      "sources": [
+        "page:concepts-how-are-options-taxed"
+      ]
+    },
+    {
+      "term": "Selling premium",
+      "slug": "selling-premium",
+      "definition": "Selling options to collect premium, aiming to profit from time decay and a drop in implied volatility. Gains in three price scenarios, versus one for buyers.",
+      "tasty_usage": "Primary strategy, selling in high IV to keep portfolio theta positive.",
+      "related": [
+        "short-premium-general",
+        "theta-nlv"
+      ],
+      "sources": [
+        "page:def-selling-option-premium",
+        "page:def-selling-premium"
+      ]
+    },
+    {
+      "term": "Short call",
+      "slug": "short-call",
+      "definition": "A sold call that obliges the seller to deliver shares at the strike if exercised. Risk is unlimited.",
+      "tasty_usage": "",
+      "related": [
+        "short-call"
+      ],
+      "sources": [
+        "page:concepts-short-call"
+      ]
+    },
+    {
+      "term": "Short hedge",
+      "slug": "short-hedge",
+      "definition": "Selling futures to lock in a sale price for an asset you own.",
+      "tasty_usage": "",
+      "related": [
+        "futures-options"
+      ],
+      "sources": [
+        "page:concepts-hedging"
+      ]
+    },
+    {
+      "term": "Short straddle",
+      "slug": "short-straddle",
+      "definition": "Selling a call and a put at the same strike and expiration to profit from stable prices and time decay.",
+      "tasty_usage": "",
+      "related": [
+        "short-straddle"
+      ],
+      "sources": [
+        "page:concepts-straddle"
+      ]
+    },
+    {
+      "term": "Skewed iron condor",
+      "slug": "skewed-iron-condor",
+      "definition": "An iron condor with unequal wing widths or strikes, adding a directional lean by shifting risk to one side.",
+      "tasty_usage": "Used in high IV or when it has a directional bias.",
+      "related": [
+        "iron-condor",
+        "directional-bias"
+      ],
+      "sources": [
+        "page:def-skewed-iron-condor"
+      ]
+    },
+    {
+      "term": "Special dividend",
+      "slug": "special-dividend",
+      "definition": "One-time payout outside the regular schedule, often from surplus cash.",
+      "tasty_usage": "",
+      "related": [
+        "assignment-dividends"
+      ],
+      "sources": [
+        "page:concepts-dividend"
+      ]
+    },
+    {
+      "term": "Speed",
+      "slug": "speed",
+      "definition": "How an option's gamma changes as the underlying price changes.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks"
+      ]
+    },
+    {
+      "term": "Spot price",
+      "slug": "spot-price",
+      "definition": "The current price for immediate delivery.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-backwardation",
+        "page:concepts-strike-price"
+      ]
+    },
+    {
+      "term": "Standard deviation",
+      "slug": "standard-deviation",
+      "definition": "A measure of how widely outcomes spread around an average; for options it is tied to implied volatility ranges.",
+      "tasty_usage": "",
+      "related": [
+        "expected-move"
+      ],
+      "sources": [
+        "page:concepts-standard-deviation"
+      ]
+    },
+    {
+      "term": "Staying small",
+      "slug": "staying-small",
+      "definition": "Placing many small high-probability trades to avoid drawdowns that are hard to recover from.",
+      "tasty_usage": "Trades small and often to build more occurrences.",
+      "related": [
+        "position-sizing",
+        "number-of-occurrences"
+      ],
+      "sources": [
+        "page:def-staying-small"
+      ]
+    },
+    {
+      "term": "Stock replacement",
+      "slug": "stock-replacement",
+      "definition": "Using a deep in-the-money long call instead of shares for leverage.",
+      "tasty_usage": "",
+      "related": [
+        "leaps-stock-replacement"
+      ],
+      "sources": [
+        "page:concepts-leaps"
+      ]
+    },
+    {
+      "term": "Stop order",
+      "slug": "stop-order",
+      "definition": "A conditional order that becomes a market order once the stock trades at the stop price.",
+      "tasty_usage": "",
+      "related": [
+        "stop-loss",
+        "order-entry"
+      ],
+      "sources": [
+        "page:def-stop-order"
+      ]
+    },
+    {
+      "term": "Strangle",
+      "slug": "strangle",
+      "definition": "A call and a put with different out-of-the-money strikes in the same expiration.",
+      "tasty_usage": "",
+      "related": [
+        "short-strangle",
+        "long-strangle"
+      ],
+      "sources": [
+        "page:concepts-strangle"
+      ]
+    },
+    {
+      "term": "Strike price",
+      "slug": "strike-price",
+      "definition": "The fixed price at which an option holder may buy (call) or sell (put) the underlying.",
+      "tasty_usage": "",
+      "related": [],
+      "sources": [
+        "page:concepts-how-to-pick-the-right-strike-price",
+        "page:concepts-strike-price",
+        "page:def-strike-price-interval"
+      ]
+    },
+    {
+      "term": "Sunny Side Up",
+      "slug": "sunny-side-up",
+      "definition": "A bullish earnings trade: buy a call spread and sell a far out-of-the-money naked call to finance it, shifting risk from downside to upside.",
+      "tasty_usage": "Used mainly for earnings with a strong bullish view; the short call strike is chosen far OTM.",
+      "related": [
+        "debit-spread",
+        "short-call",
+        "earnings-trade"
+      ],
+      "sources": [
+        "page:def-sunny-side-up"
+      ]
+    },
+    {
+      "term": "Synthetic",
+      "slug": "synthetic",
+      "definition": "A position built from different instruments to mimic another, such as a long call plus short put imitating long stock.",
+      "tasty_usage": "Uses synthetics to take part in products otherwise too big for a small account.",
+      "related": [
+        "short-risk-reversal"
+      ],
+      "sources": [
+        "page:def-synthetic",
+        "page:def-synthetics"
+      ]
+    },
+    {
+      "term": "Systematic risk",
+      "slug": "systematic-risk",
+      "definition": "Market-wide risk that diversification cannot remove.",
+      "tasty_usage": "",
+      "related": [
+        "tail-risk"
+      ],
+      "sources": [
+        "page:concepts-risk-management"
+      ]
+    },
+    {
+      "term": "Tested side",
+      "slug": "tested-side",
+      "definition": "The side of a short strangle the stock is threatening; the other side is untested.",
+      "tasty_usage": "",
+      "related": [
+        "defend-tested-side",
+        "short-strangle"
+      ],
+      "sources": [
+        "page:concepts-strangle"
+      ]
+    },
+    {
+      "term": "Theta",
+      "slug": "theta",
+      "definition": "The expected daily change in an option's value from time passing.",
+      "tasty_usage": "",
+      "related": [
+        "theta-nlv",
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks",
+        "page:concepts-theta"
+      ]
+    },
+    {
+      "term": "Theta decay",
+      "slug": "theta-decay",
+      "definition": "The steady erosion of an option's extrinsic value as expiration nears.",
+      "tasty_usage": "",
+      "related": [
+        "theta-nlv",
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-option-value"
+      ]
+    },
+    {
+      "term": "Time in force",
+      "slug": "time-in-force",
+      "definition": "Instruction for how long an order stays working before being cancelled, e.g. day, GTC, IOC or FOK.",
+      "tasty_usage": "",
+      "related": [
+        "order-entry"
+      ],
+      "sources": [
+        "page:def-time-in-force"
+      ]
+    },
+    {
+      "term": "Trailing stop",
+      "slug": "trailing-stop",
+      "definition": "A stop whose trigger follows the market at a fixed percent or point distance.",
+      "tasty_usage": "",
+      "related": [
+        "stop-loss",
+        "order-entry"
+      ],
+      "sources": [
+        "page:concepts-order-types"
+      ]
+    },
+    {
+      "term": "Twisted Sister",
+      "slug": "twisted-sister",
+      "definition": "A neutral, undefined-risk trade selling an OTM call and an OTM put spread; the reverse of a jade lizard, rarely suited because skew usually favours puts.",
+      "tasty_usage": "Finds it underperforms jade lizards; best used when skew inverts.",
+      "related": [
+        "reverse-jade-lizard",
+        "jade-lizard"
+      ],
+      "sources": [
+        "page:def-twisted-sister"
+      ]
+    },
+    {
+      "term": "Ultima",
+      "slug": "ultima",
+      "definition": "How vomma changes as implied volatility changes, a third-order volatility sensitivity.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks"
+      ]
+    },
+    {
+      "term": "Undefined risk",
+      "slug": "undefined-risk",
+      "definition": "A position, like a naked call, whose max loss is unknown at entry. Brokers set margin from a roughly two-standard-deviation move.",
+      "tasty_usage": "",
+      "related": [
+        "defined-vs-undefined",
+        "margin"
+      ],
+      "sources": [
+        "page:def-undefined-risk"
+      ]
+    },
+    {
+      "term": "Unsystematic risk",
+      "slug": "unsystematic-risk",
+      "definition": "Risk specific to one company, sector or asset that diversification can reduce.",
+      "tasty_usage": "",
+      "related": [
+        "correlation-diversification"
+      ],
+      "sources": [
+        "page:concepts-risk-management"
+      ]
+    },
+    {
+      "term": "UVXY",
+      "slug": "uvxy",
+      "definition": "A leveraged product targeting twice the daily return of a short-term VIX futures index, with strong decay.",
+      "tasty_usage": "",
+      "related": [
+        "vix-behaviour"
+      ],
+      "sources": [
+        "page:def-volatility-products",
+        "page:def-leveraged-products"
+      ]
+    },
+    {
+      "term": "Variance",
+      "slug": "variance",
+      "definition": "The randomness of small samples of results around expectation.",
+      "tasty_usage": "",
+      "related": [
+        "number-of-occurrences"
+      ],
+      "sources": [
+        "page:concepts-standard-deviation"
+      ]
+    },
+    {
+      "term": "Vega",
+      "slug": "vega",
+      "definition": "An option's price sensitivity to a 1 point change in implied volatility.",
+      "tasty_usage": "",
+      "related": [
+        "greeks",
+        "implied-volatility"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks",
+        "page:concepts-vega"
+      ]
+    },
+    {
+      "term": "Vertical spread",
+      "slug": "vertical-spread",
+      "definition": "Two options of the same type and expiration at different strikes, one long and one short.",
+      "tasty_usage": "",
+      "related": [
+        "put-credit-spread",
+        "call-credit-spread",
+        "debit-spread"
+      ],
+      "sources": [
+        "page:concepts-bear-call-spread",
+        "page:concepts-bull-call-spread",
+        "page:concepts-vertical-debit-spread",
+        "page:concepts-vertical-spread"
+      ]
+    },
+    {
+      "term": "VIX",
+      "slug": "vix",
+      "definition": "An index of expected 30-day S&P 500 volatility, derived from option prices, known as the fear gauge.",
+      "tasty_usage": "",
+      "related": [
+        "vix-behaviour"
+      ],
+      "sources": [
+        "page:concepts-vix",
+        "page:def-volatility-products"
+      ]
+    },
+    {
+      "term": "VIX tells",
+      "slug": "vix-tells",
+      "definition": "The idea that VIX moves hint at future market conditions.",
+      "tasty_usage": "Uses VIX movement to gauge what kind of market lies ahead.",
+      "related": [
+        "vix-behaviour",
+        "market-timing"
+      ],
+      "sources": [
+        "page:def-vix-tells"
+      ]
+    },
+    {
+      "term": "Volatility",
+      "slug": "volatility",
+      "definition": "The size of fluctuations in a security's price, expressed as annualised standard deviation of returns.",
+      "tasty_usage": "",
+      "related": [
+        "implied-volatility",
+        "realized-volatility"
+      ],
+      "sources": [
+        "page:def-volatility"
+      ]
+    },
+    {
+      "term": "Volatility products",
+      "slug": "volatility-products",
+      "definition": "Instruments for trading volatility directly, such as VIX options and futures, VXX, UVXY and SVXY. Contango makes holding them long term costly.",
+      "tasty_usage": "",
+      "related": [
+        "vix-behaviour",
+        "vix-hedge"
+      ],
+      "sources": [
+        "page:def-volatility-products"
+      ]
+    },
+    {
+      "term": "Volatility skew",
+      "slug": "volatility-skew",
+      "definition": "Variation in implied volatility across strikes and expirations of the same underlying.",
+      "tasty_usage": "",
+      "related": [
+        "skew",
+        "term-structure"
+      ],
+      "sources": [
+        "page:concepts-volatility-skew",
+        "page:def-twisted-sister"
+      ]
+    },
+    {
+      "term": "Volume",
+      "slug": "volume",
+      "definition": "Number of contracts traded in a period.",
+      "tasty_usage": "",
+      "related": [
+        "liquidity"
+      ],
+      "sources": [
+        "page:concepts-open-interest"
+      ]
+    },
+    {
+      "term": "Vomma",
+      "slug": "vomma",
+      "definition": "How an option's vega changes as implied volatility changes.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks"
+      ]
+    },
+    {
+      "term": "VX",
+      "slug": "vx",
+      "definition": "The ticker for VIX futures, which settle in cash. Priced on expected future volatility, and exposed to carry costs from contango.",
+      "tasty_usage": "Uses /VX to trade low-volatility extremes or hedge; exits or rolls before expiry to avoid settlement risk.",
+      "related": [
+        "vix-hedge",
+        "vix-behaviour",
+        "term-structure"
+      ],
+      "sources": [
+        "page:def-vx"
+      ]
+    },
+    {
+      "term": "VXX",
+      "slug": "vxx",
+      "definition": "An exchange-traded note tracking a blend of the front two VIX futures. Contango erodes its value over time.",
+      "tasty_usage": "",
+      "related": [
+        "vix-hedge",
+        "vix-behaviour"
+      ],
+      "sources": [
+        "page:concepts-vix",
+        "page:concepts-vxx",
+        "page:def-volatility-products",
+        "page:def-drag"
+      ]
+    },
+    {
+      "term": "Wash sale",
+      "slug": "wash-sale",
+      "definition": "A loss disallowed when the same or a substantially identical security is bought within 30 days before or after the sale.",
+      "tasty_usage": "",
+      "related": [
+        "taxes"
+      ],
+      "sources": [
+        "page:concepts-how-are-options-taxed"
+      ]
+    },
+    {
+      "term": "Weeklys",
+      "slug": "weeklys",
+      "definition": "Options with weekly expiration cycles. They are less liquid and hold less theta than monthlies.",
+      "tasty_usage": "Avoids weeklys except for earnings plays.",
+      "related": [
+        "entry-dte",
+        "liquidity"
+      ],
+      "sources": [
+        "page:def-weeklys"
+      ]
+    },
+    {
+      "term": "Wings",
+      "slug": "wings",
+      "definition": "The outer long options of a butterfly or iron condor, capping risk.",
+      "tasty_usage": "",
+      "related": [
+        "butterfly"
+      ],
+      "sources": [
+        "page:concepts-long-butterfly-spread",
+        "page:concepts-broken-wing-butterfly"
+      ]
+    },
+    {
+      "term": "Writing an option",
+      "slug": "writing-an-option",
+      "definition": "Selling an option to open; the seller is the writer.",
+      "tasty_usage": "",
+      "related": [
+        "short-put",
+        "short-call"
+      ],
+      "sources": [
+        "page:concepts-assignment",
+        "page:def-writing-an-option"
+      ]
+    },
+    {
+      "term": "ZEBRA",
+      "slug": "zebra",
+      "definition": "Zero extrinsic value back ratio: two ITM longs against one ATM short, giving a near-100-delta stock replacement.",
+      "tasty_usage": "",
+      "related": [
+        "ratio-spread",
+        "leaps-stock-replacement"
+      ],
+      "sources": [
+        "page:concepts-ratio-spread",
+        "page:concepts-zebra"
+      ]
+    },
+    {
+      "term": "Zomma",
+      "slug": "zomma",
+      "definition": "How an option's gamma changes as implied volatility changes.",
+      "tasty_usage": "",
+      "related": [
+        "greeks"
+      ],
+      "sources": [
+        "page:concepts-an-intro-to-the-greeks"
+      ]
+    }
+  ],
+  "status": "draft"
+}

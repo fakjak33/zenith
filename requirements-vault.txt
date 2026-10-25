@@ -1,0 +1,8 @@
+# OPTIONS VAULT research-only dependencies (harvest / extract / repro entry points).
+# The Streamlit view and the tests run on requirements.txt alone; these are
+# imported lazily inside zenith/vault/harvest.py (and later extract/repro).
+#   .venv/Scripts/python -m pip install -r requirements-vault.txt
+# yt-dlp needs a JavaScript runtime for YouTube (node or deno on PATH).
+yt-dlp>=2026.10.21
+# Phase 02 extraction (Claude API Message Batches; key from ANTHROPIC_API_KEY env only).
+anthropic>=1.17,<2   # 1.x API (httpx2); 2.x not yet vetted

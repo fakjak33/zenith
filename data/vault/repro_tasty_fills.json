@@ -1,0 +1,207 @@
+{
+  "note": "Phase 02 fills for data/vault/repro/*.json claims[]: tastylive's own value and sources per tested claim (paraphrase only). Matched by claim text and re-applied by zenith.vault.repro.save on every build. Filled 2026-10-25 (user-approved).",
+  "fills": [
+    {
+      "repro": "cboe_short_vol",
+      "claim": "Selling premium beats buying it over time",
+      "tasty_value": "tastylive's core premise: implied volatility often overstates realized, so sellers are paid for the gap (no figure given on the page)",
+      "tasty_sources": [
+        "page:concepts-implied-vs-realized-volatility",
+        "page:concepts-implied-volatility"
+      ],
+      "tasty_note": "Qualitative on the pages reviewed; the archive's premium-selling studies were not extracted in full."
+    },
+    {
+      "repro": "cboe_short_vol",
+      "claim": "A short-premium book is a distinct, high-probability return engine for 25-50% of capital",
+      "tasty_value": "Keep 25-50% of buying power in options, max 75%; skew higher in high volatility and small accounts",
+      "tasty_sources": [
+        "ep:options-jive-2023-12-27@06:56"
+      ],
+      "tasty_note": "Allocation guidance, not a return claim; tastylive does not frame it against the S&P 500."
+    },
+    {
+      "repro": "cboe_short_vol",
+      "claim": "Defined-risk wings give up much of the edge",
+      "tasty_value": "A 16-delta condor with 5-delta wings keeps about 60% of the strangle's median P&L with about 38% less tail risk and 2.5x less buying power (SPY, 2005-2021)",
+      "tasty_sources": [
+        "ep:market-measures-2023-02-22@03:07",
+        "ep:market-measures-2023-02-22@06:25"
+      ],
+      "tasty_note": "Agrees in direction: tastylive also finds the wings cost about 40% of profit."
+    },
+    {
+      "repro": "cboe_tail_hedge",
+      "claim": "Buying options or protection loses money over time",
+      "tasty_value": "Hedge costs (premium) can outweigh the protection and cap upside; hedging suits risk-averse investors",
+      "tasty_sources": [
+        "page:concepts-hedging",
+        "page:concepts-protective-put"
+      ],
+      "tasty_note": "Qualitative; no tastylive figure for the cost of puts found."
+    },
+    {
+      "repro": "cboe_tail_hedge",
+      "claim": "Long-volatility positions have no useful role in a portfolio",
+      "tasty_value": "Low IV rank favors long premium (debit spreads, long straddles); buy when IV rank and VIX are depressed",
+      "tasty_sources": [
+        "page:concepts-mean-reversion-explained",
+        "page:concepts-iv-crush"
+      ],
+      "tasty_note": "tastylive gives long volatility a conditional role (low IV), not a hedge role."
+    },
+    {
+      "repro": "cboe_tail_hedge",
+      "claim": "Manage risk by trading smaller rather than buying puts",
+      "tasty_value": "To reduce tail risk, cut position size first, prefer defined risk, and consider 60+ DTE; size each trade under about 5% of the account",
+      "tasty_sources": [
+        "ep:options-jive-2023-12-27@09:33",
+        "page:concepts-risk-management",
+        "page:concepts-number-of-occurrences"
+      ],
+      "tasty_note": "Agrees: tastylive's first lever is size, not puts."
+    },
+    {
+      "repro": "earnings_drift",
+      "claim": "After an outlier earnings move, more than half of companies keep drifting in the same direction over the next month (user seed hypothesis)",
+      "tasty_value": null,
+      "tasty_sources": [],
+      "tasty_note": "User seed hypothesis; no tastylive page or checked episode states a post-earnings drift rate. tastylive's earnings stance is to sell the IV crush and avoid directional earnings bets [page:concepts-earnings]."
+    },
+    {
+      "repro": "earnings_drift",
+      "claim": "Large-cap drift after earnings is about zero since 2006 (lit:martineau-2022), so the continuation rate for large caps after 2006 should be near 50%",
+      "tasty_value": null,
+      "tasty_sources": [],
+      "tasty_note": "Literature claim; no tastylive source found."
+    },
+    {
+      "repro": "earnings_drift",
+      "claim": "zenith's PEAD tracker picks (SUE + same-signed reaction) keep drifting over ~1 month",
+      "tasty_value": null,
+      "tasty_sources": [],
+      "tasty_note": "zenith's own tracker; not a tastylive claim."
+    },
+    {
+      "repro": "expected_move",
+      "claim": "The expected move (about 1 standard deviation; 16-delta strikes) contains the underlying about 68% of the time",
+      "tasty_value": "About 68% of outcomes fall within 1 SD; a 1-SD (16-delta) strike has about a 16% chance of finishing ITM",
+      "tasty_sources": [
+        "page:concepts-standard-deviation",
+        "page:concepts-implied-volatility"
+      ],
+      "tasty_note": "tastylive states the normal-theory figure; our test found 83.9% inside the band."
+    },
+    {
+      "repro": "expected_move",
+      "claim": "Breaches are asymmetric: the market breaks the downside less often but further (crash risk the sellers are paid for)",
+      "tasty_value": "Normal equity skew is negative: OTM puts are richer because of hedging demand",
+      "tasty_sources": [
+        "page:concepts-volatility-skew"
+      ],
+      "tasty_note": "tastylive explains the skew; it does not quantify breach asymmetry."
+    },
+    {
+      "repro": "strangle_mgmt",
+      "claim": "Sell 16-20 delta strangles at 45-60 DTE and manage at 50% of max profit or ~21 DTE",
+      "tasty_value": "Sell strangles around 45 DTE at about 16 delta; take profit at 50% of the credit or manage at about 21 DTE",
+      "tasty_sources": [
+        "page:concepts-strangle",
+        "ep:market-measures-2024-06-17@08:59",
+        "ep:market-measures-2023-02-22@03:07"
+      ],
+      "tasty_note": "Filled in Phase 02 (2026-10-25) from tastylive pages and checked episode extracts."
+    },
+    {
+      "repro": "strangle_mgmt",
+      "claim": "Managing winners at 50% of max profit improves results",
+      "tasty_value": "Close winners at about 50% of max profit: higher win rate, capital freed to redeploy, better P&L per day",
+      "tasty_sources": [
+        "page:concepts-managing-winners",
+        "ep:market-measures-2024-06-17@06:34"
+      ],
+      "tasty_note": "The managing-winners page gives no resulting figure."
+    },
+    {
+      "repro": "strangle_mgmt",
+      "claim": "Exiting at 21 DTE reduces tail losses",
+      "tasty_value": "Closing at 21 DTE cut the worst-5% loss by 46% in SPY and 40-60% across four ETFs vs holding (2006-2023)",
+      "tasty_sources": [
+        "ep:market-measures-2023-08-04@04:13",
+        "ep:market-measures-2023-08-04@09:22"
+      ],
+      "tasty_note": "tastylive's figure is larger than our model's (about a third)."
+    },
+    {
+      "repro": "strangle_mgmt",
+      "claim": "Management rules increase the strategy's expected edge",
+      "tasty_value": "Managing early (50% or 21 DTE) at about 45 DTE gave the best results in both high and low IV; early profit-taking described as an advantage beyond the volatility premium",
+      "tasty_sources": [
+        "ep:market-measures-2024-06-17@08:59",
+        "ep:skinny-abstract-2026-05-11@04:22"
+      ],
+      "tasty_note": "Measured on win rate, standard deviation and return on buying power, not on expected edge per unit of risk."
+    },
+    {
+      "repro": "strangle_mgmt",
+      "claim": "Avoid hard stop-losses on short premium",
+      "tasty_value": "Close a losing premium-selling trade at a net loss of 2x the credit received (described as optimal in tastylive research)",
+      "tasty_sources": [
+        "page:concepts-defending-positions"
+      ],
+      "tasty_note": "Note the tension: the claim says 'avoid hard stops', while this tastylive page recommends a 2x-credit exit."
+    },
+    {
+      "repro": "strangle_mgmt",
+      "claim": "About 45 DTE is the best tenor for selling premium",
+      "tasty_value": "45 DTE balances accelerating decay with enough distance to collect premium; lengthen toward 60-65 DTE when IV is low",
+      "tasty_sources": [
+        "page:concepts-options-expiration",
+        "page:concepts-strangle",
+        "ep:research-2023-10-20@00:02",
+        "ep:market-measures-2024-06-17@00:17"
+      ],
+      "tasty_note": "Filled in Phase 02 (2026-10-25) from tastylive pages and checked episode extracts."
+    },
+    {
+      "repro": "vix_spikes",
+      "claim": "Allocate more to short premium as VIX rises (sell when volatility is high)",
+      "tasty_value": "Allocation skews higher in higher volatility (within 25-50% of buying power, max 75%); sell volatility when IV rank is above 50, especially with VIX elevated",
+      "tasty_sources": [
+        "ep:options-jive-2023-12-27@06:56",
+        "page:concepts-iv-crush"
+      ],
+      "tasty_note": "The VIX-tiered allocation ladder is not verified from a primary tastylive source (Phase 03 needs-check)."
+    },
+    {
+      "repro": "vix_spikes",
+      "claim": "Volatility spikes mean-revert, so short-vol entries after a spike are paid",
+      "tasty_value": "Traders rely on IV mean reversion: extreme IV tends to normalize, so high IV rank favors short premium",
+      "tasty_sources": [
+        "page:concepts-mean-reversion-explained",
+        "page:concepts-implied-vs-realized-volatility"
+      ],
+      "tasty_note": "Filled in Phase 02 (2026-10-25) from tastylive pages and checked episode extracts."
+    },
+    {
+      "repro": "vrp_spx",
+      "claim": "Implied volatility overstates realized volatility most of the time, so selling premium has positive expected value",
+      "tasty_value": "IV often overestimates realized volatility, a cushion that pays option sellers (no figure given)",
+      "tasty_sources": [
+        "page:concepts-implied-vs-realized-volatility",
+        "page:concepts-how-to-start-trading-options-entry-checklist"
+      ],
+      "tasty_note": "Filled in Phase 02 (2026-10-25) from tastylive pages and checked episode extracts."
+    },
+    {
+      "repro": "vrp_spx",
+      "claim": "Sell more premium when IV rank or IV percentile is high",
+      "tasty_value": "IV rank above 50 favors selling; 80 and above is extreme; 20 or below favors buying",
+      "tasty_sources": [
+        "page:concepts-implied-volatility-rank-percentile",
+        "page:concepts-mean-reversion-explained"
+      ],
+      "tasty_note": "tastylive also warns elevated IV can be justified, so extreme IV rank is not an automatic signal."
+    }
+  ]
+}

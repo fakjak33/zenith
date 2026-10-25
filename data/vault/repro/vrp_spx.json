@@ -1,0 +1,799 @@
+{
+  "name": "vrp_spx",
+  "ref": "repro:vrp_spx",
+  "built": "2026-10-24",
+  "claim": "Implied volatility overstates realized volatility most of the time, so selling premium has positive expected value",
+  "tasty_value": "IV often overestimates realized volatility, a cushion that pays option sellers (no figure given)",
+  "tasty_sources": [
+    "page:concepts-implied-vs-realized-volatility",
+    "page:concepts-how-to-start-trading-options-entry-checklist"
+  ],
+  "tasty_note": "Filled in Phase 02 (2026-10-25) from tastylive pages and checked episode extracts.",
+  "our_value": "VIX exceeded the next 21 days' realized vol on 85% of days; mean spread +4.1 vol pts (median +4.7); realized averaged 0.78x VIX. Years with a negative mean spread: 2008.",
+  "data": "Yahoo ^VIX close and ^GSPC close (daily)",
+  "period": "1990-01-02 to 2026-09-24",
+  "method": "For each day: VIX/100 vs the annualized standard deviation of the next 21 trading days' SPX close-to-close returns (zenith.beta.hedge.realized). IV rank = VIX position in its trailing 252-day high-low range. Days overlap, so n overstates independent observations about 21-fold.",
+  "caveats": [
+    "VIX is a 30-calendar-day variance-swap rate and is quoted as vol; comparing it to 21-day realized standard deviation is the usual approximation and slightly flatters the spread (Jensen gap between variance and vol).",
+    "A positive vol spread is not the seller's P&L: losses scale with gamma and jumps, so a short option can lose in a month where the average spread was positive.",
+    "Index only; single-stock premia are smaller (lit:carr-wu-2009).",
+    "IV-rank buckets are not a tradable test of IVR timing: high-IVR days cluster in a few episodes."
+  ],
+  "verdict": "agrees",
+  "claims": [
+    {
+      "text": "Implied volatility overstates realized volatility most of the time, so selling premium has positive expected value",
+      "claim_source": "lit:vrp",
+      "tasty_value": "IV often overestimates realized volatility, a cushion that pays option sellers (no figure given)",
+      "tasty_sources": [
+        "page:concepts-implied-vs-realized-volatility",
+        "page:concepts-how-to-start-trading-options-entry-checklist"
+      ],
+      "tasty_note": "Filled in Phase 02 (2026-10-25) from tastylive pages and checked episode extracts.",
+      "our_value": "VIX exceeded the next 21 days' realized vol on 85% of days; mean spread +4.1 vol pts (median +4.7); realized averaged 0.78x VIX. Years with a negative mean spread: 2008.",
+      "verdict": "agrees",
+      "literature": [
+        "lit:carr-wu-2009",
+        "lit:bondarenko-2019"
+      ]
+    },
+    {
+      "text": "Sell more premium when IV rank or IV percentile is high",
+      "claim_source": "lit:iv-predictors",
+      "tasty_value": "IV rank above 50 favors selling; 80 and above is extreme; 20 or below favors buying",
+      "tasty_sources": [
+        "page:concepts-implied-volatility-rank-percentile",
+        "page:concepts-mean-reversion-explained"
+      ],
+      "tasty_note": "tastylive also warns elevated IV can be justified, so extreme IV rank is not an automatic signal.",
+      "our_value": "IV rank 80-100: spread +3.3 pts, IV>RV 83% (n=381); IV rank 0-20: +3.9 pts, 88% (n=4114). Worst 5% of spreads: -38.7 vs -2.6 pts.",
+      "verdict": "contradicts",
+      "literature": [
+        "lit:fallon-park-2016",
+        "lit:cheng-2019"
+      ]
+    }
+  ],
+  "literature": [
+    "lit:bondarenko-2019",
+    "lit:carr-wu-2009"
+  ],
+  "chart_data": {
+    "by_year": [
+      {
+        "year": 1990,
+        "vix": 23.06,
+        "rv": 15.4,
+        "spread": 7.66
+      },
+      {
+        "year": 1991,
+        "vix": 18.38,
+        "rv": 13.47,
+        "spread": 4.91
+      },
+      {
+        "year": 1992,
+        "vix": 15.45,
+        "rv": 9.5,
+        "spread": 5.96
+      },
+      {
+        "year": 1993,
+        "vix": 12.69,
+        "rv": 8.44,
+        "spread": 4.25
+      },
+      {
+        "year": 1994,
+        "vix": 13.93,
+        "rv": 9.6,
+        "spread": 4.33
+      },
+      {
+        "year": 1995,
+        "vix": 12.39,
+        "rv": 8.02,
+        "spread": 4.37
+      },
+      {
+        "year": 1996,
+        "vix": 16.44,
+        "rv": 11.37,
+        "spread": 5.08
+      },
+      {
+        "year": 1997,
+        "vix": 22.38,
+        "rv": 17.6,
+        "spread": 4.78
+      },
+      {
+        "year": 1998,
+        "vix": 25.6,
+        "rv": 18.59,
+        "spread": 7.02
+      },
+      {
+        "year": 1999,
+        "vix": 24.37,
+        "rv": 18.28,
+        "spread": 6.09
+      },
+      {
+        "year": 2000,
+        "vix": 23.32,
+        "rv": 21.86,
+        "spread": 1.45
+      },
+      {
+        "year": 2001,
+        "vix": 25.75,
+        "rv": 19.64,
+        "spread": 6.11
+      },
+      {
+        "year": 2002,
+        "vix": 27.29,
+        "rv": 25.18,
+        "spread": 2.12
+      },
+      {
+        "year": 2003,
+        "vix": 21.98,
+        "rv": 15.69,
+        "spread": 6.3
+      },
+      {
+        "year": 2004,
+        "vix": 15.48,
+        "rv": 11.01,
+        "spread": 4.47
+      },
+      {
+        "year": 2005,
+        "vix": 12.81,
+        "rv": 10.17,
+        "spread": 2.64
+      },
+      {
+        "year": 2006,
+        "vix": 12.81,
+        "rv": 9.52,
+        "spread": 3.29
+      },
+      {
+        "year": 2007,
+        "vix": 17.54,
+        "rv": 15.86,
+        "spread": 1.68
+      },
+      {
+        "year": 2008,
+        "vix": 32.69,
+        "rv": 35.61,
+        "spread": -2.91
+      },
+      {
+        "year": 2009,
+        "vix": 31.48,
+        "rv": 24.16,
+        "spread": 7.32
+      },
+      {
+        "year": 2010,
+        "vix": 22.55,
+        "rv": 16.49,
+        "spread": 6.06
+      },
+      {
+        "year": 2011,
+        "vix": 24.2,
+        "rv": 21.02,
+        "spread": 3.19
+      },
+      {
+        "year": 2012,
+        "vix": 17.8,
+        "rv": 12.61,
+        "spread": 5.18
+      },
+      {
+        "year": 2013,
+        "vix": 14.23,
+        "rv": 10.77,
+        "spread": 3.46
+      },
+      {
+        "year": 2014,
+        "vix": 14.17,
+        "rv": 11.08,
+        "spread": 3.09
+      },
+      {
+        "year": 2015,
+        "vix": 16.67,
+        "rv": 14.94,
+        "spread": 1.73
+      },
+      {
+        "year": 2016,
+        "vix": 15.83,
+        "rv": 11.33,
+        "spread": 4.5
+      },
+      {
+        "year": 2017,
+        "vix": 11.09,
+        "rv": 6.66,
+        "spread": 4.43
+      },
+      {
+        "year": 2018,
+        "vix": 16.64,
+        "rv": 16.04,
+        "spread": 0.6
+      },
+      {
+        "year": 2019,
+        "vix": 15.39,
+        "rv": 11.06,
+        "spread": 4.33
+      },
+      {
+        "year": 2020,
+        "vix": 29.25,
+        "rv": 27.05,
+        "spread": 2.2
+      },
+      {
+        "year": 2021,
+        "vix": 19.66,
+        "rv": 12.81,
+        "spread": 6.85
+      },
+      {
+        "year": 2022,
+        "vix": 25.62,
+        "rv": 23.85,
+        "spread": 1.78
+      },
+      {
+        "year": 2023,
+        "vix": 16.87,
+        "rv": 12.51,
+        "spread": 4.36
+      },
+      {
+        "year": 2024,
+        "vix": 15.61,
+        "rv": 12.44,
+        "spread": 3.16
+      },
+      {
+        "year": 2025,
+        "vix": 18.96,
+        "rv": 15.51,
+        "spread": 3.45
+      },
+      {
+        "year": 2026,
+        "vix": 18.33,
+        "rv": 12.86,
+        "spread": 5.47
+      }
+    ],
+    "by_ivr": [
+      {
+        "bucket": "0-20",
+        "spread": 3.87,
+        "share_iv_gt_rv": 0.8819,
+        "n": 4114
+      },
+      {
+        "bucket": "20-40",
+        "spread": 4.15,
+        "share_iv_gt_rv": 0.8549,
+        "n": 2515
+      },
+      {
+        "bucket": "40-60",
+        "spread": 4.16,
+        "share_iv_gt_rv": 0.7946,
+        "n": 1271
+      },
+      {
+        "bucket": "60-80",
+        "spread": 3.86,
+        "share_iv_gt_rv": 0.7772,
+        "n": 718
+      },
+      {
+        "bucket": "80-100",
+        "spread": 3.3,
+        "share_iv_gt_rv": 0.8294,
+        "n": 381
+      }
+    ]
+  },
+  "stats": {
+    "overall": {
+      "n": 9250,
+      "vix": 19.43,
+      "rv": 15.37,
+      "spread": 4.06,
+      "spread_median": 4.66,
+      "share_iv_gt_rv": 0.8544,
+      "ratio_rv_iv": 0.784,
+      "spread_p5": -4.87
+    },
+    "by_ivr": [
+      {
+        "bucket": "0-20",
+        "n": 4114,
+        "vix": 15.63,
+        "rv": 11.76,
+        "spread": 3.87,
+        "spread_median": 4.13,
+        "share_iv_gt_rv": 0.8819,
+        "ratio_rv_iv": 0.761,
+        "spread_p5": -2.59
+      },
+      {
+        "bucket": "20-40",
+        "n": 2515,
+        "vix": 19.29,
+        "rv": 15.14,
+        "spread": 4.15,
+        "spread_median": 5.12,
+        "share_iv_gt_rv": 0.8549,
+        "ratio_rv_iv": 0.788,
+        "spread_p5": -4.87
+      },
+      {
+        "bucket": "40-60",
+        "n": 1271,
+        "vix": 23.78,
+        "rv": 19.62,
+        "spread": 4.16,
+        "spread_median": 5.44,
+        "share_iv_gt_rv": 0.7946,
+        "ratio_rv_iv": 0.817,
+        "spread_p5": -7.71
+      },
+      {
+        "bucket": "60-80",
+        "n": 718,
+        "vix": 26.69,
+        "rv": 22.84,
+        "spread": 3.86,
+        "spread_median": 4.73,
+        "share_iv_gt_rv": 0.7772,
+        "ratio_rv_iv": 0.84,
+        "spread_p5": -11.4
+      },
+      {
+        "bucket": "80-100",
+        "n": 381,
+        "vix": 30.86,
+        "rv": 27.56,
+        "spread": 3.3,
+        "spread_median": 6.31,
+        "share_iv_gt_rv": 0.8294,
+        "ratio_rv_iv": 0.864,
+        "spread_p5": -38.71
+      }
+    ],
+    "by_year": [
+      {
+        "year": 1990,
+        "n": 253,
+        "vix": 23.06,
+        "rv": 15.4,
+        "spread": 7.66,
+        "spread_median": 8.45,
+        "share_iv_gt_rv": 0.9605,
+        "ratio_rv_iv": 0.676,
+        "spread_p5": 0.29
+      },
+      {
+        "year": 1991,
+        "n": 253,
+        "vix": 18.38,
+        "rv": 13.47,
+        "spread": 4.91,
+        "spread_median": 4.97,
+        "share_iv_gt_rv": 0.8696,
+        "ratio_rv_iv": 0.749,
+        "spread_p5": -0.89
+      },
+      {
+        "year": 1992,
+        "n": 254,
+        "vix": 15.45,
+        "rv": 9.5,
+        "spread": 5.96,
+        "spread_median": 5.85,
+        "share_iv_gt_rv": 0.9961,
+        "ratio_rv_iv": 0.62,
+        "spread_p5": 1.96
+      },
+      {
+        "year": 1993,
+        "n": 253,
+        "vix": 12.69,
+        "rv": 8.44,
+        "spread": 4.25,
+        "spread_median": 4.26,
+        "share_iv_gt_rv": 0.9407,
+        "ratio_rv_iv": 0.669,
+        "spread_p5": -0.11
+      },
+      {
+        "year": 1994,
+        "n": 252,
+        "vix": 13.93,
+        "rv": 9.6,
+        "spread": 4.33,
+        "spread_median": 4.58,
+        "share_iv_gt_rv": 0.9365,
+        "ratio_rv_iv": 0.7,
+        "spread_p5": -0.41
+      },
+      {
+        "year": 1995,
+        "n": 252,
+        "vix": 12.39,
+        "rv": 8.02,
+        "spread": 4.37,
+        "spread_median": 4.8,
+        "share_iv_gt_rv": 0.9524,
+        "ratio_rv_iv": 0.654,
+        "spread_p5": 0.18
+      },
+      {
+        "year": 1996,
+        "n": 254,
+        "vix": 16.44,
+        "rv": 11.37,
+        "spread": 5.08,
+        "spread_median": 6.01,
+        "share_iv_gt_rv": 0.878,
+        "ratio_rv_iv": 0.703,
+        "spread_p5": -1.72
+      },
+      {
+        "year": 1997,
+        "n": 253,
+        "vix": 22.38,
+        "rv": 17.6,
+        "spread": 4.78,
+        "spread_median": 5.08,
+        "share_iv_gt_rv": 0.8854,
+        "ratio_rv_iv": 0.806,
+        "spread_p5": -13.25
+      },
+      {
+        "year": 1998,
+        "n": 252,
+        "vix": 25.6,
+        "rv": 18.59,
+        "spread": 7.02,
+        "spread_median": 7.94,
+        "share_iv_gt_rv": 0.8611,
+        "ratio_rv_iv": 0.726,
+        "spread_p5": -8.03
+      },
+      {
+        "year": 1999,
+        "n": 252,
+        "vix": 24.37,
+        "rv": 18.28,
+        "spread": 6.09,
+        "spread_median": 6.16,
+        "share_iv_gt_rv": 0.9722,
+        "ratio_rv_iv": 0.754,
+        "spread_p5": 0.69
+      },
+      {
+        "year": 2000,
+        "n": 252,
+        "vix": 23.32,
+        "rv": 21.86,
+        "spread": 1.45,
+        "spread_median": 2.48,
+        "share_iv_gt_rv": 0.6508,
+        "ratio_rv_iv": 0.93,
+        "spread_p5": -7.17
+      },
+      {
+        "year": 2001,
+        "n": 248,
+        "vix": 25.75,
+        "rv": 19.64,
+        "spread": 6.11,
+        "spread_median": 6.93,
+        "share_iv_gt_rv": 0.7782,
+        "ratio_rv_iv": 0.775,
+        "spread_p5": -5.56
+      },
+      {
+        "year": 2002,
+        "n": 252,
+        "vix": 27.29,
+        "rv": 25.18,
+        "spread": 2.12,
+        "spread_median": 2.99,
+        "share_iv_gt_rv": 0.6825,
+        "ratio_rv_iv": 0.925,
+        "spread_p5": -10.94
+      },
+      {
+        "year": 2003,
+        "n": 252,
+        "vix": 21.98,
+        "rv": 15.69,
+        "spread": 6.3,
+        "spread_median": 5.84,
+        "share_iv_gt_rv": 1.0,
+        "ratio_rv_iv": 0.708,
+        "spread_p5": 2.6
+      },
+      {
+        "year": 2004,
+        "n": 252,
+        "vix": 15.48,
+        "rv": 11.01,
+        "spread": 4.47,
+        "spread_median": 4.17,
+        "share_iv_gt_rv": 0.9683,
+        "ratio_rv_iv": 0.718,
+        "spread_p5": 0.89
+      },
+      {
+        "year": 2005,
+        "n": 252,
+        "vix": 12.81,
+        "rv": 10.17,
+        "spread": 2.64,
+        "spread_median": 2.83,
+        "share_iv_gt_rv": 0.8889,
+        "ratio_rv_iv": 0.798,
+        "spread_p5": -1.2
+      },
+      {
+        "year": 2006,
+        "n": 251,
+        "vix": 12.81,
+        "rv": 9.52,
+        "spread": 3.29,
+        "spread_median": 3.65,
+        "share_iv_gt_rv": 0.9283,
+        "ratio_rv_iv": 0.741,
+        "spread_p5": -0.65
+      },
+      {
+        "year": 2007,
+        "n": 251,
+        "vix": 17.54,
+        "rv": 15.86,
+        "spread": 1.68,
+        "spread_median": 2.38,
+        "share_iv_gt_rv": 0.6653,
+        "ratio_rv_iv": 0.928,
+        "spread_p5": -7.24
+      },
+      {
+        "year": 2008,
+        "n": 253,
+        "vix": 32.69,
+        "rv": 35.61,
+        "spread": -2.91,
+        "spread_median": 0.55,
+        "share_iv_gt_rv": 0.5652,
+        "ratio_rv_iv": 1.106,
+        "spread_p5": -40.8
+      },
+      {
+        "year": 2009,
+        "n": 252,
+        "vix": 31.48,
+        "rv": 24.16,
+        "spread": 7.32,
+        "spread_median": 7.72,
+        "share_iv_gt_rv": 0.9563,
+        "ratio_rv_iv": 0.743,
+        "spread_p5": 0.4
+      },
+      {
+        "year": 2010,
+        "n": 252,
+        "vix": 22.55,
+        "rv": 16.49,
+        "spread": 6.06,
+        "spread_median": 7.3,
+        "share_iv_gt_rv": 0.8571,
+        "ratio_rv_iv": 0.738,
+        "spread_p5": -10.08
+      },
+      {
+        "year": 2011,
+        "n": 252,
+        "vix": 24.2,
+        "rv": 21.02,
+        "spread": 3.19,
+        "spread_median": 4.73,
+        "share_iv_gt_rv": 0.8413,
+        "ratio_rv_iv": 0.878,
+        "spread_p5": -22.99
+      },
+      {
+        "year": 2012,
+        "n": 250,
+        "vix": 17.8,
+        "rv": 12.61,
+        "spread": 5.18,
+        "spread_median": 4.91,
+        "share_iv_gt_rv": 0.992,
+        "ratio_rv_iv": 0.715,
+        "spread_p5": 1.07
+      },
+      {
+        "year": 2013,
+        "n": 252,
+        "vix": 14.23,
+        "rv": 10.77,
+        "spread": 3.46,
+        "spread_median": 3.77,
+        "share_iv_gt_rv": 0.8413,
+        "ratio_rv_iv": 0.767,
+        "spread_p5": -1.82
+      },
+      {
+        "year": 2014,
+        "n": 252,
+        "vix": 14.17,
+        "rv": 11.08,
+        "spread": 3.09,
+        "spread_median": 3.47,
+        "share_iv_gt_rv": 0.7659,
+        "ratio_rv_iv": 0.792,
+        "spread_p5": -3.45
+      },
+      {
+        "year": 2015,
+        "n": 252,
+        "vix": 16.67,
+        "rv": 14.94,
+        "spread": 1.73,
+        "spread_median": 2.68,
+        "share_iv_gt_rv": 0.7619,
+        "ratio_rv_iv": 0.928,
+        "spread_p5": -15.1
+      },
+      {
+        "year": 2016,
+        "n": 252,
+        "vix": 15.83,
+        "rv": 11.33,
+        "spread": 4.5,
+        "spread_median": 5.26,
+        "share_iv_gt_rv": 0.8571,
+        "ratio_rv_iv": 0.711,
+        "spread_p5": -2.63
+      },
+      {
+        "year": 2017,
+        "n": 251,
+        "vix": 11.09,
+        "rv": 6.66,
+        "spread": 4.43,
+        "spread_median": 4.63,
+        "share_iv_gt_rv": 0.996,
+        "ratio_rv_iv": 0.607,
+        "spread_p5": 0.93
+      },
+      {
+        "year": 2018,
+        "n": 251,
+        "vix": 16.64,
+        "rv": 16.04,
+        "spread": 0.6,
+        "spread_median": 3.36,
+        "share_iv_gt_rv": 0.6056,
+        "ratio_rv_iv": 0.994,
+        "spread_p5": -13.15
+      },
+      {
+        "year": 2019,
+        "n": 252,
+        "vix": 15.39,
+        "rv": 11.06,
+        "spread": 4.33,
+        "spread_median": 5.13,
+        "share_iv_gt_rv": 0.8373,
+        "ratio_rv_iv": 0.729,
+        "spread_p5": -5.36
+      },
+      {
+        "year": 2020,
+        "n": 253,
+        "vix": 29.25,
+        "rv": 27.05,
+        "spread": 2.2,
+        "spread_median": 7.93,
+        "share_iv_gt_rv": 0.7549,
+        "ratio_rv_iv": 1.006,
+        "spread_p5": -55.52
+      },
+      {
+        "year": 2021,
+        "n": 252,
+        "vix": 19.66,
+        "rv": 12.81,
+        "spread": 6.85,
+        "spread_median": 6.83,
+        "share_iv_gt_rv": 0.9524,
+        "ratio_rv_iv": 0.658,
+        "spread_p5": 0.42
+      },
+      {
+        "year": 2022,
+        "n": 251,
+        "vix": 25.62,
+        "rv": 23.85,
+        "spread": 1.78,
+        "spread_median": 1.89,
+        "share_iv_gt_rv": 0.6295,
+        "ratio_rv_iv": 0.945,
+        "spread_p5": -5.94
+      },
+      {
+        "year": 2023,
+        "n": 250,
+        "vix": 16.87,
+        "rv": 12.51,
+        "spread": 4.36,
+        "spread_median": 4.07,
+        "share_iv_gt_rv": 1.0,
+        "ratio_rv_iv": 0.746,
+        "spread_p5": 0.99
+      },
+      {
+        "year": 2024,
+        "n": 252,
+        "vix": 15.61,
+        "rv": 12.44,
+        "spread": 3.16,
+        "spread_median": 3.68,
+        "share_iv_gt_rv": 0.8095,
+        "ratio_rv_iv": 0.817,
+        "spread_p5": -4.89
+      },
+      {
+        "year": 2025,
+        "n": 250,
+        "vix": 18.96,
+        "rv": 15.51,
+        "spread": 3.45,
+        "spread_median": 5.95,
+        "share_iv_gt_rv": 0.848,
+        "ratio_rv_iv": 0.809,
+        "spread_p5": -26.03
+      },
+      {
+        "year": 2026,
+        "n": 183,
+        "vix": 18.33,
+        "rv": 12.86,
+        "spread": 5.47,
+        "spread_median": 5.32,
+        "share_iv_gt_rv": 0.9508,
+        "ratio_rv_iv": 0.709,
+        "spread_p5": 0.43
+      }
+    ],
+    "start": "1990-01-02",
+    "end": "2026-09-24"
+  }
+}

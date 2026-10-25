@@ -473,6 +473,7 @@ def test_full_app_renders_with_trend_following_tab():
     assert "TREND FOLLOWING" in labels and "MOMENTUM" in labels and "ETF MOMENTUM" in labels
     assert "CLEAN BETA" in labels
     assert "EPHEMERIS" in labels
+    assert "OPTIONS VAULT" in labels
     errors = " ".join(str(e.value) for e in at.error)
     assert "could not be loaded" not in errors, errors
 
@@ -488,3 +489,72 @@ def test_ephemeris_today_badge_never_raises():
     from zenith.ephemeris import view
     b = view.today_badge()
     assert b is None or "EPHEMERIS" in b
+
+
+# ------------------------------------------------------------- OPTIONS VAULT --
+def _vault_sub(sub: str):
+    return _render("\n".join([
+        "from zenith.vault import view",
+        "import streamlit as st",
+        f"st.session_state['vault_sub'] = {sub!r}",
+        "view.render()",
+    ]))
+
+
+def test_vault_view_renders_with_no_data(tmp_path, monkeypatch):
+    from zenith import config as cfg
+    import zenith.vault as zv
+    empty = {k: tmp_path / f"{k}.json" for k in cfg.VAULT_FILES}
+    empty["repro_dir"] = tmp_path / "repro"
+    monkeypatch.setattr(cfg, "VAULT_FILES", empty)
+    monkeypatch.setattr(zv, "VAULT_FILES", empty)
+    at, text = _render("from zenith.vault import view\nview.render()\n")
+    assert "Decision-support, not investment advice" in text
+    assert "no data yet" in " ".join(str(i.value) for i in at.info).lower()
+    from zenith.vault import view
+    assert view.today_badge() is None
+
+
+@pytest.mark.skipif(not config.VAULT_FILES["strategies"].exists(), reason="no committed vault data")
+@pytest.mark.parametrize("sub,needle", [
+    ("START HERE", "evidence ladder"),
+    ("STRATEGY ROLODEX", "strategy rolodex"),
+    ("EDGES & RESEARCH", "study catalog is not built"),
+    ("MECHANICS", "decision trees"),
+    ("PORTFOLIO & SIZING", "sizing calculator"),
+    ("GLOSSARY", "glossary"),
+    ("SOURCES & METHOD", "evidence rubric"),
+])
+def test_vault_sub_views_render(sub, needle):
+    at, text = _vault_sub(sub)
+    infos = " ".join(str(i.value) for i in at.info)
+    low = (text + " " + infos).lower()
+    assert needle in low
+    assert "decision-support, not investment advice" in low
+    assert "evidence strength" in low and "key findings" in low
+
+
+@pytest.mark.skipif(not config.VAULT_FILES["strategies"].exists(), reason="no committed vault data")
+def test_vault_cards_show_draft_thin_evidence_and_strangle_stop():
+    at, text = _vault_sub("STRATEGY ROLODEX")
+    assert "DRAFT" in text and "short strangle" in text.lower()
+    assert "-28.8 to -4.7 credits" in text                   # the Phase 05 2x-stop finding
+    at.selectbox(key="vault_card").set_value("short-straddle").run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "Thin evidence" in " ".join(str(w.value) for w in at.warning)
+
+
+@pytest.mark.skipif(not config.VAULT_FILES["strategies"].exists(), reason="no committed vault data")
+def test_vault_rolodex_filters_narrow():
+    at, text = _vault_sub("STRATEGY ROLODEX")
+    at.selectbox(key="vault_f_acct").set_value("cash").run()
+    assert not at.exception, [e.value for e in at.exception]
+    opts = at.selectbox(key="vault_card").options
+    assert 0 < len(opts) < 30
+    assert "Short strangle" not in opts                      # naked strangles need margin
+
+
+def test_vault_today_badge_never_raises():
+    from zenith.vault import view
+    b = view.today_badge()
+    assert b is None or "OPTIONS VAULT" in b

@@ -1,0 +1,1124 @@
+{
+  "version": "v1",
+  "generated": "2026-10-24",
+  "frozen": "2026-10-24",
+  "note": "Phase 02 taxonomy. Slugs are stable ids; aliases are lower-case phrases as spoken on air (incl. common caption spellings). Extraction maps every strategy/topic to a slug here or lists it under unmapped.",
+  "strategies": [
+    {
+      "slug": "short-strangle",
+      "name": "Short strangle",
+      "family": "short-premium-neutral",
+      "risk": "undefined",
+      "aliases": [
+        "strangle",
+        "short strangles",
+        "strangles",
+        "sold strangle",
+        "strangel"
+      ]
+    },
+    {
+      "slug": "short-straddle",
+      "name": "Short straddle",
+      "family": "short-premium-neutral",
+      "risk": "undefined",
+      "aliases": [
+        "straddle",
+        "short straddles",
+        "atm straddle sale"
+      ]
+    },
+    {
+      "slug": "short-put",
+      "name": "Short put",
+      "family": "short-premium-directional",
+      "risk": "undefined",
+      "aliases": [
+        "naked put",
+        "short naked put",
+        "selling puts",
+        "put sale",
+        "sold put"
+      ]
+    },
+    {
+      "slug": "short-call",
+      "name": "Short call",
+      "family": "short-premium-directional",
+      "risk": "undefined",
+      "aliases": [
+        "naked call",
+        "short naked call",
+        "selling calls",
+        "call sale",
+        "naked calls"
+      ]
+    },
+    {
+      "slug": "cash-secured-put",
+      "name": "Cash-secured put",
+      "family": "short-premium-directional",
+      "risk": "defined",
+      "aliases": [
+        "csp",
+        "cash secured put",
+        "cash-secured puts"
+      ]
+    },
+    {
+      "slug": "covered-call",
+      "name": "Covered call",
+      "family": "stock-plus-option",
+      "risk": "undefined",
+      "aliases": [
+        "buy-write",
+        "buy write",
+        "covered calls",
+        "overwrite"
+      ]
+    },
+    {
+      "slug": "covered-strangle",
+      "name": "Covered strangle",
+      "family": "stock-plus-option",
+      "risk": "undefined",
+      "aliases": [
+        "covered strangles"
+      ]
+    },
+    {
+      "slug": "wheel",
+      "name": "The wheel",
+      "family": "stock-plus-option",
+      "risk": "undefined",
+      "aliases": [
+        "wheel strategy",
+        "wheeling",
+        "options wheel"
+      ]
+    },
+    {
+      "slug": "jade-lizard",
+      "name": "Jade lizard",
+      "family": "short-premium-neutral",
+      "risk": "undefined",
+      "aliases": [
+        "jade lizards",
+        "lizard"
+      ]
+    },
+    {
+      "slug": "big-lizard",
+      "name": "Big lizard",
+      "family": "short-premium-neutral",
+      "risk": "undefined",
+      "aliases": [
+        "big lizard",
+        "big lizards"
+      ]
+    },
+    {
+      "slug": "reverse-jade-lizard",
+      "name": "Reverse jade lizard",
+      "family": "short-premium-neutral",
+      "risk": "undefined",
+      "aliases": [
+        "reverse jade lizard",
+        "twisted sister",
+        "reverse lizard"
+      ]
+    },
+    {
+      "slug": "ratio-spread",
+      "name": "Ratio spread",
+      "family": "ratio",
+      "risk": "undefined",
+      "aliases": [
+        "ratio spreads",
+        "put ratio spread",
+        "call ratio spread",
+        "1x2",
+        "front ratio",
+        "front spread",
+        "put ratio",
+        "racial spread"
+      ]
+    },
+    {
+      "slug": "short-risk-reversal",
+      "name": "Short risk reversal / synthetic",
+      "family": "directional",
+      "risk": "undefined",
+      "aliases": [
+        "risk reversal",
+        "synthetic long",
+        "synthetic short",
+        "risk reversals",
+        "financed call",
+        "synthetic shares"
+      ]
+    },
+    {
+      "slug": "iron-condor",
+      "name": "Iron condor",
+      "family": "short-premium-defined",
+      "risk": "defined",
+      "aliases": [
+        "iron condors",
+        "condor",
+        "ic",
+        "iron condo",
+        "skewed iron condor",
+        "unbalanced iron condor"
+      ]
+    },
+    {
+      "slug": "iron-fly",
+      "name": "Iron fly / iron butterfly",
+      "family": "short-premium-defined",
+      "risk": "defined",
+      "aliases": [
+        "iron butterfly",
+        "iron flies",
+        "iron flys",
+        "iron fly"
+      ]
+    },
+    {
+      "slug": "put-credit-spread",
+      "name": "Short put vertical (put credit spread)",
+      "family": "vertical",
+      "risk": "defined",
+      "aliases": [
+        "put credit spread",
+        "short put spread",
+        "bull put spread",
+        "short put vertical",
+        "put spread",
+        "paycheck trade"
+      ]
+    },
+    {
+      "slug": "call-credit-spread",
+      "name": "Short call vertical (call credit spread)",
+      "family": "vertical",
+      "risk": "defined",
+      "aliases": [
+        "call credit spread",
+        "short call spread",
+        "bear call spread",
+        "short call vertical",
+        "call spread"
+      ]
+    },
+    {
+      "slug": "debit-spread",
+      "name": "Long vertical (debit spread)",
+      "family": "vertical",
+      "risk": "defined",
+      "aliases": [
+        "debit spread",
+        "long call spread",
+        "long put spread",
+        "bull call spread",
+        "bear put spread",
+        "call debit spread",
+        "put debit spread",
+        "long vertical"
+      ]
+    },
+    {
+      "slug": "butterfly",
+      "name": "Butterfly",
+      "family": "butterfly",
+      "risk": "defined",
+      "aliases": [
+        "butterflies",
+        "long butterfly",
+        "fly",
+        "call fly",
+        "put fly"
+      ]
+    },
+    {
+      "slug": "broken-wing-butterfly",
+      "name": "Broken-wing butterfly",
+      "family": "butterfly",
+      "risk": "defined",
+      "aliases": [
+        "bwb",
+        "broken wing butterfly",
+        "broken wing fly",
+        "skip-strike butterfly"
+      ]
+    },
+    {
+      "slug": "calendar",
+      "name": "Calendar spread",
+      "family": "time-spread",
+      "risk": "defined",
+      "aliases": [
+        "calendar spread",
+        "time spread",
+        "horizontal spread",
+        "calendars"
+      ]
+    },
+    {
+      "slug": "diagonal",
+      "name": "Diagonal spread",
+      "family": "time-spread",
+      "risk": "defined",
+      "aliases": [
+        "diagonal spread",
+        "diagonals",
+        "double diagonal"
+      ]
+    },
+    {
+      "slug": "poor-mans-covered-call",
+      "name": "Poor man's covered call",
+      "family": "time-spread",
+      "risk": "defined",
+      "aliases": [
+        "pmcc",
+        "poor man's covered call",
+        "poor mans covered call",
+        "leaps covered call"
+      ]
+    },
+    {
+      "slug": "long-straddle",
+      "name": "Long straddle",
+      "family": "long-premium",
+      "risk": "defined",
+      "aliases": [
+        "long straddles",
+        "buying a straddle",
+        "bought straddle"
+      ]
+    },
+    {
+      "slug": "long-strangle",
+      "name": "Long strangle",
+      "family": "long-premium",
+      "risk": "defined",
+      "aliases": [
+        "long strangles",
+        "buying a strangle"
+      ]
+    },
+    {
+      "slug": "long-call",
+      "name": "Long call",
+      "family": "long-premium",
+      "risk": "defined",
+      "aliases": [
+        "buying calls",
+        "long calls",
+        "call option purchase"
+      ]
+    },
+    {
+      "slug": "long-put",
+      "name": "Long put",
+      "family": "long-premium",
+      "risk": "defined",
+      "aliases": [
+        "buying puts",
+        "long puts"
+      ]
+    },
+    {
+      "slug": "collar",
+      "name": "Collar",
+      "family": "hedge",
+      "risk": "defined",
+      "aliases": [
+        "collars",
+        "zero-cost collar"
+      ]
+    },
+    {
+      "slug": "protective-put",
+      "name": "Protective put / index put spread",
+      "family": "hedge",
+      "risk": "defined",
+      "aliases": [
+        "protective put",
+        "married put",
+        "index put spread",
+        "put spread hedge",
+        "portfolio hedge"
+      ]
+    },
+    {
+      "slug": "vix-hedge",
+      "name": "VIX hedges (calls, call spreads, futures)",
+      "family": "hedge",
+      "risk": "defined",
+      "aliases": [
+        "vix calls",
+        "vix call spread",
+        "/vx",
+        "vix futures hedge",
+        "uvxy"
+      ]
+    },
+    {
+      "slug": "tail-hedge",
+      "name": "Tail hedge (far OTM puts)",
+      "family": "hedge",
+      "risk": "defined",
+      "aliases": [
+        "tail risk hedge",
+        "black swan hedge",
+        "far otm puts"
+      ]
+    },
+    {
+      "slug": "earnings-trade",
+      "name": "Earnings trade (vol crush)",
+      "family": "event",
+      "risk": "either",
+      "aliases": [
+        "earnings play",
+        "earnings strangle",
+        "earnings iron condor",
+        "earnings straddle",
+        "binary event"
+      ]
+    },
+    {
+      "slug": "zero-dte",
+      "name": "0DTE structures",
+      "family": "horizon",
+      "risk": "either",
+      "aliases": [
+        "0dte",
+        "0 dte",
+        "zero dte",
+        "zero days to expiration",
+        "same-day expiration",
+        "odte",
+        "zero dts"
+      ]
+    },
+    {
+      "slug": "futures-options",
+      "name": "Futures options (/ES, /MES, /CL, /GC, /ZB ...)",
+      "family": "product",
+      "risk": "either",
+      "aliases": [
+        "futures options",
+        "/es options",
+        "/mes",
+        "options on futures"
+      ]
+    },
+    {
+      "slug": "pairs-trade",
+      "name": "Pairs trade",
+      "family": "relative-value",
+      "risk": "either",
+      "aliases": [
+        "pairs",
+        "pairs trading",
+        "spread trade",
+        "ratio pair"
+      ]
+    },
+    {
+      "slug": "leaps-stock-replacement",
+      "name": "LEAPS / deep-ITM stock replacement",
+      "family": "long-premium",
+      "risk": "defined",
+      "aliases": [
+        "leaps",
+        "leaps call",
+        "stock replacement",
+        "90 delta call",
+        "deep itm call"
+      ]
+    },
+    {
+      "slug": "super-bull",
+      "name": "Super bull (put spread funds call spread)",
+      "family": "directional",
+      "risk": "defined",
+      "aliases": [
+        "super bull",
+        "super bear",
+        "funded call spread"
+      ]
+    },
+    {
+      "slug": "strangle-swap",
+      "name": "Strangle swap (short 0DTE vs long longer-dated strangle)",
+      "family": "horizon",
+      "risk": "defined",
+      "aliases": [
+        "strangle swap"
+      ]
+    },
+    {
+      "slug": "short-premium-general",
+      "name": "Short premium (generic / book of short options)",
+      "family": "short-premium-neutral",
+      "risk": "either",
+      "aliases": [
+        "short premium",
+        "selling premium",
+        "premium selling",
+        "short options"
+      ]
+    },
+    {
+      "slug": "long-stock",
+      "name": "Long stock / shares",
+      "family": "stock",
+      "risk": "undefined",
+      "aliases": [
+        "shares",
+        "buy and hold",
+        "stock position"
+      ]
+    },
+    {
+      "slug": "short-stock",
+      "name": "Short stock",
+      "family": "stock",
+      "risk": "undefined",
+      "aliases": [
+        "shorting stock",
+        "short shares"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "slug": "iv-rank",
+      "name": "IV rank / IV percentile",
+      "kind": "metric",
+      "aliases": [
+        "ivr",
+        "iv rank",
+        "iv percentile",
+        "ivp",
+        "implied volatility rank"
+      ]
+    },
+    {
+      "slug": "implied-volatility",
+      "name": "Implied volatility level / VIX regime",
+      "kind": "metric",
+      "aliases": [
+        "iv",
+        "implied vol",
+        "vix level",
+        "vol regime",
+        "volatility environment"
+      ]
+    },
+    {
+      "slug": "expected-move",
+      "name": "Expected move",
+      "kind": "metric",
+      "aliases": [
+        "expected move",
+        "em",
+        "one standard deviation move",
+        "implied move",
+        "straddle price"
+      ]
+    },
+    {
+      "slug": "probability-of-profit",
+      "name": "Probability of profit / probability of touch",
+      "kind": "metric",
+      "aliases": [
+        "pop",
+        "probability of profit",
+        "probability of touch",
+        "pot",
+        "probability of itm",
+        "touch vs expire itm",
+        "side testing frequency",
+        "winning streak probability",
+        "max pop"
+      ]
+    },
+    {
+      "slug": "delta-as-probability",
+      "name": "Delta as probability / strike selection by delta",
+      "kind": "metric",
+      "aliases": [
+        "16 delta",
+        "30 delta",
+        "delta as probability",
+        "strike selection",
+        "delta"
+      ]
+    },
+    {
+      "slug": "entry-dte",
+      "name": "Entry DTE (duration)",
+      "kind": "convention",
+      "aliases": [
+        "45 dte",
+        "dte",
+        "days to expiration",
+        "duration",
+        "trade duration"
+      ]
+    },
+    {
+      "slug": "dte-21-management",
+      "name": "21-DTE management",
+      "kind": "convention",
+      "aliases": [
+        "21 dte",
+        "manage at 21",
+        "21 days"
+      ]
+    },
+    {
+      "slug": "profit-target",
+      "name": "Profit targets (e.g. 50% of max)",
+      "kind": "convention",
+      "aliases": [
+        "50% profit",
+        "manage winners",
+        "take profits",
+        "profit target",
+        "25% profit",
+        "p50"
+      ]
+    },
+    {
+      "slug": "rolling",
+      "name": "Rolling (for duration / for credit)",
+      "kind": "convention",
+      "aliases": [
+        "roll",
+        "rolling out",
+        "roll for credit",
+        "roll for duration",
+        "rolling up",
+        "rolling down"
+      ]
+    },
+    {
+      "slug": "defend-tested-side",
+      "name": "Defending the tested side",
+      "kind": "convention",
+      "aliases": [
+        "tested side",
+        "roll the untested side",
+        "untested side",
+        "defend"
+      ]
+    },
+    {
+      "slug": "inverting",
+      "name": "Inverting a strangle",
+      "kind": "convention",
+      "aliases": [
+        "inverted strangle",
+        "inverting",
+        "go inverted"
+      ]
+    },
+    {
+      "slug": "stop-loss",
+      "name": "Stop / loss rules",
+      "kind": "convention",
+      "aliases": [
+        "stop loss",
+        "stop-loss",
+        "2x credit stop",
+        "max loss",
+        "loss management",
+        "take the loss"
+      ]
+    },
+    {
+      "slug": "number-of-occurrences",
+      "name": "Number of occurrences / law of large numbers",
+      "kind": "convention",
+      "aliases": [
+        "occurrences",
+        "law of large numbers",
+        "trade small trade often",
+        "number of trades"
+      ]
+    },
+    {
+      "slug": "bp-allocation-vix",
+      "name": "Buying-power allocation vs VIX",
+      "kind": "convention",
+      "aliases": [
+        "portfolio allocation",
+        "bp usage",
+        "buying power usage",
+        "vix allocation",
+        "25% to 50%",
+        "capital allocation"
+      ]
+    },
+    {
+      "slug": "position-sizing",
+      "name": "Position sizing (per trade)",
+      "kind": "convention",
+      "aliases": [
+        "position size",
+        "trade size",
+        "1-5% per trade",
+        "kelly",
+        "sizing",
+        "number of positions",
+        "notional risk",
+        "concentration"
+      ]
+    },
+    {
+      "slug": "theta-nlv",
+      "name": "Theta as % of net liq",
+      "kind": "metric",
+      "aliases": [
+        "theta ratio",
+        "theta to net liq",
+        "portfolio theta",
+        "theta/nlv"
+      ]
+    },
+    {
+      "slug": "beta-weighted-delta",
+      "name": "Beta-weighted delta",
+      "kind": "metric",
+      "aliases": [
+        "beta weighting",
+        "beta weighted delta",
+        "spy-weighted delta",
+        "portfolio delta"
+      ]
+    },
+    {
+      "slug": "correlation-diversification",
+      "name": "Correlation / diversification",
+      "kind": "convention",
+      "aliases": [
+        "correlation",
+        "diversification",
+        "uncorrelated",
+        "sector exposure"
+      ]
+    },
+    {
+      "slug": "liquidity",
+      "name": "Liquidity (bid-ask, open interest)",
+      "kind": "mechanic",
+      "aliases": [
+        "liquidity",
+        "bid ask spread",
+        "open interest",
+        "liquid underlyings"
+      ]
+    },
+    {
+      "slug": "skew",
+      "name": "Skew (put/call, smile)",
+      "kind": "edge",
+      "aliases": [
+        "skew",
+        "put skew",
+        "call skew",
+        "volatility smile",
+        "smirk"
+      ]
+    },
+    {
+      "slug": "term-structure",
+      "name": "Term structure (incl. VIX futures curve)",
+      "kind": "metric",
+      "aliases": [
+        "term structure",
+        "contango",
+        "backwardation",
+        "vix futures curve",
+        "vix curve"
+      ]
+    },
+    {
+      "slug": "vrp",
+      "name": "Variance / volatility risk premium (implied > realized)",
+      "kind": "edge",
+      "aliases": [
+        "implied vs realized",
+        "iv overstates",
+        "volatility risk premium",
+        "variance risk premium",
+        "iv vs hv",
+        "overstatement"
+      ]
+    },
+    {
+      "slug": "earnings-iv-crush",
+      "name": "Earnings IV crush",
+      "kind": "edge",
+      "aliases": [
+        "iv crush",
+        "vol crush",
+        "earnings crush",
+        "volatility crush"
+      ]
+    },
+    {
+      "slug": "post-earnings-drift",
+      "name": "Post-earnings drift",
+      "kind": "edge",
+      "aliases": [
+        "pead",
+        "post earnings drift",
+        "earnings drift"
+      ]
+    },
+    {
+      "slug": "assignment-dividends",
+      "name": "Assignment, early exercise and dividends",
+      "kind": "mechanic",
+      "aliases": [
+        "assignment",
+        "early assignment",
+        "dividend risk",
+        "exercise",
+        "pin risk"
+      ]
+    },
+    {
+      "slug": "margin",
+      "name": "Margin types (cash, Reg T, portfolio margin) and buying power",
+      "kind": "mechanic",
+      "aliases": [
+        "buying power",
+        "bpr",
+        "reg t",
+        "portfolio margin",
+        "margin requirement",
+        "span margin",
+        "buying power reduction"
+      ]
+    },
+    {
+      "slug": "taxes",
+      "name": "Taxes (1256, wash sales)",
+      "kind": "mechanic",
+      "aliases": [
+        "section 1256",
+        "60/40",
+        "wash sale",
+        "tax treatment"
+      ]
+    },
+    {
+      "slug": "costs-slippage",
+      "name": "Costs and slippage (commissions, fills)",
+      "kind": "mechanic",
+      "aliases": [
+        "commissions",
+        "slippage",
+        "mid price",
+        "fills",
+        "fees"
+      ]
+    },
+    {
+      "slug": "realized-volatility",
+      "name": "Realized volatility / market moves",
+      "kind": "market",
+      "aliases": [
+        "realized vol",
+        "historical volatility",
+        "hv",
+        "daily move",
+        "big moves",
+        "volatility clustering",
+        "outlier days",
+        "two standard deviation move"
+      ]
+    },
+    {
+      "slug": "tail-risk",
+      "name": "Tail risk / crash behaviour",
+      "kind": "market",
+      "aliases": [
+        "black swan",
+        "tail event",
+        "crash",
+        "drawdown",
+        "outlier move",
+        "kurtosis",
+        "outlier risk",
+        "tail risk"
+      ]
+    },
+    {
+      "slug": "vix-behaviour",
+      "name": "VIX behaviour (spikes, mean reversion)",
+      "kind": "market",
+      "aliases": [
+        "vix spike",
+        "vix mean reversion",
+        "vol expansion",
+        "vol contraction",
+        "vvix",
+        "vvix/vix ratio",
+        "vix1d",
+        "one day vix",
+        "speed of reversion"
+      ]
+    },
+    {
+      "slug": "market-timing",
+      "name": "Market timing / predictive indicators",
+      "kind": "market",
+      "aliases": [
+        "indicator",
+        "signal",
+        "seasonality",
+        "santa rally",
+        "intraday timing"
+      ]
+    },
+    {
+      "slug": "directional-bias",
+      "name": "Directional assumptions (bullish/bearish/neutral)",
+      "kind": "convention",
+      "aliases": [
+        "directional",
+        "neutral",
+        "bullish",
+        "bearish",
+        "delta neutral",
+        "perma bull"
+      ]
+    },
+    {
+      "slug": "greeks",
+      "name": "Greeks behaviour (gamma, vega, theta over time)",
+      "kind": "mechanic",
+      "aliases": [
+        "gamma risk",
+        "vega",
+        "theta decay",
+        "greeks",
+        "static vs dynamic delta",
+        "permanent vs temporary theta",
+        "p&l attribution",
+        "negative theta",
+        "positive theta"
+      ]
+    },
+    {
+      "slug": "win-rate-vs-pnl",
+      "name": "Win rate vs P&L (payoff asymmetry)",
+      "kind": "convention",
+      "aliases": [
+        "win rate",
+        "high probability",
+        "avg winner vs loser",
+        "expectancy",
+        "p&l distribution",
+        "standard deviation of p&l"
+      ]
+    },
+    {
+      "slug": "tail-loss-metrics",
+      "name": "Tail-loss metrics (CVaR, worst loss vs credit)",
+      "kind": "metric",
+      "aliases": [
+        "cvar",
+        "expected shortfall",
+        "worst loss",
+        "loss-to-credit ratio",
+        "max loss multiple of credit",
+        "conditional value at risk",
+        "c bar"
+      ]
+    },
+    {
+      "slug": "hold-vs-manage",
+      "name": "Managing early vs holding to expiration",
+      "kind": "convention",
+      "aliases": [
+        "hold to expiration",
+        "early management",
+        "mechanical vs discretionary",
+        "time-based exit"
+      ]
+    },
+    {
+      "slug": "capital-efficiency",
+      "name": "Capital efficiency (P&L per day, return on capital, redeployment)",
+      "kind": "convention",
+      "aliases": [
+        "p&l per day",
+        "return on capital",
+        "roc",
+        "capital redeployment",
+        "cash drag",
+        "premium efficiency"
+      ]
+    },
+    {
+      "slug": "defined-vs-undefined",
+      "name": "Defined vs undefined risk; wing width and cost",
+      "kind": "convention",
+      "aliases": [
+        "defined risk",
+        "undefined risk",
+        "wing width",
+        "wing cost",
+        "buying wings"
+      ]
+    },
+    {
+      "slug": "intraday-timing",
+      "name": "Intraday timing (0DTE entry hour, open/close, event days)",
+      "kind": "market",
+      "aliases": [
+        "time of day",
+        "hourly entry",
+        "opening move",
+        "last 30 minutes",
+        "intraday u-shape",
+        "re-entry"
+      ]
+    },
+    {
+      "slug": "macro-events",
+      "name": "Macro events (FOMC, CPI, jobs, yields)",
+      "kind": "market",
+      "aliases": [
+        "fomc",
+        "cpi",
+        "jobs report",
+        "event risk",
+        "10-year yield"
+      ]
+    },
+    {
+      "slug": "positive-drift",
+      "name": "Positive drift / bull-market bias of equities",
+      "kind": "edge",
+      "aliases": [
+        "positive drift",
+        "upward drift",
+        "bull market bias"
+      ]
+    },
+    {
+      "slug": "market-structure",
+      "name": "Market structure (breadth, cap vs equal weight, dealer gamma, flows)",
+      "kind": "market",
+      "aliases": [
+        "breadth",
+        "equal weight",
+        "rsp vs spy",
+        "dealer gamma",
+        "index inclusion",
+        "skew index"
+      ]
+    },
+    {
+      "slug": "performance-measurement",
+      "name": "Performance measurement (net liq, realized vs unrealized P&L)",
+      "kind": "mechanic",
+      "aliases": [
+        "net liq",
+        "realized p&l",
+        "unrealized p&l",
+        "p&l tracking"
+      ]
+    },
+    {
+      "slug": "order-entry",
+      "name": "Order entry and closing (limit at mid, balanced vs full close)",
+      "kind": "mechanic",
+      "aliases": [
+        "order entry",
+        "limit order",
+        "fill at mid",
+        "closing order",
+        "balanced close"
+      ]
+    },
+    {
+      "slug": "account-size",
+      "name": "Small accounts / account size",
+      "kind": "convention",
+      "aliases": [
+        "small account",
+        "account size",
+        "$10,000 account",
+        "pdt rule",
+        "pattern day trader",
+        "minimum credit",
+        "pattern day trading"
+      ]
+    },
+    {
+      "slug": "trade-selection",
+      "name": "Trade selection process",
+      "kind": "convention",
+      "aliases": [
+        "watchlist",
+        "screening",
+        "trade process",
+        "finding trades",
+        "trade journal",
+        "year-end review"
+      ]
+    },
+    {
+      "slug": "underlying-choice",
+      "name": "Underlying choice (SPX vs SPY vs ETFs vs stocks vs futures)",
+      "kind": "mechanic",
+      "aliases": [
+        "spx vs spy",
+        "index vs etf",
+        "european vs american",
+        "cash-settled",
+        "xsp",
+        "etf vs single stock vol",
+        "dispersion"
+      ]
+    }
+  ],
+  "episode_types": [
+    {
+      "slug": "study",
+      "description": "Backtest or data study with a defined sample, period and metrics"
+    },
+    {
+      "slug": "mechanics",
+      "description": "How something works: margin, assignment, order entry, taxes, products"
+    },
+    {
+      "slug": "concept",
+      "description": "Explains a concept or framework without a dataset"
+    },
+    {
+      "slug": "commentary",
+      "description": "Market commentary or news/celebrity reaction with options framing"
+    },
+    {
+      "slug": "trade_review",
+      "description": "Walks through specific live or recent trades"
+    },
+    {
+      "slug": "other",
+      "description": "Little or no options content"
+    }
+  ]
+}

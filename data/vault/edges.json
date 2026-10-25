@@ -1,0 +1,1499 @@
+{
+  "edges": [
+    {
+      "slug": "vrp",
+      "title": "Implied volatility overstates realized (the variance risk premium)",
+      "finding": "VIX topped the next 21 days' realized volatility on 85% of days since 1990, a mean gap of +4.1 vol points with realized averaging 0.78x VIX [repro:vrp_spx], in line with the 4.2-point 1990-2018 gap in the literature (VIX 19.3% vs 15.1% realized) [lit:bondarenko-2019]. Selling it paid: ATM SPX put-writing (PUT) earned 7.24% a year in 2007-2026 against 1.56% for its T-bill collateral [repro:cboe_short_vol]. Much of the premium is payment for crash risk, so it arrives with negative skew and rare large losses [lit:bollerslev-todorov-2011].",
+      "numbers": [
+        {
+          "label": "Share of days VIX exceeded next-21-day realized vol (1990-2026)",
+          "value": "85%",
+          "sources": [
+            "repro:vrp_spx"
+          ]
+        },
+        {
+          "label": "Mean VIX minus realized spread",
+          "value": "+4.1 vol pts (median +4.7); realized averaged 0.78x VIX",
+          "sources": [
+            "repro:vrp_spx"
+          ]
+        },
+        {
+          "label": "Years with a negative mean spread",
+          "value": "2008 only",
+          "sources": [
+            "repro:vrp_spx"
+          ]
+        },
+        {
+          "label": "Average VIX vs realized, 1990-2018",
+          "value": "19.3% vs 15.1% (4.2 pts); in 2008 32.7% implied vs 35.2% realized",
+          "sources": [
+            "lit:bondarenko-2019"
+          ]
+        },
+        {
+          "label": "PUT vs its T-bill collateral, 2007-2026 (gross)",
+          "value": "7.24% vs 1.56% CAGR, +5.68 pts/yr",
+          "sources": [
+            "repro:cboe_short_vol"
+          ]
+        },
+        {
+          "label": "PUT vs S&P 500, Jun 1986-Dec 2018",
+          "value": "CAGR 9.54% vs 9.80%; volatility 9.95% vs 14.93%; monthly skew -2.09 vs -0.81",
+          "sources": [
+            "lit:bondarenko-2019"
+          ]
+        },
+        {
+          "label": "PUT vs S&P 500 TR, 2007-2026 (gross)",
+          "value": "CAGR 7.24% vs 10.95%; max drawdown -37.1% vs -55.3%",
+          "sources": [
+            "repro:cboe_short_vol"
+          ]
+        },
+        {
+          "label": "Cboe short-vol indices trailing the S&P 500 TR since 2009-03-09",
+          "value": "6 of 6 (S&P 500 TR 16.88% CAGR)",
+          "sources": [
+            "repro:cboe_short_vol"
+          ]
+        },
+        {
+          "label": "Single stocks: names with a significant level variance premium",
+          "value": "3 of 35",
+          "sources": [
+            "lit:carr-wu-2009"
+          ]
+        },
+        {
+          "label": "tastylive: realized pop vs theoretical pop",
+          "value": "70/30 or 69/31 instead of 67/33",
+          "sources": [
+            "ep:skinny-abstract-2026-05-11@05:47"
+          ]
+        }
+      ],
+      "conditions": "Holds on average for liquid index options (SPX/SPY) over long samples and across many papers. Fails in the months that matter: realized exceeded implied in 2008, and a positive average spread is not the seller's P&L because losses scale with gamma and jumps. The index premium is much larger than the single-stock premium, and since 2009 every Cboe short-vol index has trailed the S&P 500 total return.",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "iron-fly",
+        "short-put",
+        "cash-secured-put",
+        "put-credit-spread",
+        "call-credit-spread",
+        "covered-call",
+        "jade-lizard"
+      ],
+      "tasty_sources": [
+        "page:concepts-implied-volatility",
+        "page:concepts-implied-vs-realized-volatility",
+        "ep:skinny-abstract-2026-05-11@05:47",
+        "ep:skinny-abstract-2026-05-11@01:04"
+      ],
+      "tasty_position": "IV tends to run above realized volatility, which is why option selling can be profitable [page:concepts-implied-volatility] [page:concepts-implied-vs-realized-volatility], and real win rates run a little above theoretical for a small positive expectancy [ep:skinny-abstract-2026-05-11@05:47].",
+      "literature": [
+        "lit:coval-shumway-2001",
+        "lit:bakshi-kapadia-2003",
+        "lit:carr-wu-2009",
+        "lit:bondarenko-2019",
+        "lit:bollerslev-todorov-2011",
+        "lit:fallon-park-2016",
+        "lit:ungar-moran-2009",
+        "lit:broadie-etal-2009",
+        "lit:lemperiere-etal-2017"
+      ],
+      "repro": "repro:vrp_spx",
+      "agreement": "agrees",
+      "tier": "A",
+      "kind": "EDGE",
+      "caveats": [
+        "VIX is a variance-swap rate compared with 21-day realized standard deviation, which slightly flatters the spread [repro:vrp_spx].",
+        "Index only: the single-stock premium is smaller and mostly a correlation premium [lit:carr-wu-2009].",
+        "Headline put-writing returns are statistically fragile once estimation noise is allowed for [lit:broadie-etal-2009].",
+        "Index returns are gross of commissions, bid-ask and taxes, and Cboe sponsored most of the early studies [repro:cboe_short_vol]."
+      ]
+    },
+    {
+      "slug": "iv-rank-timing",
+      "title": "Selling when IV rank is high",
+      "finding": "tastylive treats IV rank above 50 as the cue to sell premium, because IV mean-reverts [page:concepts-implied-volatility-rank-percentile]. In our SPX test the gap between implied and realized volatility was no better when IV rank was high: IV rank 80-100 gave +3.3 pts with IV above realized on 83% of days, against +3.9 pts and 88% at IV rank 0-20, and the worst 5% of spreads were -38.7 vs -2.6 pts [repro:vrp_spx]. A high rank buys a larger dollar credit and strikes further out, not a better premium per unit of risk [lit:fallon-park-2016]. It is an entry filter, not a source of return.",
+      "numbers": [
+        {
+          "label": "IV rank 80-100: mean spread and share of days IV>RV (n=381)",
+          "value": "+3.3 pts, 83%",
+          "sources": [
+            "repro:vrp_spx"
+          ]
+        },
+        {
+          "label": "IV rank 0-20: mean spread and share of days IV>RV (n=4114)",
+          "value": "+3.9 pts, 88%",
+          "sources": [
+            "repro:vrp_spx"
+          ]
+        },
+        {
+          "label": "Worst 5% of spreads, high vs low IV rank",
+          "value": "-38.7 vs -2.6 pts",
+          "sources": [
+            "repro:vrp_spx"
+          ]
+        },
+        {
+          "label": "tastylive sell threshold",
+          "value": "IV rank above 50 (buyers filter at 20 or below)",
+          "sources": [
+            "page:concepts-implied-volatility-rank-percentile"
+          ]
+        },
+        {
+          "label": "Risk-sized SPX variance selling, 32 years",
+          "value": "Sharpe above 1.2; premium lower after sell-offs and no significant link to implied or realized vol levels",
+          "sources": [
+            "lit:fallon-park-2016"
+          ]
+        },
+        {
+          "label": "VIX futures premia when ex-ante risk rises",
+          "value": "fall or stay flat",
+          "sources": [
+            "lit:cheng-2019"
+          ]
+        }
+      ],
+      "conditions": "Higher IV does widen strikes for a given credit and lifts the dollar premium [page:concepts-implied-volatility]. It does not reliably lift the risk-adjusted premium for the index, and the high-rank days cluster in a few crisis episodes where the left tail is fattest. Cross-sectional single-stock evidence (IV far above RV) is a long-short relative-value result, not net short exposure [lit:goyal-saretto-2009]. No peer-reviewed test of IV-rank thresholds exists.",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "iron-fly",
+        "put-credit-spread",
+        "call-credit-spread",
+        "short-put",
+        "cash-secured-put",
+        "covered-call",
+        "calendar",
+        "diagonal",
+        "debit-spread"
+      ],
+      "tasty_sources": [
+        "page:concepts-implied-volatility-rank-percentile",
+        "page:concepts-implied-volatility",
+        "page:concepts-iv-crush",
+        "page:concepts-mean-reversion-explained",
+        "ep:market-measures-2025-12-19@04:24",
+        "ep:market-measures-2025-08-14@06:44"
+      ],
+      "tasty_position": "Favor short premium above IV rank 50 and long premium or debit structures when it is low [page:concepts-implied-volatility-rank-percentile] [page:concepts-mean-reversion-explained], while warning that elevated IV may reflect a real catalyst [page:concepts-mean-reversion-explained] and that thin low-IV premium leaves strangles exposed to a spike [ep:market-measures-2025-08-14@06:44].",
+      "literature": [
+        "lit:fallon-park-2016",
+        "lit:cheng-2019",
+        "lit:bakshi-kapadia-2003",
+        "lit:goyal-saretto-2009",
+        "lit:hu-jacobs-2020"
+      ],
+      "repro": "repro:vrp_spx",
+      "agreement": "contradicts",
+      "tier": "C",
+      "kind": "CONVENTION",
+      "caveats": [
+        "IV-rank buckets are not a tradable test: high-rank days cluster in a few episodes [repro:vrp_spx].",
+        "Index IV rank only; the single-stock picture differs [lit:goyal-saretto-2009].",
+        "Delta-hedged buyers lose more at high volatility, which is a different statement from risk-sized sellers earning more [lit:bakshi-kapadia-2003]."
+      ]
+    },
+    {
+      "slug": "managing-winners",
+      "title": "Taking profit at 50% of max profit",
+      "finding": "Closing at 50% reshapes the P&L distribution rather than adding return: in our model it lifted the win rate (96% vs 92% held) and P&L per day (+2.04 vs +1.69 bp), but cut the mean per trade (+0.36 vs +0.64 credits) [repro:strangle_mgmt]. The combined 50%-or-21-DTE rule earned the same book return as holding (+5.84% vs +5.83% a year) with 20 trades a year instead of 8 [repro:strangle_mgmt]. tastylive's own SPY study reports about 76% more total profit over 11 years from roughly twice the trades [lit:tastylive-managing-2016], consistent with turnover, not a better expected return per trade [lit:williams-1991].",
+      "numbers": [
+        {
+          "label": "50% target vs hold: win rate (model, 16-delta 45-DTE strangle)",
+          "value": "96% vs 92%",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "50% target vs hold: mean P&L per trade",
+          "value": "+0.36 vs +0.64 credits",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "50% target vs hold: P&L per day",
+          "value": "+2.04 vs +1.69 bp of notional",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "50% target vs hold: one-at-a-time book",
+          "value": "+6.93% vs +5.83% of notional a year",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "50%-or-21-DTE vs hold: mean P&L per trade",
+          "value": "+0.319% vs +0.750% of notional",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "50%-or-21-DTE vs hold: book return and trade count",
+          "value": "+5.84% vs +5.83% a year; 20 vs 8 trades a year",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "tastylive SPY 1-SD 45 DTE strangles from 2005: managed vs held",
+          "value": "about 76% more total profit over 11 years from about twice as many trades; holding had higher P/L per trade",
+          "sources": [
+            "lit:tastylive-managing-2016"
+          ]
+        },
+        {
+          "label": "tastylive win rate managed vs held",
+          "value": "about 90% vs about 82%",
+          "sources": [
+            "lit:tastylive-bestof-2016"
+          ]
+        },
+        {
+          "label": "Targets tastylive uses on other structures",
+          "value": "calendars, diagonals, iron flies 10-50%; ratio spread about 65% of credit; short-dated jade lizard 25%; 0DTE condor 20-35%",
+          "sources": [
+            "page:concepts-managing-winners",
+            "ep:from-theory-to-practice-2023-03-20@07:32",
+            "ep:market-measures-2026-05-02-2@11:03",
+            "ep:market-measures-2026-09-25@08:50"
+          ]
+        }
+      ],
+      "conditions": "Raises win rate and capital turnover if freed capital is redeployed at a similar edge and spread costs on roughly doubled round trips stay small. Lowers profit per trade, and the mean edge is unchanged under optional stopping: no bounded exit rule creates expected profit, so the variance premium stays the only source of return [lit:williams-1991]. Mid-fill backtests flatter high-turnover rules most [lit:muravyev-pearson-2020].",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "iron-fly",
+        "short-put",
+        "cash-secured-put",
+        "put-credit-spread",
+        "call-credit-spread",
+        "jade-lizard",
+        "ratio-spread",
+        "calendar",
+        "diagonal",
+        "covered-call"
+      ],
+      "tasty_sources": [
+        "page:concepts-managing-winners",
+        "page:concepts-iron-condor",
+        "page:concepts-strangle",
+        "ep:market-measures-2024-06-17@06:34",
+        "ep:market-measures-2025-12-19@09:29",
+        "ep:skinny-abstract-2026-05-11@04:22"
+      ],
+      "tasty_position": "Close winners at about 50% of max profit as the long-run sweet spot, which raises win rate and frees capital [page:concepts-managing-winners] [ep:market-measures-2024-06-17@06:34]; the Skinny Abstract goes further and says early management adds a strategic edge on top of the volatility premium [ep:skinny-abstract-2026-05-11@04:22].",
+      "literature": [
+        "lit:williams-1991",
+        "lit:tastylive-managing-2016",
+        "lit:tastylive-bestof-2016",
+        "lit:tastylive-jive-2016",
+        "lit:spina-kulikov-2022",
+        "lit:muravyev-pearson-2020"
+      ],
+      "repro": "repro:strangle_mgmt",
+      "agreement": "mixed",
+      "tier": "B",
+      "kind": "CONVENTION",
+      "caveats": [
+        "Model-priced with one flat VIX for all strikes, no skew, no bid-ask or commissions, closes only [repro:strangle_mgmt].",
+        "tastylive's 76% figure is a vendor study on SPY only [lit:tastylive-managing-2016].",
+        "The claim that management raises expected edge is contradicted by our test and by optional stopping [repro:strangle_mgmt] [lit:williams-1991]."
+      ]
+    },
+    {
+      "slug": "exit-21-dte",
+      "title": "Closing at about 21 DTE",
+      "finding": "Exiting at 21 DTE trims the left tail and the spread of outcomes but not the single worst case: in our model CVaR(5%) improved from -4.69 to -3.09 credits and stdev from 1.80% to 1.25% of notional, while the maximum loss barely moved (-28.8 vs -29.4 credits) [repro:strangle_mgmt]. tastylive's SPY study found the worst-5% average loss fell 46% (about 435 vs 791) and 40-60% across ETFs [ep:market-measures-2023-08-04@04:13] [ep:market-measures-2023-08-04@09:22]. It gives up the residual premium, so it moves risk around without creating return.",
+      "numbers": [
+        {
+          "label": "21-DTE exit vs hold: CVaR(5%) (model)",
+          "value": "-3.09 vs -4.69 credits (-3.46% vs -5.12% of notional)",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "21-DTE exit vs hold: max loss",
+          "value": "-28.8 vs -29.4 credits",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "21-DTE exit vs hold: stdev",
+          "value": "1.25% vs 1.80%",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "50%-or-21-DTE vs hold: mean P&L per trade",
+          "value": "+0.319% vs +0.750% of notional",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "tastylive SPY worst-5% average loss, 21-DTE close vs held",
+          "value": "about 435 vs 791 (46% lower)",
+          "sources": [
+            "ep:market-measures-2023-08-04@04:13"
+          ]
+        },
+        {
+          "label": "tastylive tail-risk reduction across SPY, XLK, XLF, XLV (2006-2023)",
+          "value": "40 to 60 percent",
+          "sources": [
+            "ep:market-measures-2023-08-04@09:22"
+          ]
+        },
+        {
+          "label": "tastylive vendor study: largest losses and stress-period maximum risk",
+          "value": "largest losses down almost 50%, stress-period maximum risk down by up to 75%",
+          "sources": [
+            "lit:tastylive-cutlosses-nd"
+          ]
+        },
+        {
+          "label": "Breakeven distance at 21 DTE vs expiration (45-DTE entry)",
+          "value": "about 73%",
+          "sources": [
+            "ep:research-2025-03-12@05:55"
+          ]
+        }
+      ],
+      "conditions": "Cuts late-life gamma and the chance of riding a breach to expiration; the effect is similar across underlyings in tastylive's tests. Costs the last slice of premium and, in our model, halves per-trade profit when combined with a 50% target. Works against sudden gaps less than against slow breaches, since the worst loss is nearly unchanged.",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "iron-fly",
+        "short-put",
+        "cash-secured-put",
+        "put-credit-spread",
+        "call-credit-spread",
+        "short-call",
+        "jade-lizard"
+      ],
+      "tasty_sources": [
+        "ep:market-measures-2023-08-04@04:13",
+        "ep:market-measures-2023-08-04@09:22",
+        "ep:research-2025-03-12@05:55",
+        "ep:market-measures-2024-06-17@08:59",
+        "page:concepts-defending-positions"
+      ],
+      "tasty_position": "Close short strangles around 21 DTE to cut worst-case losses by 40-60% [ep:market-measures-2023-08-04@09:22] and manage early at 50% or 21 DTE from a 45-DTE entry [ep:market-measures-2024-06-17@08:59]; roll losers about 7-21 days before expiration [page:concepts-defending-positions].",
+      "literature": [
+        "lit:tastylive-cutlosses-nd",
+        "lit:tastylive-capalloc-nd",
+        "lit:williams-1991",
+        "lit:spina-kulikov-2022"
+      ],
+      "repro": "repro:strangle_mgmt",
+      "agreement": "agrees",
+      "tier": "B",
+      "kind": "CONVENTION",
+      "caveats": [
+        "Only the tail statistic improves in our test; expected profit per trade falls [repro:strangle_mgmt].",
+        "tastylive tested four ETFs, all broadly rising over the period, and compared risk rather than P&L [ep:market-measures-2023-08-04@04:13].",
+        "No independent replication of the 21-DTE result [lit:tastylive-cutlosses-nd]."
+      ]
+    },
+    {
+      "slug": "stop-loss-2x",
+      "title": "Closing at a 2x-credit loss",
+      "finding": "tastylive's guidance is to close a premium-selling trade for a loss of 2x the credit [page:concepts-defending-positions]. In our model a 2x stop left the worst-5% average about unchanged (CVaR(5%) -3.11 vs -3.01 credits) but cut the single worst trade of the March 2020 crash from -28.8 to -4.7 credits, with a lower win rate (85% vs 87%) and lower book return (+5.62% vs +5.84% a year), and real stop fills would be worse [repro:strangle_mgmt]. Under a random walk a stop has a negative stopping premium and only pays with momentum [lit:kaminski-lo-2014]; it converts open-ended paths into realized losses.",
+      "numbers": [
+        {
+          "label": "2x-credit stop vs none: mean P&L per trade (model)",
+          "value": "+0.21 vs +0.26 credits",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "2x-credit stop vs none: win rate",
+          "value": "85% vs 87%",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "2x-credit stop vs none: CVaR(5%)",
+          "value": "-3.11 vs -3.01 credits",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "2x-credit stop vs none: worst trade in the March 2020 crash (model)",
+          "value": "-4.7 vs -28.8 credits",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "2x-credit stop vs none: book return",
+          "value": "+5.62% vs +5.84% a year",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "0DTE iron condor: sessions reaching a 2x-credit loss",
+          "value": "about 30%",
+          "sources": [
+            "ep:market-measures-2026-09-25@04:08"
+          ]
+        },
+        {
+          "label": "0DTE iron condor: recovery from a 2x loss; from a 1x loss",
+          "value": "about one in five; about 53%",
+          "sources": [
+            "ep:market-measures-2026-09-25@04:08"
+          ]
+        },
+        {
+          "label": "tastylive research on the stop multiple",
+          "value": "tested 1x, 2x, 3x on historical data; no figures given",
+          "sources": [
+            "page:concepts-defending-positions"
+          ]
+        }
+      ],
+      "conditions": "Worth it as disaster insurance, not as a return rule: it costs a little on average and caps the worst crash-period loss on paper. A stop makes sense only as a tail (CVaR) or risk-budget rule: it caps a single loss near 2x credit on paper. It forgoes premium after spikes that revert, and fills slip past the level in gaps (the Feb 2018 volatility event). For 0DTE, hosts instead suggest sizing small enough to leave trades alone, or stopping near 2x [ep:market-measures-2026-09-25@03:25].",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "iron-fly",
+        "short-put",
+        "put-credit-spread",
+        "call-credit-spread",
+        "short-call",
+        "zero-dte",
+        "jade-lizard"
+      ],
+      "tasty_sources": [
+        "page:concepts-defending-positions",
+        "ep:market-measures-2026-09-25@03:25",
+        "ep:market-measures-2026-09-25@08:19",
+        "ep:market-measures-2026-09-25@04:08"
+      ],
+      "tasty_position": "Close losers at a net loss of 2x the credit received, which the page says tested as optimal [page:concepts-defending-positions]; for 0DTE size small or stop near 2x, and treat a 1x loss as the decision point [ep:market-measures-2026-09-25@03:25] [ep:market-measures-2026-09-25@08:19].",
+      "literature": [
+        "lit:kaminski-lo-2014",
+        "lit:lo-remorov-2017",
+        "lit:williams-1991",
+        "lit:santaclara-saretto-2009"
+      ],
+      "repro": "repro:strangle_mgmt",
+      "agreement": "mixed",
+      "tier": "C",
+      "kind": "CONVENTION",
+      "caveats": [
+        "The stop was tested on closes only, so intraday gaps and stop slippage are missed and real results would be worse [repro:strangle_mgmt].",
+        "tastylive's page gives no numbers for its 2x finding [page:concepts-defending-positions].",
+        "The 0DTE statistics are a single SPX condor design since May 2022 and are partly by construction, since small credits reach credit multiples easily [ep:market-measures-2026-09-25@04:08]."
+      ]
+    },
+    {
+      "slug": "entry-45-dte",
+      "title": "45 DTE as the best tenor",
+      "finding": "Our model finds roughly equal results across tenors rather than a peak at 45 DTE: managed P&L per day was +1.78 bp at 30 DTE, +1.76 at 45 and +1.72 at 60, and the book earned +6.25%, +5.84% and +5.75% a year [repro:strangle_mgmt]. tastylive finds win rates barely change with duration (low-to-mid 70s) and that return on buying power favors 45-60 DTE in low IV but 14-30 DTE above IV 20 [ep:market-measures-2024-06-17@03:25]. The model prices every tenor off the 30-day VIX so it cannot see the term structure, and the literature points to the premium being concentrated at short horizons, an inference rather than a direct 30-vs-45 test [lit:dewbecker-etal-2017].",
+      "numbers": [
+        {
+          "label": "Managed P&L per day by entry DTE (model)",
+          "value": "30 DTE +1.78 bp; 45 DTE +1.76 bp; 60 DTE +1.72 bp",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "Book return per year by entry DTE (model)",
+          "value": "30 DTE +6.25%; 45 DTE +5.84%; 60 DTE +5.75%",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "tastylive 16-delta SPY strangle, 19 years, held: win rate across 7-60 DTE",
+          "value": "low-to-mid 70s percent at every duration and IV level",
+          "sources": [
+            "ep:market-measures-2024-06-17@03:25"
+          ]
+        },
+        {
+          "label": "tastylive: return on buying power by regime",
+          "value": "higher at 45-60 DTE when IV is low; higher at 14, 21, 30 DTE when IV is above 20",
+          "sources": [
+            "ep:market-measures-2024-06-17@03:25"
+          ]
+        },
+        {
+          "label": "tastylive wide condor (25/5 delta, SPY, 2010-): max-loss trades at 7, 14, 45 DTE",
+          "value": "about 49, 28, 8",
+          "sources": [
+            "ep:research-2023-10-20@05:13"
+          ]
+        },
+        {
+          "label": "tastylive: duration with a profit edge in that test",
+          "value": "no statistically dominant duration",
+          "sources": [
+            "ep:research-2023-10-20@05:13"
+          ]
+        }
+      ],
+      "conditions": "45 DTE balances decay speed against distance of strikes from the stock in tastylive's account [page:concepts-options-expiration]. Longer tenors cut gamma and the count of max-loss trades; shorter tenors add trades and turbulence without a clear profit gain. Tenor is a choice about risk profile and capital use, not a demonstrated source of return.",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "iron-fly",
+        "short-put",
+        "cash-secured-put",
+        "put-credit-spread",
+        "call-credit-spread",
+        "covered-call",
+        "jade-lizard"
+      ],
+      "tasty_sources": [
+        "page:concepts-options-expiration",
+        "page:concepts-strangle",
+        "page:concepts-straddle",
+        "ep:research-2023-10-20@00:02",
+        "ep:market-measures-2024-06-17@03:25",
+        "ep:market-measures-2024-06-17@00:17"
+      ],
+      "tasty_position": "Research favors about 45 DTE as the best risk-return point for selling premium [page:concepts-options-expiration] [ep:research-2023-10-20@00:02], lengthening when IV is low and shortening when it is high [ep:market-measures-2024-06-17@00:17].",
+      "literature": [
+        "lit:dewbecker-etal-2017",
+        "lit:egloff-etal-2010"
+      ],
+      "repro": "repro:strangle_mgmt",
+      "agreement": "mixed",
+      "tier": "C",
+      "kind": "CONVENTION",
+      "caveats": [
+        "VIX is a 30-day rate applied to every tenor, so the model cannot test the term structure [repro:strangle_mgmt].",
+        "The literature link to short-horizon pricing is inference only; no direct 45-vs-30 DTE study [lit:dewbecker-etal-2017].",
+        "tastylive's tenor studies are SPY-only and held to expiration or at one target [ep:research-2023-10-20@05:13]."
+      ]
+    },
+    {
+      "slug": "defined-vs-undefined",
+      "title": "Buying wings (iron condor vs strangle)",
+      "finding": "Wings cap the loss and the margin, and in return give up much of the premium. In tastylive's SPY test the 5-delta-wing condor kept about 60% of the strangle's median profit and cut tail risk (CVaR) by roughly 38% (about $430 vs $700), while the strangle needed about 2.5x the buying power [ep:market-measures-2023-02-22@03:07]. On Cboe indices the condor index CNDR returned 0.98% a year in 2007-2026 against 7.24% for PUT and 1.56% for T-bills [repro:cboe_short_vol], so for the index the long wings consumed most of the premium.",
+      "numbers": [
+        {
+          "label": "tastylive SPY 2005-2021, 45 DTE, 16-delta: condor with 5-delta wings vs strangle, median profit",
+          "value": "about 60% of the strangle's",
+          "sources": [
+            "ep:market-measures-2023-02-22@03:07"
+          ]
+        },
+        {
+          "label": "tastylive: tail risk (CVaR) strangle vs $5-wide condor, 16 years",
+          "value": "about $700 vs about $430 (roughly 38% less)",
+          "sources": [
+            "ep:market-measures-2023-02-22@03:07"
+          ]
+        },
+        {
+          "label": "tastylive: buying power strangle vs $5-wide condor",
+          "value": "about 2.5x",
+          "sources": [
+            "ep:market-measures-2023-02-22@03:07"
+          ]
+        },
+        {
+          "label": "tastylive: pop of the 5-delta-wing condor vs the strangle",
+          "value": "79 versus 74",
+          "sources": [
+            "ep:market-measures-2023-02-22@03:07"
+          ]
+        },
+        {
+          "label": "tastylive with VIX above 35: condor median P&L and tail risk vs strangle",
+          "value": "about 60% of median P&L; about 33% less tail risk; buying power roughly equal",
+          "sources": [
+            "ep:market-measures-2023-02-22@05:45"
+          ]
+        },
+        {
+          "label": "CNDR (20-delta shorts, 5-delta wings) CAGR, 2007-2026",
+          "value": "0.98% vs PUT 7.24% vs T-bills 1.56%",
+          "sources": [
+            "repro:cboe_short_vol"
+          ]
+        },
+        {
+          "label": "CNDR vs PUT: beta, max drawdown, worst month (2007-2026)",
+          "value": "0.10 vs 0.60; -19.7% vs -37.1%; -7.9% vs -17.7%",
+          "sources": [
+            "repro:cboe_short_vol"
+          ]
+        },
+        {
+          "label": "CNDR worst peak-to-trough monthly loss vs S&P 500",
+          "value": "about 19% vs 51%; 59% of months returned 0-2%",
+          "sources": [
+            "lit:moran-2021b"
+          ]
+        }
+      ],
+      "conditions": "Wings shrink buying power and tail loss, which matters for small, IRA or margin-constrained accounts and when sizing by max loss. They cost return: wide enough to act like a strangle they keep roughly 60% of the profit; narrow they behave very differently. With high IV the buying-power gap closes and tastylive hosts see little reason to pay for wings if the risk can be carried. Very far wings pay almost nothing and are illiquid.",
+      "act_with": [
+        "iron-condor",
+        "iron-fly",
+        "short-strangle",
+        "short-straddle",
+        "put-credit-spread",
+        "call-credit-spread",
+        "jade-lizard",
+        "broken-wing-butterfly",
+        "butterfly",
+        "short-put"
+      ],
+      "tasty_sources": [
+        "ep:market-measures-2023-02-22@03:07",
+        "ep:market-measures-2023-02-22@05:45",
+        "ep:market-measures-2023-02-22@06:25",
+        "ep:research-2023-10-20@02:24",
+        "ep:skinny-abstract-2026-05-11@06:20",
+        "page:concepts-iron-condor"
+      ],
+      "tasty_position": "The two structures are priced fairly: a very wide condor is a capital-light stand-in for a strangle, and the undefined strangle earns more when capital allows [ep:market-measures-2023-02-22@06:25]; undefined-risk short premium has the larger structural edge but needs skill and adjustments [ep:skinny-abstract-2026-05-11@06:20].",
+      "literature": [
+        "lit:moran-2021b",
+        "lit:moran-2021a",
+        "lit:santaclara-saretto-2009",
+        "lit:black-szado-2016a"
+      ],
+      "repro": "repro:cboe_short_vol",
+      "agreement": "agrees",
+      "tier": "B",
+      "kind": "CONVENTION",
+      "caveats": [
+        "CNDR is a monthly 20-delta/5-delta Cboe index, not tastylive's 16-delta 45-DTE condor, and Cboe has no undefined-risk strangle index [repro:cboe_short_vol].",
+        "tastylive's comparison is SPY only and its sample size is not stated [ep:market-measures-2023-02-22@05:45].",
+        "Index returns are gross of costs; wings add legs and spreads in practice [repro:cboe_short_vol]."
+      ]
+    },
+    {
+      "slug": "expected-move",
+      "title": "Price stays inside the 1-SD expected move",
+      "finding": "Options price a 1-SD move as containing the underlying about 68% of the time [page:concepts-implied-volatility], but SPX finished inside the VIX 1-sigma band 83.9% of the time over 30-day windows since 1990, because realized moves ran 0.75x the implied sigma [repro:expected_move]. The misses are lopsided: breaks were up 8.8% vs down 7.3%, but the downside overshoot averaged 0.53 sigma against 0.25 up [repro:expected_move]. The extra coverage is the variance premium seen in a different place, with the crash risk the sellers are paid for.",
+      "numbers": [
+        {
+          "label": "SPX closes inside the VIX 1-sigma band at 30 days (1990-2026)",
+          "value": "83.9% (normal theory 68.3%)",
+          "sources": [
+            "repro:expected_move"
+          ]
+        },
+        {
+          "label": "Paths touching outside the band (closes)",
+          "value": "26.1%",
+          "sources": [
+            "repro:expected_move"
+          ]
+        },
+        {
+          "label": "Realized move vs implied sigma",
+          "value": "0.75x",
+          "sources": [
+            "repro:expected_move"
+          ]
+        },
+        {
+          "label": "Breaks above vs below the band",
+          "value": "8.8% up vs 7.3% down",
+          "sources": [
+            "repro:expected_move"
+          ]
+        },
+        {
+          "label": "Average overshoot beyond the band, up vs down; worst",
+          "value": "+0.25 sigma vs 0.53 sigma; worst -7.8 sigma",
+          "sources": [
+            "repro:expected_move"
+          ]
+        },
+        {
+          "label": "tastylive: share within 1 SD, per side beyond",
+          "value": "68.2%; about 16% each side",
+          "sources": [
+            "page:concepts-implied-volatility"
+          ]
+        },
+        {
+          "label": "tastylive: 45-DTE 1-SD SPY strangles that lose money unmanaged (about two decades)",
+          "value": "16%; median loss-to-credit of losers 1.2; highest 27",
+          "sources": [
+            "ep:market-measures-2025-08-14@03:22"
+          ]
+        },
+        {
+          "label": "tastylive: 1-SD strangle losses above 3x the credit",
+          "value": "under 4% of cases, roughly 10 times a year on the host's rough math",
+          "sources": [
+            "ep:market-measures-2025-08-14@03:22"
+          ]
+        }
+      ],
+      "conditions": "Holds as a description of the average month and supports selling strikes at or beyond 1 SD. Fails in fast moves: tastylive finds 2020 and 2025 had the worst loss ratios because of speed rather than depth, and strangles opened in low IV just before an IV jump lost most [ep:market-measures-2025-08-14@05:05]. The 16% unmanaged loss rate and our 16.1% total break rate line up.",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "jade-lizard",
+        "put-credit-spread",
+        "call-credit-spread",
+        "short-put",
+        "cash-secured-put",
+        "earnings-trade"
+      ],
+      "tasty_sources": [
+        "page:concepts-implied-volatility",
+        "page:concepts-standard-deviation",
+        "page:concepts-implied-volatility-rank-percentile",
+        "ep:market-measures-2025-08-14@03:22",
+        "ep:market-measures-2025-08-14@05:05",
+        "ep:math-check-2026-04-01@06:26"
+      ],
+      "tasty_position": "IV gives an annualized 1-SD range containing about 68.2% of outcomes, with a 16%-ITM strike marking one SD [page:concepts-implied-volatility] [page:concepts-standard-deviation]; the standard-deviation view shows what the market expects, not where the stock will go [page:concepts-standard-deviation].",
+      "literature": [
+        "lit:bondarenko-2019",
+        "lit:bollerslev-todorov-2011",
+        "lit:andersen-etal-2015"
+      ],
+      "repro": "repro:expected_move",
+      "agreement": "mixed",
+      "tier": "B",
+      "kind": "EDGE",
+      "caveats": [
+        "VIX is the variance-swap IV, slightly above ATM IV, so the band is a bit wider than a broker's ATM expected move [repro:expected_move].",
+        "Price only, closes only (intraday touches are more frequent), and overlapping 30-day windows overstate n by about 21-fold [repro:expected_move].",
+        "One index (SPX); the premium is weaker in single stocks [lit:carr-wu-2009]."
+      ]
+    },
+    {
+      "slug": "vix-spike-entries",
+      "title": "Selling premium after VIX spikes",
+      "finding": "After VIX first closes above 30 (n=54), VIX minus the next 21 days' realized vol averaged +6.0 pts vs +4.1 on all days and SPX gained +2.2% on average, but a >10% drop followed 11% of events vs 4% of all days and the worst intra-month low was -24.9% [repro:vix_spikes]. After a +50% five-day VIX jump (n=39) VIX fell 4.1 pts on average, spread +4.3, with a worst intra-month low of -28.2% [repro:vix_spikes]. The dollar premium is bigger, the average is better, and the tail is fatter; risk-sized premium was lower after sell-offs [lit:fallon-park-2016].",
+      "numbers": [
+        {
+          "label": "After VIX first closes above 30 (n=54): mean VIX minus next-21d realized vs all days",
+          "value": "+6.0 pts vs +4.1 pts (positive 85% vs 85%)",
+          "sources": [
+            "repro:vix_spikes"
+          ]
+        },
+        {
+          "label": "After VIX first closes above 30: SPX next 21d mean and share up",
+          "value": "+2.2% vs +0.8% all days; up 74%",
+          "sources": [
+            "repro:vix_spikes"
+          ]
+        },
+        {
+          "label": "After VIX first closes above 30: worst cases",
+          "value": "worst +21d -16.3%; worst intra-month low -24.9%; worst spread -55.5 pts",
+          "sources": [
+            "repro:vix_spikes"
+          ]
+        },
+        {
+          "label": "After VIX first closes above 30: >10% drop within 21 days",
+          "value": "11% of events vs 4% of all days",
+          "sources": [
+            "repro:vix_spikes"
+          ]
+        },
+        {
+          "label": "After a +50% VIX jump in 5 days (n=39)",
+          "value": "VIX -4.1 pts, SPX +1.0% (up 72%), spread +4.3 pts, worst intra-month low -28.2%",
+          "sources": [
+            "repro:vix_spikes"
+          ]
+        },
+        {
+          "label": "tastylive with VIX above 35: wide condor vs strangle",
+          "value": "about 60% of median P&L, about 33% less tail risk, buying power roughly equal",
+          "sources": [
+            "ep:market-measures-2023-02-22@05:45"
+          ]
+        },
+        {
+          "label": "tastylive: long-run VIX average",
+          "value": "roughly 19",
+          "sources": [
+            "page:concepts-iv-crush"
+          ]
+        }
+      ],
+      "conditions": "Spikes mean-revert on average, so selling after a first close above 30 has been paid on average. Fails in the tail: events are few (dozens) and dominated by 2008-09 and 2020, margin requirements rise with VIX and can force sellers to cut exactly here [lit:santaclara-saretto-2009], and fear compensation stays elevated after crashes [lit:todorov-2010] [lit:andersen-etal-2015].",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "iron-fly",
+        "short-put",
+        "cash-secured-put",
+        "put-credit-spread",
+        "jade-lizard"
+      ],
+      "tasty_sources": [
+        "page:concepts-iv-crush",
+        "page:concepts-vix",
+        "ep:market-measures-2023-02-22@05:45",
+        "ep:market-measures-2024-06-17@00:17",
+        "ep:market-measures-2025-08-14@05:05"
+      ],
+      "tasty_position": "Option traders get more active selling as VIX trends into the 20s and 30s [page:concepts-iv-crush]; with VIX above 35 the hosts lean to the undefined strangle at small size [ep:market-measures-2023-02-22@05:45], shorten duration in high IV [ep:market-measures-2024-06-17@00:17], and warn that the biggest losses came from IV jumps [ep:market-measures-2025-08-14@05:05].",
+      "literature": [
+        "lit:fallon-park-2016",
+        "lit:todorov-2010",
+        "lit:andersen-etal-2015",
+        "lit:santaclara-saretto-2009",
+        "lit:cheng-2019"
+      ],
+      "repro": "repro:vix_spikes",
+      "agreement": "mixed",
+      "tier": "C",
+      "kind": "EDGE",
+      "caveats": [
+        "Few independent events, dominated by 2008-09 and 2020; one more crash would move the averages [repro:vix_spikes].",
+        "Price returns only, no option P&L: a positive average spread does not make short options at the spike safe [repro:vix_spikes].",
+        "Risk-sized evidence finds no extra premium per unit of risk after sell-offs [lit:fallon-park-2016]."
+      ]
+    },
+    {
+      "slug": "earnings-iv-crush",
+      "title": "Selling premium into earnings",
+      "finding": "Option prices anticipate earnings: IV builds into the report and collapses after, so a seller does collect the crush [page:concepts-earnings]. Whether the event options are overpriced is conditional: vendor data on 9,622 S&P 500 straddles show median implied move about 1.25x realized (4.14% vs 3.32%) and a long straddle win rate of 22.0% [lit:ivolatility-2026], but straddles bought 3 days pre-announcement earned +3.34% in 1996-2010 [lit:gao-etal-2018]. tastylive's own study of AAPL, NFLX, AMZN, TSLA found win rates of 72-73% but positive return on investment only for Apple, and called earnings the smallest edge [ep:research-2024-10-21@01:45].",
+      "numbers": [
+        {
+          "label": "Vendor study, long ATM S&P 500 straddles (n=9,622): median implied vs realized move",
+          "value": "4.14% vs 3.32% (about 1.25x); about 59.5% of events overpriced",
+          "sources": [
+            "lit:ivolatility-2026"
+          ]
+        },
+        {
+          "label": "Same study: mean IV crush; win rate; mean and median trade",
+          "value": "15.6 vol points; 22.0%; -18.5% and -26.5%",
+          "sources": [
+            "lit:ivolatility-2026"
+          ]
+        },
+        {
+          "label": "ATM straddles bought 3 days before to the announcement, 1996-2010",
+          "value": "+3.34% (larger for small, volatile, high-cost firms)",
+          "sources": [
+            "lit:gao-etal-2018"
+          ]
+        },
+        {
+          "label": "Retail buyers around earnings",
+          "value": "lose about 5-9% on average (10-14% for high expected-volatility events); spreads near 20% of price",
+          "sources": [
+            "lit:desilva-etal-2025"
+          ]
+        },
+        {
+          "label": "tastylive 16-delta strangles on AAPL, NFLX, AMZN, TSLA: win rate, all periods and earnings only",
+          "value": "about 70-78%; about 72-73%",
+          "sources": [
+            "ep:research-2024-10-21@01:45"
+          ]
+        },
+        {
+          "label": "tastylive earnings-only return on investment",
+          "value": "positive only for Apple; net negative for Netflix, Amazon, Tesla",
+          "sources": [
+            "ep:research-2024-10-21@01:45"
+          ]
+        },
+        {
+          "label": "tastylive 16/10-delta condors on the same names: return on investment range",
+          "value": "roughly -9% to +9% depending on timing",
+          "sources": [
+            "ep:research-2024-10-21@03:19"
+          ]
+        },
+        {
+          "label": "tastylive: highlighted earnings batch",
+          "value": "50% winners, 50% losers, average return about zero",
+          "sources": [
+            "ep:options-jive-2026-02-09@12:57"
+          ]
+        }
+      ],
+      "conditions": "Fits large caps and bellwethers, concave pre-announcement IV curves (bimodal outcomes) and names whose historical earnings moves are small relative to the implied move [lit:alexiou-etal-2025] [lit:milian-2023]. Fails on fat-tail gaps, in names that regularly move more than priced, and in the pre-event window for smaller noisier firms. No peer-reviewed net-of-cost test of short strangles through earnings exists.",
+      "act_with": [
+        "earnings-trade",
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "calendar",
+        "covered-call",
+        "long-straddle",
+        "long-strangle"
+      ],
+      "tasty_sources": [
+        "page:concepts-earnings",
+        "page:concepts-iv-crush",
+        "page:concepts-company-earnings",
+        "page:concepts-how-to-trade-earnings-with-options",
+        "ep:research-2024-10-21@01:45",
+        "ep:research-2024-10-21@03:19",
+        "ep:research-2024-10-21@06:05",
+        "ep:options-jive-2026-02-09@13:36"
+      ],
+      "tasty_position": "Sell premium before earnings and buy it back after to harvest the IV crush, and avoid directional bets [page:concepts-earnings]; but keep these trades small or skip them, since direction is a coin flip [ep:options-jive-2026-02-09@13:36], and their own six-year test calls earnings the smallest edge [ep:research-2024-10-21@01:45].",
+      "literature": [
+        "lit:patell-wolfson-1981",
+        "lit:dubinsky-etal-2019",
+        "lit:gao-etal-2018",
+        "lit:barth-so-2014",
+        "lit:alexiou-etal-2025",
+        "lit:milian-2023",
+        "lit:ivolatility-2026",
+        "lit:desilva-etal-2025",
+        "lit:bryzgalova-etal-2023"
+      ],
+      "repro": null,
+      "agreement": "mixed",
+      "tier": "C",
+      "kind": "EDGE",
+      "caveats": [
+        "The ivolatility study is vendor data on long straddles; it does not test short strangles net of costs [lit:ivolatility-2026].",
+        "tastylive's study covers four large tech names in a strong bull market and quotes six and eight years inconsistently [ep:research-2024-10-21@01:45].",
+        "Right-skewed absolute moves make the mean edge smaller than the median [lit:ivolatility-2026].",
+        "Gao et al.'s +3.34% window may not include the release itself, so check before relying on it [lit:gao-etal-2018]."
+      ]
+    },
+    {
+      "slug": "post-earnings-drift",
+      "title": "After outlier earnings moves, >50% keep drifting for a month (user hypothesis)",
+      "finding": "Over 29,122 Russell 1000 reports (2001-2026), 51.0% [50.4%, 51.6%] kept drifting in the same direction at +21 trading days, mean +0.04%; for outlier moves (variant A, move above 2x own mean) it was 51.0% [49.5%, 52.5%], n=4,112, mean +0.09% [repro:earnings_drift]. That is above 50% by about a point, within noise for overlapping events, and flat for large caps after 2006 as the literature predicts [lit:martineau-2022]. zenith's own PEAD tracker picks did worse, at 47.9% [46.5%, 49.4%] with mean -0.34% over 20 days [repro:earnings_drift].",
+      "numbers": [
+        {
+          "label": "Variant A outliers, +21 trading days: keep drifting",
+          "value": "51.0% [49.5%, 52.5%], n=4112, mean +0.09%",
+          "sources": [
+            "repro:earnings_drift"
+          ]
+        },
+        {
+          "label": "Variant B and C outliers",
+          "value": "50.9% [49.5%, 52.2%], n=5507, mean +0.03%; 51.0% [50.0%, 52.0%], n=9435, mean -0.03%",
+          "sources": [
+            "repro:earnings_drift"
+          ]
+        },
+        {
+          "label": "All reports",
+          "value": "51.0% [50.4%, 51.6%], n=29122, mean +0.04%",
+          "sources": [
+            "repro:earnings_drift"
+          ]
+        },
+        {
+          "label": "Variant A by period",
+          "value": "2001-05 49.4%, n=253, mean -0.03%; 2006-15 52.4% [49.9%, 54.9%], n=1552, mean +0.24%; 2016-26 50.2% [48.2%, 52.3%], n=2307, mean +0.01%",
+          "sources": [
+            "repro:earnings_drift"
+          ]
+        },
+        {
+          "label": "Variant A, large-size tercile after 2006 (two cuts)",
+          "value": "52.1% [47.7%, 56.5%], n=499, mean +0.21%; 50.1% [46.5%, 53.6%], n=749, mean -0.09%",
+          "sources": [
+            "repro:earnings_drift"
+          ]
+        },
+        {
+          "label": "zenith PEAD tracker picks, 2024-05-21 to 2026-10-22",
+          "value": "+20d 47.9% [46.5%, 49.4%], n=4551, mean -0.34%; +5d 47.8%, n=4576, mean -0.29%",
+          "sources": [
+            "repro:earnings_drift"
+          ]
+        },
+        {
+          "label": "Large-cap PEAD since 2006",
+          "value": "about zero",
+          "sources": [
+            "lit:martineau-2022"
+          ]
+        },
+        {
+          "label": "Back-of-envelope hit rate from the literature",
+          "value": "about 55-60% historically; about 50% for large caps today",
+          "sources": [
+            "lit:martineau-2022",
+            "lit:chan-2003",
+            "lit:savor-2012"
+          ]
+        }
+      ],
+      "conditions": "Continuation is the documented direction after information-backed moves: headline-backed and analyst-confirmed shocks drift, while no-news extremes partly reverse [lit:chan-2003] [lit:savor-2012] [lit:jiang-zhu-2017]. Classic drift was large historically but sits in small illiquid stocks and costs absorbed most of it [lit:chordia-etal-2009]; text-based surprises still show drift [lit:meursault-etal-2023]. Our large-cap sample shows no usable edge.",
+      "act_with": [
+        "earnings-trade",
+        "long-call",
+        "long-put",
+        "debit-spread",
+        "put-credit-spread",
+        "call-credit-spread",
+        "short-put"
+      ],
+      "tasty_sources": [
+        "page:concepts-earnings",
+        "ep:options-jive-2026-02-09@13:36",
+        "ep:options-jive-2026-02-09@12:57"
+      ],
+      "tasty_position": "tastylive has no stated view on drift; it avoids directional earnings bets because stocks can fall on beats and rise on misses [page:concepts-earnings], and calls post-earnings direction a coin flip with average reaction about zero [ep:options-jive-2026-02-09@13:36] [ep:options-jive-2026-02-09@12:57].",
+      "literature": [
+        "lit:martineau-2022",
+        "lit:bernard-thomas-1989",
+        "lit:chordia-etal-2009",
+        "lit:meursault-etal-2023",
+        "lit:chan-2003",
+        "lit:savor-2012",
+        "lit:jiang-zhu-2017",
+        "lit:fink-2021"
+      ],
+      "repro": "repro:earnings_drift",
+      "agreement": "mixed",
+      "tier": "C",
+      "kind": "EDGE",
+      "caveats": [
+        "Survivorship: today's Russell 1000 members only; 2001-05 is the weakest and smallest period [repro:earnings_drift].",
+        "Overlapping events make the confidence intervals too narrow; read differences under about 3 points as noise [repro:earnings_drift].",
+        "Excess return vs SPY, no costs; 'size' is dollar volume within large caps, no small caps sampled [repro:earnings_drift].",
+        "zenith's tracker gates on EPS surprise too and covers only 2024-05 onward, so it is a different selection, not a test of the outlier rule [repro:earnings_drift].",
+        "Several drift figures in the literature are training-knowledge values flagged to verify [lit:bernard-thomas-1989] [lit:chordia-etal-2009]."
+      ]
+    },
+    {
+      "slug": "zero-dte",
+      "title": "0DTE results",
+      "finding": "tastylive's one-year tests show timing matters: strangles sold at the open and closed after 90 minutes won 64-68% and were profitable, while premium sold in the last half hour won 40-82% yet lost money overall with about double the CVaR [ep:market-measures-2024-05-14@02:27] [ep:market-measures-2024-05-14@03:01]. The independent literature finds a positive but small same-day variance premium that frictions mostly erase, with only conditional 10:00 ET rules netting gains [lit:vilkov-2023], and 0DTEs expensive but not mispriced once costs are counted [lit:chong-todorov-2026]. Retail buyers lose in aggregate [lit:beckmeyer-etal-2023].",
+      "numbers": [
+        {
+          "label": "tastylive 52 weeks: 0DTE strangles sold at open, closed after 90 min, win rate at $10/$20/$30 out",
+          "value": "64%, 65%, 68%; profitable, $10 best average P&L",
+          "sources": [
+            "ep:market-measures-2024-05-14@02:27"
+          ]
+        },
+        {
+          "label": "tastylive: premium sold about 30-35 min before close, held: win rate straddle, $10 out, $20 out",
+          "value": "40%, 57%, 82%; every approach lost overall; CVaR about double the morning trades",
+          "sources": [
+            "ep:market-measures-2024-05-14@03:01"
+          ]
+        },
+        {
+          "label": "tastylive SPX 16-delta 10-wide 0DTE condor since May 2022: sessions with a half-credit loss; 2x-credit loss",
+          "value": "about 61%; about 30%",
+          "sources": [
+            "ep:market-measures-2026-09-25@04:08"
+          ]
+        },
+        {
+          "label": "Same study: recovery to profit before close from half-credit, 1x, 1.5x, 2x loss",
+          "value": "about 74%, about 53%, about one in three, about one in five",
+          "sources": [
+            "ep:market-measures-2026-09-25@04:08"
+          ]
+        },
+        {
+          "label": "SPX 0DTE share of SPX volume, Aug 2025",
+          "value": "record 62.4%; retail an estimated 53% of 0DTE volume",
+          "sources": [
+            "lit:cboe-0dte-record-2025"
+          ]
+        },
+        {
+          "label": "Retail 0DTE (press, secondary)",
+          "value": "$358k a day lost after May 2022; about $50M of $70M+ attributed to costs",
+          "sources": [
+            "lit:beckmeyer-etal-2023"
+          ]
+        },
+        {
+          "label": "User-built 0DTE backtests (Option Alpha, n=3,909)",
+          "value": "99.9% profitable, median win rate 53.7%, median profit factor 1.98; selection bias flagged",
+          "sources": [
+            "lit:kam-2026"
+          ]
+        }
+      ],
+      "conditions": "Possible for tested conditional entries (morning start, small size, quick management), with defined risk and small size [ep:research-2023-10-20@07:27]. Fails when selling late in the session, when gamma and speed are exaggerated, and in vendor backtests that overstate success. Costs and spreads are largest relative to premium at 0DTE, which is why the unconditional net edge is thin.",
+      "act_with": [
+        "zero-dte",
+        "iron-condor",
+        "short-strangle",
+        "short-straddle",
+        "put-credit-spread",
+        "call-credit-spread",
+        "iron-fly"
+      ],
+      "tasty_sources": [
+        "page:concepts-zero-days-0dte-options-explained",
+        "page:concepts-how-to-trade-0dte-options",
+        "ep:market-measures-2024-05-14@02:27",
+        "ep:market-measures-2024-05-14@03:01",
+        "ep:market-measures-2024-05-14@03:22",
+        "ep:market-measures-2026-09-25@04:08",
+        "ep:research-2023-10-20@05:13"
+      ],
+      "tasty_position": "0DTE costs and risks can exceed weeklies and monthlies, and research favors about 45 DTE for short options [page:concepts-zero-days-0dte-options-explained]; if used, sell near the open and manage quickly, and do not sell with half an hour left [ep:market-measures-2024-05-14@03:22].",
+      "literature": [
+        "lit:vilkov-2023",
+        "lit:chong-todorov-2026",
+        "lit:almeida-etal-2024",
+        "lit:beckmeyer-etal-2023",
+        "lit:kam-2026",
+        "lit:cboe-0dte-record-2025",
+        "lit:dim-etal-2024",
+        "lit:brogaard-etal-2023"
+      ],
+      "repro": null,
+      "agreement": "mixed",
+      "tier": "C",
+      "kind": "EDGE",
+      "caveats": [
+        "tastylive's 0DTE tests use one year of data and the underlying is not named [ep:market-measures-2024-05-14@02:27].",
+        "Credit multiples are reached easily by construction when credits are small [ep:market-measures-2026-09-25@04:08].",
+        "One peer-reviewed paper; most of the literature is 2023-2026 working papers on one market [lit:vilkov-2023].",
+        "Evidence on whether 0DTE trading raises volatility conflicts across teams [lit:brogaard-etal-2023] [lit:adams-etal-2025]."
+      ]
+    },
+    {
+      "slug": "put-skew",
+      "title": "Selling single-stock puts because skew is steep",
+      "finding": "Index puts are rich, but that richness is the variance premium itself: more than 40% to about half of the SPX volatility slope is a skew risk premium, and skew and variance premia are one factor [lit:kozhan-etal-2013]. In single stocks the evidence points the other way: the steepest-smirk quintile underperformed by 10.9% a year risk-adjusted, so a steep put smirk is a bearish signal as much as free premium [lit:xing-etal-2010]. The smirk effect has faded, with the next-month coefficient falling from -0.023 (t=-5.5) in 2015-19 to -0.006 (t=-1.5) in 2023-26 [lit:li-wang-2026].",
+      "numbers": [
+        {
+          "label": "Steepest vs flattest smirk stocks",
+          "value": "underperform by 10.9% a year risk-adjusted (about 0.9% a month)",
+          "sources": [
+            "lit:xing-etal-2010"
+          ]
+        },
+        {
+          "label": "Smirk coefficient, next month",
+          "value": "-0.023 (t=-5.5) in 2015-19; -0.006 (t=-1.5) in 2023-26",
+          "sources": [
+            "lit:li-wang-2026"
+          ]
+        },
+        {
+          "label": "Share of SPX IV slope that is skew risk premium",
+          "value": "more than 40% (abstract) to about half",
+          "sources": [
+            "lit:kozhan-etal-2013"
+          ]
+        },
+        {
+          "label": "IV minus RV gap by strike, 1990-2005",
+          "value": "3.9 pts for 2% OTM puts vs 2.4 ATM",
+          "sources": [
+            "lit:hill-etal-2006"
+          ]
+        },
+        {
+          "label": "Long index put returns (secondary)",
+          "value": "about -40% ATM and -95% deep OTM, 1987-2000",
+          "sources": [
+            "lit:bondarenko-2014b"
+          ]
+        },
+        {
+          "label": "Anomaly decay",
+          "value": "about 58% lower after publication; average of 204 anomalies about 4 bp a month net",
+          "sources": [
+            "lit:mclean-pontiff-2016",
+            "lit:chen-velikov-2023"
+          ]
+        },
+        {
+          "label": "5%-OTM monthly puts bought (PPUT) vs S&P 500 TR, 2007-2026",
+          "value": "8.14% vs 10.95% CAGR",
+          "sources": [
+            "repro:cboe_short_vol"
+          ]
+        }
+      ],
+      "conditions": "Index puts have been rich on average and selling them earned the variance premium, but a put-heavy structure is a bigger bet on the same crash factor, not diversification. For single names the call-put IV spread is the more persistent signal (about 50 bp a week in-sample, declining) [lit:cremers-weinbaum-2010]. No verified study shows OTM short puts beating ATM after costs and tail losses.",
+      "act_with": [
+        "short-put",
+        "cash-secured-put",
+        "put-credit-spread",
+        "jade-lizard",
+        "short-strangle",
+        "ratio-spread"
+      ],
+      "tasty_sources": [
+        "page:concepts-volatility-skew",
+        "ep:options-jive-2026-02-09@06:07",
+        "ep:options-jive-2024-01-16@05:07"
+      ],
+      "tasty_position": "Skew is one input, not a standalone signal: elevated IV does not automatically justify selling and sharp skew changes call for caution [page:concepts-volatility-skew]; they use call skew to justify a jade lizard on a bullish name [ep:options-jive-2026-02-09@06:07].",
+      "literature": [
+        "lit:xing-etal-2010",
+        "lit:kozhan-etal-2013",
+        "lit:li-wang-2026",
+        "lit:cremers-weinbaum-2010",
+        "lit:bondarenko-2014b",
+        "lit:hill-etal-2006",
+        "lit:mclean-pontiff-2016",
+        "lit:chen-velikov-2023",
+        "lit:garleanu-etal-2009"
+      ],
+      "repro": null,
+      "agreement": "mixed",
+      "tier": "C",
+      "kind": "EDGE",
+      "caveats": [
+        "tastylive does not claim steep put skew is a reason to sell single-stock puts; the card tests the idea, not their rule [page:concepts-volatility-skew].",
+        "Several figures are secondary or from recollection of abstracts [lit:bondarenko-2014b] [lit:mclean-pontiff-2016].",
+        "Our reproductions have no skew: the strangle model uses one flat VIX [repro:strangle_mgmt]."
+      ]
+    },
+    {
+      "slug": "number-of-occurrences",
+      "title": "Many small trades converge to the edge",
+      "finding": "The convergence is real arithmetic: tastylive expects an 80% trade to land at 75-85% wins over 10,000 occurrences and sizes each trade under 5% (about 1% in the example) so variance cannot end the run [page:concepts-number-of-occurrences]. For short premium the trades are not independent: losses cluster in crash regimes, and our model's worst book year was 2018 (-4.0% of notional) with a worst single trade of -28.8 credits against a +0.26-credit mean [repro:strangle_mgmt]. Small size is a survival rule that shapes the path, not a source of return.",
+      "numbers": [
+        {
+          "label": "tastylive: expected win rate of an 80% trade over 10,000 occurrences",
+          "value": "between 75% and 85%",
+          "sources": [
+            "page:concepts-number-of-occurrences"
+          ]
+        },
+        {
+          "label": "tastylive: sizing rule",
+          "value": "under 5% of portfolio per trade; 1% in the example",
+          "sources": [
+            "page:concepts-number-of-occurrences"
+          ]
+        },
+        {
+          "label": "Model 16-delta 45-DTE managed strangle: win rate; mean per trade; worst trade",
+          "value": "87%; +0.26 credits; -28.8 credits",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "Model: CVaR(5%) and worst book year",
+          "value": "-3.01 credits; 2018 at -4.0% of notional",
+          "sources": [
+            "repro:strangle_mgmt"
+          ]
+        },
+        {
+          "label": "Independent observations in overlapping 30-day windows",
+          "value": "n overstates independent observations about 21-fold",
+          "sources": [
+            "repro:expected_move"
+          ]
+        },
+        {
+          "label": "tastylive: unmanaged 45-DTE SPY strangle losses above 3x credit",
+          "value": "under 4% of cases, roughly 10 times a year on the host's rough math",
+          "sources": [
+            "ep:market-measures-2025-08-14@03:22"
+          ]
+        },
+        {
+          "label": "tastylive: biggest one-lot losers",
+          "value": "about $8,000 in 2020 and about $7,000 in 2025",
+          "sources": [
+            "ep:market-measures-2025-08-14@05:05"
+          ]
+        }
+      ],
+      "conditions": "Holds for independent bets with small size: a single high-probability trade can still lose [page:concepts-standard-deviation]. Fails when the bets share one risk factor, as short index premium does: margin calls force exits at losses [lit:santaclara-saretto-2009], and adding risk after losses preceded the LJM collapse [lit:sec-ljm-2021]. Win rate says little without drawdown and CVaR beside it.",
+      "act_with": [
+        "short-strangle",
+        "short-straddle",
+        "iron-condor",
+        "iron-fly",
+        "short-put",
+        "cash-secured-put",
+        "put-credit-spread",
+        "call-credit-spread",
+        "jade-lizard",
+        "zero-dte"
+      ],
+      "tasty_sources": [
+        "page:concepts-number-of-occurrences",
+        "page:concepts-standard-deviation",
+        "ep:market-measures-2025-08-14@03:22",
+        "ep:market-measures-2025-08-14@05:05"
+      ],
+      "tasty_position": "Probabilities only show up over many repetitions, so keep each trade small: \"Trading small allows us to stay alive when probabilities go against us.\" [page:concepts-number-of-occurrences]",
+      "literature": [
+        "lit:santaclara-saretto-2009",
+        "lit:sec-ljm-2021",
+        "lit:fallon-park-2016",
+        "lit:lemperiere-etal-2017",
+        "lit:spina-kulikov-2022"
+      ],
+      "repro": "repro:strangle_mgmt",
+      "agreement": "mixed",
+      "tier": "B",
+      "kind": "CONVENTION",
+      "caveats": [
+        "Daily entries overlap heavily, so trade counts overstate independent observations [repro:strangle_mgmt].",
+        "The model has no skew, bid-ask or commissions, so crash losses are understated [repro:strangle_mgmt].",
+        "The 2008, 2020 and 2025 outliers are few and large, so the convergence claim is untested at the tail [ep:market-measures-2025-08-14@05:05]."
+      ]
+    },
+    {
+      "slug": "long-premium-cost",
+      "title": "Buying options or protection loses on average",
+      "finding": "Buying 5%-OTM monthly S&P puts (PPUT) trailed the S&P 500 total return by 3.5 pts a year from 1988, 2.8 from 2007 and 3.0 from 2016 [repro:cboe_tail_hedge]; a 56% stock / 44% T-bill mix matched PPUT's 7.92% CAGR with a smaller drawdown (-31.5% vs -38.9%, month-end) [repro:cboe_tail_hedge]. Other buyer evidence agrees: constant-maturity long VIX futures lost about 30% a year in 2006-2013 [lit:eraker-wu-2017], earnings straddles averaged -18.5% [lit:ivolatility-2026], and retail buyers lose to spreads [lit:bryzgalova-etal-2023]. The hedge does pay in a crash (COVID: PPUT -11.8% vs -33.8%) [repro:cboe_tail_hedge].",
+      "numbers": [
+        {
+          "label": "PPUT shortfall vs S&P 500 TR",
+          "value": "3.5 pts/yr from 1988; 2.8 from 2007; 3.0 from 2016",
+          "sources": [
+            "repro:cboe_tail_hedge"
+          ]
+        },
+        {
+          "label": "PPUT vs S&P 500 TR CAGR, 2007-2026",
+          "value": "8.14% vs 10.95%",
+          "sources": [
+            "repro:cboe_short_vol"
+          ]
+        },
+        {
+          "label": "56% S&P TR / 44% T-bill mix vs PPUT, 1988-2026",
+          "value": "same 7.92% CAGR; max drawdown -31.5% vs -38.9%; worst month -9.4% vs -9.8%",
+          "sources": [
+            "repro:cboe_tail_hedge"
+          ]
+        },
+        {
+          "label": "COVID peak-to-trough; calendar 2020; 2022",
+          "value": "PPUT -11.8% vs S&P TR -33.8%; PPUT 29.08% vs 18.40%; PPUT -19.81% in 2022",
+          "sources": [
+            "repro:cboe_tail_hedge"
+          ]
+        },
+        {
+          "label": "Zero-beta ATM SPX straddles",
+          "value": "lost roughly 3% a week on average",
+          "sources": [
+            "lit:coval-shumway-2001"
+          ]
+        },
+        {
+          "label": "Constant-maturity 1-month VIX futures, 2006-2013",
+          "value": "about -30% a year",
+          "sources": [
+            "lit:eraker-wu-2017"
+          ]
+        },
+        {
+          "label": "Retail option buyers: average bid-ask spread of weeklies",
+          "value": "12.6%",
+          "sources": [
+            "lit:bryzgalova-etal-2023"
+          ]
+        },
+        {
+          "label": "Long ATM S&P 500 earnings straddles (vendor)",
+          "value": "win rate 22.0%; mean -18.5%",
+          "sources": [
+            "lit:ivolatility-2026"
+          ]
+        },
+        {
+          "label": "tastylive: POP when buying a spread with breakeven near the price",
+          "value": "around 50% or a bit better",
+          "sources": [
+            "page:concepts-probability-of-profit"
+          ]
+        }
+      ],
+      "conditions": "Holds on average for passive, rule-based buying of index puts, straddles and volatility products. It does not say hedges are useless: protection paid in COVID and lost in 2022, and one design (5% OTM one-month puts) is one of many. tastylive uses long premium when IV is low and a move is expected; that conditional use is not tested here.",
+      "act_with": [
+        "long-call",
+        "long-put",
+        "long-straddle",
+        "long-strangle",
+        "protective-put",
+        "collar",
+        "tail-hedge",
+        "vix-hedge",
+        "debit-spread",
+        "leaps-stock-replacement",
+        "poor-mans-covered-call"
+      ],
+      "tasty_sources": [
+        "page:concepts-iv-crush",
+        "page:concepts-straddle",
+        "page:concepts-probability-of-profit",
+        "page:concepts-implied-volatility",
+        "ep:research-2024-10-21@07:36",
+        "ep:from-theory-to-practice-2022-12-21@24:39"
+      ],
+      "tasty_position": "Buying options with elevated IV ahead of an event can lose even when direction is right [page:concepts-iv-crush], long straddles need a gap-type move and so have low probability [page:concepts-straddle], and buying earnings premium two weeks ahead was a 50/50 proposition [ep:research-2024-10-21@07:36]; long premium is favored only when IV is low [page:concepts-implied-volatility].",
+      "literature": [
+        "lit:coval-shumway-2001",
+        "lit:bakshi-kapadia-2003",
+        "lit:bondarenko-2019",
+        "lit:eraker-wu-2017",
+        "lit:whaley-2013",
+        "lit:ilmanen-2012",
+        "lit:desilva-etal-2025",
+        "lit:bryzgalova-etal-2023",
+        "lit:ivolatility-2026"
+      ],
+      "repro": "repro:cboe_tail_hedge",
+      "agreement": "agrees",
+      "tier": "A",
+      "kind": "EDGE",
+      "caveats": [
+        "PPUT is one hedging design; tenor, strike and monetization rules change results a lot [repro:cboe_tail_hedge].",
+        "Gross Cboe index returns; the matched-mix drawdown uses month-end closes [repro:cboe_tail_hedge].",
+        "The repro's source note cites a 'tail-hedging' literature topic that is not in the bundle, so only the papers listed are cited here."
+      ]
+    }
+  ],
+  "status": "draft",
+  "generated": "2026-10-25"
+}

@@ -867,6 +867,33 @@ EPHEMERIS_PX_MAX_AGE_HOURS = 30.0      # re-download the release asset after thi
 EPHEMERIS_DB_SECRET = "ephemeris_db_url"
 
 
+# --- OPTIONS VAULT (evidence-graded options strategy & edge reference) -------
+# Distilled from tastylive research shows + the literature. Only paraphrased,
+# source-linked artefacts are committed; transcripts and page text (third-party
+# material) live in VAULT_CACHE_DIR, which is gitignored. See zenith/vault/.
+VAULT_DIR = DATA_DIR / "vault"
+VAULT_CACHE_DIR = VAULT_DIR / "cache"          # raw/ transcripts, pages/, discovery/ (gitignored)
+VAULT_FILES = {
+    "manifest": VAULT_DIR / "manifest.json",       # one row per episode (tastylive x YouTube)
+    "coverage": VAULT_DIR / "coverage.json",       # per show x year counts + transcript coverage
+    "review": VAULT_DIR / "review.json",           # unclassified / unmatched videos for review
+    "pages": VAULT_DIR / "pages.json",             # written-source inventory (no text)
+    "taxonomy": VAULT_DIR / "taxonomy.json",       # frozen strategy / topic / episode-type slugs
+    "page_notes": VAULT_DIR / "page_notes.json",   # paraphrased Learn Center page notes
+    "popularity": VAULT_DIR / "popularity.json",   # episode counts per strategy / topic / period
+    "literature": VAULT_DIR / "literature.json",   # Phase 03 topics, papers, tiers
+    "strategies": VAULT_DIR / "strategies.json",   # Phase 05 strategy cards
+    "mechanics": VAULT_DIR / "mechanics.json",     # open / manage / roll / close / loss trees
+    "edges": VAULT_DIR / "edges.json",             # edge cards
+    "portfolio": VAULT_DIR / "portfolio.json",     # account matrix, allocation, sleeve playbook
+    "glossary": VAULT_DIR / "glossary.json",       # terms (also feed help tooltips)
+    "pop": VAULT_DIR / "pop.json",                 # flat-vol POP / tail model per default setup
+    "ranking": VAULT_DIR / "ranking.json",         # popularity / POP / reliability rankings
+    "build": VAULT_DIR / "build.json",             # packed by zenith.vault.build: counts + ref links
+    "repro_dir": VAULT_DIR / "repro",              # Phase 04 reproductions, one <name>.json each
+}
+
+
 @dataclass(frozen=True)
 class Theme:
     bg: str = "#000000"

@@ -1,0 +1,1519 @@
+{
+  "name": "earnings_drift",
+  "ref": "repro:earnings_drift",
+  "built": "2026-10-24",
+  "claim": "After an outlier earnings move, more than half of companies keep drifting in the same direction over the next month (user seed hypothesis)",
+  "tasty_value": null,
+  "tasty_sources": [],
+  "tasty_note": "User seed hypothesis; no tastylive page or checked episode states a post-earnings drift rate. tastylive's earnings stance is to sell the IV crush and avoid directional earnings bets [page:concepts-earnings].",
+  "our_value": "Variant A (|move| > 2x own mean): 51.0% [49.5%, 52.5%], n=4112, mean +0.09% kept drifting at +21 trading days (B: 50.9% [49.5%, 52.2%], n=5507, mean +0.03%; C: 51.0% [50.0%, 52.0%], n=9435, mean -0.03%; all reports: 51.0% [50.4%, 51.6%], n=29122, mean +0.04%).",
+  "data": "yfinance earnings dates and adjusted daily closes for 393 current Russell 1000 names (stratified by VONE weight), SPY as the market; zenith data/pead/history.json",
+  "period": "report dates 2001-10-15 to 2026-09-22",
+  "method": "Two-day market-excess reaction around each report; drift = excess return from the second day's close to +5 / +21 trading days; continues = same sign. Outlier variants A/B/C as in the module docstring. Size = dollar-volume tercile within each year (60 days before the report). 95% CI = normal approximation.",
+  "caveats": [
+    "Survivorship: today's Russell 1000 members only; names that fell out or were delisted after bad news are missing, which flatters down-move continuation less than it flatters up-move continuation. Treat 2001-2005 as the weakest period (and the smallest: outliers need 6 prior reports, so it effectively starts in 2003).",
+    "yfinance earnings dates can be off by a day; the two-day window absorbs most of it.",
+    "Events overlap in calendar time (earnings season clustering), so the CIs are too narrow; read differences under ~3 points as noise.",
+    "'Size' is dollar-volume within this large-cap universe, not small caps: no Russell 2000 names are sampled.",
+    "Excess return vs SPY, not a size/industry-matched benchmark; no costs.",
+    "zenith's tracker covers only 2024-05 onward and gates on EPS surprise too, so it is a different selection, not a test of the outlier rule."
+  ],
+  "verdict": "mixed",
+  "claims": [
+    {
+      "text": "After an outlier earnings move, more than half of companies keep drifting in the same direction over the next month (user seed hypothesis)",
+      "claim_source": "seed",
+      "tasty_value": null,
+      "tasty_sources": [],
+      "tasty_note": "User seed hypothesis; no tastylive page or checked episode states a post-earnings drift rate. tastylive's earnings stance is to sell the IV crush and avoid directional earnings bets [page:concepts-earnings].",
+      "our_value": "Variant A (|move| > 2x own mean): 51.0% [49.5%, 52.5%], n=4112, mean +0.09% kept drifting at +21 trading days (B: 50.9% [49.5%, 52.2%], n=5507, mean +0.03%; C: 51.0% [50.0%, 52.0%], n=9435, mean -0.03%; all reports: 51.0% [50.4%, 51.6%], n=29122, mean +0.04%).",
+      "verdict": "mixed",
+      "literature": [
+        "lit:martineau-2022",
+        "lit:chan-2003",
+        "lit:bernard-thomas-1989"
+      ]
+    },
+    {
+      "text": "Large-cap drift after earnings is about zero since 2006 (lit:martineau-2022), so the continuation rate for large caps after 2006 should be near 50%",
+      "claim_source": "lit:earnings",
+      "tasty_value": null,
+      "tasty_sources": [],
+      "tasty_note": "Literature claim; no tastylive source found.",
+      "our_value": "Variant A at +21d by period: 2001-05 49.4% [43.2%, 55.6%], n=253, mean -0.03%; 2006-15 52.4% [49.9%, 54.9%], n=1552, mean +0.24%; 2016-26 50.2% [48.2%, 52.3%], n=2307, mean +0.01%. Large-tercile after 2006: 52.1% [47.7%, 56.5%], n=499, mean +0.21%; 50.1% [46.5%, 53.6%], n=749, mean -0.09%.",
+      "verdict": "agrees",
+      "literature": [
+        "lit:martineau-2022"
+      ]
+    },
+    {
+      "text": "zenith's PEAD tracker picks (SUE + same-signed reaction) keep drifting over ~1 month",
+      "claim_source": "zenith:pead",
+      "tasty_value": null,
+      "tasty_sources": [],
+      "tasty_note": "zenith's own tracker; not a tastylive claim.",
+      "our_value": "2024-05-21 to 2026-10-22: +20d 47.9% [46.5%, 49.4%], n=4551, mean -0.34%; +5d 47.8% [46.4%, 49.2%], n=4576, mean -0.29%",
+      "verdict": "contradicts",
+      "literature": [
+        "lit:bernard-thomas-1989"
+      ]
+    }
+  ],
+  "literature": [
+    "lit:martineau-2022",
+    "lit:chan-2003"
+  ],
+  "chart_data": {
+    "variants": [
+      {
+        "variant": "A",
+        "horizon": "+5d",
+        "n": 4112,
+        "share_cont": 0.5005,
+        "ci_lo": 0.4852,
+        "ci_hi": 0.5158,
+        "mean_signed_drift": -0.00072,
+        "median_signed_drift": 8e-05
+      },
+      {
+        "variant": "A",
+        "horizon": "+21d",
+        "n": 4112,
+        "share_cont": 0.51,
+        "ci_lo": 0.4947,
+        "ci_hi": 0.5253,
+        "mean_signed_drift": 0.00091,
+        "median_signed_drift": 0.00165
+      },
+      {
+        "variant": "B",
+        "horizon": "+5d",
+        "n": 5507,
+        "share_cont": 0.5015,
+        "ci_lo": 0.4883,
+        "ci_hi": 0.5147,
+        "mean_signed_drift": -0.00016,
+        "median_signed_drift": 0.00013
+      },
+      {
+        "variant": "B",
+        "horizon": "+21d",
+        "n": 5507,
+        "share_cont": 0.5086,
+        "ci_lo": 0.4954,
+        "ci_hi": 0.5218,
+        "mean_signed_drift": 0.00028,
+        "median_signed_drift": 0.00144
+      },
+      {
+        "variant": "C",
+        "horizon": "+5d",
+        "n": 9435,
+        "share_cont": 0.4988,
+        "ci_lo": 0.4887,
+        "ci_hi": 0.5089,
+        "mean_signed_drift": -0.00068,
+        "median_signed_drift": -0.00011
+      },
+      {
+        "variant": "C",
+        "horizon": "+21d",
+        "n": 9435,
+        "share_cont": 0.5099,
+        "ci_lo": 0.4998,
+        "ci_hi": 0.52,
+        "mean_signed_drift": -0.00035,
+        "median_signed_drift": 0.00192
+      },
+      {
+        "variant": "all",
+        "horizon": "+5d",
+        "n": 29122,
+        "share_cont": 0.5073,
+        "ci_lo": 0.5016,
+        "ci_hi": 0.5131,
+        "mean_signed_drift": 0.00022,
+        "median_signed_drift": 0.00057
+      },
+      {
+        "variant": "all",
+        "horizon": "+21d",
+        "n": 29122,
+        "share_cont": 0.5102,
+        "ci_lo": 0.5045,
+        "ci_hi": 0.5159,
+        "mean_signed_drift": 0.00045,
+        "median_signed_drift": 0.00151
+      }
+    ],
+    "size_period_A21": [
+      {
+        "period": "2001-2005",
+        "size": "small",
+        "n": 87,
+        "share_cont": 0.4483,
+        "ci_lo": 0.3438,
+        "ci_hi": 0.5528,
+        "mean_signed_drift": -0.00735,
+        "median_signed_drift": -0.0084
+      },
+      {
+        "period": "2001-2005",
+        "size": "mid",
+        "n": 89,
+        "share_cont": 0.4719,
+        "ci_lo": 0.3682,
+        "ci_hi": 0.5756,
+        "mean_signed_drift": -0.00035,
+        "median_signed_drift": -0.00307
+      },
+      {
+        "period": "2001-2005",
+        "size": "large",
+        "n": 77,
+        "share_cont": 0.5714,
+        "ci_lo": 0.4609,
+        "ci_hi": 0.682,
+        "mean_signed_drift": 0.00773,
+        "median_signed_drift": 0.01077
+      },
+      {
+        "period": "2006-2015",
+        "size": "small",
+        "n": 535,
+        "share_cont": 0.5196,
+        "ci_lo": 0.4773,
+        "ci_hi": 0.562,
+        "mean_signed_drift": 0.00364,
+        "median_signed_drift": 0.00224
+      },
+      {
+        "period": "2006-2015",
+        "size": "mid",
+        "n": 518,
+        "share_cont": 0.5309,
+        "ci_lo": 0.4879,
+        "ci_hi": 0.5739,
+        "mean_signed_drift": 0.00135,
+        "median_signed_drift": 0.00312
+      },
+      {
+        "period": "2006-2015",
+        "size": "large",
+        "n": 499,
+        "share_cont": 0.521,
+        "ci_lo": 0.4772,
+        "ci_hi": 0.5649,
+        "mean_signed_drift": 0.0021,
+        "median_signed_drift": 0.00291
+      },
+      {
+        "period": "2016-2026",
+        "size": "small",
+        "n": 789,
+        "share_cont": 0.4867,
+        "ci_lo": 0.4518,
+        "ci_hi": 0.5216,
+        "mean_signed_drift": -0.00152,
+        "median_signed_drift": -0.00213
+      },
+      {
+        "period": "2016-2026",
+        "size": "mid",
+        "n": 769,
+        "share_cont": 0.5202,
+        "ci_lo": 0.4848,
+        "ci_hi": 0.5555,
+        "mean_signed_drift": 0.00256,
+        "median_signed_drift": 0.00381
+      },
+      {
+        "period": "2016-2026",
+        "size": "large",
+        "n": 749,
+        "share_cont": 0.5007,
+        "ci_lo": 0.4649,
+        "ci_hi": 0.5365,
+        "mean_signed_drift": -0.00089,
+        "median_signed_drift": 0.00075
+      }
+    ],
+    "dir_A": [
+      {
+        "dir": "down",
+        "horizon": "+5d",
+        "n": 1856,
+        "share_cont": 0.5016,
+        "ci_lo": 0.4789,
+        "ci_hi": 0.5244,
+        "mean_signed_drift": -0.00168,
+        "median_signed_drift": 0.00013
+      },
+      {
+        "dir": "down",
+        "horizon": "+21d",
+        "n": 1856,
+        "share_cont": 0.5124,
+        "ci_lo": 0.4897,
+        "ci_hi": 0.5351,
+        "mean_signed_drift": -0.00471,
+        "median_signed_drift": 0.00193
+      },
+      {
+        "dir": "up",
+        "horizon": "+5d",
+        "n": 2256,
+        "share_cont": 0.4996,
+        "ci_lo": 0.4789,
+        "ci_hi": 0.5202,
+        "mean_signed_drift": 6e-05,
+        "median_signed_drift": -5e-05
+      },
+      {
+        "dir": "up",
+        "horizon": "+21d",
+        "n": 2256,
+        "share_cont": 0.508,
+        "ci_lo": 0.4873,
+        "ci_hi": 0.5286,
+        "mean_signed_drift": 0.00553,
+        "median_signed_drift": 0.0012
+      }
+    ]
+  },
+  "stats": {
+    "n_events": 29122,
+    "n_tickers": 393,
+    "first": "2001-10-15",
+    "last": "2026-09-22",
+    "variants": {
+      "A": {
+        "h5": {
+          "n": 4112,
+          "share_cont": 0.5005,
+          "ci_lo": 0.4852,
+          "ci_hi": 0.5158,
+          "mean_signed_drift": -0.00072,
+          "median_signed_drift": 8e-05
+        },
+        "h21": {
+          "n": 4112,
+          "share_cont": 0.51,
+          "ci_lo": 0.4947,
+          "ci_hi": 0.5253,
+          "mean_signed_drift": 0.00091,
+          "median_signed_drift": 0.00165
+        },
+        "by_dir": {
+          "down": {
+            "h5": {
+              "n": 1856,
+              "share_cont": 0.5016,
+              "ci_lo": 0.4789,
+              "ci_hi": 0.5244,
+              "mean_signed_drift": -0.00168,
+              "median_signed_drift": 0.00013
+            },
+            "h21": {
+              "n": 1856,
+              "share_cont": 0.5124,
+              "ci_lo": 0.4897,
+              "ci_hi": 0.5351,
+              "mean_signed_drift": -0.00471,
+              "median_signed_drift": 0.00193
+            }
+          },
+          "up": {
+            "h5": {
+              "n": 2256,
+              "share_cont": 0.4996,
+              "ci_lo": 0.4789,
+              "ci_hi": 0.5202,
+              "mean_signed_drift": 6e-05,
+              "median_signed_drift": -5e-05
+            },
+            "h21": {
+              "n": 2256,
+              "share_cont": 0.508,
+              "ci_lo": 0.4873,
+              "ci_hi": 0.5286,
+              "mean_signed_drift": 0.00553,
+              "median_signed_drift": 0.0012
+            }
+          }
+        },
+        "by_size": {
+          "small": {
+            "h5": {
+              "n": 1411,
+              "share_cont": 0.5159,
+              "ci_lo": 0.4899,
+              "ci_hi": 0.542,
+              "mean_signed_drift": 0.00108,
+              "median_signed_drift": 0.00119
+            },
+            "h21": {
+              "n": 1411,
+              "share_cont": 0.4968,
+              "ci_lo": 0.4707,
+              "ci_hi": 0.5229,
+              "mean_signed_drift": 8e-05,
+              "median_signed_drift": -0.00019
+            }
+          },
+          "mid": {
+            "h5": {
+              "n": 1376,
+              "share_cont": 0.4985,
+              "ci_lo": 0.4721,
+              "ci_hi": 0.525,
+              "mean_signed_drift": -0.00043,
+              "median_signed_drift": -3e-05
+            },
+            "h21": {
+              "n": 1376,
+              "share_cont": 0.5211,
+              "ci_lo": 0.4947,
+              "ci_hi": 0.5475,
+              "mean_signed_drift": 0.00192,
+              "median_signed_drift": 0.00318
+            }
+          },
+          "large": {
+            "h5": {
+              "n": 1325,
+              "share_cont": 0.486,
+              "ci_lo": 0.4591,
+              "ci_hi": 0.5129,
+              "mean_signed_drift": -0.00295,
+              "median_signed_drift": -0.00109
+            },
+            "h21": {
+              "n": 1325,
+              "share_cont": 0.5125,
+              "ci_lo": 0.4855,
+              "ci_hi": 0.5394,
+              "mean_signed_drift": 0.00074,
+              "median_signed_drift": 0.00179
+            }
+          }
+        },
+        "by_period": {
+          "2001-2005": {
+            "h5": {
+              "n": 253,
+              "share_cont": 0.4704,
+              "ci_lo": 0.4089,
+              "ci_hi": 0.5319,
+              "mean_signed_drift": -0.00304,
+              "median_signed_drift": -0.00239
+            },
+            "h21": {
+              "n": 253,
+              "share_cont": 0.4941,
+              "ci_lo": 0.4325,
+              "ci_hi": 0.5557,
+              "mean_signed_drift": -0.0003,
+              "median_signed_drift": -0.0011
+            }
+          },
+          "2006-2015": {
+            "h5": {
+              "n": 1552,
+              "share_cont": 0.5032,
+              "ci_lo": 0.4783,
+              "ci_hi": 0.5281,
+              "mean_signed_drift": 0.00056,
+              "median_signed_drift": 0.00022
+            },
+            "h21": {
+              "n": 1552,
+              "share_cont": 0.5238,
+              "ci_lo": 0.499,
+              "ci_hi": 0.5487,
+              "mean_signed_drift": 0.00238,
+              "median_signed_drift": 0.00293
+            }
+          },
+          "2016-2026": {
+            "h5": {
+              "n": 2307,
+              "share_cont": 0.502,
+              "ci_lo": 0.4815,
+              "ci_hi": 0.5224,
+              "mean_signed_drift": -0.00133,
+              "median_signed_drift": 0.00017
+            },
+            "h21": {
+              "n": 2307,
+              "share_cont": 0.5024,
+              "ci_lo": 0.482,
+              "ci_hi": 0.5228,
+              "mean_signed_drift": 5e-05,
+              "median_signed_drift": 0.00078
+            }
+          }
+        },
+        "by_size_period": {
+          "2001-2005|small": {
+            "n": 87,
+            "share_cont": 0.4483,
+            "ci_lo": 0.3438,
+            "ci_hi": 0.5528,
+            "mean_signed_drift": -0.00735,
+            "median_signed_drift": -0.0084
+          },
+          "2001-2005|mid": {
+            "n": 89,
+            "share_cont": 0.4719,
+            "ci_lo": 0.3682,
+            "ci_hi": 0.5756,
+            "mean_signed_drift": -0.00035,
+            "median_signed_drift": -0.00307
+          },
+          "2001-2005|large": {
+            "n": 77,
+            "share_cont": 0.5714,
+            "ci_lo": 0.4609,
+            "ci_hi": 0.682,
+            "mean_signed_drift": 0.00773,
+            "median_signed_drift": 0.01077
+          },
+          "2006-2015|small": {
+            "n": 535,
+            "share_cont": 0.5196,
+            "ci_lo": 0.4773,
+            "ci_hi": 0.562,
+            "mean_signed_drift": 0.00364,
+            "median_signed_drift": 0.00224
+          },
+          "2006-2015|mid": {
+            "n": 518,
+            "share_cont": 0.5309,
+            "ci_lo": 0.4879,
+            "ci_hi": 0.5739,
+            "mean_signed_drift": 0.00135,
+            "median_signed_drift": 0.00312
+          },
+          "2006-2015|large": {
+            "n": 499,
+            "share_cont": 0.521,
+            "ci_lo": 0.4772,
+            "ci_hi": 0.5649,
+            "mean_signed_drift": 0.0021,
+            "median_signed_drift": 0.00291
+          },
+          "2016-2026|small": {
+            "n": 789,
+            "share_cont": 0.4867,
+            "ci_lo": 0.4518,
+            "ci_hi": 0.5216,
+            "mean_signed_drift": -0.00152,
+            "median_signed_drift": -0.00213
+          },
+          "2016-2026|mid": {
+            "n": 769,
+            "share_cont": 0.5202,
+            "ci_lo": 0.4848,
+            "ci_hi": 0.5555,
+            "mean_signed_drift": 0.00256,
+            "median_signed_drift": 0.00381
+          },
+          "2016-2026|large": {
+            "n": 749,
+            "share_cont": 0.5007,
+            "ci_lo": 0.4649,
+            "ci_hi": 0.5365,
+            "mean_signed_drift": -0.00089,
+            "median_signed_drift": 0.00075
+          }
+        }
+      },
+      "B": {
+        "h5": {
+          "n": 5507,
+          "share_cont": 0.5015,
+          "ci_lo": 0.4883,
+          "ci_hi": 0.5147,
+          "mean_signed_drift": -0.00016,
+          "median_signed_drift": 0.00013
+        },
+        "h21": {
+          "n": 5507,
+          "share_cont": 0.5086,
+          "ci_lo": 0.4954,
+          "ci_hi": 0.5218,
+          "mean_signed_drift": 0.00028,
+          "median_signed_drift": 0.00144
+        },
+        "by_dir": {
+          "down": {
+            "h5": {
+              "n": 2759,
+              "share_cont": 0.5013,
+              "ci_lo": 0.4826,
+              "ci_hi": 0.5199,
+              "mean_signed_drift": -0.00102,
+              "median_signed_drift": 9e-05
+            },
+            "h21": {
+              "n": 2759,
+              "share_cont": 0.5118,
+              "ci_lo": 0.4931,
+              "ci_hi": 0.5304,
+              "mean_signed_drift": -0.00469,
+              "median_signed_drift": 0.00188
+            }
+          },
+          "up": {
+            "h5": {
+              "n": 2748,
+              "share_cont": 0.5018,
+              "ci_lo": 0.4831,
+              "ci_hi": 0.5205,
+              "mean_signed_drift": 0.00071,
+              "median_signed_drift": 0.00013
+            },
+            "h21": {
+              "n": 2748,
+              "share_cont": 0.5055,
+              "ci_lo": 0.4868,
+              "ci_hi": 0.5242,
+              "mean_signed_drift": 0.00526,
+              "median_signed_drift": 0.00096
+            }
+          }
+        },
+        "by_size": {
+          "small": {
+            "h5": {
+              "n": 1813,
+              "share_cont": 0.5085,
+              "ci_lo": 0.4855,
+              "ci_hi": 0.5316,
+              "mean_signed_drift": 0.00216,
+              "median_signed_drift": 0.00067
+            },
+            "h21": {
+              "n": 1813,
+              "share_cont": 0.4975,
+              "ci_lo": 0.4745,
+              "ci_hi": 0.5205,
+              "mean_signed_drift": 0.00093,
+              "median_signed_drift": -0.0002
+            }
+          },
+          "mid": {
+            "h5": {
+              "n": 1833,
+              "share_cont": 0.4954,
+              "ci_lo": 0.4725,
+              "ci_hi": 0.5183,
+              "mean_signed_drift": -0.0015,
+              "median_signed_drift": -0.00044
+            },
+            "h21": {
+              "n": 1833,
+              "share_cont": 0.5106,
+              "ci_lo": 0.4878,
+              "ci_hi": 0.5335,
+              "mean_signed_drift": -0.00114,
+              "median_signed_drift": 0.00136
+            }
+          },
+          "large": {
+            "h5": {
+              "n": 1861,
+              "share_cont": 0.5008,
+              "ci_lo": 0.4781,
+              "ci_hi": 0.5235,
+              "mean_signed_drift": -0.0011,
+              "median_signed_drift": 6e-05
+            },
+            "h21": {
+              "n": 1861,
+              "share_cont": 0.5175,
+              "ci_lo": 0.4948,
+              "ci_hi": 0.5402,
+              "mean_signed_drift": 0.00103,
+              "median_signed_drift": 0.00291
+            }
+          }
+        },
+        "by_period": {
+          "2001-2005": {
+            "h5": {
+              "n": 356,
+              "share_cont": 0.4691,
+              "ci_lo": 0.4173,
+              "ci_hi": 0.5209,
+              "mean_signed_drift": -0.00216,
+              "median_signed_drift": -0.00265
+            },
+            "h21": {
+              "n": 356,
+              "share_cont": 0.4719,
+              "ci_lo": 0.4201,
+              "ci_hi": 0.5238,
+              "mean_signed_drift": -0.00409,
+              "median_signed_drift": -0.00392
+            }
+          },
+          "2006-2015": {
+            "h5": {
+              "n": 2076,
+              "share_cont": 0.513,
+              "ci_lo": 0.4915,
+              "ci_hi": 0.5345,
+              "mean_signed_drift": 0.00116,
+              "median_signed_drift": 0.00083
+            },
+            "h21": {
+              "n": 2076,
+              "share_cont": 0.526,
+              "ci_lo": 0.5045,
+              "ci_hi": 0.5475,
+              "mean_signed_drift": 0.0032,
+              "median_signed_drift": 0.00302
+            }
+          },
+          "2016-2026": {
+            "h5": {
+              "n": 3075,
+              "share_cont": 0.4976,
+              "ci_lo": 0.4799,
+              "ci_hi": 0.5152,
+              "mean_signed_drift": -0.00082,
+              "median_signed_drift": -0.00023
+            },
+            "h21": {
+              "n": 3075,
+              "share_cont": 0.5011,
+              "ci_lo": 0.4835,
+              "ci_hi": 0.5188,
+              "mean_signed_drift": -0.00119,
+              "median_signed_drift": 0.00051
+            }
+          }
+        },
+        "by_size_period": {
+          "2001-2005|small": {
+            "n": 105,
+            "share_cont": 0.4476,
+            "ci_lo": 0.3525,
+            "ci_hi": 0.5427,
+            "mean_signed_drift": -0.00705,
+            "median_signed_drift": -0.00487
+          },
+          "2001-2005|mid": {
+            "n": 128,
+            "share_cont": 0.4375,
+            "ci_lo": 0.3516,
+            "ci_hi": 0.5234,
+            "mean_signed_drift": -0.00819,
+            "median_signed_drift": -0.00592
+          },
+          "2001-2005|large": {
+            "n": 123,
+            "share_cont": 0.5285,
+            "ci_lo": 0.4402,
+            "ci_hi": 0.6167,
+            "mean_signed_drift": 0.0027,
+            "median_signed_drift": 0.00523
+          },
+          "2006-2015|small": {
+            "n": 676,
+            "share_cont": 0.5251,
+            "ci_lo": 0.4875,
+            "ci_hi": 0.5628,
+            "mean_signed_drift": 0.00526,
+            "median_signed_drift": 0.00419
+          },
+          "2006-2015|mid": {
+            "n": 683,
+            "share_cont": 0.5227,
+            "ci_lo": 0.4852,
+            "ci_hi": 0.5602,
+            "mean_signed_drift": -0.00041,
+            "median_signed_drift": 0.00213
+          },
+          "2006-2015|large": {
+            "n": 717,
+            "share_cont": 0.53,
+            "ci_lo": 0.4935,
+            "ci_hi": 0.5665,
+            "mean_signed_drift": 0.00471,
+            "median_signed_drift": 0.00398
+          },
+          "2016-2026|small": {
+            "n": 1032,
+            "share_cont": 0.4845,
+            "ci_lo": 0.454,
+            "ci_hi": 0.515,
+            "mean_signed_drift": -0.00109,
+            "median_signed_drift": -0.0022
+          },
+          "2016-2026|mid": {
+            "n": 1022,
+            "share_cont": 0.5117,
+            "ci_lo": 0.4811,
+            "ci_hi": 0.5424,
+            "mean_signed_drift": -0.00074,
+            "median_signed_drift": 0.00217
+          },
+          "2016-2026|large": {
+            "n": 1021,
+            "share_cont": 0.5073,
+            "ci_lo": 0.4767,
+            "ci_hi": 0.538,
+            "mean_signed_drift": -0.00175,
+            "median_signed_drift": 0.00144
+          }
+        }
+      },
+      "C": {
+        "h5": {
+          "n": 9435,
+          "share_cont": 0.4988,
+          "ci_lo": 0.4887,
+          "ci_hi": 0.5089,
+          "mean_signed_drift": -0.00068,
+          "median_signed_drift": -0.00011
+        },
+        "h21": {
+          "n": 9435,
+          "share_cont": 0.5099,
+          "ci_lo": 0.4998,
+          "ci_hi": 0.52,
+          "mean_signed_drift": -0.00035,
+          "median_signed_drift": 0.00192
+        },
+        "by_dir": {
+          "down": {
+            "h5": {
+              "n": 4222,
+              "share_cont": 0.5111,
+              "ci_lo": 0.4961,
+              "ci_hi": 0.5262,
+              "mean_signed_drift": -0.0017,
+              "median_signed_drift": 0.00117
+            },
+            "h21": {
+              "n": 4222,
+              "share_cont": 0.5208,
+              "ci_lo": 0.5058,
+              "ci_hi": 0.5359,
+              "mean_signed_drift": -0.00604,
+              "median_signed_drift": 0.00415
+            }
+          },
+          "up": {
+            "h5": {
+              "n": 5213,
+              "share_cont": 0.4888,
+              "ci_lo": 0.4752,
+              "ci_hi": 0.5023,
+              "mean_signed_drift": 0.00015,
+              "median_signed_drift": -0.001
+            },
+            "h21": {
+              "n": 5213,
+              "share_cont": 0.5011,
+              "ci_lo": 0.4875,
+              "ci_hi": 0.5146,
+              "mean_signed_drift": 0.00425,
+              "median_signed_drift": 0.00041
+            }
+          }
+        },
+        "by_size": {
+          "small": {
+            "h5": {
+              "n": 3289,
+              "share_cont": 0.495,
+              "ci_lo": 0.4779,
+              "ci_hi": 0.5121,
+              "mean_signed_drift": -0.00044,
+              "median_signed_drift": -0.00061
+            },
+            "h21": {
+              "n": 3289,
+              "share_cont": 0.4965,
+              "ci_lo": 0.4794,
+              "ci_hi": 0.5136,
+              "mean_signed_drift": -0.00182,
+              "median_signed_drift": -0.00043
+            }
+          },
+          "mid": {
+            "h5": {
+              "n": 3179,
+              "share_cont": 0.4954,
+              "ci_lo": 0.4781,
+              "ci_hi": 0.5128,
+              "mean_signed_drift": -0.00147,
+              "median_signed_drift": -0.00026
+            },
+            "h21": {
+              "n": 3179,
+              "share_cont": 0.5212,
+              "ci_lo": 0.5039,
+              "ci_hi": 0.5386,
+              "mean_signed_drift": -0.00012,
+              "median_signed_drift": 0.00365
+            }
+          },
+          "large": {
+            "h5": {
+              "n": 2967,
+              "share_cont": 0.5066,
+              "ci_lo": 0.4886,
+              "ci_hi": 0.5246,
+              "mean_signed_drift": -0.0001,
+              "median_signed_drift": 0.0005
+            },
+            "h21": {
+              "n": 2967,
+              "share_cont": 0.5126,
+              "ci_lo": 0.4947,
+              "ci_hi": 0.5306,
+              "mean_signed_drift": 0.00102,
+              "median_signed_drift": 0.00273
+            }
+          }
+        },
+        "by_period": {
+          "2001-2005": {
+            "h5": {
+              "n": 923,
+              "share_cont": 0.5135,
+              "ci_lo": 0.4813,
+              "ci_hi": 0.5458,
+              "mean_signed_drift": -0.00252,
+              "median_signed_drift": 0.00145
+            },
+            "h21": {
+              "n": 923,
+              "share_cont": 0.493,
+              "ci_lo": 0.4607,
+              "ci_hi": 0.5252,
+              "mean_signed_drift": -0.0067,
+              "median_signed_drift": -0.00115
+            }
+          },
+          "2006-2015": {
+            "h5": {
+              "n": 3114,
+              "share_cont": 0.4891,
+              "ci_lo": 0.4715,
+              "ci_hi": 0.5066,
+              "mean_signed_drift": -0.00049,
+              "median_signed_drift": -0.00097
+            },
+            "h21": {
+              "n": 3114,
+              "share_cont": 0.5103,
+              "ci_lo": 0.4927,
+              "ci_hi": 0.5278,
+              "mean_signed_drift": 0.00156,
+              "median_signed_drift": 0.0018
+            }
+          },
+          "2016-2026": {
+            "h5": {
+              "n": 5398,
+              "share_cont": 0.5019,
+              "ci_lo": 0.4885,
+              "ci_hi": 0.5152,
+              "mean_signed_drift": -0.00048,
+              "median_signed_drift": 0.00021
+            },
+            "h21": {
+              "n": 5398,
+              "share_cont": 0.5126,
+              "ci_lo": 0.4993,
+              "ci_hi": 0.5259,
+              "mean_signed_drift": -0.00037,
+              "median_signed_drift": 0.00262
+            }
+          }
+        },
+        "by_size_period": {
+          "2001-2005|small": {
+            "n": 269,
+            "share_cont": 0.4684,
+            "ci_lo": 0.4088,
+            "ci_hi": 0.528,
+            "mean_signed_drift": -0.02091,
+            "median_signed_drift": -0.00483
+          },
+          "2001-2005|mid": {
+            "n": 318,
+            "share_cont": 0.5094,
+            "ci_lo": 0.4545,
+            "ci_hi": 0.5644,
+            "mean_signed_drift": -0.00478,
+            "median_signed_drift": 0.00088
+          },
+          "2001-2005|large": {
+            "n": 336,
+            "share_cont": 0.497,
+            "ci_lo": 0.4436,
+            "ci_hi": 0.5505,
+            "mean_signed_drift": 0.00287,
+            "median_signed_drift": -0.0003
+          },
+          "2006-2015|small": {
+            "n": 1186,
+            "share_cont": 0.5059,
+            "ci_lo": 0.4774,
+            "ci_hi": 0.5344,
+            "mean_signed_drift": 0.00324,
+            "median_signed_drift": 0.00065
+          },
+          "2006-2015|mid": {
+            "n": 1030,
+            "share_cont": 0.5136,
+            "ci_lo": 0.4831,
+            "ci_hi": 0.5441,
+            "mean_signed_drift": -0.00099,
+            "median_signed_drift": 0.00223
+          },
+          "2006-2015|large": {
+            "n": 898,
+            "share_cont": 0.5122,
+            "ci_lo": 0.4796,
+            "ci_hi": 0.5449,
+            "mean_signed_drift": 0.00226,
+            "median_signed_drift": 0.00215
+          },
+          "2016-2026|small": {
+            "n": 1834,
+            "share_cont": 0.4945,
+            "ci_lo": 0.4717,
+            "ci_hi": 0.5174,
+            "mean_signed_drift": -0.0023,
+            "median_signed_drift": -0.0008
+          },
+          "2016-2026|mid": {
+            "n": 1831,
+            "share_cont": 0.5276,
+            "ci_lo": 0.5047,
+            "ci_hi": 0.5504,
+            "mean_signed_drift": 0.00118,
+            "median_signed_drift": 0.00493
+          },
+          "2016-2026|large": {
+            "n": 1733,
+            "share_cont": 0.5159,
+            "ci_lo": 0.4923,
+            "ci_hi": 0.5394,
+            "mean_signed_drift": 2e-05,
+            "median_signed_drift": 0.00389
+          }
+        }
+      },
+      "all": {
+        "h5": {
+          "n": 29122,
+          "share_cont": 0.5073,
+          "ci_lo": 0.5016,
+          "ci_hi": 0.5131,
+          "mean_signed_drift": 0.00022,
+          "median_signed_drift": 0.00057
+        },
+        "h21": {
+          "n": 29122,
+          "share_cont": 0.5102,
+          "ci_lo": 0.5045,
+          "ci_hi": 0.5159,
+          "mean_signed_drift": 0.00045,
+          "median_signed_drift": 0.00151
+        },
+        "by_dir": {
+          "down": {
+            "h5": {
+              "n": 13782,
+              "share_cont": 0.5083,
+              "ci_lo": 0.4999,
+              "ci_hi": 0.5166,
+              "mean_signed_drift": -0.00076,
+              "median_signed_drift": 0.00072
+            },
+            "h21": {
+              "n": 13782,
+              "share_cont": 0.5106,
+              "ci_lo": 0.5022,
+              "ci_hi": 0.5189,
+              "mean_signed_drift": -0.00298,
+              "median_signed_drift": 0.00154
+            }
+          },
+          "up": {
+            "h5": {
+              "n": 15340,
+              "share_cont": 0.5065,
+              "ci_lo": 0.4985,
+              "ci_hi": 0.5144,
+              "mean_signed_drift": 0.00109,
+              "median_signed_drift": 0.00045
+            },
+            "h21": {
+              "n": 15340,
+              "share_cont": 0.5098,
+              "ci_lo": 0.5019,
+              "ci_hi": 0.5178,
+              "mean_signed_drift": 0.00353,
+              "median_signed_drift": 0.0015
+            }
+          }
+        },
+        "by_size": {
+          "small": {
+            "h5": {
+              "n": 9709,
+              "share_cont": 0.4997,
+              "ci_lo": 0.4898,
+              "ci_hi": 0.5097,
+              "mean_signed_drift": 0.00039,
+              "median_signed_drift": -1e-05
+            },
+            "h21": {
+              "n": 9709,
+              "share_cont": 0.4995,
+              "ci_lo": 0.4896,
+              "ci_hi": 0.5095,
+              "mean_signed_drift": -0.00036,
+              "median_signed_drift": -4e-05
+            }
+          },
+          "mid": {
+            "h5": {
+              "n": 9699,
+              "share_cont": 0.5108,
+              "ci_lo": 0.5008,
+              "ci_hi": 0.5207,
+              "mean_signed_drift": 1e-05,
+              "median_signed_drift": 0.00097
+            },
+            "h21": {
+              "n": 9699,
+              "share_cont": 0.5234,
+              "ci_lo": 0.5134,
+              "ci_hi": 0.5333,
+              "mean_signed_drift": 0.00138,
+              "median_signed_drift": 0.0033
+            }
+          },
+          "large": {
+            "h5": {
+              "n": 9714,
+              "share_cont": 0.5114,
+              "ci_lo": 0.5015,
+              "ci_hi": 0.5214,
+              "mean_signed_drift": 0.00025,
+              "median_signed_drift": 0.00079
+            },
+            "h21": {
+              "n": 9714,
+              "share_cont": 0.5077,
+              "ci_lo": 0.4978,
+              "ci_hi": 0.5177,
+              "mean_signed_drift": 0.00033,
+              "median_signed_drift": 0.00104
+            }
+          }
+        },
+        "by_period": {
+          "2001-2005": {
+            "h5": {
+              "n": 3442,
+              "share_cont": 0.5395,
+              "ci_lo": 0.5229,
+              "ci_hi": 0.5562,
+              "mean_signed_drift": 0.0018,
+              "median_signed_drift": 0.00308
+            },
+            "h21": {
+              "n": 3442,
+              "share_cont": 0.5203,
+              "ci_lo": 0.5036,
+              "ci_hi": 0.537,
+              "mean_signed_drift": 0.00072,
+              "median_signed_drift": 0.00338
+            }
+          },
+          "2006-2015": {
+            "h5": {
+              "n": 10715,
+              "share_cont": 0.5028,
+              "ci_lo": 0.4934,
+              "ci_hi": 0.5123,
+              "mean_signed_drift": 1e-05,
+              "median_signed_drift": 0.0002
+            },
+            "h21": {
+              "n": 10715,
+              "share_cont": 0.5091,
+              "ci_lo": 0.4996,
+              "ci_hi": 0.5186,
+              "mean_signed_drift": 0.00144,
+              "median_signed_drift": 0.00119
+            }
+          },
+          "2016-2026": {
+            "h5": {
+              "n": 14965,
+              "share_cont": 0.5031,
+              "ci_lo": 0.4951,
+              "ci_hi": 0.5111,
+              "mean_signed_drift": 0.0,
+              "median_signed_drift": 0.0003
+            },
+            "h21": {
+              "n": 14965,
+              "share_cont": 0.5087,
+              "ci_lo": 0.5006,
+              "ci_hi": 0.5167,
+              "mean_signed_drift": -0.00032,
+              "median_signed_drift": 0.00142
+            }
+          }
+        },
+        "by_size_period": {
+          "2001-2005|small": {
+            "n": 1148,
+            "share_cont": 0.5052,
+            "ci_lo": 0.4763,
+            "ci_hi": 0.5341,
+            "mean_signed_drift": -0.00174,
+            "median_signed_drift": 0.00172
+          },
+          "2001-2005|mid": {
+            "n": 1146,
+            "share_cont": 0.5305,
+            "ci_lo": 0.5016,
+            "ci_hi": 0.5594,
+            "mean_signed_drift": 0.00184,
+            "median_signed_drift": 0.00509
+          },
+          "2001-2005|large": {
+            "n": 1148,
+            "share_cont": 0.5253,
+            "ci_lo": 0.4964,
+            "ci_hi": 0.5541,
+            "mean_signed_drift": 0.00206,
+            "median_signed_drift": 0.00457
+          },
+          "2006-2015|small": {
+            "n": 3572,
+            "share_cont": 0.5081,
+            "ci_lo": 0.4917,
+            "ci_hi": 0.5245,
+            "mean_signed_drift": 0.00229,
+            "median_signed_drift": 0.00132
+          },
+          "2006-2015|mid": {
+            "n": 3568,
+            "share_cont": 0.5263,
+            "ci_lo": 0.51,
+            "ci_hi": 0.5427,
+            "mean_signed_drift": 0.0025,
+            "median_signed_drift": 0.00298
+          },
+          "2006-2015|large": {
+            "n": 3575,
+            "share_cont": 0.4929,
+            "ci_lo": 0.4765,
+            "ci_hi": 0.5093,
+            "mean_signed_drift": -0.00048,
+            "median_signed_drift": -0.00096
+          },
+          "2016-2026|small": {
+            "n": 4989,
+            "share_cont": 0.4921,
+            "ci_lo": 0.4782,
+            "ci_hi": 0.506,
+            "mean_signed_drift": -0.00195,
+            "median_signed_drift": -0.00105
+          },
+          "2016-2026|mid": {
+            "n": 4985,
+            "share_cont": 0.5196,
+            "ci_lo": 0.5057,
+            "ci_hi": 0.5334,
+            "mean_signed_drift": 0.00048,
+            "median_signed_drift": 0.0033
+          },
+          "2016-2026|large": {
+            "n": 4991,
+            "share_cont": 0.5143,
+            "ci_lo": 0.5005,
+            "ci_hi": 0.5282,
+            "mean_signed_drift": 0.0005,
+            "median_signed_drift": 0.00231
+          }
+        }
+      },
+      "non_outlier_A": {
+        "h5": {
+          "n": 22683,
+          "share_cont": 0.5065,
+          "ci_lo": 0.5,
+          "ci_hi": 0.5131,
+          "mean_signed_drift": 0.0003,
+          "median_signed_drift": 0.0005
+        },
+        "h21": {
+          "n": 22683,
+          "share_cont": 0.5083,
+          "ci_lo": 0.5018,
+          "ci_hi": 0.5148,
+          "mean_signed_drift": 0.00025,
+          "median_signed_drift": 0.00117
+        },
+        "by_dir": {
+          "down": {
+            "h5": {
+              "n": 10887,
+              "share_cont": 0.5109,
+              "ci_lo": 0.5015,
+              "ci_hi": 0.5203,
+              "mean_signed_drift": -0.00036,
+              "median_signed_drift": 0.00087
+            },
+            "h21": {
+              "n": 10887,
+              "share_cont": 0.511,
+              "ci_lo": 0.5016,
+              "ci_hi": 0.5204,
+              "mean_signed_drift": -0.0022,
+              "median_signed_drift": 0.00147
+            }
+          },
+          "up": {
+            "h5": {
+              "n": 11796,
+              "share_cont": 0.5025,
+              "ci_lo": 0.4935,
+              "ci_hi": 0.5116,
+              "mean_signed_drift": 0.00092,
+              "median_signed_drift": 0.0002
+            },
+            "h21": {
+              "n": 11796,
+              "share_cont": 0.5058,
+              "ci_lo": 0.4967,
+              "ci_hi": 0.5148,
+              "mean_signed_drift": 0.00251,
+              "median_signed_drift": 0.00087
+            }
+          }
+        },
+        "by_size": {
+          "small": {
+            "h5": {
+              "n": 7236,
+              "share_cont": 0.4938,
+              "ci_lo": 0.4823,
+              "ci_hi": 0.5053,
+              "mean_signed_drift": 6e-05,
+              "median_signed_drift": -0.00055
+            },
+            "h21": {
+              "n": 7236,
+              "share_cont": 0.4953,
+              "ci_lo": 0.4838,
+              "ci_hi": 0.5068,
+              "mean_signed_drift": -0.0008,
+              "median_signed_drift": -0.00069
+            }
+          },
+          "mid": {
+            "h5": {
+              "n": 7660,
+              "share_cont": 0.5104,
+              "ci_lo": 0.4992,
+              "ci_hi": 0.5216,
+              "mean_signed_drift": 4e-05,
+              "median_signed_drift": 0.00095
+            },
+            "h21": {
+              "n": 7660,
+              "share_cont": 0.5213,
+              "ci_lo": 0.5101,
+              "ci_hi": 0.5325,
+              "mean_signed_drift": 0.00101,
+              "median_signed_drift": 0.0029
+            }
+          },
+          "large": {
+            "h5": {
+              "n": 7787,
+              "share_cont": 0.5146,
+              "ci_lo": 0.5035,
+              "ci_hi": 0.5257,
+              "mean_signed_drift": 0.00079,
+              "median_signed_drift": 0.00104
+            },
+            "h21": {
+              "n": 7787,
+              "share_cont": 0.5075,
+              "ci_lo": 0.4964,
+              "ci_hi": 0.5186,
+              "mean_signed_drift": 0.00046,
+              "median_signed_drift": 0.00102
+            }
+          }
+        },
+        "by_period": {
+          "2001-2005": {
+            "h5": {
+              "n": 1762,
+              "share_cont": 0.5477,
+              "ci_lo": 0.5244,
+              "ci_hi": 0.5709,
+              "mean_signed_drift": 0.00226,
+              "median_signed_drift": 0.00328
+            },
+            "h21": {
+              "n": 1762,
+              "share_cont": 0.5227,
+              "ci_lo": 0.4994,
+              "ci_hi": 0.546,
+              "mean_signed_drift": 0.00181,
+              "median_signed_drift": 0.00298
+            }
+          },
+          "2006-2015": {
+            "h5": {
+              "n": 8812,
+              "share_cont": 0.5023,
+              "ci_lo": 0.4918,
+              "ci_hi": 0.5127,
+              "mean_signed_drift": -9e-05,
+              "median_signed_drift": 0.00015
+            },
+            "h21": {
+              "n": 8812,
+              "share_cont": 0.5048,
+              "ci_lo": 0.4943,
+              "ci_hi": 0.5152,
+              "mean_signed_drift": 0.00119,
+              "median_signed_drift": 0.00061
+            }
+          },
+          "2016-2026": {
+            "h5": {
+              "n": 12109,
+              "share_cont": 0.5037,
+              "ci_lo": 0.4948,
+              "ci_hi": 0.5126,
+              "mean_signed_drift": 0.00031,
+              "median_signed_drift": 0.00033
+            },
+            "h21": {
+              "n": 12109,
+              "share_cont": 0.5087,
+              "ci_lo": 0.4998,
+              "ci_hi": 0.5176,
+              "mean_signed_drift": -0.00067,
+              "median_signed_drift": 0.00129
+            }
+          }
+        },
+        "by_size_period": {
+          "2001-2005|small": {
+            "n": 501,
+            "share_cont": 0.507,
+            "ci_lo": 0.4632,
+            "ci_hi": 0.5508,
+            "mean_signed_drift": 0.00054,
+            "median_signed_drift": 0.00196
+          },
+          "2001-2005|mid": {
+            "n": 615,
+            "share_cont": 0.5138,
+            "ci_lo": 0.4743,
+            "ci_hi": 0.5533,
+            "mean_signed_drift": -0.00082,
+            "median_signed_drift": 0.00117
+          },
+          "2001-2005|large": {
+            "n": 646,
+            "share_cont": 0.5433,
+            "ci_lo": 0.5049,
+            "ci_hi": 0.5818,
+            "mean_signed_drift": 0.00532,
+            "median_signed_drift": 0.00576
+          },
+          "2006-2015|small": {
+            "n": 2791,
+            "share_cont": 0.5009,
+            "ci_lo": 0.4823,
+            "ci_hi": 0.5194,
+            "mean_signed_drift": 0.0017,
+            "median_signed_drift": 0.00013
+          },
+          "2006-2015|mid": {
+            "n": 2987,
+            "share_cont": 0.5259,
+            "ci_lo": 0.508,
+            "ci_hi": 0.5439,
+            "mean_signed_drift": 0.00285,
+            "median_signed_drift": 0.00294
+          },
+          "2006-2015|large": {
+            "n": 3034,
+            "share_cont": 0.4875,
+            "ci_lo": 0.4697,
+            "ci_hi": 0.5053,
+            "mean_signed_drift": -0.00091,
+            "median_signed_drift": -0.0015
+          },
+          "2016-2026|small": {
+            "n": 3944,
+            "share_cont": 0.4899,
+            "ci_lo": 0.4743,
+            "ci_hi": 0.5055,
+            "mean_signed_drift": -0.00273,
+            "median_signed_drift": -0.00138
+          },
+          "2016-2026|mid": {
+            "n": 4058,
+            "share_cont": 0.519,
+            "ci_lo": 0.5036,
+            "ci_hi": 0.5343,
+            "mean_signed_drift": -6e-05,
+            "median_signed_drift": 0.0031
+          },
+          "2016-2026|large": {
+            "n": 4107,
+            "share_cont": 0.5167,
+            "ci_lo": 0.5014,
+            "ci_hi": 0.532,
+            "mean_signed_drift": 0.00072,
+            "median_signed_drift": 0.00262
+          }
+        }
+      }
+    }
+  },
+  "tracker": {
+    "h5": {
+      "n": 4576,
+      "share_cont": 0.4779,
+      "ci_lo": 0.4635,
+      "ci_hi": 0.4924,
+      "mean_signed_drift": -0.0029
+    },
+    "h20": {
+      "n": 4551,
+      "share_cont": 0.4795,
+      "ci_lo": 0.4649,
+      "ci_hi": 0.494,
+      "mean_signed_drift": -0.00342
+    },
+    "period": "2024-05-21 to 2026-10-22"
+  }
+}
