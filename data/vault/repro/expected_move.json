@@ -1,0 +1,551 @@
+{
+  "name": "expected_move",
+  "ref": "repro:expected_move",
+  "built": "2026-10-24",
+  "claim": "The expected move (about 1 standard deviation; 16-delta strikes) contains the underlying about 68% of the time",
+  "tasty_value": "About 68% of outcomes fall within 1 SD; a 1-SD (16-delta) strike has about a 16% chance of finishing ITM",
+  "tasty_sources": [
+    "page:concepts-standard-deviation",
+    "page:concepts-implied-volatility"
+  ],
+  "tasty_note": "tastylive states the normal-theory figure; our test found 83.9% inside the band.",
+  "our_value": "SPX finished inside the VIX 1-sigma band 83.9% of the time (normal theory 68.3%), touched outside it on 26.1% of paths; realized moves had 0.75x the implied sigma.",
+  "data": "Yahoo ^GSPC and ^VIX daily closes",
+  "period": "1990-01-02 to 2026-09-23",
+  "method": "Band = S x VIX x sqrt(30/365) around each day's close; finish = last close on or before t+30 calendar days; touch = any close outside the band in between. Overlapping windows.",
+  "caveats": [
+    "VIX is the variance-swap implied vol (weighted toward OTM puts), slightly above ATM IV, so the band is a bit wider than the ATM expected move brokers quote.",
+    "Price only, no dividends; drift over 30 days shifts results by a fraction of a point.",
+    "Touch uses closes; intraday touches are more frequent.",
+    "Overlapping 30-day windows: n overstates independent observations ~21-fold."
+  ],
+  "verdict": "mixed",
+  "claims": [
+    {
+      "text": "The expected move (about 1 standard deviation; 16-delta strikes) contains the underlying about 68% of the time",
+      "claim_source": "seed",
+      "tasty_value": "About 68% of outcomes fall within 1 SD; a 1-SD (16-delta) strike has about a 16% chance of finishing ITM",
+      "tasty_sources": [
+        "page:concepts-standard-deviation",
+        "page:concepts-implied-volatility"
+      ],
+      "tasty_note": "tastylive states the normal-theory figure; our test found 83.9% inside the band.",
+      "our_value": "SPX finished inside the VIX 1-sigma band 83.9% of the time (normal theory 68.3%), touched outside it on 26.1% of paths; realized moves had 0.75x the implied sigma.",
+      "verdict": "mixed",
+      "literature": [
+        "lit:bondarenko-2019"
+      ]
+    },
+    {
+      "text": "Breaches are asymmetric: the market breaks the downside less often but further (crash risk the sellers are paid for)",
+      "claim_source": "lit:vrp",
+      "tasty_value": "Normal equity skew is negative: OTM puts are richer because of hedging demand",
+      "tasty_sources": [
+        "page:concepts-volatility-skew"
+      ],
+      "tasty_note": "tastylive explains the skew; it does not quantify breach asymmetry.",
+      "our_value": "Breaks: up 8.8% vs down 7.3%; average overshoot beyond the band +0.25 sigma up vs 0.53 sigma down; worst -7.8 sigma.",
+      "verdict": "agrees",
+      "literature": [
+        "lit:bollerslev-todorov-2011"
+      ]
+    }
+  ],
+  "literature": [
+    "lit:bondarenko-2019"
+  ],
+  "chart_data": {
+    "by_vix": [
+      {
+        "bucket": "0-15",
+        "n": 2960,
+        "inside": 0.8514,
+        "touch": 0.2544,
+        "up_break": 0.0919,
+        "down_break": 0.0568,
+        "mean_up_overshoot_sigma": 0.231,
+        "mean_down_overshoot_sigma": 0.529,
+        "worst_sigma": -7.75,
+        "best_sigma": 2.36,
+        "realized_sd_sigma": 0.725
+      },
+      {
+        "bucket": "15-20",
+        "n": 2861,
+        "inside": 0.8357,
+        "touch": 0.2464,
+        "up_break": 0.0804,
+        "down_break": 0.0839,
+        "mean_up_overshoot_sigma": 0.263,
+        "mean_down_overshoot_sigma": 0.569,
+        "worst_sigma": -7.1,
+        "best_sigma": 2.27,
+        "realized_sd_sigma": 0.78
+      },
+      {
+        "bucket": "20-30",
+        "n": 2692,
+        "inside": 0.8258,
+        "touch": 0.2845,
+        "up_break": 0.0892,
+        "down_break": 0.0851,
+        "mean_up_overshoot_sigma": 0.263,
+        "mean_down_overshoot_sigma": 0.471,
+        "worst_sigma": -4.01,
+        "best_sigma": 2.01,
+        "realized_sd_sigma": 0.758
+      },
+      {
+        "bucket": "30-+",
+        "n": 736,
+        "inside": 0.8478,
+        "touch": 0.2527,
+        "up_break": 0.0992,
+        "down_break": 0.053,
+        "mean_up_overshoot_sigma": 0.274,
+        "mean_down_overshoot_sigma": 0.645,
+        "worst_sigma": -2.92,
+        "best_sigma": 1.76,
+        "realized_sd_sigma": 0.699
+      }
+    ],
+    "by_decade": [
+      {
+        "decade": "1990s",
+        "n": 2528,
+        "inside": 0.8489,
+        "touch": 0.2377,
+        "up_break": 0.1147,
+        "down_break": 0.0364,
+        "mean_up_overshoot_sigma": 0.31,
+        "mean_down_overshoot_sigma": 0.348,
+        "worst_sigma": -2.25,
+        "best_sigma": 2.27,
+        "realized_sd_sigma": 0.665
+      },
+      {
+        "decade": "2000s",
+        "n": 2515,
+        "inside": 0.8338,
+        "touch": 0.274,
+        "up_break": 0.0624,
+        "down_break": 0.1038,
+        "mean_up_overshoot_sigma": 0.243,
+        "mean_down_overshoot_sigma": 0.467,
+        "worst_sigma": -4.01,
+        "best_sigma": 2.01,
+        "realized_sd_sigma": 0.759
+      },
+      {
+        "decade": "2010s",
+        "n": 2516,
+        "inside": 0.8482,
+        "touch": 0.2456,
+        "up_break": 0.0779,
+        "down_break": 0.0739,
+        "mean_up_overshoot_sigma": 0.194,
+        "mean_down_overshoot_sigma": 0.545,
+        "worst_sigma": -3.28,
+        "best_sigma": 2.36,
+        "realized_sd_sigma": 0.728
+      },
+      {
+        "decade": "2020s",
+        "n": 1690,
+        "inside": 0.8172,
+        "touch": 0.297,
+        "up_break": 0.1018,
+        "down_break": 0.0811,
+        "mean_up_overshoot_sigma": 0.235,
+        "mean_down_overshoot_sigma": 0.752,
+        "worst_sigma": -7.75,
+        "best_sigma": 1.76,
+        "realized_sd_sigma": 0.858
+      }
+    ],
+    "sigma_hist": [
+      {
+        "bin_lo": -4.0,
+        "share": 0.0013
+      },
+      {
+        "bin_lo": -3.75,
+        "share": 0.0001
+      },
+      {
+        "bin_lo": -3.5,
+        "share": 0.0004
+      },
+      {
+        "bin_lo": -3.25,
+        "share": 0.0001
+      },
+      {
+        "bin_lo": -3.0,
+        "share": 0.0004
+      },
+      {
+        "bin_lo": -2.75,
+        "share": 0.0013
+      },
+      {
+        "bin_lo": -2.5,
+        "share": 0.0016
+      },
+      {
+        "bin_lo": -2.25,
+        "share": 0.0039
+      },
+      {
+        "bin_lo": -2.0,
+        "share": 0.0064
+      },
+      {
+        "bin_lo": -1.75,
+        "share": 0.0102
+      },
+      {
+        "bin_lo": -1.5,
+        "share": 0.0185
+      },
+      {
+        "bin_lo": -1.25,
+        "share": 0.0289
+      },
+      {
+        "bin_lo": -1.0,
+        "share": 0.0441
+      },
+      {
+        "bin_lo": -0.75,
+        "share": 0.0591
+      },
+      {
+        "bin_lo": -0.5,
+        "share": 0.0815
+      },
+      {
+        "bin_lo": -0.25,
+        "share": 0.105
+      },
+      {
+        "bin_lo": 0.0,
+        "share": 0.1379
+      },
+      {
+        "bin_lo": 0.25,
+        "share": 0.1555
+      },
+      {
+        "bin_lo": 0.5,
+        "share": 0.1453
+      },
+      {
+        "bin_lo": 0.75,
+        "share": 0.1104
+      },
+      {
+        "bin_lo": 1.0,
+        "share": 0.0555
+      },
+      {
+        "bin_lo": 1.25,
+        "share": 0.0194
+      },
+      {
+        "bin_lo": 1.5,
+        "share": 0.0096
+      },
+      {
+        "bin_lo": 1.75,
+        "share": 0.0024
+      },
+      {
+        "bin_lo": 2.0,
+        "share": 0.0009
+      },
+      {
+        "bin_lo": 2.25,
+        "share": 0.0004
+      },
+      {
+        "bin_lo": 2.5,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 2.75,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 3.0,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 3.25,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 3.5,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 3.75,
+        "share": 0.0
+      }
+    ]
+  },
+  "stats": {
+    "overall": {
+      "n": 9249,
+      "inside": 0.8388,
+      "touch": 0.2606,
+      "up_break": 0.0881,
+      "down_break": 0.0731,
+      "mean_up_overshoot_sigma": 0.253,
+      "mean_down_overshoot_sigma": 0.53,
+      "worst_sigma": -7.75,
+      "best_sigma": 2.36,
+      "realized_sd_sigma": 0.751
+    },
+    "by_vix": [
+      {
+        "bucket": "0-15",
+        "n": 2960,
+        "inside": 0.8514,
+        "touch": 0.2544,
+        "up_break": 0.0919,
+        "down_break": 0.0568,
+        "mean_up_overshoot_sigma": 0.231,
+        "mean_down_overshoot_sigma": 0.529,
+        "worst_sigma": -7.75,
+        "best_sigma": 2.36,
+        "realized_sd_sigma": 0.725
+      },
+      {
+        "bucket": "15-20",
+        "n": 2861,
+        "inside": 0.8357,
+        "touch": 0.2464,
+        "up_break": 0.0804,
+        "down_break": 0.0839,
+        "mean_up_overshoot_sigma": 0.263,
+        "mean_down_overshoot_sigma": 0.569,
+        "worst_sigma": -7.1,
+        "best_sigma": 2.27,
+        "realized_sd_sigma": 0.78
+      },
+      {
+        "bucket": "20-30",
+        "n": 2692,
+        "inside": 0.8258,
+        "touch": 0.2845,
+        "up_break": 0.0892,
+        "down_break": 0.0851,
+        "mean_up_overshoot_sigma": 0.263,
+        "mean_down_overshoot_sigma": 0.471,
+        "worst_sigma": -4.01,
+        "best_sigma": 2.01,
+        "realized_sd_sigma": 0.758
+      },
+      {
+        "bucket": "30-+",
+        "n": 736,
+        "inside": 0.8478,
+        "touch": 0.2527,
+        "up_break": 0.0992,
+        "down_break": 0.053,
+        "mean_up_overshoot_sigma": 0.274,
+        "mean_down_overshoot_sigma": 0.645,
+        "worst_sigma": -2.92,
+        "best_sigma": 1.76,
+        "realized_sd_sigma": 0.699
+      }
+    ],
+    "by_decade": [
+      {
+        "decade": "1990s",
+        "n": 2528,
+        "inside": 0.8489,
+        "touch": 0.2377,
+        "up_break": 0.1147,
+        "down_break": 0.0364,
+        "mean_up_overshoot_sigma": 0.31,
+        "mean_down_overshoot_sigma": 0.348,
+        "worst_sigma": -2.25,
+        "best_sigma": 2.27,
+        "realized_sd_sigma": 0.665
+      },
+      {
+        "decade": "2000s",
+        "n": 2515,
+        "inside": 0.8338,
+        "touch": 0.274,
+        "up_break": 0.0624,
+        "down_break": 0.1038,
+        "mean_up_overshoot_sigma": 0.243,
+        "mean_down_overshoot_sigma": 0.467,
+        "worst_sigma": -4.01,
+        "best_sigma": 2.01,
+        "realized_sd_sigma": 0.759
+      },
+      {
+        "decade": "2010s",
+        "n": 2516,
+        "inside": 0.8482,
+        "touch": 0.2456,
+        "up_break": 0.0779,
+        "down_break": 0.0739,
+        "mean_up_overshoot_sigma": 0.194,
+        "mean_down_overshoot_sigma": 0.545,
+        "worst_sigma": -3.28,
+        "best_sigma": 2.36,
+        "realized_sd_sigma": 0.728
+      },
+      {
+        "decade": "2020s",
+        "n": 1690,
+        "inside": 0.8172,
+        "touch": 0.297,
+        "up_break": 0.1018,
+        "down_break": 0.0811,
+        "mean_up_overshoot_sigma": 0.235,
+        "mean_down_overshoot_sigma": 0.752,
+        "worst_sigma": -7.75,
+        "best_sigma": 1.76,
+        "realized_sd_sigma": 0.858
+      }
+    ],
+    "hist": [
+      {
+        "bin_lo": -4.0,
+        "share": 0.0013
+      },
+      {
+        "bin_lo": -3.75,
+        "share": 0.0001
+      },
+      {
+        "bin_lo": -3.5,
+        "share": 0.0004
+      },
+      {
+        "bin_lo": -3.25,
+        "share": 0.0001
+      },
+      {
+        "bin_lo": -3.0,
+        "share": 0.0004
+      },
+      {
+        "bin_lo": -2.75,
+        "share": 0.0013
+      },
+      {
+        "bin_lo": -2.5,
+        "share": 0.0016
+      },
+      {
+        "bin_lo": -2.25,
+        "share": 0.0039
+      },
+      {
+        "bin_lo": -2.0,
+        "share": 0.0064
+      },
+      {
+        "bin_lo": -1.75,
+        "share": 0.0102
+      },
+      {
+        "bin_lo": -1.5,
+        "share": 0.0185
+      },
+      {
+        "bin_lo": -1.25,
+        "share": 0.0289
+      },
+      {
+        "bin_lo": -1.0,
+        "share": 0.0441
+      },
+      {
+        "bin_lo": -0.75,
+        "share": 0.0591
+      },
+      {
+        "bin_lo": -0.5,
+        "share": 0.0815
+      },
+      {
+        "bin_lo": -0.25,
+        "share": 0.105
+      },
+      {
+        "bin_lo": 0.0,
+        "share": 0.1379
+      },
+      {
+        "bin_lo": 0.25,
+        "share": 0.1555
+      },
+      {
+        "bin_lo": 0.5,
+        "share": 0.1453
+      },
+      {
+        "bin_lo": 0.75,
+        "share": 0.1104
+      },
+      {
+        "bin_lo": 1.0,
+        "share": 0.0555
+      },
+      {
+        "bin_lo": 1.25,
+        "share": 0.0194
+      },
+      {
+        "bin_lo": 1.5,
+        "share": 0.0096
+      },
+      {
+        "bin_lo": 1.75,
+        "share": 0.0024
+      },
+      {
+        "bin_lo": 2.0,
+        "share": 0.0009
+      },
+      {
+        "bin_lo": 2.25,
+        "share": 0.0004
+      },
+      {
+        "bin_lo": 2.5,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 2.75,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 3.0,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 3.25,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 3.5,
+        "share": 0.0
+      },
+      {
+        "bin_lo": 3.75,
+        "share": 0.0
+      }
+    ],
+    "start": "1990-01-02",
+    "end": "2026-09-23"
+  }
+}

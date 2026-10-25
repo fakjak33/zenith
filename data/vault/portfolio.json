@@ -1,0 +1,612 @@
+{
+  "as_of": "2026-10-25",
+  "account_matrix": [
+    {
+      "account": "Cash account",
+      "strategies_allowed": "Fully paid or fully secured structures: covered calls, cash-secured puts, long calls and puts, LEAPS stock replacement, protective puts, collars, long straddles and strangles [lit:tastytrade-ira-2026]. Whether a cash account accepts defined-risk spreads was not verified.",
+      "not_allowed": "Naked short puts, short calls, short strangles and straddles, jade lizards and ratio spreads, which need a margin account [lit:tastytrade-ira-2026]. Credit spreads in a cash account are unverified, so treat them as not available until the broker confirms.",
+      "bpr_basis": "Full cash: a cash-secured put reserves strike x 100 per contract, released if the option expires worthless [page:concepts-cash-secured-put]. Covered-call shares are paid in full [lit:tastytrade-ira-2026]. The reserve is also the maximum-loss ceiling, less the credit [page:concepts-cash-secured-put].",
+      "minimums": "Not sourced. Regulation T cash-account option rules (12 CFR 220.8) were not read; broker approval level and experience requirements apply [page:concepts-naked-options].",
+      "notes": "Opportunity cost is real: reserved cash cannot be used elsewhere [page:concepts-cash-secured-put]. Full cash backing removes the forced-liquidation tail that hurt leveraged short-volatility books [lit:santaclara-saretto-2009]. The old pattern-day-trader rule applied to margin accounts, not cash accounts [page:concepts-pattern-day-trader-pdt-rule].",
+      "sources": [
+        "lit:santaclara-saretto-2009",
+        "lit:tastytrade-ira-2026",
+        "page:concepts-cash-secured-put",
+        "page:concepts-naked-options",
+        "page:concepts-pattern-day-trader-pdt-rule"
+      ]
+    },
+    {
+      "account": "IRA (tastytrade tiers)",
+      "strategies_allowed": "Buying options, covered calls and cash-secured puts; defined-risk spreads in the Basic and The Works tiers; uncovered calls in The Works with $25,000 start-of-day net liquidation value; futures need The Works [lit:tastytrade-ira-2026].",
+      "not_allowed": "Naked puts, which also rules out short strangles, straddles and jade lizards (each contains a naked put) [lit:tastytrade-ira-2026]. No portfolio margin in an IRA [lit:tastytrade-pm-2026].",
+      "bpr_basis": "Cash-secured: a short put needs the full strike value less the credit, for example $5,000 for a $50 put [page:concepts-notional-value]. Defined-risk spreads are margined at the spread's maximum loss, (width x 100) minus the credit [page:concepts-vertical-spread].",
+      "minimums": "$25,000 start-of-day net liquidation value for uncovered calls in The Works [lit:tastytrade-ira-2026]. The name and minimum of the lowest IRA tier was not in the reviewed material.",
+      "notes": "The strategy cards for short-call mark IRA as not allowed, but the IRA page says The Works permits uncovered calls above $25,000; this playbook follows the broker page and flags the conflict. Buying a put wing instead of selling a naked put in SPX cuts buying power sharply and is useful for small or IRA accounts [ep:market-measures-2026-05-02-2@05:45]. Buying replacement shares or calls inside an IRA within 30 days of a taxable loss permanently disallows that loss [lit:irs-p550-2025].",
+      "sources": [
+        "ep:market-measures-2026-05-02-2@05:45",
+        "lit:irs-p550-2025",
+        "lit:tastytrade-ira-2026",
+        "lit:tastytrade-pm-2026",
+        "page:concepts-notional-value",
+        "page:concepts-vertical-spread"
+      ]
+    },
+    {
+      "account": "Reg T margin account",
+      "strategies_allowed": "Everything above plus naked puts and calls, strangles, straddles, ratio spreads and jade lizards, subject to the broker's options approval level [page:concepts-naked-options].",
+      "not_allowed": "Nothing by rule, but naked shorts are restricted by broker approval, experience and size requirements [page:concepts-naked-options]. Portfolio margin needs a separate approval [lit:tastytrade-pm-2026].",
+      "bpr_basis": "Naked short listed option: 100% of option value plus 20% of the underlying (15% for broad indexes such as SPX and XSP) less the out-of-the-money amount, with a floor of option value plus 10% (puts: of strike) [lit:finra-4210-2026]. Worked example: a short $95 put on a $100 stock at $2.00 needs $1,700 [lit:finra-4210-2026]. tastylive's rule of thumb for a short put is about 20% of the strike [page:concepts-notional-value]. Shares bought on margin carry 50% initial margin [lit:frb-regt-220-12-nd].",
+      "minimums": "$2,000 minimum margin equity [lit:finra-4210-2026]. The $25,000 pattern-day-trader minimum was eliminated effective 4 Jun 2026, with an optional broker phase-in to 20 Oct 2027 [lit:finra-rn26-10-2026]; tastylive's PDT page predates that change [page:concepts-pattern-day-trader-pdt-rule].",
+      "notes": "Posted margin is not maximum loss: a short put can lose its strike less the credit, and a short call has no cap [page:concepts-naked-options]. Requirements on listed options barely change as positions are tested, while futures-option requirements rise sharply [ep:options-jive-2023-12-27@07:37]. Requirements are price-based, not volatility-based [ep:market-measures-2024-06-17@04:48]. A margin deficit intraday must be cured within 5 business days, with a 90-day restriction for repeat failures [lit:finra-rn26-10-2026].",
+      "sources": [
+        "ep:market-measures-2024-06-17@04:48",
+        "ep:options-jive-2023-12-27@07:37",
+        "lit:finra-4210-2026",
+        "lit:finra-rn26-10-2026",
+        "lit:frb-regt-220-12-nd",
+        "lit:tastytrade-pm-2026",
+        "page:concepts-naked-options",
+        "page:concepts-notional-value",
+        "page:concepts-pattern-day-trader-pdt-rule"
+      ]
+    },
+    {
+      "account": "Portfolio margin",
+      "strategies_allowed": "Same product set as Reg T, with requirements set by simulated market moves across the whole portfolio rather than strategy by strategy [lit:finra-rn12-44-2012].",
+      "not_allowed": "Not available in IRAs or cash accounts [lit:tastytrade-pm-2026].",
+      "bpr_basis": "Portfolio is revalued across 10 points of move: +6%/-8% for high-cap broad indexes, +/-10% for other broad indexes, +/-15% for equities and narrow indexes [lit:finra-4210-2026]. tastytrade adds a house stress of +/-15% for single equities and -15%/+10% for equity indexes plus a concentration test [lit:tastytrade-pm-2026].",
+      "minimums": "Regulatory floor $100k with full real-time intraday monitoring [lit:finra-4210-interps-2026]. tastytrade: $125k to open and $100k to maintain, in a margin account at The Works level [lit:tastytrade-pm-2026]. Interactive Brokers and Schwab thresholds were not verified.",
+      "notes": "Can be a fraction of Reg T on far-out-of-the-money index options, but the stress is only -8%/+6% on high-cap indexes, so a gap can exceed the posted requirement [lit:finra-4210-2026]. More leverage is the cost of more efficiency [lit:finra-rn12-44-2012].",
+      "sources": [
+        "lit:finra-4210-2026",
+        "lit:finra-4210-interps-2026",
+        "lit:finra-rn12-44-2012",
+        "lit:tastytrade-pm-2026"
+      ]
+    },
+    {
+      "account": "Futures account (options on futures)",
+      "strategies_allowed": "Futures options with defined or undefined risk; in a tastytrade IRA, futures require The Works tier [lit:tastytrade-ira-2026].",
+      "not_allowed": "The FINRA equity-option margin formula does not apply; futures-option margin is a separate CME performance-bond calculation [lit:cme-24-425-2024].",
+      "bpr_basis": "CME SPAN or SPAN 2 performance bond plus house add-ons, a dollar amount that moves with volatility [lit:cme-24-425-2024] (partially verified). Defined-risk positions: width x point value minus the credit.",
+      "minimums": "Not sourced for tastytrade futures accounts in the reviewed material.",
+      "notes": "Leverage example: /CL notional about $47,000 versus about $3,500 margin, over 10:1 [page:concepts-notional-value]. Selling futures options naked carries large risk and needs a plan first [page:concepts-futures-options]. Mini, micro and small futures options use less capital [page:concepts-futures-options]. Requirements rise sharply when the market moves against you [ep:options-jive-2023-12-27@07:37]. Futures options are Section 1256 contracts [lit:uscongress-irc1256-2018].",
+      "sources": [
+        "ep:options-jive-2023-12-27@07:37",
+        "lit:cme-24-425-2024",
+        "lit:tastytrade-ira-2026",
+        "lit:uscongress-irc1256-2018",
+        "page:concepts-futures-options",
+        "page:concepts-notional-value"
+      ]
+    }
+  ],
+  "allocation": {
+    "bp_vs_vix": {
+      "guidance": "No verified VIX-tiered buying-power ladder exists in the reviewed material, so none is presented. What is verified: tastylive's guideline is 25-50% of portfolio buying power in short premium, scaled to VIX, and about 30% allocation when VIX stays above 15 all year [lit:tastylive-allocation-2022]. The hosts say to lean higher in high volatility and with small accounts, lower in low volatility and with large accounts, never above 75% [ep:options-jive-2023-12-27@06:56]; another episode puts typical allocation at 30-70%, the host running near 50% give or take 10, higher when volatility is higher [ep:from-theory-to-practice-2022-12-21@22:13].",
+      "table": [],
+      "verified": false,
+      "notes": "The literature review rates the claim 'allocate more as VIX rises' as mixed: regime scaling has some support, but margin calls and gap risk peak when VIX is high [lit:santaclara-saretto-2009]. In our test, after VIX first closed above 30 (n=54) the VIX-minus-realized spread averaged +6.0 points versus +4.1 on all days, yet a drop of more than 10% within 21 days followed 11% of events versus 4% of all days, and the worst intra-month low was -24.9% [repro:vix_spikes]. That argues against treating a high VIX as a reason to size up without a stress limit. A 25/30/35/40/50% ladder circulates but could not be confirmed from a primary tastylive page or the Spina and Kulikov tables [lit:spina-kulikov-2022]; it is listed as unverified."
+    },
+    "per_trade": {
+      "guidance": "tastylive sources give a range, not one number: keep each trade under 5% of the portfolio so results come from many occurrences [page:concepts-number-of-occurrences]; the general risk primer suggests about 1% risk per trade, 2% for higher tolerance [page:concepts-risk-management]; a host example risks about 1% per defined-risk trade, around $500 on a $50,000 account [ep:from-theory-to-practice-2022-12-21@22:30]. The same BPR is a different risk by account size: 1% of a $100,000 account is $1,000, but the same $1,000 in a $10,000 account is 10% [page:concepts-number-of-occurrences]. A 10-wide QQQ put spread with about a $3 credit had a max loss of $700, above the $500 target [ep:from-theory-to-practice-2022-12-21@23:18]. For short-dated 0DTE trades, size small enough to leave alone when tested [ep:market-measures-2026-09-25@03:25]; for earnings, keep positions small [ep:research-2024-10-21@07:02]. The independent support for a '1-5% of net liq' or '2% maximum' rule is thin; see the unverified list.",
+      "sources": [
+        "ep:from-theory-to-practice-2022-12-21@22:30",
+        "ep:from-theory-to-practice-2022-12-21@23:18",
+        "ep:market-measures-2026-09-25@03:25",
+        "ep:research-2024-10-21@07:02",
+        "page:concepts-number-of-occurrences",
+        "page:concepts-risk-management"
+      ]
+    },
+    "positions": {
+      "guidance": "Many small positions help only if they are roughly independent, and short-volatility tails are not: short-variance strategies are negatively skewed in every case studied [lit:lemperiere-etal-2017]. Five bullish positions in correlated underlyings give no real diversification [page:concepts-correlation]. The documented failures (LJM, OptionSellers, Allianz) combined short volatility with leverage or concentration and a stated worst case far below the realized loss [lit:cftc-ljm-2021] [lit:sec-allianz-2022] [lit:famag-optionsellers-2018]. The evidence suggests capping the number of undefined-risk positions that share one factor (equity crash) rather than counting tickers.",
+      "sources": [
+        "lit:cftc-ljm-2021",
+        "lit:famag-optionsellers-2018",
+        "lit:lemperiere-etal-2017",
+        "lit:sec-allianz-2022",
+        "page:concepts-correlation"
+      ]
+    },
+    "theta_nlv": {
+      "guidance": "A host gives a goal of theta around 0.1% of net liquidation value as a rough yardstick, with an IWM example (IV rank 8.4) judged poor premium efficiency [ep:from-theory-to-practice-2022-12-21@16:01]. This is a single episode data point; no independent source supports 0.1% as a target or a ceiling, so it is best read as a sanity check on whether the sleeve is producing meaningful decay, not as a sizing rule.",
+      "sources": [
+        "ep:from-theory-to-practice-2022-12-21@16:01"
+      ]
+    },
+    "beta_weighted_delta": {
+      "guidance": "Convert every position to one benchmark so one delta number summarizes the book; tastytrade does this against SPY by default [ep:options-jive-2023-12-27@04:12]. Use SPY for liquid mid- and large-cap names and a closer benchmark such as QQQ when positions cluster in one sector [page:concepts-beta-weight]. Betas use five years of history and the result is a contextual guide, not a precise input [page:concepts-beta-weight]. For the sleeve, size as equity risk: put-write index beta is about 0.56-0.60 [lit:bondarenko-2019], BXM about 0.62-0.67 and BXMD about 0.80 [lit:israelov-nielsen-2014] [repro:cboe_short_vol]. Add the sleeve's beta-weighted delta to the core's rather than looking at each separately.",
+      "sources": [
+        "ep:options-jive-2023-12-27@04:12",
+        "lit:bondarenko-2019",
+        "lit:israelov-nielsen-2014",
+        "page:concepts-beta-weight",
+        "repro:cboe_short_vol"
+      ]
+    },
+    "correlation": {
+      "guidance": "The hosts aim for pairwise correlation within roughly -0.5 to +0.5 between holdings, with index products the exception because they are highly correlated with each other [ep:options-jive-2023-12-27@05:12]. Bands on the tastylive page: weak 0.1-0.3, moderate 0.3-0.5, strong 0.5-1.0 [page:concepts-correlation]. Correlation is measured on at least one month of history and can break down in a crash, so do not rely on it there [page:concepts-correlation]. A long-stock core and short index puts are the same factor, so for this investor correlation inside the sleeve matters less than correlation between sleeve and core.",
+      "sources": [
+        "ep:options-jive-2023-12-27@05:12",
+        "page:concepts-correlation"
+      ]
+    },
+    "stress": {
+      "guidance": "Size to an aggregate stress loss, not to per-trade BPR. The literature review's criterion: keep a plausible crash loss, taken as 2-3 times BPR for undefined-risk index strangles and more for single names and commodities, below about 25-35% of net liquidation value [lit:santaclara-saretto-2009] [lit:finra-4210-2026]. Illustrative arithmetic from those inputs (not a sourced figure): that points to undefined-risk index BPR of roughly 8-17% of net liquidation value (25 divided by 3, 35 divided by 2). Portfolio margin stresses high-cap indexes only -8%/+6%, so posted margin is not maximum loss [lit:finra-4210-2026]. On average there is about a 5% chance of a move twice as large as expected [ep:options-jive-2023-12-27@08:55]. Half Kelly or less is the defensible fraction (about 75% of growth at half the volatility) and 2x Kelly earns zero excess growth [lit:thorp-2006] [lit:maclean-etal-2010].",
+      "sources": [
+        "ep:options-jive-2023-12-27@08:55",
+        "lit:finra-4210-2026",
+        "lit:maclean-etal-2010",
+        "lit:santaclara-saretto-2009",
+        "lit:thorp-2006"
+      ]
+    }
+  },
+  "sleeve_playbook": [
+    {
+      "question": "Does a 25-50% options sleeve need margin?",
+      "answer": "Not for the core of it, but it depends on the strategy family. Covered calls on shares you own, cash-secured puts and long options (calls, puts, LEAPS, protective puts, collars) can run in a cash account or an IRA at tastytrade [lit:tastytrade-ira-2026]; a cash-secured put reserves strike x 100 per contract, so the reserve is the position size [page:concepts-cash-secured-put]. Defined-risk spreads are allowed in tastytrade IRAs (Basic and The Works tiers) [lit:tastytrade-ira-2026], but whether a cash account accepts them was not verified. Naked puts, short strangles and straddles, jade lizards and ratio spreads need a margin account [lit:tastytrade-ira-2026]; under Reg T a naked option needs premium plus 20% of the underlying less the out-of-the-money amount (15% for SPX and XSP), with a $2,000 minimum margin equity [lit:finra-4210-2026]. So margin buys capital efficiency rather than being required for the sleeve; the evidence suggests it is also where leveraged short-premium books were forced to exit at losses [lit:santaclara-saretto-2009].",
+      "by_strategy": [
+        {
+          "slug": "covered-call",
+          "note": "Cash and IRA eligible because the shares cover the call [lit:tastytrade-ira-2026]; margin treatment of the call itself is standard structure, not verified."
+        },
+        {
+          "slug": "cash-secured-put",
+          "note": "Cash and IRA eligible; reserve is strike x 100 per contract [page:concepts-cash-secured-put] [lit:tastytrade-ira-2026]."
+        },
+        {
+          "slug": "put-credit-spread",
+          "note": "IRA eligible [lit:tastytrade-ira-2026]; cash-account eligibility not verified."
+        },
+        {
+          "slug": "short-put",
+          "note": "Margin account only; about 20% of strike as a rule of thumb [page:concepts-notional-value]."
+        },
+        {
+          "slug": "short-strangle",
+          "note": "Margin account only; not allowed in IRA or cash [lit:tastytrade-ira-2026]."
+        },
+        {
+          "slug": "short-call",
+          "note": "Margin account; the IRA page allows uncovered calls only in The Works with $25,000 start-of-day net liq [lit:tastytrade-ira-2026]."
+        },
+        {
+          "slug": "long-put",
+          "note": "Debit only, so cash and IRA eligible [lit:tastytrade-ira-2026]."
+        }
+      ],
+      "sources": [
+        "lit:finra-4210-2026",
+        "lit:santaclara-saretto-2009",
+        "lit:tastytrade-ira-2026",
+        "page:concepts-cash-secured-put",
+        "page:concepts-notional-value"
+      ]
+    },
+    {
+      "question": "How big should each position and the whole sleeve be?",
+      "answer": "tastylive sources suggest under 5% of the portfolio per trade [page:concepts-number-of-occurrences], with about 1% risk per defined-risk trade (2% if aggressive) [page:concepts-risk-management] [ep:from-theory-to-practice-2022-12-21@22:30]; 1% of $100,000 is $1,000 of BPR, but the same $1,000 is 10% of a $10,000 account [page:concepts-number-of-occurrences]. For the whole book, the hosts keep options buying-power use around 25-50% with 75% as a ceiling, higher when volatility is high or the account is small, lower when the account is large [ep:options-jive-2023-12-27@06:56]. Note that their 25-50% is of buying power, while your 25-50% is of the account; the two match only for fully cash-secured positions, and margin makes the account share of actual risk larger than BPR suggests [lit:finra-4210-2026]. A stress test is stricter: a crash loss of 2-3x BPR kept below 25-35% of net liquidation value [lit:santaclara-saretto-2009] points, by illustrative arithmetic, to roughly 8-17% of net liquidation value in undefined-risk index BPR. Even a conservative 25% of capital in SPY 30-delta short puts would have ended 2008 with about half its value, with buying power possibly exhausted [ep:options-jive-2023-12-27@08:16]. Consider half Kelly or less as the upper bound on aggressiveness [lit:thorp-2006].",
+      "by_strategy": [
+        {
+          "slug": "short-put",
+          "note": "Posted margin is not maximum loss; size by stress loss [lit:finra-4210-2026]."
+        },
+        {
+          "slug": "put-credit-spread",
+          "note": "Risk about 1% per trade: about $500 on $50,000 [ep:from-theory-to-practice-2022-12-21@22:30]."
+        },
+        {
+          "slug": "iron-condor",
+          "note": "BPR is (wing width x 100) minus the credit; a $5-wing condor needs about 2.5x less buying power than the 16-delta strangle [ep:market-measures-2023-02-22@03:07]."
+        }
+      ],
+      "sources": [
+        "ep:from-theory-to-practice-2022-12-21@22:30",
+        "ep:market-measures-2023-02-22@03:07",
+        "ep:options-jive-2023-12-27@06:56",
+        "ep:options-jive-2023-12-27@08:16",
+        "lit:finra-4210-2026",
+        "lit:santaclara-saretto-2009",
+        "lit:thorp-2006",
+        "page:concepts-number-of-occurrences",
+        "page:concepts-risk-management"
+      ]
+    },
+    {
+      "question": "How do short puts and covered calls change total portfolio delta/beta and concentration?",
+      "answer": "A short put adds long equity delta and a covered call trims the delta of shares you already own, so the two push the book in opposite directions. Index put-writing has a beta of about 0.56-0.60 to the S&P 500 [lit:bondarenko-2019] and covered-call indexes about 0.62-0.67 (BXM) and 0.80 (BXMD) [lit:israelov-nielsen-2014] [repro:cboe_short_vol], so treat sleeve capital as equity exposure and add it to the core's beta-weighted delta [ep:options-jive-2023-12-27@04:12]. In covered calls the downside beta is higher than the upside beta (0.78 versus 0.63), so the call gives up upside faster than it protects the downside [lit:israelov-nielsen-2014]. Selling puts on a stock you already hold in the core doubles the same bet and means assignment adds to the position; selling calls on core shares caps upside and can call the shares away [page:concepts-covered-call]. Whether short call credit spreads can offset part of the core's beta is plausible but no source quantifies it.",
+      "by_strategy": [
+        {
+          "slug": "short-put",
+          "note": "Adds beta of about 0.56-0.60 on reserved capital [lit:bondarenko-2019]."
+        },
+        {
+          "slug": "cash-secured-put",
+          "note": "Behaves like the put-write index, beta about 0.60 [repro:cboe_short_vol]."
+        },
+        {
+          "slug": "covered-call",
+          "note": "Most of the risk is still the stock; do not count the premium as extra return [lit:israelov-nielsen-2014]."
+        },
+        {
+          "slug": "call-credit-spread",
+          "note": "Opposite sign to the long-stock book; offset not quantified by any source."
+        }
+      ],
+      "sources": [
+        "ep:options-jive-2023-12-27@04:12",
+        "lit:bondarenko-2019",
+        "lit:israelov-nielsen-2014",
+        "page:concepts-covered-call",
+        "repro:cboe_short_vol"
+      ]
+    },
+    {
+      "question": "What should be avoided or capped?",
+      "answer": "Consider capping or avoiding: naked short calls, which have unlimited loss [page:concepts-options-leverage] (OptionSellers' short natural-gas calls left $35.3M of deficit claims after forced liquidation [lit:famag-optionsellers-2018]); naked futures options without a plan [page:concepts-futures-options]; selling 0DTE premium in the last half hour, where every late-day approach lost money over a 52-week sample despite win rates of 40-82% [ep:market-measures-2024-05-14@03:01] [ep:market-measures-2024-05-14@03:22]; and earnings strangles, where return on investment was positive only for Apple among four large tech names [ep:research-2024-10-21@01:45]. Cap total buying-power use at 75% and aim lower [ep:options-jive-2023-12-27@06:56], avoid full Kelly (2x Kelly earns zero excess growth) [lit:maclean-etal-2010], and avoid stacking several short puts in correlated names [page:concepts-correlation]. Short-volatility products can terminate in a day: XIV's indicative value fell to 20% or less of the prior close on 5 Feb 2018 [lit:creditsuisse-xiv-2018]. Prefer liquid underlyings, since weeklies averaged a 12.6% bid-ask spread [lit:bryzgalova-etal-2023].",
+      "by_strategy": [
+        {
+          "slug": "short-call",
+          "note": "Unlimited loss; the bundle's strategy card rates it tier C."
+        },
+        {
+          "slug": "zero-dte",
+          "note": "Frictions erase the premium on average [lit:vilkov-2023]; small size and defined risk [ep:research-2023-10-20@07:27]."
+        },
+        {
+          "slug": "earnings-trade",
+          "note": "Direction is close to a coin flip; keep small or skip [ep:options-jive-2026-02-09@13:36]."
+        },
+        {
+          "slug": "jade-lizard",
+          "note": "A put-heavy structure is a bigger bet on the same crash factor [lit:kozhan-etal-2013]."
+        }
+      ],
+      "sources": [
+        "ep:market-measures-2024-05-14@03:01",
+        "ep:market-measures-2024-05-14@03:22",
+        "ep:options-jive-2023-12-27@06:56",
+        "ep:options-jive-2026-02-09@13:36",
+        "ep:research-2023-10-20@07:27",
+        "ep:research-2024-10-21@01:45",
+        "lit:bryzgalova-etal-2023",
+        "lit:creditsuisse-xiv-2018",
+        "lit:famag-optionsellers-2018",
+        "lit:kozhan-etal-2013",
+        "lit:maclean-etal-2010",
+        "lit:vilkov-2023",
+        "page:concepts-correlation",
+        "page:concepts-futures-options",
+        "page:concepts-options-leverage"
+      ]
+    },
+    {
+      "question": "Can the sleeve hedge the core, and at what cost?",
+      "answer": "Partly, but the sleeve's short-premium positions add equity risk rather than hedge it; hedging means buying protection, which has a measurable cost. A monthly 5% out-of-the-money put overlay (PPUT) trailed the S&P 500 total return by 3.5 points a year from 1988, 2.8 from 2007 and 3.0 from 2016 [repro:cboe_tail_hedge], and continuously held one-month at-the-money puts returned -7.4% a year in excess terms [lit:harvey-etal-2019]. Puts did help in fast crashes (-11.8% versus -33.8% in the COVID window, calendar 2020 +29.08% versus +18.40%) but not in the slower 2022 decline (-19.81%) [repro:cboe_tail_hedge]. Simply holding less equity did as well: a 56% stock and 44% T-bill mix matched PPUT's 7.92% CAGR with a -31.5% max drawdown versus -38.9% [repro:cboe_tail_hedge]. A collar funds the put with a short call but caps upside; the Cboe collar index (CLL) returned 8.56% a year versus 16.88% for the S&P 500 total return from 2009, with a worst month of -20.63% [repro:cboe_tail_hedge]. Trend following was a cheaper crisis diversifier in the studies reviewed [lit:harvey-etal-2019] [lit:ilmanen-etal-2021].",
+      "by_strategy": [
+        {
+          "slug": "protective-put",
+          "note": "Cash and IRA eligible; one contract per 100 shares [page:concepts-protective-put]."
+        },
+        {
+          "slug": "collar",
+          "note": "Costless collar balances put cost against call credit but caps upside [page:concepts-collar-option]."
+        },
+        {
+          "slug": "tail-hedge",
+          "note": "A 3% a year overlay must save about 30 points of drawdown roughly once a decade to pay for itself (illustrative arithmetic) [lit:bondarenko-2019]."
+        }
+      ],
+      "sources": [
+        "lit:bondarenko-2019",
+        "lit:harvey-etal-2019",
+        "lit:ilmanen-etal-2021",
+        "page:concepts-collar-option",
+        "page:concepts-protective-put",
+        "repro:cboe_tail_hedge"
+      ]
+    },
+    {
+      "question": "What happens in a crash (2008, Feb 2018, Mar 2020, Apr 2025)?",
+      "answer": "2008: the S&P 500 fell 57% from the 2007 peak to March 2009 and VIX hit record highs [page:concepts-black-swan-event]; the hosts' 25%-of-capital SPY 30-delta short put example kept about half its value [ep:options-jive-2023-12-27@08:16]. February 2018: LJM's funds lost more than 80% in two days after VIX rose more than 20 points, against stated worst cases of 20-40% [lit:cftc-ljm-2021], and XIV accelerated after falling to 20% or less of its prior close [lit:creditsuisse-xiv-2018]. March 2020: the S&P 500 fell 34% [page:concepts-black-swan-event], Allianz's Structured Alpha lost more than $5bn [lit:sec-allianz-2022], and the roughly $600M Malachite fund wound down after margin calls [lit:bloomberg-malachite-2020]; a one-lot SPY strangle loser reached about $8,000 [ep:market-measures-2025-08-14@05:05]. April 2025: a drawdown of about 19% still produced the second-worst loss ratio, with a one-lot loser near $7,000, because speed hurt more than depth [ep:market-measures-2025-08-14@05:05] [ep:market-measures-2025-08-14@05:23]. The pattern: strangles opened in low implied volatility just before a sudden jump lost the most [ep:market-measures-2025-08-14@05:05], margin forced exits at the worst time [lit:santaclara-saretto-2009], and your core falls at the same time as the sleeve.",
+      "by_strategy": [
+        {
+          "slug": "cash-secured-put",
+          "note": "Full cash backing removes the margin-call tail but not the loss on the stock [lit:santaclara-saretto-2009]."
+        },
+        {
+          "slug": "short-strangle",
+          "note": "Our model's worst book year was 2018 at -4.0% of notional, but it marks at closes and misses intraday gaps [repro:strangle_mgmt]."
+        },
+        {
+          "slug": "iron-condor",
+          "note": "The wide condor index CNDR had a worst peak-to-trough monthly loss of about 19% versus 51% for the S&P 500 [lit:moran-2021b]."
+        }
+      ],
+      "sources": [
+        "ep:market-measures-2025-08-14@05:05",
+        "ep:market-measures-2025-08-14@05:23",
+        "ep:options-jive-2023-12-27@08:16",
+        "lit:bloomberg-malachite-2020",
+        "lit:cftc-ljm-2021",
+        "lit:creditsuisse-xiv-2018",
+        "lit:moran-2021b",
+        "lit:santaclara-saretto-2009",
+        "lit:sec-allianz-2022",
+        "page:concepts-black-swan-event",
+        "repro:strangle_mgmt"
+      ]
+    },
+    {
+      "question": "Defined versus undefined risk for this investor?",
+      "answer": "The trade-off is cost against survivability, and the evidence suggests the answer leans toward defined risk for the part of the sleeve that cannot be monitored daily. Adding 5-delta wings to a 16-delta SPY strangle kept about 60% of the median profit, needed about 2.5 times less buying power and cut the worst-5% loss by roughly 38% [ep:market-measures-2023-02-22@03:07]; with VIX above 35 the condor still earned about 60% of the strangle's median P&L with about 33% less tail risk, and the two needed roughly equal buying power [ep:market-measures-2023-02-22@05:45]. The hosts' own rule is to prefer defined risk, shrink size and consider 60 days or more to reduce tail risk [ep:options-jive-2023-12-27@09:33]. The cost is real: the Cboe 20-delta condor index returned 0.98% a year over 2007-2026 versus 7.24% for put-writing and 1.56% for T-bills [repro:cboe_short_vol]. Defined risk caps the loss per trade but not the correlation between trades [lit:lemperiere-etal-2017], and a cash-secured put is defined only in the sense that the stock can fall to zero [page:concepts-cash-secured-put].",
+      "by_strategy": [
+        {
+          "slug": "iron-condor",
+          "note": "Wide wings behave statistically like a strangle with less capital [ep:market-measures-2023-02-22@06:25]."
+        },
+        {
+          "slug": "short-strangle",
+          "note": "Higher median P&L, but a worst-5% loss of about $700 versus about $430 for the $5-wing condor [ep:market-measures-2023-02-22@03:07]."
+        },
+        {
+          "slug": "put-credit-spread",
+          "note": "Max loss is width x 100 minus the credit [page:concepts-vertical-spread]."
+        }
+      ],
+      "sources": [
+        "ep:market-measures-2023-02-22@03:07",
+        "ep:market-measures-2023-02-22@05:45",
+        "ep:market-measures-2023-02-22@06:25",
+        "ep:options-jive-2023-12-27@09:33",
+        "lit:lemperiere-etal-2017",
+        "page:concepts-cash-secured-put",
+        "page:concepts-vertical-spread",
+        "repro:cboe_short_vol"
+      ]
+    }
+  ],
+  "account_tiers": [
+    {
+      "tier": "Under $25k",
+      "practical": "Defined-risk spreads, cash-secured puts on low-priced liquid ETFs, covered calls on shares already held. A 25-50% sleeve is a small dollar amount, so per-trade risk of 1% is smaller still [page:concepts-risk-management].",
+      "constraints": "The same BPR is a larger share of a small account: $1,000 is 10% of $10,000 [page:concepts-number-of-occurrences]. The $25,000 pattern-day-trader minimum was eliminated effective 4 Jun 2026 with an optional broker phase-in to 20 Oct 2027 [lit:finra-rn26-10-2026]; tastylive's PDT page predates that change [page:concepts-pattern-day-trader-pdt-rule]. Reg T minimum margin equity $2,000 [lit:finra-4210-2026]. Uncovered calls in a tastytrade IRA need $25,000 [lit:tastytrade-ira-2026]. The hosts lean toward higher allocation in small accounts [ep:options-jive-2023-12-27@06:56], which the literature does not endorse as safe [lit:santaclara-saretto-2009].",
+      "contracts": "SPX is a $100 multiplier, European, cash-settled [lit:cboe-spx-2026]; XSP is one-tenth of SPX [lit:cboe-xsp-2026]. SPY options are equity options [lit:uscongress-irc1256-2018]. /MES and /ES contract specifications and option exercise style were not verified.",
+      "sources": [
+        "ep:options-jive-2023-12-27@06:56",
+        "lit:cboe-spx-2026",
+        "lit:cboe-xsp-2026",
+        "lit:finra-4210-2026",
+        "lit:finra-rn26-10-2026",
+        "lit:santaclara-saretto-2009",
+        "lit:tastytrade-ira-2026",
+        "lit:uscongress-irc1256-2018",
+        "page:concepts-number-of-occurrences",
+        "page:concepts-pattern-day-trader-pdt-rule",
+        "page:concepts-risk-management"
+      ]
+    },
+    {
+      "tier": "$25k-$100k",
+      "practical": "Reg T margin account running defined-risk spreads, cash-secured puts and covered calls; a few naked short puts are possible but each BPR is a large share of the account. The $50,000 host example risks about $500 per defined-risk trade [ep:from-theory-to-practice-2022-12-21@22:30].",
+      "constraints": "Portfolio margin is not available below the $100k regulatory floor [lit:finra-4210-interps-2026]. A 10-wide spread can exceed a 1% risk target even with a $3 credit ($700 versus $500) [ep:from-theory-to-practice-2022-12-21@23:18]. Posted margin is not maximum loss [lit:finra-4210-2026].",
+      "contracts": "XSP (one-tenth SPX) [lit:cboe-xsp-2026] and SPY options are the practical sizes; one SPX contract has 100 times the index level in notional [lit:cboe-spx-2026]. Index options get 15% rather than 20% in the Reg T formula [lit:finra-4210-2026]. /MES versus /ES: unverified.",
+      "sources": [
+        "ep:from-theory-to-practice-2022-12-21@22:30",
+        "ep:from-theory-to-practice-2022-12-21@23:18",
+        "lit:cboe-spx-2026",
+        "lit:cboe-xsp-2026",
+        "lit:finra-4210-2026",
+        "lit:finra-4210-interps-2026"
+      ]
+    },
+    {
+      "tier": "$100k-$250k",
+      "practical": "Portfolio margin becomes possible: tastytrade needs $125k to open and $100k to maintain [lit:tastytrade-pm-2026]. 1% risk per trade is about $1,000 or more [page:concepts-number-of-occurrences].",
+      "constraints": "Drawdowns in the core and the sleeve together can push the account under the $100k maintenance level [lit:tastytrade-pm-2026]; that exposure follows from the stated numbers but no source discusses it. House index stress of -15%/+10% roughly doubles the regulatory -8%/+6% [lit:tastytrade-pm-2026] [lit:finra-4210-interps-2026]. Interactive Brokers and Schwab minimums were not verified.",
+      "contracts": "SPX or XSP for taxable accounts to get Section 1256 treatment on SPX [lit:uscongress-irc1256-2018]; /MES and /ES futures options need a futures-enabled account and The Works in an IRA [lit:tastytrade-ira-2026]; futures margin moves with volatility [lit:cme-24-425-2024].",
+      "sources": [
+        "lit:cme-24-425-2024",
+        "lit:finra-4210-interps-2026",
+        "lit:tastytrade-ira-2026",
+        "lit:tastytrade-pm-2026",
+        "lit:uscongress-irc1256-2018",
+        "page:concepts-number-of-occurrences"
+      ]
+    },
+    {
+      "tier": "Over $250k",
+      "practical": "Portfolio margin is comfortable above the floors [lit:tastytrade-pm-2026]. The hosts lean lower on buying-power use with large accounts [ep:options-jive-2023-12-27@06:56].",
+      "constraints": "More capacity makes the stress criterion, not the margin limit, the binding constraint: crash loss of 2-3x BPR kept below about 25-35% of net liquidation value [lit:santaclara-saretto-2009]. Concentration across correlated short puts still applies [page:concepts-correlation].",
+      "contracts": "SPX and XSP for 60/40 treatment [lit:uscongress-irc1256-2018] and no early assignment [lit:cboe-spx-2026]; /ES versus /MES are Section 1256 futures options [lit:uscongress-irc1256-2018], but their multipliers and exercise style were not verified.",
+      "sources": [
+        "ep:options-jive-2023-12-27@06:56",
+        "lit:cboe-spx-2026",
+        "lit:santaclara-saretto-2009",
+        "lit:tastytrade-pm-2026",
+        "lit:uscongress-irc1256-2018",
+        "page:concepts-correlation"
+      ]
+    }
+  ],
+  "taxes": [
+    {
+      "topic": "Section 1256 (SPX, futures options)",
+      "point": "Broad-based index options and futures options are marked to market at year end and taxed 60% long-term and 40% short-term regardless of holding period [lit:uscongress-irc1256-2018] [lit:irs-f6781-2025]. By the bundle's arithmetic the top blended rate is about 26.8% versus 37% for short-term, before the net investment income tax [lit:uscongress-irc1256-2018] [lit:irs-f6781-2025]. SPX is a broad-based index; whether RUT, NDX and XND qualify was not verified. Educational and dated 2026-10-25; not tax advice.",
+      "sources": [
+        "lit:irs-f6781-2025",
+        "lit:uscongress-irc1256-2018"
+      ]
+    },
+    {
+      "topic": "XSP and SPY options",
+      "point": "Cboe describes only 'potential' 60/40 treatment for XSP and refers investors to a tax advisor [lit:cboe-xsp-2026]. SPY and QQQ options are equity options and fall under ordinary treatment [lit:uscongress-irc1256-2018]. Not tax advice.",
+      "sources": [
+        "lit:cboe-xsp-2026",
+        "lit:uscongress-irc1256-2018"
+      ]
+    },
+    {
+      "topic": "Wash sales with options",
+      "point": "A loss sale followed by repurchase of a substantially identical option or stock within 30 days may disallow the loss [page:concepts-how-are-options-taxed]; the disallowed amount is added to the replacement's basis and options can be treated as substantially identical to the stock [page:concepts-how-are-options-taxed]. Purchases inside an IRA permanently disallow the loss [lit:irs-p550-2025]. Wash-sale rules do not apply to Section 1256 contracts [lit:irs-f6781-2025]. Not tax advice.",
+      "sources": [
+        "lit:irs-f6781-2025",
+        "lit:irs-p550-2025",
+        "page:concepts-how-are-options-taxed"
+      ]
+    },
+    {
+      "topic": "Short-option gains and premium",
+      "point": "Premium from writing an option is generally short-term, and gains and losses on short options are short-term regardless of how long the position was open [page:concepts-how-are-options-taxed]. Writer premium is deferred and short-term on expiry or close [lit:irs-p550-2025]. If a put is assigned, the cost basis is reduced by the premium [page:concepts-cash-secured-put]. Not tax advice.",
+      "sources": [
+        "lit:irs-p550-2025",
+        "page:concepts-cash-secured-put",
+        "page:concepts-how-are-options-taxed"
+      ]
+    },
+    {
+      "topic": "Covered calls on core stock",
+      "point": "Section 1092 straddle rules can defer losses; qualified covered calls must be listed, more than 30 days to expiry and not deep in the money [lit:irs-p550-2025]. This matters for covered calls written on long-term core holdings. Not tax advice.",
+      "sources": [
+        "lit:irs-p550-2025"
+      ]
+    },
+    {
+      "topic": "IRA considerations",
+      "point": "Defined-risk spreads, covered calls and cash-secured puts can run in a tastytrade IRA, naked puts cannot [lit:tastytrade-ira-2026]. Inside an IRA the 60/40 advantage and the wash-sale benefit of 1256 contracts are not sourced in the reviewed material; the interaction of IRA purchases with taxable losses is covered above [lit:irs-p550-2025]. Not tax advice.",
+      "sources": [
+        "lit:irs-p550-2025",
+        "lit:tastytrade-ira-2026"
+      ]
+    },
+    {
+      "topic": "Section 1256 loss carryback",
+      "point": "Individuals may elect a 3-year carryback of net 1256 losses against 1256 gains only, with no net operating loss created, via Form 1045 or amended returns [lit:irs-f6781-2025]. Whether the carryback keeps its 60/40 character was not verified. Not tax advice.",
+      "sources": [
+        "lit:irs-f6781-2025"
+      ]
+    }
+  ],
+  "unverified": [
+    {
+      "item": "VIX-tiered buying-power ladder (25/30/35/40/50%)",
+      "why": "Not confirmed from a primary tastylive page or Spina and Kulikov Table 3.4; only '25-50% scaled to VIX' and 'about 30% with VIX above 15' are verified (Phase 03 needs-check). The allocation table is therefore empty."
+    },
+    {
+      "item": "1-5% of net liq per trade and 2% maximum risk per trade",
+      "why": "No primary tastylive or Spina source; 2% came from a third-party site (Phase 03 needs-check). The tastylive pages do state 5%, 1% and 2%, but with no independent support."
+    },
+    {
+      "item": "Sentence in the literature review that 25-30% buying-power use 'roughly meets' the stress criterion",
+      "why": "Does not reconcile with its own criterion (2-3x BPR below 25-35% of net liq gives about 8-17% BPR by simple arithmetic); not reproduced as fact here, inference only."
+    },
+    {
+      "item": "Credit Suisse XIV class action outcome",
+      "why": "Partial class certification (Feb 2025) per plaintiff counsel only; final outcome unverified (Phase 03 needs-check)."
+    },
+    {
+      "item": "Allianz portfolio managers Taylor and Bond-Nelson sentencing",
+      "why": "Not verified (Phase 03 needs-check)."
+    },
+    {
+      "item": "Legacy CME SPAN mechanics (16 scenarios, scan ranges, short-option minimum)",
+      "why": "Training knowledge only; CME pages were blocked (Phase 03 needs-check)."
+    },
+    {
+      "item": "SPAN 2 internals (filtered historical simulation, add-ons)",
+      "why": "CME framework PDF returned 403 (Phase 03 needs-check); SPAN 2 rollout for equity products is only partially verified."
+    },
+    {
+      "item": "CME E-mini S&P (/ES, /MES) options exercise style, settlement and multipliers",
+      "why": "Recollection only (Phase 03 needs-check); multipliers for /ES and /MES are not in the reviewed material."
+    },
+    {
+      "item": "OCC statements on American early assignment, random allocation and SPY and QQQ physical settlement",
+      "why": "OCC site returned 403; ODD text not read (Phase 03 needs-check)."
+    },
+    {
+      "item": "Interactive Brokers portfolio-margin minimums ($110k open / $100k maintain) and Schwab portfolio-margin and IRA rules",
+      "why": "IBKR page 403; Schwab not checked (Phase 03 needs-check)."
+    },
+    {
+      "item": "Reg T 220.8 cash-account option rules and 75% margin for long options over nine months",
+      "why": "eCFR blocked; not verified from primary text (Phase 03 needs-check)."
+    },
+    {
+      "item": "RUT, NDX and XND broad-based (Section 1256) status",
+      "why": "Cboe and Nasdaq pages not opened (Phase 03 needs-check)."
+    },
+    {
+      "item": "Whether a Section 1256 carryback keeps its 60/40 character in the carryback year",
+      "why": "Commonly stated; not in the form text read (Phase 03 needs-check)."
+    },
+    {
+      "item": "FINRA 4210 'Oct 22, 2026 onwards' version",
+      "why": "Possible further amendment is unexplained (Phase 03 needs-check)."
+    },
+    {
+      "item": "Santa-Clara and Saretto Sharpe ratio fall from 1.83 to 0.16",
+      "why": "Numbers from a secondary summary; PDF not opened (Phase 03 kept-partial). Used here only qualitatively."
+    },
+    {
+      "item": "Rotando and Thorp optimal S&P leverage of about 1.17x",
+      "why": "Figure from memory (Phase 03 kept-partial); not used in this playbook."
+    },
+    {
+      "item": "OptionSellers 2018 regulator action and the roughly $150M loss total; Malachite regulator action and exact loss; Niederhoffer 1997 loss",
+      "why": "No primary record found or sources conflict (Phase 03 kept-partial). Only the $35.3M deficit claim and the Malachite wind-down are used."
+    },
+    {
+      "item": "Cash-account eligibility of defined-risk credit spreads",
+      "why": "Broker-specific and not sourced; strategy cards mark cash accounts as not verified."
+    },
+    {
+      "item": "Margin treatment of covered calls, collars, calendars and diagonals in a margin account",
+      "why": "Standard structure, but no source states the broker requirement."
+    },
+    {
+      "item": "Strangle and straddle buying-power total (larger leg plus the other leg's premium)",
+      "why": "Standard practice; source not yet verified per the strategy cards."
+    },
+    {
+      "item": "Name and minimums of the lowest tastytrade IRA tier",
+      "why": "The IRA page names Basic and The Works only for spreads; the other tier or tiers were not in the reviewed material."
+    },
+    {
+      "item": "Conflict on IRA uncovered calls",
+      "why": "The strategy cards mark short-call as not allowed in IRAs; the broker IRA page says The Works permits uncovered calls with $25,000 start-of-day net liq. Broker page followed."
+    },
+    {
+      "item": "Theta at 0.1% of net liq as a target",
+      "why": "A single episode data point with no independent support."
+    },
+    {
+      "item": "Beta offset of short call spreads against the core",
+      "why": "No source quantifies it."
+    },
+    {
+      "item": "Collar evidence (Israelov and Klein)",
+      "why": "The paper was not read this phase; collar costs here rest on the Cboe CLL index figures only."
+    },
+    {
+      "item": "tastylive PDT page",
+      "why": "Predates FINRA's 2026 change; the new rule is cited from the FINRA notice [lit:finra-rn26-10-2026]. Individual broker phase-in dates were not checked."
+    },
+    {
+      "item": "2008 drawdown figure",
+      "why": "The black swan page gives 57% peak to trough 2007-2009 while the strangle episode says about 48%; the windows differ and they were not reconciled."
+    },
+    {
+      "item": "Section 1256 and wash-sale treatment inside an IRA",
+      "why": "Not sourced; the reviewed material covers taxable accounts."
+    },
+    {
+      "item": "Tax figures",
+      "why": "Educational, dated 2026-10-25, based on 2025 IRS forms; not tax advice."
+    }
+  ],
+  "status": "draft"
+}

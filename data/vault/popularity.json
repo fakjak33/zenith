@@ -1,0 +1,1842 @@
+{
+  "n_episodes": 5515,
+  "note": "Mentions in episode title/description/tags, not trade counts. Side is not distinguished ('strangle' counts long and short; 'butterfly' also matches iron butterflies). Generic show descriptions undercount some shows.",
+  "periods": {
+    "2012-2016": 997,
+    "2017-2021": 1892,
+    "2022-2026": 2626
+  },
+  "strategies": [
+    {
+      "slug": "short-strangle",
+      "name": "Short strangle",
+      "episodes": 614,
+      "by_period": {
+        "2012-2016": 126,
+        "2017-2021": 308,
+        "2022-2026": 180
+      },
+      "share_by_period": {
+        "2012-2016": 0.1264,
+        "2017-2021": 0.1628,
+        "2022-2026": 0.0685
+      },
+      "by_show": {
+        "market-measures": 381,
+        "from-theory-to-practice": 216,
+        "skinny-abstract": 9,
+        "research": 5,
+        "options-jive": 3
+      }
+    },
+    {
+      "slug": "iron-condor",
+      "name": "Iron condor",
+      "episodes": 263,
+      "by_period": {
+        "2012-2016": 46,
+        "2017-2021": 124,
+        "2022-2026": 93
+      },
+      "share_by_period": {
+        "2012-2016": 0.0461,
+        "2017-2021": 0.0655,
+        "2022-2026": 0.0354
+      },
+      "by_show": {
+        "market-measures": 164,
+        "from-theory-to-practice": 88,
+        "options-jive": 4,
+        "research": 4,
+        "skinny-abstract": 3
+      }
+    },
+    {
+      "slug": "zero-dte",
+      "name": "0DTE structures",
+      "episodes": 239,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 239
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.091
+      },
+      "by_show": {
+        "market-measures": 182,
+        "research": 45,
+        "skinny-abstract": 5,
+        "skinny-math": 5,
+        "from-theory-to-practice": 1,
+        "options-jive": 1
+      }
+    },
+    {
+      "slug": "short-premium-general",
+      "name": "Short premium (generic / book of short options)",
+      "episodes": 200,
+      "by_period": {
+        "2012-2016": 57,
+        "2017-2021": 60,
+        "2022-2026": 83
+      },
+      "share_by_period": {
+        "2012-2016": 0.0572,
+        "2017-2021": 0.0317,
+        "2022-2026": 0.0316
+      },
+      "by_show": {
+        "market-measures": 132,
+        "from-theory-to-practice": 54,
+        "skinny-abstract": 12,
+        "options-jive": 1,
+        "research": 1
+      }
+    },
+    {
+      "slug": "short-put",
+      "name": "Short put",
+      "episodes": 184,
+      "by_period": {
+        "2012-2016": 22,
+        "2017-2021": 93,
+        "2022-2026": 69
+      },
+      "share_by_period": {
+        "2012-2016": 0.0221,
+        "2017-2021": 0.0492,
+        "2022-2026": 0.0263
+      },
+      "by_show": {
+        "from-theory-to-practice": 99,
+        "market-measures": 75,
+        "skinny-abstract": 10
+      }
+    },
+    {
+      "slug": "short-straddle",
+      "name": "Short straddle",
+      "episodes": 170,
+      "by_period": {
+        "2012-2016": 60,
+        "2017-2021": 91,
+        "2022-2026": 19
+      },
+      "share_by_period": {
+        "2012-2016": 0.0602,
+        "2017-2021": 0.0481,
+        "2022-2026": 0.0072
+      },
+      "by_show": {
+        "market-measures": 97,
+        "from-theory-to-practice": 72,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "butterfly",
+      "name": "Butterfly",
+      "episodes": 159,
+      "by_period": {
+        "2012-2016": 21,
+        "2017-2021": 42,
+        "2022-2026": 96
+      },
+      "share_by_period": {
+        "2012-2016": 0.0211,
+        "2017-2021": 0.0222,
+        "2022-2026": 0.0366
+      },
+      "by_show": {
+        "from-theory-to-practice": 124,
+        "market-measures": 30,
+        "skinny-abstract": 4,
+        "math-check": 1
+      }
+    },
+    {
+      "slug": "earnings-trade",
+      "name": "Earnings trade (vol crush)",
+      "episodes": 114,
+      "by_period": {
+        "2012-2016": 17,
+        "2017-2021": 50,
+        "2022-2026": 47
+      },
+      "share_by_period": {
+        "2012-2016": 0.0171,
+        "2017-2021": 0.0264,
+        "2022-2026": 0.0179
+      },
+      "by_show": {
+        "from-theory-to-practice": 85,
+        "market-measures": 23,
+        "research": 4,
+        "skinny-math": 2
+      }
+    },
+    {
+      "slug": "short-call",
+      "name": "Short call",
+      "episodes": 101,
+      "by_period": {
+        "2012-2016": 14,
+        "2017-2021": 48,
+        "2022-2026": 39
+      },
+      "share_by_period": {
+        "2012-2016": 0.014,
+        "2017-2021": 0.0254,
+        "2022-2026": 0.0149
+      },
+      "by_show": {
+        "from-theory-to-practice": 62,
+        "market-measures": 34,
+        "skinny-abstract": 4,
+        "research": 1
+      }
+    },
+    {
+      "slug": "ratio-spread",
+      "name": "Ratio spread",
+      "episodes": 86,
+      "by_period": {
+        "2012-2016": 8,
+        "2017-2021": 55,
+        "2022-2026": 23
+      },
+      "share_by_period": {
+        "2012-2016": 0.008,
+        "2017-2021": 0.0291,
+        "2022-2026": 0.0088
+      },
+      "by_show": {
+        "from-theory-to-practice": 70,
+        "market-measures": 11,
+        "skinny-abstract": 4,
+        "research": 1
+      }
+    },
+    {
+      "slug": "call-credit-spread",
+      "name": "Short call vertical (call credit spread)",
+      "episodes": 77,
+      "by_period": {
+        "2012-2016": 9,
+        "2017-2021": 32,
+        "2022-2026": 36
+      },
+      "share_by_period": {
+        "2012-2016": 0.009,
+        "2017-2021": 0.0169,
+        "2022-2026": 0.0137
+      },
+      "by_show": {
+        "from-theory-to-practice": 48,
+        "market-measures": 26,
+        "skinny-abstract": 2,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "covered-call",
+      "name": "Covered call",
+      "episodes": 72,
+      "by_period": {
+        "2012-2016": 18,
+        "2017-2021": 31,
+        "2022-2026": 23
+      },
+      "share_by_period": {
+        "2012-2016": 0.0181,
+        "2017-2021": 0.0164,
+        "2022-2026": 0.0088
+      },
+      "by_show": {
+        "from-theory-to-practice": 41,
+        "market-measures": 29,
+        "skinny-abstract": 2
+      }
+    },
+    {
+      "slug": "diagonal",
+      "name": "Diagonal spread",
+      "episodes": 68,
+      "by_period": {
+        "2012-2016": 11,
+        "2017-2021": 41,
+        "2022-2026": 16
+      },
+      "share_by_period": {
+        "2012-2016": 0.011,
+        "2017-2021": 0.0217,
+        "2022-2026": 0.0061
+      },
+      "by_show": {
+        "from-theory-to-practice": 53,
+        "market-measures": 13,
+        "skinny-abstract": 2
+      }
+    },
+    {
+      "slug": "long-stock",
+      "name": "Long stock / shares",
+      "episodes": 64,
+      "by_period": {
+        "2012-2016": 13,
+        "2017-2021": 17,
+        "2022-2026": 34
+      },
+      "share_by_period": {
+        "2012-2016": 0.013,
+        "2017-2021": 0.009,
+        "2022-2026": 0.0129
+      },
+      "by_show": {
+        "market-measures": 33,
+        "from-theory-to-practice": 23,
+        "skinny-abstract": 7,
+        "math-check": 1
+      }
+    },
+    {
+      "slug": "put-credit-spread",
+      "name": "Short put vertical (put credit spread)",
+      "episodes": 63,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 26,
+        "2022-2026": 33
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0137,
+        "2022-2026": 0.0126
+      },
+      "by_show": {
+        "from-theory-to-practice": 33,
+        "market-measures": 27,
+        "skinny-abstract": 3
+      }
+    },
+    {
+      "slug": "calendar",
+      "name": "Calendar spread",
+      "episodes": 62,
+      "by_period": {
+        "2012-2016": 21,
+        "2017-2021": 29,
+        "2022-2026": 12
+      },
+      "share_by_period": {
+        "2012-2016": 0.0211,
+        "2017-2021": 0.0153,
+        "2022-2026": 0.0046
+      },
+      "by_show": {
+        "from-theory-to-practice": 29,
+        "market-measures": 27,
+        "skinny-abstract": 5,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "pairs-trade",
+      "name": "Pairs trade",
+      "episodes": 49,
+      "by_period": {
+        "2012-2016": 19,
+        "2017-2021": 18,
+        "2022-2026": 12
+      },
+      "share_by_period": {
+        "2012-2016": 0.0191,
+        "2017-2021": 0.0095,
+        "2022-2026": 0.0046
+      },
+      "by_show": {
+        "market-measures": 34,
+        "from-theory-to-practice": 9,
+        "skinny-math": 4,
+        "options-jive": 1,
+        "research": 1
+      }
+    },
+    {
+      "slug": "futures-options",
+      "name": "Futures options (/ES, /MES, /CL, /GC, /ZB ...)",
+      "episodes": 42,
+      "by_period": {
+        "2012-2016": 20,
+        "2017-2021": 2,
+        "2022-2026": 20
+      },
+      "share_by_period": {
+        "2012-2016": 0.0201,
+        "2017-2021": 0.0011,
+        "2022-2026": 0.0076
+      },
+      "by_show": {
+        "market-measures": 23,
+        "from-theory-to-practice": 16,
+        "skinny-abstract": 2,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "iron-fly",
+      "name": "Iron fly / iron butterfly",
+      "episodes": 40,
+      "by_period": {
+        "2012-2016": 11,
+        "2017-2021": 22,
+        "2022-2026": 7
+      },
+      "share_by_period": {
+        "2012-2016": 0.011,
+        "2017-2021": 0.0116,
+        "2022-2026": 0.0027
+      },
+      "by_show": {
+        "market-measures": 26,
+        "from-theory-to-practice": 14
+      }
+    },
+    {
+      "slug": "jade-lizard",
+      "name": "Jade lizard",
+      "episodes": 39,
+      "by_period": {
+        "2012-2016": 9,
+        "2017-2021": 18,
+        "2022-2026": 12
+      },
+      "share_by_period": {
+        "2012-2016": 0.009,
+        "2017-2021": 0.0095,
+        "2022-2026": 0.0046
+      },
+      "by_show": {
+        "market-measures": 21,
+        "from-theory-to-practice": 18
+      }
+    },
+    {
+      "slug": "debit-spread",
+      "name": "Long vertical (debit spread)",
+      "episodes": 38,
+      "by_period": {
+        "2012-2016": 3,
+        "2017-2021": 13,
+        "2022-2026": 22
+      },
+      "share_by_period": {
+        "2012-2016": 0.003,
+        "2017-2021": 0.0069,
+        "2022-2026": 0.0084
+      },
+      "by_show": {
+        "from-theory-to-practice": 25,
+        "market-measures": 10,
+        "skinny-abstract": 2,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "long-call",
+      "name": "Long call",
+      "episodes": 30,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 8,
+        "2022-2026": 18
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0042,
+        "2022-2026": 0.0069
+      },
+      "by_show": {
+        "from-theory-to-practice": 18,
+        "market-measures": 11,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "long-put",
+      "name": "Long put",
+      "episodes": 25,
+      "by_period": {
+        "2012-2016": 6,
+        "2017-2021": 8,
+        "2022-2026": 11
+      },
+      "share_by_period": {
+        "2012-2016": 0.006,
+        "2017-2021": 0.0042,
+        "2022-2026": 0.0042
+      },
+      "by_show": {
+        "from-theory-to-practice": 17,
+        "market-measures": 8
+      }
+    },
+    {
+      "slug": "broken-wing-butterfly",
+      "name": "Broken-wing butterfly",
+      "episodes": 20,
+      "by_period": {
+        "2012-2016": 5,
+        "2017-2021": 2,
+        "2022-2026": 13
+      },
+      "share_by_period": {
+        "2012-2016": 0.005,
+        "2017-2021": 0.0011,
+        "2022-2026": 0.005
+      },
+      "by_show": {
+        "from-theory-to-practice": 16,
+        "market-measures": 4
+      }
+    },
+    {
+      "slug": "poor-mans-covered-call",
+      "name": "Poor man's covered call",
+      "episodes": 19,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 8,
+        "2022-2026": 7
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0042,
+        "2022-2026": 0.0027
+      },
+      "by_show": {
+        "from-theory-to-practice": 12,
+        "market-measures": 7
+      }
+    },
+    {
+      "slug": "super-bull",
+      "name": "Super bull (put spread funds call spread)",
+      "episodes": 14,
+      "by_period": {
+        "2012-2016": 7,
+        "2017-2021": 5,
+        "2022-2026": 2
+      },
+      "share_by_period": {
+        "2012-2016": 0.007,
+        "2017-2021": 0.0026,
+        "2022-2026": 0.0008
+      },
+      "by_show": {
+        "from-theory-to-practice": 10,
+        "market-measures": 4
+      }
+    },
+    {
+      "slug": "protective-put",
+      "name": "Protective put / index put spread",
+      "episodes": 12,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 9,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.0048,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "market-measures": 12
+      }
+    },
+    {
+      "slug": "short-risk-reversal",
+      "name": "Short risk reversal / synthetic",
+      "episodes": 11,
+      "by_period": {
+        "2012-2016": 3,
+        "2017-2021": 6,
+        "2022-2026": 2
+      },
+      "share_by_period": {
+        "2012-2016": 0.003,
+        "2017-2021": 0.0032,
+        "2022-2026": 0.0008
+      },
+      "by_show": {
+        "from-theory-to-practice": 5,
+        "market-measures": 3,
+        "skinny-math": 2,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "big-lizard",
+      "name": "Big lizard",
+      "episodes": 10,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 7,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.0037,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "from-theory-to-practice": 7,
+        "market-measures": 3
+      }
+    },
+    {
+      "slug": "vix-hedge",
+      "name": "VIX hedges (calls, call spreads, futures)",
+      "episodes": 9,
+      "by_period": {
+        "2012-2016": 5,
+        "2017-2021": 3,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.005,
+        "2017-2021": 0.0016,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "market-measures": 8,
+        "from-theory-to-practice": 1
+      }
+    },
+    {
+      "slug": "covered-strangle",
+      "name": "Covered strangle",
+      "episodes": 6,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 2,
+        "2022-2026": 0
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0011,
+        "2022-2026": 0.0
+      },
+      "by_show": {
+        "market-measures": 5,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "long-straddle",
+      "name": "Long straddle",
+      "episodes": 6,
+      "by_period": {
+        "2012-2016": 5,
+        "2017-2021": 1,
+        "2022-2026": 0
+      },
+      "share_by_period": {
+        "2012-2016": 0.005,
+        "2017-2021": 0.0005,
+        "2022-2026": 0.0
+      },
+      "by_show": {
+        "market-measures": 5,
+        "from-theory-to-practice": 1
+      }
+    },
+    {
+      "slug": "collar",
+      "name": "Collar",
+      "episodes": 5,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 3,
+        "2022-2026": 0
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.0016,
+        "2022-2026": 0.0
+      },
+      "by_show": {
+        "market-measures": 5
+      }
+    },
+    {
+      "slug": "short-stock",
+      "name": "Short stock",
+      "episodes": 5,
+      "by_period": {
+        "2012-2016": 3,
+        "2017-2021": 1,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.003,
+        "2017-2021": 0.0005,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "market-measures": 4,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "long-strangle",
+      "name": "Long strangle",
+      "episodes": 2,
+      "by_period": {
+        "2012-2016": 1,
+        "2017-2021": 0,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.001,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "market-measures": 2
+      }
+    },
+    {
+      "slug": "leaps-stock-replacement",
+      "name": "LEAPS / deep-ITM stock replacement",
+      "episodes": 2,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 0,
+        "2022-2026": 0
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0
+      },
+      "by_show": {
+        "market-measures": 2
+      }
+    },
+    {
+      "slug": "wheel",
+      "name": "The wheel",
+      "episodes": 1,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "market-measures": 1
+      }
+    },
+    {
+      "slug": "cash-secured-put",
+      "name": "Cash-secured put",
+      "episodes": 0,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 0
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0
+      },
+      "by_show": {}
+    },
+    {
+      "slug": "reverse-jade-lizard",
+      "name": "Reverse jade lizard",
+      "episodes": 0,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 0
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0
+      },
+      "by_show": {}
+    },
+    {
+      "slug": "tail-hedge",
+      "name": "Tail hedge (far OTM puts)",
+      "episodes": 0,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 0
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0
+      },
+      "by_show": {}
+    },
+    {
+      "slug": "strangle-swap",
+      "name": "Strangle swap (short 0DTE vs long longer-dated strangle)",
+      "episodes": 0,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 0
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0
+      },
+      "by_show": {}
+    }
+  ],
+  "topics": [
+    {
+      "slug": "implied-volatility",
+      "name": "Implied volatility level / VIX regime",
+      "episodes": 460,
+      "by_period": {
+        "2012-2016": 132,
+        "2017-2021": 165,
+        "2022-2026": 163
+      },
+      "share_by_period": {
+        "2012-2016": 0.1324,
+        "2017-2021": 0.0872,
+        "2022-2026": 0.0621
+      },
+      "by_show": {
+        "market-measures": 336,
+        "from-theory-to-practice": 78,
+        "skinny-math": 24,
+        "skinny-abstract": 21,
+        "research": 1
+      }
+    },
+    {
+      "slug": "delta-as-probability",
+      "name": "Delta as probability / strike selection by delta",
+      "episodes": 450,
+      "by_period": {
+        "2012-2016": 61,
+        "2017-2021": 210,
+        "2022-2026": 179
+      },
+      "share_by_period": {
+        "2012-2016": 0.0612,
+        "2017-2021": 0.111,
+        "2022-2026": 0.0682
+      },
+      "by_show": {
+        "market-measures": 229,
+        "from-theory-to-practice": 146,
+        "skinny-abstract": 54,
+        "skinny-math": 12,
+        "research": 7,
+        "options-jive": 2
+      }
+    },
+    {
+      "slug": "directional-bias",
+      "name": "Directional assumptions (bullish/bearish/neutral)",
+      "episodes": 278,
+      "by_period": {
+        "2012-2016": 39,
+        "2017-2021": 126,
+        "2022-2026": 113
+      },
+      "share_by_period": {
+        "2012-2016": 0.0391,
+        "2017-2021": 0.0666,
+        "2022-2026": 0.043
+      },
+      "by_show": {
+        "from-theory-to-practice": 145,
+        "market-measures": 102,
+        "skinny-abstract": 21,
+        "skinny-math": 6,
+        "research": 2,
+        "math-check": 1,
+        "options-jive": 1
+      }
+    },
+    {
+      "slug": "rolling",
+      "name": "Rolling (for duration / for credit)",
+      "episodes": 231,
+      "by_period": {
+        "2012-2016": 25,
+        "2017-2021": 137,
+        "2022-2026": 69
+      },
+      "share_by_period": {
+        "2012-2016": 0.0251,
+        "2017-2021": 0.0724,
+        "2022-2026": 0.0263
+      },
+      "by_show": {
+        "from-theory-to-practice": 158,
+        "market-measures": 59,
+        "skinny-abstract": 10,
+        "skinny-math": 2,
+        "options-jive": 1,
+        "research": 1
+      }
+    },
+    {
+      "slug": "greeks",
+      "name": "Greeks behaviour (gamma, vega, theta over time)",
+      "episodes": 203,
+      "by_period": {
+        "2012-2016": 34,
+        "2017-2021": 91,
+        "2022-2026": 78
+      },
+      "share_by_period": {
+        "2012-2016": 0.0341,
+        "2017-2021": 0.0481,
+        "2022-2026": 0.0297
+      },
+      "by_show": {
+        "from-theory-to-practice": 100,
+        "market-measures": 46,
+        "skinny-abstract": 39,
+        "skinny-math": 15,
+        "research": 2,
+        "options-jive": 1
+      }
+    },
+    {
+      "slug": "iv-rank",
+      "name": "IV rank / IV percentile",
+      "episodes": 199,
+      "by_period": {
+        "2012-2016": 33,
+        "2017-2021": 76,
+        "2022-2026": 90
+      },
+      "share_by_period": {
+        "2012-2016": 0.0331,
+        "2017-2021": 0.0402,
+        "2022-2026": 0.0343
+      },
+      "by_show": {
+        "market-measures": 149,
+        "from-theory-to-practice": 38,
+        "skinny-math": 8,
+        "skinny-abstract": 2,
+        "math-check": 1,
+        "research": 1
+      }
+    },
+    {
+      "slug": "entry-dte",
+      "name": "Entry DTE (duration)",
+      "episodes": 177,
+      "by_period": {
+        "2012-2016": 40,
+        "2017-2021": 64,
+        "2022-2026": 73
+      },
+      "share_by_period": {
+        "2012-2016": 0.0401,
+        "2017-2021": 0.0338,
+        "2022-2026": 0.0278
+      },
+      "by_show": {
+        "market-measures": 122,
+        "from-theory-to-practice": 41,
+        "skinny-abstract": 9,
+        "skinny-math": 3,
+        "research": 2
+      }
+    },
+    {
+      "slug": "correlation-diversification",
+      "name": "Correlation / diversification",
+      "episodes": 177,
+      "by_period": {
+        "2012-2016": 25,
+        "2017-2021": 69,
+        "2022-2026": 83
+      },
+      "share_by_period": {
+        "2012-2016": 0.0251,
+        "2017-2021": 0.0365,
+        "2022-2026": 0.0316
+      },
+      "by_show": {
+        "market-measures": 130,
+        "from-theory-to-practice": 20,
+        "skinny-math": 17,
+        "research": 6,
+        "options-jive": 2,
+        "math-check": 1,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "defined-vs-undefined",
+      "name": "Defined vs undefined risk; wing width and cost",
+      "episodes": 173,
+      "by_period": {
+        "2012-2016": 34,
+        "2017-2021": 72,
+        "2022-2026": 67
+      },
+      "share_by_period": {
+        "2012-2016": 0.0341,
+        "2017-2021": 0.0381,
+        "2022-2026": 0.0255
+      },
+      "by_show": {
+        "from-theory-to-practice": 90,
+        "market-measures": 66,
+        "skinny-abstract": 13,
+        "skinny-math": 3,
+        "research": 1
+      }
+    },
+    {
+      "slug": "skew",
+      "name": "Skew (put/call, smile)",
+      "episodes": 134,
+      "by_period": {
+        "2012-2016": 29,
+        "2017-2021": 49,
+        "2022-2026": 56
+      },
+      "share_by_period": {
+        "2012-2016": 0.0291,
+        "2017-2021": 0.0259,
+        "2022-2026": 0.0213
+      },
+      "by_show": {
+        "market-measures": 70,
+        "from-theory-to-practice": 34,
+        "skinny-math": 13,
+        "skinny-abstract": 12,
+        "math-check": 2,
+        "options-jive": 2,
+        "research": 1
+      }
+    },
+    {
+      "slug": "probability-of-profit",
+      "name": "Probability of profit / probability of touch",
+      "episodes": 133,
+      "by_period": {
+        "2012-2016": 36,
+        "2017-2021": 29,
+        "2022-2026": 68
+      },
+      "share_by_period": {
+        "2012-2016": 0.0361,
+        "2017-2021": 0.0153,
+        "2022-2026": 0.0259
+      },
+      "by_show": {
+        "market-measures": 72,
+        "from-theory-to-practice": 33,
+        "skinny-abstract": 12,
+        "skinny-math": 11,
+        "research": 3,
+        "options-jive": 2
+      }
+    },
+    {
+      "slug": "tail-risk",
+      "name": "Tail risk / crash behaviour",
+      "episodes": 133,
+      "by_period": {
+        "2012-2016": 13,
+        "2017-2021": 38,
+        "2022-2026": 82
+      },
+      "share_by_period": {
+        "2012-2016": 0.013,
+        "2017-2021": 0.0201,
+        "2022-2026": 0.0312
+      },
+      "by_show": {
+        "market-measures": 75,
+        "skinny-abstract": 20,
+        "from-theory-to-practice": 16,
+        "research": 10,
+        "math-check": 7,
+        "options-jive": 2,
+        "skinny-math": 2,
+        "strange-stats": 1
+      }
+    },
+    {
+      "slug": "margin",
+      "name": "Margin types (cash, Reg T, portfolio margin) and buying power",
+      "episodes": 126,
+      "by_period": {
+        "2012-2016": 18,
+        "2017-2021": 60,
+        "2022-2026": 48
+      },
+      "share_by_period": {
+        "2012-2016": 0.0181,
+        "2017-2021": 0.0317,
+        "2022-2026": 0.0183
+      },
+      "by_show": {
+        "market-measures": 80,
+        "from-theory-to-practice": 34,
+        "skinny-abstract": 8,
+        "skinny-math": 2,
+        "options-jive": 1,
+        "research": 1
+      }
+    },
+    {
+      "slug": "expected-move",
+      "name": "Expected move",
+      "episodes": 110,
+      "by_period": {
+        "2012-2016": 24,
+        "2017-2021": 20,
+        "2022-2026": 66
+      },
+      "share_by_period": {
+        "2012-2016": 0.0241,
+        "2017-2021": 0.0106,
+        "2022-2026": 0.0251
+      },
+      "by_show": {
+        "from-theory-to-practice": 55,
+        "market-measures": 41,
+        "skinny-math": 8,
+        "math-check": 2,
+        "research": 2,
+        "skinny-abstract": 2
+      }
+    },
+    {
+      "slug": "profit-target",
+      "name": "Profit targets (e.g. 50% of max)",
+      "episodes": 110,
+      "by_period": {
+        "2012-2016": 9,
+        "2017-2021": 30,
+        "2022-2026": 71
+      },
+      "share_by_period": {
+        "2012-2016": 0.009,
+        "2017-2021": 0.0159,
+        "2022-2026": 0.027
+      },
+      "by_show": {
+        "market-measures": 67,
+        "from-theory-to-practice": 38,
+        "research": 3,
+        "skinny-abstract": 2
+      }
+    },
+    {
+      "slug": "position-sizing",
+      "name": "Position sizing (per trade)",
+      "episodes": 91,
+      "by_period": {
+        "2012-2016": 21,
+        "2017-2021": 14,
+        "2022-2026": 56
+      },
+      "share_by_period": {
+        "2012-2016": 0.0211,
+        "2017-2021": 0.0074,
+        "2022-2026": 0.0213
+      },
+      "by_show": {
+        "market-measures": 44,
+        "from-theory-to-practice": 23,
+        "skinny-abstract": 11,
+        "skinny-math": 9,
+        "research": 4
+      }
+    },
+    {
+      "slug": "dte-21-management",
+      "name": "21-DTE management",
+      "episodes": 88,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 45,
+        "2022-2026": 41
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.0238,
+        "2022-2026": 0.0156
+      },
+      "by_show": {
+        "from-theory-to-practice": 47,
+        "market-measures": 34,
+        "skinny-abstract": 4,
+        "research": 2,
+        "options-jive": 1
+      }
+    },
+    {
+      "slug": "capital-efficiency",
+      "name": "Capital efficiency (P&L per day, return on capital, redeployment)",
+      "episodes": 81,
+      "by_period": {
+        "2012-2016": 25,
+        "2017-2021": 34,
+        "2022-2026": 22
+      },
+      "share_by_period": {
+        "2012-2016": 0.0251,
+        "2017-2021": 0.018,
+        "2022-2026": 0.0084
+      },
+      "by_show": {
+        "market-measures": 66,
+        "from-theory-to-practice": 10,
+        "skinny-abstract": 5
+      }
+    },
+    {
+      "slug": "win-rate-vs-pnl",
+      "name": "Win rate vs P&L (payoff asymmetry)",
+      "episodes": 60,
+      "by_period": {
+        "2012-2016": 8,
+        "2017-2021": 11,
+        "2022-2026": 41
+      },
+      "share_by_period": {
+        "2012-2016": 0.008,
+        "2017-2021": 0.0058,
+        "2022-2026": 0.0156
+      },
+      "by_show": {
+        "market-measures": 51,
+        "from-theory-to-practice": 4,
+        "skinny-abstract": 3,
+        "research": 2
+      }
+    },
+    {
+      "slug": "market-timing",
+      "name": "Market timing / predictive indicators",
+      "episodes": 58,
+      "by_period": {
+        "2012-2016": 5,
+        "2017-2021": 11,
+        "2022-2026": 42
+      },
+      "share_by_period": {
+        "2012-2016": 0.005,
+        "2017-2021": 0.0058,
+        "2022-2026": 0.016
+      },
+      "by_show": {
+        "market-measures": 37,
+        "from-theory-to-practice": 6,
+        "research": 5,
+        "math-check": 4,
+        "skinny-math": 3,
+        "options-jive": 2,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "liquidity",
+      "name": "Liquidity (bid-ask, open interest)",
+      "episodes": 55,
+      "by_period": {
+        "2012-2016": 14,
+        "2017-2021": 17,
+        "2022-2026": 24
+      },
+      "share_by_period": {
+        "2012-2016": 0.014,
+        "2017-2021": 0.009,
+        "2022-2026": 0.0091
+      },
+      "by_show": {
+        "market-measures": 25,
+        "from-theory-to-practice": 19,
+        "skinny-math": 6,
+        "skinny-abstract": 4,
+        "options-jive": 1
+      }
+    },
+    {
+      "slug": "number-of-occurrences",
+      "name": "Number of occurrences / law of large numbers",
+      "episodes": 53,
+      "by_period": {
+        "2012-2016": 10,
+        "2017-2021": 29,
+        "2022-2026": 14
+      },
+      "share_by_period": {
+        "2012-2016": 0.01,
+        "2017-2021": 0.0153,
+        "2022-2026": 0.0053
+      },
+      "by_show": {
+        "market-measures": 22,
+        "from-theory-to-practice": 13,
+        "skinny-abstract": 10,
+        "skinny-math": 8
+      }
+    },
+    {
+      "slug": "inverting",
+      "name": "Inverting a strangle",
+      "episodes": 52,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 37,
+        "2022-2026": 13
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.0196,
+        "2022-2026": 0.005
+      },
+      "by_show": {
+        "from-theory-to-practice": 50,
+        "market-measures": 1,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "bp-allocation-vix",
+      "name": "Buying-power allocation vs VIX",
+      "episodes": 50,
+      "by_period": {
+        "2012-2016": 16,
+        "2017-2021": 17,
+        "2022-2026": 17
+      },
+      "share_by_period": {
+        "2012-2016": 0.016,
+        "2017-2021": 0.009,
+        "2022-2026": 0.0065
+      },
+      "by_show": {
+        "market-measures": 35,
+        "from-theory-to-practice": 11,
+        "skinny-abstract": 2,
+        "options-jive": 1,
+        "research": 1
+      }
+    },
+    {
+      "slug": "realized-volatility",
+      "name": "Realized volatility / market moves",
+      "episodes": 50,
+      "by_period": {
+        "2012-2016": 9,
+        "2017-2021": 19,
+        "2022-2026": 22
+      },
+      "share_by_period": {
+        "2012-2016": 0.009,
+        "2017-2021": 0.01,
+        "2022-2026": 0.0084
+      },
+      "by_show": {
+        "market-measures": 37,
+        "from-theory-to-practice": 6,
+        "skinny-math": 4,
+        "skinny-abstract": 3
+      }
+    },
+    {
+      "slug": "assignment-dividends",
+      "name": "Assignment, early exercise and dividends",
+      "episodes": 45,
+      "by_period": {
+        "2012-2016": 7,
+        "2017-2021": 25,
+        "2022-2026": 13
+      },
+      "share_by_period": {
+        "2012-2016": 0.007,
+        "2017-2021": 0.0132,
+        "2022-2026": 0.005
+      },
+      "by_show": {
+        "from-theory-to-practice": 34,
+        "market-measures": 5,
+        "skinny-math": 3,
+        "skinny-abstract": 2,
+        "options-jive": 1
+      }
+    },
+    {
+      "slug": "stop-loss",
+      "name": "Stop / loss rules",
+      "episodes": 44,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 19,
+        "2022-2026": 23
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.01,
+        "2022-2026": 0.0088
+      },
+      "by_show": {
+        "market-measures": 31,
+        "from-theory-to-practice": 10,
+        "math-check": 1,
+        "research": 1,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "beta-weighted-delta",
+      "name": "Beta-weighted delta",
+      "episodes": 36,
+      "by_period": {
+        "2012-2016": 7,
+        "2017-2021": 13,
+        "2022-2026": 16
+      },
+      "share_by_period": {
+        "2012-2016": 0.007,
+        "2017-2021": 0.0069,
+        "2022-2026": 0.0061
+      },
+      "by_show": {
+        "from-theory-to-practice": 19,
+        "market-measures": 9,
+        "skinny-abstract": 6,
+        "skinny-math": 2
+      }
+    },
+    {
+      "slug": "macro-events",
+      "name": "Macro events (FOMC, CPI, jobs, yields)",
+      "episodes": 34,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 2,
+        "2022-2026": 28
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0011,
+        "2022-2026": 0.0107
+      },
+      "by_show": {
+        "from-theory-to-practice": 21,
+        "market-measures": 11,
+        "research": 1,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "defend-tested-side",
+      "name": "Defending the tested side",
+      "episodes": 33,
+      "by_period": {
+        "2012-2016": 7,
+        "2017-2021": 16,
+        "2022-2026": 10
+      },
+      "share_by_period": {
+        "2012-2016": 0.007,
+        "2017-2021": 0.0085,
+        "2022-2026": 0.0038
+      },
+      "by_show": {
+        "from-theory-to-practice": 16,
+        "market-measures": 16,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "account-size",
+      "name": "Small accounts / account size",
+      "episodes": 31,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 13,
+        "2022-2026": 18
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0069,
+        "2022-2026": 0.0069
+      },
+      "by_show": {
+        "from-theory-to-practice": 12,
+        "market-measures": 8,
+        "research": 8,
+        "skinny-abstract": 3
+      }
+    },
+    {
+      "slug": "theta-nlv",
+      "name": "Theta as % of net liq",
+      "episodes": 25,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 17,
+        "2022-2026": 6
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.009,
+        "2022-2026": 0.0023
+      },
+      "by_show": {
+        "from-theory-to-practice": 19,
+        "market-measures": 4,
+        "skinny-abstract": 2
+      }
+    },
+    {
+      "slug": "vix-behaviour",
+      "name": "VIX behaviour (spikes, mean reversion)",
+      "episodes": 22,
+      "by_period": {
+        "2012-2016": 2,
+        "2017-2021": 3,
+        "2022-2026": 17
+      },
+      "share_by_period": {
+        "2012-2016": 0.002,
+        "2017-2021": 0.0016,
+        "2022-2026": 0.0065
+      },
+      "by_show": {
+        "market-measures": 16,
+        "options-jive": 2,
+        "from-theory-to-practice": 1,
+        "research": 1,
+        "skinny-abstract": 1,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "tail-loss-metrics",
+      "name": "Tail-loss metrics (CVaR, worst loss vs credit)",
+      "episodes": 22,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 3,
+        "2022-2026": 19
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0016,
+        "2022-2026": 0.0072
+      },
+      "by_show": {
+        "market-measures": 16,
+        "skinny-math": 4,
+        "research": 1,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "vrp",
+      "name": "Variance / volatility risk premium (implied > realized)",
+      "episodes": 18,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 7,
+        "2022-2026": 7
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0037,
+        "2022-2026": 0.0027
+      },
+      "by_show": {
+        "market-measures": 14,
+        "from-theory-to-practice": 3,
+        "skinny-abstract": 1
+      }
+    },
+    {
+      "slug": "positive-drift",
+      "name": "Positive drift / bull-market bias of equities",
+      "episodes": 18,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 9,
+        "2022-2026": 5
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0048,
+        "2022-2026": 0.0019
+      },
+      "by_show": {
+        "from-theory-to-practice": 6,
+        "market-measures": 6,
+        "skinny-abstract": 5,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "order-entry",
+      "name": "Order entry and closing (limit at mid, balanced vs full close)",
+      "episodes": 16,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 8,
+        "2022-2026": 4
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0042,
+        "2022-2026": 0.0015
+      },
+      "by_show": {
+        "from-theory-to-practice": 12,
+        "market-measures": 3,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "term-structure",
+      "name": "Term structure (incl. VIX futures curve)",
+      "episodes": 13,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 2,
+        "2022-2026": 7
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0011,
+        "2022-2026": 0.0027
+      },
+      "by_show": {
+        "from-theory-to-practice": 5,
+        "market-measures": 3,
+        "math-check": 2,
+        "options-jive": 1,
+        "skinny-abstract": 1,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "earnings-iv-crush",
+      "name": "Earnings IV crush",
+      "episodes": 13,
+      "by_period": {
+        "2012-2016": 5,
+        "2017-2021": 3,
+        "2022-2026": 5
+      },
+      "share_by_period": {
+        "2012-2016": 0.005,
+        "2017-2021": 0.0016,
+        "2022-2026": 0.0019
+      },
+      "by_show": {
+        "from-theory-to-practice": 9,
+        "market-measures": 4
+      }
+    },
+    {
+      "slug": "costs-slippage",
+      "name": "Costs and slippage (commissions, fills)",
+      "episodes": 10,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 5,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0026,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "market-measures": 7,
+        "from-theory-to-practice": 2,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "trade-selection",
+      "name": "Trade selection process",
+      "episodes": 10,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 5,
+        "2022-2026": 5
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0026,
+        "2022-2026": 0.0019
+      },
+      "by_show": {
+        "from-theory-to-practice": 8,
+        "options-jive": 2
+      }
+    },
+    {
+      "slug": "hold-vs-manage",
+      "name": "Managing early vs holding to expiration",
+      "episodes": 9,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 3,
+        "2022-2026": 6
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0016,
+        "2022-2026": 0.0023
+      },
+      "by_show": {
+        "market-measures": 9
+      }
+    },
+    {
+      "slug": "market-structure",
+      "name": "Market structure (breadth, cap vs equal weight, dealer gamma, flows)",
+      "episodes": 9,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 6,
+        "2022-2026": 3
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0032,
+        "2022-2026": 0.0011
+      },
+      "by_show": {
+        "market-measures": 6,
+        "options-jive": 1,
+        "skinny-abstract": 1,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "underlying-choice",
+      "name": "Underlying choice (SPX vs SPY vs ETFs vs stocks vs futures)",
+      "episodes": 7,
+      "by_period": {
+        "2012-2016": 4,
+        "2017-2021": 1,
+        "2022-2026": 2
+      },
+      "share_by_period": {
+        "2012-2016": 0.004,
+        "2017-2021": 0.0005,
+        "2022-2026": 0.0008
+      },
+      "by_show": {
+        "market-measures": 3,
+        "from-theory-to-practice": 2,
+        "skinny-abstract": 1,
+        "skinny-math": 1
+      }
+    },
+    {
+      "slug": "intraday-timing",
+      "name": "Intraday timing (0DTE entry hour, open/close, event days)",
+      "episodes": 4,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 1,
+        "2022-2026": 3
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0005,
+        "2022-2026": 0.0011
+      },
+      "by_show": {
+        "market-measures": 4
+      }
+    },
+    {
+      "slug": "post-earnings-drift",
+      "name": "Post-earnings drift",
+      "episodes": 1,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "from-theory-to-practice": 1
+      }
+    },
+    {
+      "slug": "taxes",
+      "name": "Taxes (1256, wash sales)",
+      "episodes": 1,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "market-measures": 1
+      }
+    },
+    {
+      "slug": "performance-measurement",
+      "name": "Performance measurement (net liq, realized vs unrealized P&L)",
+      "episodes": 1,
+      "by_period": {
+        "2012-2016": 0,
+        "2017-2021": 0,
+        "2022-2026": 1
+      },
+      "share_by_period": {
+        "2012-2016": 0.0,
+        "2017-2021": 0.0,
+        "2022-2026": 0.0004
+      },
+      "by_show": {
+        "skinny-math": 1
+      }
+    }
+  ]
+}

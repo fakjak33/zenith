@@ -1340,6 +1340,88 @@ def screen_index() -> None:
           f"{status.get('zenith_sources_linked', 0)} linked to Zenith sources")
 
 
+def screen_vault() -> None:
+    print("[vault]")
+    import math
+    import re
+    from collections import Counter
+    from zenith.vault import load as vload, payoff as vpo, sizing as vsz
+    from zenith.vault import repro as vrepro
+    from zenith.vault.repro import charts as vcharts
+
+    cards = vload("strategies", {}).get("cards", [])
+    if not cards:
+        warn(True, "vault: no strategy cards — skipping")
+        return
+    b = vload("build", {})
+    check(bool(b), "vault: build.json present (python -m zenith.vault.build)")
+    check(not b.get("problems"), f"vault: build resolves every source reference ({len(b.get('problems', []))} problems)")
+    edges = vload("edges", {}).get("edges", [])
+    check(b.get("counts", {}).get("strategies") == len(cards) and b.get("counts", {}).get("edges") == len(edges),
+          "vault: build counts match the artefacts (rebuild after editing cards)")
+    slugs = [c["slug"] for c in cards]
+    check(len(slugs) == len(set(slugs)), "vault: no duplicate card slugs")
+    check(all(c["evidence"]["tier"] in ("A", "B", "C") for c in cards), "vault: every card has an A/B/C tier")
+    def _leaky(v) -> bool:
+        # a displayed value that IS None/NaN (prose like "None; the max loss is ..." is fine)
+        if isinstance(v, dict):
+            return any(_leaky(x) for x in v.values())
+        if isinstance(v, list):
+            return any(_leaky(x) for x in v)
+        if isinstance(v, float):
+            return v != v
+        return isinstance(v, str) and v.strip().lower() in ("none", "nan", "null")
+    shown = ("one_liner", "when", "setup", "manage", "size", "example")
+    leaks = [c["slug"] for c in cards
+             if any(_leaky(c.get(k)) for k in shown)
+             or any(s.get("value") in (None, "") or _leaky(s.get("value")) for s in c.get("stats", []))]
+    check(not leaks, f"vault: no None/NaN shown as a card value ({leaks})")
+    known = set(slugs)
+    bad_rel = [c["slug"] for c in cards if any(r not in known for r in c.get("related", []))]
+    warn(bool(bad_rel), f"vault: cards whose related list names a slug with no card (no button shown): {bad_rel}")
+    bad_act = [e["slug"] for e in edges if not any(s in known for s in e.get("act_with", []))]
+    check(not bad_act, f"vault: every edge links to at least one card ({bad_act})")
+    terms = [t["term"].lower() for t in vload("glossary", {}).get("terms", [])]
+    dup = [t for t, n in Counter(terms).items() if n > 1]
+    check(not dup, f"vault: no duplicate glossary terms ({dup})")
+
+    bad_pay = []
+    for slug in list(vpo.SETUPS) + list(vpo.EXTRA_SETUPS):
+        legs = vpo.price_legs(vpo.setup_for(slug)["legs"])
+        s = vpo.summary(legs)
+        rows = vpo.curves(legs)
+        if (not all(math.isfinite(r["pnl"]) for r in rows) or not s["breakevens"]
+                or any(not 20 < x < 250 for x in s["breakevens"])
+                or (s["net"] == "credit" and s["max_profit"] is not None
+                    and abs(s["max_profit"] - s["premium"]) > 0.05 and not slug.startswith(("ratio", "broken")))):
+            bad_pay.append(slug)
+    check(not bad_pay, f"vault: payoff curves finite, breakevens plausible, credit = max profit ({bad_pay})")
+    pop = vload("pop", {}).get("rows", [])
+    check(all(0 < r["pop_theoretical"] < 1 and 0 < r["pop_realized"] < 1 and r["cvar5_units_realized"] < 0
+              for r in pop), f"vault: POP rows in (0,1) with negative tails ({len(pop)} rows)")
+    r = vsz.calculate(100_000, 35, "reg_t", 20)
+    check(r["bp_range"] == (25_000, 35_000) and r["per_trade"] == (1_000, 5_000),
+          "vault: sizing calculator default case (25-35k band, 1-5k per trade)")
+    bad_ch = []
+    for name in vcharts.BUILDERS:
+        obj = vrepro.load(name)
+        try:
+            vcharts.chart(name, obj).to_dict()
+        except Exception as exc:
+            bad_ch.append(f"{name}: {type(exc).__name__}")
+    check(not bad_ch, f"vault: every repro chart builds ({bad_ch})")
+    sm = (vrepro.load("strangle_mgmt") or {}).get("episodes", {})
+    try:
+        pair = (sm["p50_d21"]["covid_2020"]["worst_pnl_credits"], sm["p50_d21_stop2x"]["covid_2020"]["worst_pnl_credits"])
+    except KeyError:
+        pair = None
+    check(pair is not None and pair[1] > pair[0], f"vault: 2x-stop March 2020 finding present (worst {pair})")
+    thin = sum(1 for c in cards if c.get("thin_evidence"))
+    print(f"       {len(cards)} cards (tiers {dict(Counter(c['evidence']['tier'] for c in cards))}, thin {thin}) · "
+          f"{len(edges)} edges · {len(terms)} terms · {b.get('counts', {}).get('refs')} refs · "
+          f"status {vload('strategies', {}).get('status')}")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -1358,6 +1440,7 @@ def main() -> None:
     screen_regimes()
     screen_index()
     screen_ephemeris()
+    screen_vault()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")

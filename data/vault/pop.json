@@ -1,0 +1,324 @@
+{
+  "iv": 0.2,
+  "realized_ratio": 0.78,
+  "spot": 100.0,
+  "limits": "Black-Scholes, flat IV, no skew, no costs, held to expiration (no 50%/21-DTE management), lognormal tails thinner than real crashes. Stock-based rows measure P&L of the whole position.",
+  "sources": [
+    "page:concepts-vix",
+    "repro:vrp_spx"
+  ],
+  "rows": [
+    {
+      "slug": "call-credit-spread",
+      "setup": "30-delta short / 16-delta long call, 45 DTE (long strike is ours)",
+      "sources": [
+        "page:concepts-vertical-spread"
+      ],
+      "net": "credit",
+      "unit": "credit",
+      "premium_per_share": 0.716,
+      "pop_theoretical": 0.7554,
+      "pop_realized": 0.8074,
+      "mean_units_realized": 0.264,
+      "cvar5_units_realized": -3.87,
+      "strikes": [
+        104.01,
+        107.5
+      ]
+    },
+    {
+      "slug": "short-strangle",
+      "setup": "16-delta put + 16-delta call, 45 DTE",
+      "sources": [
+        "page:concepts-strangle",
+        "ep:market-measures-2023-02-22@03:07"
+      ],
+      "net": "credit",
+      "unit": "credit",
+      "premium_per_share": 1.184,
+      "pop_theoretical": 0.7542,
+      "pop_realized": 0.8634,
+      "mean_units_realized": 0.555,
+      "cvar5_units_realized": -3.92,
+      "strikes": [
+        93.48,
+        107.5
+      ]
+    },
+    {
+      "slug": "jade-lizard",
+      "setup": "16-delta put + 16/5-delta call spread, 45 DTE (wing and DTE are ours; tastylive's study used 5-7 DTE)",
+      "sources": [
+        "page:concepts-jade-lizard",
+        "ep:market-measures-2026-05-02-2@03:47"
+      ],
+      "net": "credit",
+      "unit": "credit",
+      "premium_per_share": 1.041,
+      "pop_theoretical": 0.7461,
+      "pop_realized": 0.8561,
+      "mean_units_realized": 0.525,
+      "cvar5_units_realized": -3.97,
+      "strikes": [
+        93.48,
+        107.5,
+        112.52
+      ]
+    },
+    {
+      "slug": "short-put",
+      "setup": "30-delta put, 45 DTE (delta is ours; no tastylive put delta found)",
+      "sources": [
+        "page:concepts-options-expiration"
+      ],
+      "net": "credit",
+      "unit": "credit",
+      "premium_per_share": 1.388,
+      "pop_theoretical": 0.7459,
+      "pop_realized": 0.8066,
+      "mean_units_realized": 0.374,
+      "cvar5_units_realized": -4.35,
+      "strikes": [
+        96.62
+      ]
+    },
+    {
+      "slug": "iron-condor",
+      "setup": "16-delta shorts, 5-delta wings, 45 DTE",
+      "sources": [
+        "ep:market-measures-2023-02-22@03:07"
+      ],
+      "net": "credit",
+      "unit": "credit",
+      "premium_per_share": 0.89,
+      "pop_theoretical": 0.7372,
+      "pop_realized": 0.849,
+      "mean_units_realized": 0.486,
+      "cvar5_units_realized": -3.98,
+      "strikes": [
+        93.48,
+        89.31,
+        107.5,
+        112.52
+      ]
+    },
+    {
+      "slug": "put-credit-spread",
+      "setup": "30-delta short / 16-delta long put, 45 DTE (long strike is ours)",
+      "sources": [
+        "page:concepts-vertical-spread"
+      ],
+      "net": "credit",
+      "unit": "credit",
+      "premium_per_share": 0.777,
+      "pop_theoretical": 0.7152,
+      "pop_realized": 0.7729,
+      "mean_units_realized": 0.242,
+      "cvar5_units_realized": -3.04,
+      "strikes": [
+        96.62,
+        93.48
+      ]
+    },
+    {
+      "slug": "short-straddle",
+      "setup": "ATM put + call, 45 DTE",
+      "sources": [
+        "page:concepts-straddle"
+      ],
+      "net": "credit",
+      "unit": "credit",
+      "premium_per_share": 5.602,
+      "pop_theoretical": 0.5751,
+      "pop_realized": 0.6937,
+      "mean_units_realized": 0.22,
+      "cvar5_units_realized": -1.3,
+      "strikes": [
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "slug": "covered-call",
+      "setup": "100 shares + 30-delta call, 45 DTE",
+      "sources": [
+        "page:concepts-covered-call"
+      ],
+      "net": "debit",
+      "unit": "position cost",
+      "premium_per_share": 98.711,
+      "pop_theoretical": 0.559,
+      "pop_realized": 0.5826,
+      "mean_units_realized": 0.005,
+      "cvar5_units_realized": -0.1,
+      "strikes": [
+        "stock",
+        104.01
+      ]
+    },
+    {
+      "slug": "collar",
+      "setup": "100 shares + 30-delta call sold + 30-delta put bought (deltas are ours)",
+      "sources": [
+        "page:concepts-collar-option"
+      ],
+      "net": "debit",
+      "unit": "position cost",
+      "premium_per_share": 100.099,
+      "pop_theoretical": 0.4803,
+      "pop_realized": 0.4815,
+      "mean_units_realized": -0.0,
+      "cvar5_units_realized": -0.03,
+      "strikes": [
+        "stock",
+        104.01,
+        96.62
+      ]
+    },
+    {
+      "slug": "iron-fly",
+      "setup": "ATM shorts, 16-delta wings, 45 DTE (wing choice is ours)",
+      "sources": [
+        "page:concepts-iron-butterfly"
+      ],
+      "net": "credit",
+      "unit": "credit",
+      "premium_per_share": 4.418,
+      "pop_theoretical": 0.4702,
+      "pop_realized": 0.5803,
+      "mean_units_realized": 0.13,
+      "cvar5_units_realized": -0.7,
+      "strikes": [
+        100.0,
+        93.48,
+        100.0,
+        107.5
+      ]
+    },
+    {
+      "slug": "long-straddle",
+      "setup": "ATM put + call bought, 45 DTE",
+      "sources": [
+        "page:concepts-straddle"
+      ],
+      "net": "debit",
+      "unit": "debit",
+      "premium_per_share": 5.602,
+      "pop_theoretical": 0.4249,
+      "pop_realized": 0.3063,
+      "mean_units_realized": -0.22,
+      "cvar5_units_realized": -0.97,
+      "strikes": [
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "slug": "protective-put",
+      "setup": "100 shares + 30-delta put, 45 DTE (delta is ours)",
+      "sources": [
+        "page:concepts-protective-put"
+      ],
+      "net": "debit",
+      "unit": "position cost",
+      "premium_per_share": 101.388,
+      "pop_theoretical": 0.4081,
+      "pop_realized": 0.3895,
+      "mean_units_realized": -0.005,
+      "cvar5_units_realized": -0.05,
+      "strikes": [
+        "stock",
+        96.62
+      ]
+    },
+    {
+      "slug": "debit-spread",
+      "setup": "ATM long call / 30-delta short call, 45 DTE (strikes are ours)",
+      "sources": [
+        "page:concepts-vertical-debit-spread"
+      ],
+      "net": "debit",
+      "unit": "debit",
+      "premium_per_share": 1.512,
+      "pop_theoretical": 0.4023,
+      "pop_realized": 0.3815,
+      "mean_units_realized": -0.067,
+      "cvar5_units_realized": -1.0,
+      "strikes": [
+        100.0,
+        104.01
+      ]
+    },
+    {
+      "slug": "butterfly",
+      "setup": "95/100/105 call butterfly, 45 DTE (width is ours)",
+      "sources": [
+        "page:concepts-long-butterfly-spread"
+      ],
+      "net": "debit",
+      "unit": "debit",
+      "premium_per_share": 1.363,
+      "pop_theoretical": 0.3961,
+      "pop_realized": 0.4936,
+      "mean_units_realized": 0.25,
+      "cvar5_units_realized": -1.0,
+      "strikes": [
+        95.0,
+        100.0,
+        105.0
+      ]
+    },
+    {
+      "slug": "long-put",
+      "setup": "ATM put, 45 DTE",
+      "sources": [
+        "page:concepts-put-options"
+      ],
+      "net": "debit",
+      "unit": "debit",
+      "premium_per_share": 2.801,
+      "pop_theoretical": 0.3555,
+      "pop_realized": 0.3119,
+      "mean_units_realized": -0.22,
+      "cvar5_units_realized": -1.0,
+      "strikes": [
+        100.0
+      ]
+    },
+    {
+      "slug": "long-call",
+      "setup": "ATM call, 45 DTE",
+      "sources": [
+        "page:concepts-call-options"
+      ],
+      "net": "debit",
+      "unit": "debit",
+      "premium_per_share": 2.801,
+      "pop_theoretical": 0.3345,
+      "pop_realized": 0.2972,
+      "mean_units_realized": -0.22,
+      "cvar5_units_realized": -1.0,
+      "strikes": [
+        100.0
+      ]
+    },
+    {
+      "slug": "long-strangle",
+      "setup": "16-delta put + call bought, 45 DTE",
+      "sources": [
+        "page:concepts-strangle"
+      ],
+      "net": "debit",
+      "unit": "debit",
+      "premium_per_share": 1.184,
+      "pop_theoretical": 0.2458,
+      "pop_realized": 0.1366,
+      "mean_units_realized": -0.555,
+      "cvar5_units_realized": -1.0,
+      "strikes": [
+        93.48,
+        107.5
+      ]
+    }
+  ]
+}

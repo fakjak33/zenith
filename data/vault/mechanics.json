@@ -1,0 +1,121 @@
+{
+  "status": "draft",
+  "generated": "2026-10-24",
+  "note": "Decision trees for opening, managing, rolling, closing and taking losses on premium-selling trades. Nodes: decision (a question), action (do this), info (how it works). Management rules are CONVENTIONS: they reshape the P&L distribution and capital turnover; they do not add expected return [lit:williams-1991].",
+  "trees": [
+    {
+      "id": "opening",
+      "title": "Opening a trade",
+      "kind": "MECHANIC",
+      "nodes": [
+        {"id": "o1", "type": "decision", "text": "Is the symbol liquid? Check bid-ask width, open interest and volume together, at the strike and the symbol level.", "sources": ["page:concepts-options-liquidity", "page:concepts-open-interest"]},
+        {"id": "o1n", "type": "action", "text": "If one strike is illiquid, move strikes or expiration; if the whole symbol is illiquid, skip it.", "sources": ["page:concepts-options-liquidity"]},
+        {"id": "o2", "type": "decision", "text": "Is IV rank high? Above 50 favors selling premium; 20 or below favors buying or defined-risk.", "sources": ["page:concepts-implied-volatility-rank-percentile"]},
+        {"id": "o2c", "type": "info", "text": "Caveat: in our 1990-2026 test, high IV rank days had a slightly smaller average IV-RV spread and a far worse tail than low IV rank days.", "sources": ["repro:vrp_spx"]},
+        {"id": "o3", "type": "action", "text": "Choose the strategy from your market assumption and the IV environment (see the strategy cards).", "sources": ["page:concepts-how-to-start-trading-options-entry-checklist"]},
+        {"id": "o4", "type": "action", "text": "Pick duration: about 45 DTE for short premium, longer (60-65) when IV is low.", "sources": ["page:concepts-options-expiration", "ep:market-measures-2024-06-17@00:17"]},
+        {"id": "o5", "type": "action", "text": "Size it: keep each trade under about 5% of the account; keep total options buying power in the 25-50% band (max 75%).", "sources": ["page:concepts-number-of-occurrences", "ep:options-jive-2023-12-27@06:56"]},
+        {"id": "o6", "type": "action", "text": "Enter as one multi-leg limit order, priced near the mid; a market order trades price control for speed.", "sources": ["page:concepts-order-types"]},
+        {"id": "o7", "type": "info", "text": "Know the expiration date, time and settlement of the product before opening (SPX monthlies AM-settled, weeklies PM; equity options physically settled).", "sources": ["page:concepts-options-expiration"]}
+      ],
+      "edges": [
+        {"from": "o1", "to": "o2", "label": "liquid"},
+        {"from": "o1", "to": "o1n", "label": "not liquid"},
+        {"from": "o2", "to": "o2c", "label": "note"},
+        {"from": "o2", "to": "o3", "label": "either way"},
+        {"from": "o3", "to": "o4", "label": ""},
+        {"from": "o4", "to": "o5", "label": ""},
+        {"from": "o5", "to": "o6", "label": ""},
+        {"from": "o6", "to": "o7", "label": ""}
+      ]
+    },
+    {
+      "id": "managing-winners",
+      "title": "Managing winners",
+      "kind": "CONVENTION",
+      "nodes": [
+        {"id": "w1", "type": "decision", "text": "Has the trade reached its profit target? 50% of max profit for most short-premium trades; 10-50% for calendars, diagonals and iron flies; 25% of the debit for calendars.", "sources": ["page:concepts-managing-winners", "page:concepts-calendar-spread"]},
+        {"id": "w2", "type": "action", "text": "Close it and redeploy the capital into a new trade.", "sources": ["page:concepts-managing-winners"]},
+        {"id": "w3", "type": "decision", "text": "Is it at or below about 21 DTE?", "sources": ["ep:market-measures-2024-06-17@08:59"]},
+        {"id": "w4", "type": "action", "text": "Close or roll to the next cycle rather than hold into expiration week.", "sources": ["ep:market-measures-2023-08-04@09:22"]},
+        {"id": "w5", "type": "action", "text": "Hold; check again.", "sources": []},
+        {"id": "w6", "type": "info", "text": "Do not close for a tiny gain that commissions would eat (e.g. $0.10).", "sources": ["page:concepts-managing-winners"]},
+        {"id": "w7", "type": "info", "text": "Effect: the 50% target raises the win rate and P&L per day, lowers P&L per trade; the 21-DTE exit cuts the worst-5% loss. Neither raises the expected return of the book.", "sources": ["repro:strangle_mgmt", "lit:williams-1991"]}
+      ],
+      "edges": [
+        {"from": "w1", "to": "w2", "label": "yes"},
+        {"from": "w1", "to": "w3", "label": "no"},
+        {"from": "w3", "to": "w4", "label": "yes"},
+        {"from": "w3", "to": "w5", "label": "no"},
+        {"from": "w2", "to": "w6", "label": "note"},
+        {"from": "w4", "to": "w7", "label": "why"}
+      ]
+    },
+    {
+      "id": "defending-rolling",
+      "title": "Defending and rolling a tested trade",
+      "kind": "CONVENTION",
+      "nodes": [
+        {"id": "d1", "type": "decision", "text": "Is one side tested (price at or through a short strike)?", "sources": []},
+        {"id": "d2", "type": "action", "text": "Two-sided trades (strangle, iron condor): roll the untested side closer to the price for extra credit; a condor's untested side can go as far as the tested strike (an iron fly).", "sources": ["page:concepts-strangle", "page:concepts-iron-condor"]},
+        {"id": "d3", "type": "decision", "text": "Can the trade be rolled out in time for a net credit?", "sources": ["page:concepts-defending-positions"]},
+        {"id": "d4", "type": "action", "text": "Roll out for a credit, ideally 7-21 days before expiration; strikes may move closer only if the roll still brings a credit.", "sources": ["page:concepts-defending-positions"]},
+        {"id": "d5", "type": "action", "text": "Do not roll for a debit: it worsens the breakeven and opens a low-probability trade. Close or keep the position under the loss rule instead.", "sources": ["page:concepts-defending-positions"]},
+        {"id": "d6", "type": "info", "text": "Evidence: a roll is a close plus a new trade; the realized loss is real, and rolling the untested side adds exposure in the losing direction. Treat every roll as a new trade under the same size and stress limits.", "sources": ["lit:williams-1991", "lit:santaclara-saretto-2009", "lit:sec-ljm-2021"]},
+        {"id": "d7", "type": "info", "text": "Small accounts cannot keep rolling losers as long as large ones; keep individual trades small.", "sources": ["page:concepts-defending-positions"]}
+      ],
+      "edges": [
+        {"from": "d1", "to": "d2", "label": "yes"},
+        {"from": "d2", "to": "d3", "label": "still tested"},
+        {"from": "d3", "to": "d4", "label": "yes"},
+        {"from": "d3", "to": "d5", "label": "no"},
+        {"from": "d4", "to": "d6", "label": "evidence"},
+        {"from": "d5", "to": "d7", "label": "note"}
+      ]
+    },
+    {
+      "id": "taking-losses",
+      "title": "Taking losses",
+      "kind": "CONVENTION",
+      "nodes": [
+        {"id": "l1", "type": "decision", "text": "Has the net loss reached 2x the credit received (e.g. $1.00 collected, option now worth $3.00)?", "sources": ["page:concepts-defending-positions"]},
+        {"id": "l2", "type": "action", "text": "tastylive: close the trade.", "sources": ["page:concepts-defending-positions"]},
+        {"id": "l3", "type": "info", "text": "Evidence: in our strangle model a 2x-credit stop lowered the mean (+0.21 vs +0.26 credits a trade) and left the worst-5% average about unchanged, but it cut the single worst trade in the March 2020 crash from -28.8 to -4.7 credits. Closes-only data flatter it (real stop fills slip in spikes). Use it to cap disaster risk, not to add return.", "sources": ["repro:strangle_mgmt", "lit:kaminski-lo-2014"]},
+        {"id": "l4", "type": "decision", "text": "Defined-risk trade?", "sources": []},
+        {"id": "l5", "type": "info", "text": "Max loss was known at entry; many traders size it and let it run rather than stop out.", "sources": ["ep:market-measures-2026-09-25@03:25"]},
+        {"id": "l6", "type": "action", "text": "Undefined-risk: follow the loss rule or the roll-for-credit tree; never add size to a loser to recover.", "sources": ["page:concepts-defending-positions", "lit:sec-ljm-2021"]}
+      ],
+      "edges": [
+        {"from": "l1", "to": "l2", "label": "yes"},
+        {"from": "l2", "to": "l3", "label": "evidence"},
+        {"from": "l1", "to": "l4", "label": "no"},
+        {"from": "l4", "to": "l5", "label": "yes"},
+        {"from": "l4", "to": "l6", "label": "no"}
+      ]
+    },
+    {
+      "id": "expiration-assignment",
+      "title": "Expiration, assignment and dividends",
+      "kind": "MECHANIC",
+      "nodes": [
+        {"id": "e1", "type": "decision", "text": "Is a short option in the money or near the strike going into expiration?", "sources": ["page:concepts-assignment"]},
+        {"id": "e2", "type": "action", "text": "Close it (or the whole spread) before expiration: a narrow spread where one leg is exercised and the other expires can turn small defined risk into a large share position.", "sources": ["page:concepts-options-expiration", "page:concepts-iron-condor"]},
+        {"id": "e3", "type": "info", "text": "ITM options at expiration convert to 100 shares per contract (short put -> long stock, short call -> short stock); OTM options expire worthless. Assignment notices arrive after the close, at random among writers.", "sources": ["page:concepts-assignment", "page:concepts-options-expiration"]},
+        {"id": "e4", "type": "decision", "text": "Short ITM call on a stock going ex-dividend, with the dividend larger than the call's remaining extrinsic value?", "sources": ["page:concepts-assignment"]},
+        {"id": "e5", "type": "action", "text": "Expect early assignment: close or roll the call before the ex-date.", "sources": ["page:concepts-assignment", "page:concepts-dividend"]},
+        {"id": "e6", "type": "info", "text": "European-style, cash-settled index options (SPX, XSP) cannot be assigned early and settle to cash; equity and ETF options are American-style and deliver shares.", "sources": ["page:concepts-american-vs-european-options", "page:concepts-cash-settlement"]},
+        {"id": "e7", "type": "info", "text": "Taxes (educational): broad index options fall under Section 1256 (60% long-term / 40% short-term); short-option gains are short-term; wash sales can apply across stock and options within 30 days.", "sources": ["page:concepts-how-are-options-taxed"]},
+        {"id": "e8", "type": "info", "text": "Day trading: the tastylive page still describes the $25,000 pattern-day-trader rule; FINRA replaced it with intraday margin standards effective 2026-06-04 (brokers may phase in to 2027-10-20).", "sources": ["page:concepts-pattern-day-trader-pdt-rule", "lit:finra-rn26-10-2026"]}
+      ],
+      "edges": [
+        {"from": "e1", "to": "e2", "label": "yes"},
+        {"from": "e1", "to": "e3", "label": "how it works"},
+        {"from": "e3", "to": "e4", "label": "stock options"},
+        {"from": "e4", "to": "e5", "label": "yes"},
+        {"from": "e3", "to": "e6", "label": "index options"},
+        {"from": "e6", "to": "e7", "label": "taxes"},
+        {"from": "e7", "to": "e8", "label": "account rules"}
+      ]
+    }
+  ]
+}

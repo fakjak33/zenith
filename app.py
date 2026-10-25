@@ -87,7 +87,12 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "ticker, dates and price level hidden; call UP or DOWN over the next N candles, watch the "
         "future replay, and every call is scored against the base rate and a trend rule on the "
         "same charts. Profiles are one click: type a handle, bookmark the URL.\n"
-        "16. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "16. **OPTIONS VAULT** — an *evidence-graded options reference*: 30 strategy cards (when, "
+        "setup, manage, exit, with payoff diagrams), 15 edges, decision trees for opening, managing, "
+        "rolling and taking losses, and a sleeve-sizing calculator, distilled from tastylive research "
+        "and checked against the literature and our own free-data reproductions. Every number links "
+        "to its episode, page, paper or test.\n"
+        "17. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -174,10 +179,11 @@ def render_feature(module_path: str, feature: str) -> None:
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
  tab_nightday, tab_holdings, tab_mom, tab_etfmom, tab_trend, tab_beta, tab_ideas, tab_regimes,
- tab_index, tab_ephemeris, tab_archive, tab_sources) = st.tabs(
+ tab_index, tab_ephemeris, tab_vault, tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
      "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM",
-     "TREND FOLLOWING", "CLEAN BETA", "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "ARCHIVE", "SOURCES"])
+     "TREND FOLLOWING", "CLEAN BETA", "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "OPTIONS VAULT",
+     "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -209,6 +215,7 @@ with tab_today:
         ("REGIMES", "zenith.regimes.view"),
         ("INDEX", "zenith.index.view"),
         ("EPHEMERIS", "zenith.ephemeris.view"),
+        ("OPTIONS VAULT", "zenith.vault.view"),
     )
     _chips, _chip_failures = [], []
     for _label, _module in _BADGE_SOURCES:
@@ -308,6 +315,11 @@ with tab_index:
 with tab_ephemeris:
     st.markdown(section("EPHEMERIS — blind-chart tape-reading trainer", 1), unsafe_allow_html=True)
     render_feature("zenith.ephemeris.view", "EPHEMERIS")
+
+with tab_vault:
+    st.markdown(section("OPTIONS VAULT — evidence-graded options strategies, edges & mechanics", 4),
+                unsafe_allow_html=True)
+    render_feature("zenith.vault.view", "OPTIONS VAULT")
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)
