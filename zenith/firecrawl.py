@@ -22,7 +22,7 @@ _calls_this_run = 0
 
 
 def enabled() -> bool:
-    return bool(config.FIRECRAWL_API_KEY)
+    return not config.FREE_ONLY and bool(config.FIRECRAWL_API_KEY)
 
 
 def fetch_html(url: str) -> tuple[str | None, str]:

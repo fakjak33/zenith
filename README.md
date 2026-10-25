@@ -41,11 +41,19 @@ Many firms publish no RSS. For those, `kind="html"` sources are fetched in tiers
    Apify's `website-content-crawler`, gated on Apify's *own* reported monthly
    spend so it can never exceed the FREE plan.
 
-### Fallback setup (both optional)
+### FREE_ONLY (on by default): Zenith never costs money
+`zenith/config.py` sets `FREE_ONLY = True` unless the environment says
+`ZENITH_FREE_ONLY=0`. While it is on, Firecrawl, Apify and the vault's Anthropic
+extractor refuse to run **even if a key is present**, and the nightly scrape
+workflow no longer passes their secrets. Sources that only work through those
+tiers report `free_only` instead of spending credits. Tests in
+`tests/test_zenith.py` enforce both the code guard and the workflow lint.
+
+### Fallback setup (both optional, only with ZENITH_FREE_ONLY=0)
 - **Firecrawl (recommended free tier):** set `FIRECRAWL_API_KEY` (env / Streamlit
-  secret / GitHub repo secret). The Action passes `secrets.FIRECRAWL_API_KEY`.
+  secret / GitHub repo secret) and pass it to the scrape step yourself.
   Best first choice for JS/anti-bot hubs; tried before Apify.
-- **Apify:** set `APIFY_TOKEN` (the nightly Action passes `secrets.APIFY_TOKEN`).
+- **Apify:** set `APIFY_TOKEN` and pass it to the scrape step yourself.
   No tokens at all ⇒ direct-only (free).
 - Env knobs: `APIFY_CRAWLER=cheerio|playwright` (cheerio = cheapest, no browser),
   `APIFY_MONTHLY_BUDGET_USD` (default 4.0; stops calling Apify above this),

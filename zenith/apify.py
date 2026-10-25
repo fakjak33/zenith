@@ -34,7 +34,7 @@ def _get_json(url: str, timeout: int = 20):
 
 def monthly_spend_usd(force: bool = False) -> float:
     """Apify's own reported usage for the current month, in USD. Cached per run."""
-    if not config.APIFY_TOKEN:
+    if config.FREE_ONLY or not config.APIFY_TOKEN:
         return 0.0
     if not force and _spend_cache["usd"] >= 0:
         return _spend_cache["usd"]
@@ -84,9 +84,11 @@ def fetch_html(url: str) -> tuple[str | None, str]:
     """Fetch a URL via Apify; return (html_or_text, note).
 
     note is one of: 'apify', 'apify:empty', 'apify:budget', 'apify:disabled',
-    'apify:error:<reason>'. Respects the monthly budget gate.
+    'apify:error:<reason>', 'apify:free_only'. Respects the monthly budget gate.
     """
     global _calls_this_run
+    if config.FREE_ONLY:
+        return None, "apify:free_only"
     if not config.APIFY_ENABLED:
         return None, "apify:disabled"
     if not budget_ok():
@@ -128,6 +130,8 @@ def crawl_articles(url: str, max_pages: int = 8,
     link-harvesting fails). Returns ([{title, link, summary}], note). Budget-gated.
     """
     global _calls_this_run
+    if config.FREE_ONLY:
+        return None, "apify:free_only"
     if not config.APIFY_ENABLED:
         return None, "apify:disabled"
     if not budget_ok():

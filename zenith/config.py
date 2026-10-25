@@ -826,6 +826,19 @@ BROWSER_HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
 }
 
+# --- FREE_ONLY: zenith must never cost money ---------------------------------
+# On by default. Every metered integration (Apify, Firecrawl, the Anthropic API
+# used by the vault extractor) checks this flag and refuses to run — even when a
+# key is present in the environment or a Streamlit / GitHub secret. Opting back
+# in is a deliberate act: set ZENITH_FREE_ONLY=0.
+FREE_ONLY = os.environ.get("ZENITH_FREE_ONLY", "1").strip() != "0"
+
+
+def paid_allowed() -> bool:
+    """True only when the owner has explicitly opted out of FREE_ONLY."""
+    return not FREE_ONLY
+
+
 # --- Apify fallback (only used when the direct tier is blocked) -------------
 # Token comes from env / Streamlit secret / GitHub Action secret — never hard-coded.
 APIFY_TOKEN = os.environ.get("APIFY_TOKEN", "").strip()
@@ -840,7 +853,7 @@ APIFY_TIMEOUT = int(os.environ.get("APIFY_TIMEOUT", "120"))
 # Soft monthly safety cap (USD). The FREE plan grants ~$5/mo; stop calling Apify
 # once we estimate we've spent this much so a run can never blow the budget.
 APIFY_MONTHLY_BUDGET_USD = float(os.environ.get("APIFY_MONTHLY_BUDGET_USD", "4.0"))
-APIFY_ENABLED = bool(APIFY_TOKEN)
+APIFY_ENABLED = bool(APIFY_TOKEN) and not FREE_ONLY
 
 # --- Firecrawl fallback (free-tier alternative, tried before Apify) ---------
 FIRECRAWL_API_KEY = os.environ.get("FIRECRAWL_API_KEY", "").strip()

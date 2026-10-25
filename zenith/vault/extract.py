@@ -680,6 +680,11 @@ def requests_for(rows: list[dict], tax: dict, config: str) -> list[dict]:
 def _client():
     import os
 
+    from .. import config as zconfig
+    if zconfig.FREE_ONLY:
+        # Metered API: never reachable unless the owner sets ZENITH_FREE_ONLY=0.
+        raise RuntimeError("FREE_ONLY is on: the Anthropic API is disabled "
+                           "(set ZENITH_FREE_ONLY=0 to opt in to paid calls)")
     import anthropic  # research-only dependency (requirements-vault.txt)
     if not os.environ.get("ANTHROPIC_API_KEY") and sys.platform == "win32":
         # A key saved with SetEnvironmentVariable(..., 'User') only reaches processes started after

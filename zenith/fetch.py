@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 import requests
 
 from .config import USER_AGENT, REQUEST_TIMEOUT, BROWSER_HEADERS
-from . import apify, firecrawl
+from . import apify, config, firecrawl
 
 
 @lru_cache(maxsize=256)
@@ -67,7 +67,8 @@ def get_html(url: str, timeout: int = REQUEST_TIMEOUT) -> tuple[str | None, str]
     Tier 3 (paid, budget-gated): Apify, last resort.
 
     Returns (html_or_none, via) where via ∈ {'direct', 'firecrawl', 'apify',
-    'apify:…' / 'firecrawl:…', 'blocked', 'robots'}.
+    'apify:…' / 'firecrawl:…', 'blocked', 'robots', 'free_only'}. With
+    config.FREE_ONLY on (the default) the paid tiers are never attempted.
     """
     if not allowed(url):
         return None, "robots"
@@ -77,6 +78,8 @@ def get_html(url: str, timeout: int = REQUEST_TIMEOUT) -> tuple[str | None, str]
         r.encoding = r.apparent_encoding or r.encoding
         return r.text, "direct"
     # direct blocked/empty -> Firecrawl (free-tier) -> Apify (budget-gated)
+    if config.FREE_ONLY:
+        return None, "free_only"
     last = "blocked"
     if firecrawl.enabled():
         html, note = firecrawl.fetch_html(url)

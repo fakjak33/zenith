@@ -83,6 +83,7 @@ def test_extract_links_respects_pattern_and_dedup():
 
 
 def test_apify_disabled_without_token(monkeypatch):
+    monkeypatch.setattr(config, "FREE_ONLY", False)
     monkeypatch.setattr(config, "APIFY_ENABLED", False)
     monkeypatch.setattr(config, "APIFY_TOKEN", "")
     html, note = apify.fetch_html("https://example.com")
@@ -90,7 +91,8 @@ def test_apify_disabled_without_token(monkeypatch):
 
 
 def test_apify_budget_gate(monkeypatch):
-    # over budget -> never calls the network
+    # over budget -> never calls the network (with FREE_ONLY explicitly lifted)
+    monkeypatch.setattr(config, "FREE_ONLY", False)
     monkeypatch.setattr(config, "APIFY_ENABLED", True)
     monkeypatch.setattr(config, "APIFY_TOKEN", "x")
     monkeypatch.setattr(apify, "monthly_spend_usd", lambda *a, **k: 999.0)
@@ -109,6 +111,63 @@ def test_firecrawl_disabled_without_key(monkeypatch):
     html, note = firecrawl.fetch_html("https://example.com")
     assert html is None and note == "firecrawl:disabled"
     assert firecrawl.enabled() is False
+
+
+# --- FREE_ONLY: no metered call can fire, even with keys present -------------
+
+def _no_network(*a, **k):
+    raise AssertionError("network call attempted under FREE_ONLY")
+
+
+def test_free_only_is_the_default():
+    assert config.FREE_ONLY is True
+    assert config.paid_allowed() is False
+
+
+def test_free_only_blocks_apify_and_firecrawl_with_keys(monkeypatch):
+    import urllib.request
+    monkeypatch.setattr(config, "FREE_ONLY", True)
+    monkeypatch.setattr(config, "APIFY_TOKEN", "fake-token")
+    monkeypatch.setattr(config, "APIFY_ENABLED", True)
+    monkeypatch.setattr(config, "FIRECRAWL_API_KEY", "fake-key")
+    monkeypatch.setattr(urllib.request, "urlopen", _no_network)
+    assert firecrawl.enabled() is False
+    assert apify.fetch_html("https://example.com") == (None, "apify:free_only")
+    assert apify.crawl_articles("https://example.com") == (None, "apify:free_only")
+    assert apify.monthly_spend_usd(force=True) == 0.0
+
+
+def test_free_only_get_html_stops_after_direct(monkeypatch):
+    from zenith import fetch
+    monkeypatch.setattr(config, "FREE_ONLY", True)
+    monkeypatch.setattr(config, "FIRECRAWL_API_KEY", "fake-key")
+    monkeypatch.setattr(fetch, "allowed", lambda url: True)
+    monkeypatch.setattr(fetch, "get", lambda *a, **k: None)      # direct tier blocked
+    monkeypatch.setattr(firecrawl, "fetch_html", _no_network)
+    monkeypatch.setattr(apify, "fetch_html", _no_network)
+    assert fetch.get_html("https://example.com/js-site") == (None, "free_only")
+
+
+def test_free_only_blocks_anthropic_client(monkeypatch):
+    import pytest
+    from zenith.vault import extract as vextract
+    monkeypatch.setattr(config, "FREE_ONLY", True)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "fake-key")
+    with pytest.raises(RuntimeError, match="FREE_ONLY"):
+        vextract._client()
+
+
+def test_workflows_pass_no_paid_secrets_and_all_have_timeouts():
+    from pathlib import Path
+    wf_dir = Path(__file__).resolve().parents[1] / ".github" / "workflows"
+    files = sorted(wf_dir.glob("*.yml"))
+    assert files
+    for f in files:
+        text = f.read_text(encoding="utf-8")
+        for secret in ("APIFY_TOKEN", "FIRECRAWL_API_KEY", "ANTHROPIC_API_KEY"):
+            assert secret not in text, f"{f.name} references paid secret {secret}"
+        assert text.count("timeout-minutes") >= text.count("runs-on:"), \
+            f"{f.name}: every job needs timeout-minutes"
 
 
 def test_get_html_respects_robots(monkeypatch):
