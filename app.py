@@ -92,7 +92,12 @@ with st.expander("What is Zenith?  ·  a 20-second orientation"):
         "rolling and taking losses, and a sleeve-sizing calculator, distilled from tastylive research "
         "and checked against the literature and our own free-data reproductions. Every number links "
         "to its episode, page, paper or test.\n"
-        "17. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
+        "17. **THETA RUN** — a *gamified options-portfolio speedrun*: screen real historical markets "
+        "by IV, IV rank and earnings, open tastytrade-style trades, then manage the book day by day "
+        "(21 DTE, profit targets, rolls, assignment) against buy-and-hold SPY and a mechanical "
+        "tastytrade bot on the same tape, coached by OPTIONS VAULT. Crisis challenges, XP and "
+        "achievements; real prices, modeled option prices.\n"
+        "18. **Today / Archive** — a *research & insights aggregator* pulling institutional & academic "
         "sources (Fed, NBER, BIS, quant desks, journals) into one deduped feed.\n\n"
         "Every feature shows an **evidence-strength rating (A/B/C)** so you can tell the strong "
         "signals from the weak ones. Every number is **decision-support, not investment advice**. "
@@ -179,11 +184,11 @@ def render_feature(module_path: str, feature: str) -> None:
 
 (tab_today, tab_brief, tab_cas, tab_pretom, tab_pead, tab_fmom, tab_edge,
  tab_nightday, tab_holdings, tab_mom, tab_etfmom, tab_trend, tab_beta, tab_ideas, tab_regimes,
- tab_index, tab_ephemeris, tab_vault, tab_archive, tab_sources) = st.tabs(
+ tab_index, tab_ephemeris, tab_vault, tab_theta, tab_archive, tab_sources) = st.tabs(
     ["TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM",
      "EDGE SCREENS", "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM",
      "TREND FOLLOWING", "CLEAN BETA", "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "OPTIONS VAULT",
-     "ARCHIVE", "SOURCES"])
+     "THETA RUN", "ARCHIVE", "SOURCES"])
 
 with tab_today:
     from zenith.ui_theme import stamp
@@ -216,6 +221,7 @@ with tab_today:
         ("INDEX", "zenith.index.view"),
         ("EPHEMERIS", "zenith.ephemeris.view"),
         ("OPTIONS VAULT", "zenith.vault.view"),
+        ("THETA RUN", "zenith.theta.view"),
     )
     _chips, _chip_failures = [], []
     for _label, _module in _BADGE_SOURCES:
@@ -320,6 +326,11 @@ with tab_vault:
     st.markdown(section("OPTIONS VAULT — evidence-graded options strategies, edges & mechanics", 4),
                 unsafe_allow_html=True)
     render_feature("zenith.vault.view", "OPTIONS VAULT")
+
+with tab_theta:
+    st.markdown(section("THETA RUN — options-portfolio speedrun vs the tape and the bot", 0),
+                unsafe_allow_html=True)
+    render_feature("zenith.theta.view", "THETA RUN")
 
 with tab_archive:
     st.markdown(section("Archive", 0), unsafe_allow_html=True)

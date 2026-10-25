@@ -1,0 +1,33 @@
+{
+  "note": "Scripted THETA RUN scenarios. Dates are real; option prices are modeled. 'crisis' runs score the SURVIVOR achievement.",
+  "challenges": [
+    {"id": "gfc-2008", "title": "LEHMAN WEEKEND", "start": "2008-08-01", "end": "2009-01-30",
+     "crisis": true, "seed": 2008,
+     "brief": "Sell premium into the 2008 crash. VIX goes from 20 to 80. Can a short-premium book survive the worst tail since 1987?",
+     "lesson": "Undefined risk plus high buying-power use is how accounts end. Size for the tail, not the average."},
+    {"id": "flash-2010", "title": "FLASH CRASH", "start": "2010-04-01", "end": "2010-07-30",
+     "crisis": true, "seed": 2010,
+     "brief": "A calm tape, then the May 6 flash crash and a summer of elevated vol.",
+     "lesson": "IV spikes are when premium is richest -- if you still have buying power to sell it."},
+    {"id": "volmageddon-2018", "title": "VOLMAGEDDON", "start": "2018-01-02", "end": "2018-04-30",
+     "crisis": true, "seed": 2018,
+     "brief": "VIX at 10, everyone short vol. On Feb 5 VIX doubles in a day and the short-vol ETPs blow up.",
+     "lesson": "Low IV rank is the worst time to sell premium big: the premium is thin and the move is not."},
+    {"id": "covid-2020", "title": "COVID CRASH", "start": "2020-01-21", "end": "2020-06-30",
+     "crisis": true, "seed": 2020,
+     "brief": "The fastest bear market in history: SPY -34% in 23 trading days, VIX to 82, then a V.",
+     "lesson": "Defined risk and small size let you stay in the game -- and sell the richest premium of the decade on the way back."},
+    {"id": "bear-2022", "title": "THE GRIND", "start": "2022-01-03", "end": "2022-10-31",
+     "crisis": true, "seed": 2022,
+     "brief": "A slow, rate-driven bear market with sticky IV around 25-35. No single crash -- just relentless delta.",
+     "lesson": "Managing delta (rolling the untested side, skewing deltas) matters more than the entry."},
+    {"id": "melt-up-2017", "title": "LOW-VOL MELT-UP", "start": "2017-01-03", "end": "2017-12-29",
+     "crisis": false, "seed": 2017,
+     "brief": "The calmest year on record: VIX below 12 most of the year and the market only goes up.",
+     "lesson": "Short calls fight a melt-up; low IVR means small credits. Consider fewer, smaller trades."},
+    {"id": "earnings-season", "title": "EARNINGS SEASON", "start": "2023-07-03", "end": "2023-08-31", "blind": true,
+     "crisis": false, "seed": 2307,
+     "brief": "A blind earnings season. Find the names with reports inside your expiry and decide: sell the IV crush, or stay away?",
+     "lesson": "Earnings IV is predictably crushed, but the move is the risk. Size earnings trades smaller than core trades."}
+  ]
+}

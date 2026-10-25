@@ -907,6 +907,22 @@ VAULT_FILES = {
 }
 
 
+# --- THETA RUN (gamified options-portfolio simulator) -------------------------
+# Real daily price paths + modeled IV. The per-ticker feature table is too big to
+# commit, so like EPHEMERIS it rides on the free `ephemeris-px` GitHub Release and
+# is downloaded once per container into EPHEMERIS_PX_DIR (gitignored).
+THETA_DIR = DATA_DIR / "theta"
+THETA_ASSET = "theta.parquet"                       # release asset name
+THETA_FILES = {
+    "universe": THETA_DIR / "universe.json",        # tickers, kind, tier, listed_from
+    "earnings": THETA_DIR / "earnings.json",        # {ticker: [report dates]} (no live calls)
+    "challenges": THETA_DIR / "challenges.json",    # scripted scenarios (crashes, bears, daily)
+    "build": THETA_DIR / "build.json",              # build report: calibration + coverage
+    "local_parquet": EPHEMERIS_PX_DIR / THETA_ASSET,
+}
+THETA_START = "2005-01-01"                          # earliest sim date (earnings coverage)
+
+
 @dataclass(frozen=True)
 class Theme:
     bg: str = "#000000"

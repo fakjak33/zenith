@@ -474,6 +474,7 @@ def test_full_app_renders_with_trend_following_tab():
     assert "CLEAN BETA" in labels
     assert "EPHEMERIS" in labels
     assert "OPTIONS VAULT" in labels
+    assert "THETA RUN" in labels
     errors = " ".join(str(e.value) for e in at.error)
     assert "could not be loaded" not in errors, errors
 
@@ -558,3 +559,42 @@ def test_vault_today_badge_never_raises():
     from zenith.vault import view
     b = view.today_badge()
     assert b is None or "OPTIONS VAULT" in b
+
+
+# ----------------------------------------------------------------- THETA RUN --
+def test_theta_view_renders_without_market():
+    at, text = _render("\n".join([
+        "from zenith.theta import view",
+        "orig = view._market",
+        "view._market = lambda: None",
+        "try:",
+        "    view.render()",
+        "finally:",
+        "    view._market = orig",
+    ]))
+    assert "not investment advice" in text.lower()
+    assert "isn't published yet" in " ".join(str(i.value) for i in at.info)
+
+
+@pytest.mark.skipif(not config.THETA_FILES["local_parquet"].exists(), reason="no local THETA data")
+def test_theta_view_lobby_and_run_render():
+    at, text = _render("from zenith.theta import view\nview.render()\n")
+    assert "QUICK RUN" in text and "CHALLENGES" in text
+    # easy = visible tickers: AppTest matches selectbox values against formatted labels,
+    # which blind runs alias (ASSET-0xx) mid-session
+    at.radio(key="th_diff").set_value("easy")
+    at.button(key="th_go_quick").click().run()
+    assert not at.exception, [e.value for e in at.exception]
+    labels = [b.label for b in at.button]
+    assert "▶▶ NEXT EVENT" in labels
+    at.button(key="th_event").click().run()
+    assert not at.exception, [e.value for e in at.exception]
+    at.button(key="th_end").click().run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "RUN COMPLETE" in " ".join(str(m.value) for m in at.markdown)
+
+
+def test_theta_today_badge_never_raises():
+    from zenith.theta import view
+    b = view.today_badge()
+    assert b is None or "THETA RUN" in b

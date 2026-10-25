@@ -1,0 +1,50 @@
+name: THETA RUN market
+
+on:
+  schedule:
+    - cron: "30 6 * * 2-6"      # after ephemeris.yml (05:30, ~25 min): reads its daily.parquet
+  workflow_dispatch:
+
+permissions:
+  contents: write               # commit data/theta/ + publish the release asset
+
+concurrency:
+  group: theta
+  cancel-in-progress: false
+
+jobs:
+  theta:
+    runs-on: ubuntu-latest
+    # ~150 tickers of modeled IV from the EPHEMERIS price store + ~110 yfinance
+    # earnings calendars (free): ~5-10 min.
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build modeled-IV table
+        run: python -m zenith.theta.build --refresh-earnings
+
+      - name: Publish release asset (rolling tag ephemeris-px)
+        run: |
+          # The feature table lives in the same free release as the EPHEMERIS prices.
+          gh release upload ephemeris-px data/ephemeris/px/theta.parquet --clobber
+
+      - name: Commit THETA metadata
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add -A data/theta/
+          if git diff --cached --quiet; then
+            echo "No THETA changes."
+          else
+            git commit -m "theta: $(date -u +%Y-%m-%d) market"
+            git push
+          fi
