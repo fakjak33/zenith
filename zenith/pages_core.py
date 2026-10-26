@@ -7,7 +7,10 @@ import streamlit as st
 
 from . import store
 from .sources import SOURCES
+from . import ui_kit as uk
+from .config import THEME as T
 from .ui_theme import card_html, section, stamp
+from .viz.charts import calendar_heat
 
 VIEWS = ["Everything", "Insights — text-only", "Insights — charts & visuals",
          "Research & papers", "News"]
@@ -59,6 +62,40 @@ def insights_research_news(items, key_prefix):
             render_items(news)
 
 
+@st.cache_data(ttl=900, show_spinner=False)
+def _flow(days: int = 35) -> pd.DataFrame:
+    """Items per source per day over the last `days` archived days."""
+    rows = []
+    for d in store.archive_dates()[:days]:
+        for it in store.load_archive(d):
+            rows.append({"day": d, "source": it.get("source", "?"), "category": it.get("category", "")})
+    return pd.DataFrame(rows)
+
+
+def _flow_panel(title: str = "RESEARCH FLOW") -> None:
+    """Signature: a source x day pulse map of everything the scrape collected."""
+    df = _flow()
+    if df.empty:
+        return
+    top = df["source"].value_counts().head(18).index
+    g = (df[df["source"].isin(top)].groupby(["source", "day"]).size().rename("n").reset_index())
+    g["day"] = g["day"].str[5:]
+    cap = max(float(g["n"].quantile(0.9)), 1.0)
+    import altair as alt
+    with uk.panel(title, T.cyan, f"top {len(top)} sources · last {df['day'].nunique()} days"):
+        ch = alt.Chart(g).mark_circle(opacity=0.9).encode(
+            x=alt.X("day:O", title=None, axis=alt.Axis(labelAngle=-90, labelFontSize=9)),
+            y=alt.Y("source:N", title=None, sort=list(top)),
+            size=alt.Size("n:Q", legend=None, scale=alt.Scale(range=[8, 260], domain=[0, cap], clamp=True)),
+            color=alt.Color("n:Q", legend=None, scale=alt.Scale(range=[T.line, T.cyan, T.teal], domain=[0, cap / 2, cap],
+                                                                 clamp=True)),
+            tooltip=["source", "day", "n"]).properties(height=max(200, 17 * len(top)))
+        st.altair_chart(ch, use_container_width=True)
+        mix = df["category"].value_counts()
+        st.markdown(uk.kpis([{"label": k, "value": f"{v:,}", "color": c} for (k, v), c in
+                             zip(mix.items(), [T.teal, T.amber, T.violet, T.cyan])]), unsafe_allow_html=True)
+
+
 def today() -> None:
     latest = store.load_latest()
     dates = store.archive_dates()
@@ -67,6 +104,7 @@ def today() -> None:
                "Module status chips live on HOME.")
     if not latest and dates:
         latest = store.load_archive(dates[0])
+    _flow_panel()
     insights_research_news(latest, "today")
 
 
@@ -75,6 +113,7 @@ def archive() -> None:
     if not dates:
         st.info("No archived days yet. The nightly scrape will populate this.")
         return
+    _flow_panel("ARCHIVE PULSE")
     day = st.selectbox("Pick a day", dates)
     items = store.load_archive(day)
     st.caption(f"{day} — {len(items)} items")
@@ -111,4 +150,15 @@ def sources() -> None:
               for c in ("insight", "research", "news")}
     st.caption(f"Enabled by category — insights: {by_cat['insight']} · research: {by_cat['research']} "
                f"· news: {by_cat['news']}")
+    health = {(r["Category"], r["Source"][:22]): (1.0 if r["Last run"] == "ok" else (-1.0 if r["Last run"] == "err" else None))
+              for r in rows if r["Enabled"] == "✓"}
+    with uk.panel("SOURCE HEALTH", T.teal, "teal = ok · coral = error · grey = no run"):
+        cats = sorted({c for c, _ in health})
+        for c in cats:
+            names = [n for cc, n in health if cc == c]
+            dots = "".join(f'<i title="{n}" style="display:inline-block; width:12px; height:12px; margin:2px; '
+                           f'background:{T.teal if health[(c, n)] == 1 else (T.coral if health[(c, n)] == -1 else T.line)};"></i>'
+                           for n in names)
+            st.markdown(f'<div style="display:flex; align-items:center; gap:0.8rem;"><span class="z-lbl" '
+                        f'style="width:6rem;">{c}</span><div>{dots}</div></div>', unsafe_allow_html=True)
     st.dataframe(pd.DataFrame(rows), use_container_width=True, height=560, hide_index=True)

@@ -267,32 +267,58 @@ def _window_lines(stats: dict) -> None:
 
 
 def _name_heatmap(panel: dict, names: list[dict], sched: dict, top: int) -> None:
+    """THE WINDOW MAP (signature): every basket name x every day since the lock.
+    Background = the cycle phase (pre-window, selling window, reversal), dots = that
+    day's move (size = magnitude, colour = direction), and a right-hand rail of
+    bubbles sized by index weight -- the 'dispensability' of each name."""
     order = [n["ticker"] for n in names[:top] if n["ticker"] in panel]
+    weights = {n["ticker"]: float(n.get("weight_pct") or 0) for n in names}
+    scores = {n["ticker"]: float(n.get("score") or 0) for n in names}
+    ws = pd.Timestamp(sched.get("win_start", "1900-01-01"))
+    we = pd.Timestamp(sched.get("win_end_classic", "1900-01-01"))
+    ps = pd.Timestamp(sched.get("post_start", "2100-01-01"))
     recs = []
     for t in order:
         d = pd.to_datetime(panel[t]["d"])
         c = pd.Series(panel[t]["c"], index=d, dtype=float)
         r = c.pct_change().dropna() * 100
-        r = r[r.index >= pd.Timestamp(sched["win_start"])]
-        recs += [{"ticker": t, "d": i.date().isoformat(), "ret": round(float(v), 2)}
-                 for i, v in r.items()]
+        for i, v in r.items():
+            ph = "reversal" if i >= ps else ("window" if ws <= i <= we else "pre-window")
+            recs.append({"ticker": t, "d": i.strftime("%m-%d"), "ret": round(float(v), 2),
+                         "mag": abs(float(v)), "phase": ph})
     if not recs:
-        st.caption("Heatmap appears once the window opens.")
+        st.caption("The map appears once the basket is locked.")
         return
     df = pd.DataFrame(recs)
+    wdf = pd.DataFrame([{"ticker": t, "weight": weights.get(t, 0), "score": scores.get(t, 0)} for t in order])
     try:
         import altair as alt
-        ch = (alt.Chart(df).mark_rect().encode(
-            x=alt.X("d:O", title=None),
-            y=alt.Y("ticker:N", sort=order, title=None),
-            color=alt.Color("ret:Q", scale=alt.Scale(range=uc.DIV3,
-                                                     domain=[-4, 4]),
-                            legend=alt.Legend(title="daily %")),
-            tooltip=["ticker", "d", alt.Tooltip("ret:Q", format="+.2f")],
-        ).properties(height=max(220, 16 * len(order))))
-        st.altair_chart(ch, use_container_width=True)
-        st.caption("Daily % moves per basket name — red days are the short thesis "
-                   "working. Columns after τ−3 are the reversal window.")
+        h = max(260, 17 * len(order))
+        y = alt.Y("ticker:N", sort=order, title=None)
+        bg = alt.Chart(df).mark_rect(opacity=0.16).encode(
+            x=alt.X("d:O", title=None, axis=alt.Axis(labelAngle=0, labelOverlap=True)), y=y,
+            color=alt.Color("phase:N", scale=alt.Scale(domain=["pre-window", "window", "reversal"],
+                                                       range=[THEME.faint, THEME.coral, THEME.teal]),
+                            legend=alt.Legend(orient="top", title=None)))
+        dots = alt.Chart(df).mark_circle(opacity=0.95).encode(
+            x="d:O", y=y,
+            size=alt.Size("mag:Q", legend=None, scale=alt.Scale(range=[4, 260], domain=[0, 6], clamp=True)),
+            color=alt.Color("ret:Q", legend=None, scale=alt.Scale(range=uc.DIV3, domain=[-4, -2, 0, 2, 4],
+                                                                  clamp=True)),
+            tooltip=["ticker", "d", "phase", alt.Tooltip("ret:Q", format="+.2f", title="daily %")])
+        rail = alt.Chart(wdf).mark_circle(color=THEME.amber, opacity=0.8).encode(
+            x=alt.X("one:O", title="weight", axis=alt.Axis(labels=False, ticks=False)), y=alt.Y("ticker:N", sort=order,
+                                                                                         axis=None),
+            size=alt.Size("weight:Q", legend=None,
+                          scale=alt.Scale(domain=[0, max(wdf["weight"].max(), 1e-6)], range=[0, 520], zero=True)),
+            tooltip=["ticker", alt.Tooltip("weight:Q", format=".2f", title="index weight %"),
+                     alt.Tooltip("score:Q", format=".2f")]).transform_calculate(one="'w'").properties(width=40)
+        nd = max(df["d"].nunique(), 1)
+        cell = max(26, min(60, int(900 / nd)))
+        st.altair_chart(alt.hconcat((bg + dots).properties(height=h, width=alt.Step(cell)),
+                                    rail.properties(height=h), spacing=10), use_container_width=False)
+        st.caption("Coral band = the pre-month-end selling window (the short thesis), teal = the reversal. "
+                   "Dot size = |daily move|; amber rail = index weight.")
     except Exception:
         pass
 
@@ -566,8 +592,15 @@ def render() -> None:
                                                   basket.get("locked_at", "?")),
                       "PRETOM"), unsafe_allow_html=True)
 
-    # --- current basket ------------------------------------------------------
     names = basket.get("names", [])
+    if names and basket.get("panel"):
+        from .. import ui_kit as uk
+        with uk.panel("THE WINDOW MAP", THEME.coral, f"{basket.get('month', '')} basket · every name, every day"):
+            hm_top = st.slider("Depth (top N by rank)", 10, len(names) or 10, min(30, len(names) or 10), 5,
+                               key="hm_top")
+            _name_heatmap(basket.get("panel", {}), names, basket.get("schedule", {}), hm_top)
+
+    # --- current basket ------------------------------------------------------
     uni_info = basket.get("universe", {})
     st.markdown(section(f"Short-bias basket — {basket.get('month', '?')} "
                         f"(locked {basket.get('locked_at', '?')})", 2,
@@ -625,10 +658,6 @@ def render() -> None:
             m4.metric("Post reversal", f"{p['reversal_ratio']:.2f}"
                       if p.get("reversal_ratio") is not None else "—",
                       help=COLS["Reversal"])
-        hm_top = st.slider("Heatmap depth (top N by rank)", 10, len(names) or 10,
-                           min(30, len(names) or 10), 5, key="hm_top")
-        _name_heatmap(basket.get("panel", {}), names, basket.get("schedule", {}),
-                      hm_top)
         if basket.get("per_name_marks"):
             with st.expander("Per-name window returns (ranked)"):
                 _marks_bar(basket["per_name_marks"], names)

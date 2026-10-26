@@ -114,6 +114,25 @@ def _picked_ticker(event) -> str | None:
 
 
 # -------------------------------------------------------------------- main --
+def _signature(rows: list[dict]) -> None:
+    """THE MOMENTUM MAP: the whole Russell 1000 as a sector -> stock treemap, area =
+    market cap, colour = composite score."""
+    from .. import ui_kit as uk
+    from ..viz.treemap import treemap
+    rows = [r for r in rows if r.get("composite") is not None and not r.get("excluded")]
+    if not rows:
+        return
+    by: dict[str, list] = {}
+    for r in rows:
+        by.setdefault(r.get("sector") or "Other", []).append(
+            {"name": r["ticker"], "size": max(float(r.get("mktcap") or 0), 1e9), "value": r["composite"],
+             "sub": r.get("name", "")})
+    groups = sorted(({"name": k, "children": sorted(v, key=lambda c: -c["size"])} for k, v in by.items()),
+                    key=lambda g: -sum(c["size"] for c in g["children"]))
+    with uk.panel("THE MOMENTUM MAP", THEME.teal, "area = market cap · colour = composite (−20..+20)"):
+        st.markdown(treemap(groups, 1280, 560, cap=12.0, fmt="{:+.1f}"), unsafe_allow_html=True)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     status = load("status", {})
@@ -132,6 +151,7 @@ def render() -> None:
         return
 
     st.markdown(stamp(scores.get("as_of", "—"), "MOMENTUM"), unsafe_allow_html=True)
+    _signature(scores.get("rows", []))
 
     with st.expander("Methodology — five factors, one transparent composite"):
         weights_txt = " · ".join(f"{FACTOR_LABELS[k]} {v:.0%}" for k, v in MOM_WEIGHTS.items())

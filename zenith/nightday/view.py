@@ -90,6 +90,41 @@ def today_badge() -> str | None:
     return None
 
 
+def _signature(panel: dict, screen: dict) -> None:
+    """24-HOUR DIALS for the ETF panel (night arc vs session arc, thickness = size)
+    and the TUG butterfly of the stock screen (overnight vs intraday per name)."""
+    import altair as alt
+
+    from .. import ui_kit as uk
+    from ..viz.radial import day_clock
+    etfs = panel.get("etfs") or {}
+    if etfs:
+        with uk.panel("24-HOUR DIALS", THEME.violet, "outer arc 16:00→09:30 = overnight · 09:30→16:00 = session"):
+            order = sorted(etfs, key=lambda t: -abs((etfs[t].get("stats") or {}).get("tug", 0)))[:12]
+            dials = "".join(day_clock((etfs[t]["stats"].get("cum_overnight") or 0),
+                                      (etfs[t]["stats"].get("cum_intraday") or 0), t, 132, 0.3)
+                            for t in order if etfs[t].get("stats"))
+            st.markdown(f'<div style="display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:space-between;">'
+                        f'{dials}</div>', unsafe_allow_html=True)
+    rows = (screen.get("long") or [])[:18] + (screen.get("short") or [])[:18]
+    if rows:
+        df = pd.DataFrame(rows)
+        long = pd.concat([
+            pd.DataFrame({"ticker": df["ticker"], "part": "overnight", "ret": df["cum_overnight"], "side": df["side"]}),
+            pd.DataFrame({"ticker": df["ticker"], "part": "intraday", "ret": df["cum_intraday"], "side": df["side"]})])
+        order = list(df.sort_values("tug")["ticker"])
+        with uk.panel("THE TUG", THEME.amber, "cumulative overnight vs intraday return per screened name"):
+            ch = alt.Chart(long).mark_bar(size=9).encode(
+                y=alt.Y("ticker:N", sort=order, title=None),
+                x=alt.X("ret:Q", title=None, axis=alt.Axis(format="+%")),
+                color=alt.Color("part:N", scale=alt.Scale(domain=["overnight", "intraday"],
+                                                          range=[THEME.violet, THEME.amber]),
+                                legend=alt.Legend(orient="top", title=None)),
+                tooltip=["ticker", "part", alt.Tooltip("ret:Q", format="+.1%"), "side"],
+            ).properties(height=max(300, 12 * len(order)))
+            st.altair_chart(ch, use_container_width=True)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     st.markdown(evidence_rating(
@@ -116,6 +151,8 @@ def render() -> None:
         return
     st.markdown(stamp(panel.get("as_of", screen.get("as_of", "?")), "NIGHT & DAY"),
                 unsafe_allow_html=True)
+
+    _signature(panel, screen)
 
     # --- headline SPY split ---------------------------------------------------
     spy = (panel.get("etfs") or {}).get("SPY", {}).get("stats")

@@ -1,38 +1,48 @@
-"""One registered Altair theme for ZENITH//TERM: every chart inherits fonts,
-axes, grid and colour ranges from here instead of setting them per mark."""
+"""One registered Altair theme for ZENITH v2: every chart inherits a monospace,
+hairline, black-glass look and the categorical / diverging / sequential ranges
+from THEME instead of setting them per mark."""
 
 from __future__ import annotations
 
 import altair as alt
 
-from .ui_term import TERM as T
+from .config import THEME as T
 
-NAME = "zenith_term"
+NAME = "zenith_v2"
+FONT = "JetBrains Mono"
+DIVERGING = [T.coral, "#7a2e22", "#151a20", "#16615b", T.teal]
 
 
 def _config() -> dict:
-    axis = {"domainColor": T.line, "gridColor": T.grid, "gridDash": [2, 3], "tickColor": T.line,
-            "labelColor": T.muted, "titleColor": T.muted, "labelFont": "Share Tech Mono",
-            "titleFont": "Silkscreen", "titleFontSize": 9, "titleFontWeight": "normal",
-            "labelFontSize": 11, "labelLimit": 0}
+    axis = {"domain": False, "gridColor": T.grid, "gridDash": [1, 3], "gridOpacity": 1,
+            "tickColor": T.line, "tickSize": 3, "labelColor": T.muted, "titleColor": T.faint,
+            "labelFont": FONT, "titleFont": FONT, "labelFontSize": 10, "titleFontSize": 9,
+            "titleFontWeight": "normal", "labelLimit": 0, "titlePadding": 8}
     return {"config": {
         "background": "transparent",
-        "view": {"stroke": T.line, "strokeWidth": 1},
-        "font": "Share Tech Mono",
+        "padding": {"left": 4, "right": 8, "top": 6, "bottom": 4},
+        "view": {"stroke": None},
+        "font": FONT,
         "axis": axis,
-        "legend": {"labelColor": T.text, "titleColor": T.muted, "labelFont": "Share Tech Mono",
-                   "titleFont": "Silkscreen", "symbolType": "square", "labelLimit": 0},
-        "title": {"color": T.phosphor, "font": "VT323", "fontSize": 20, "fontWeight": "normal",
-                  "anchor": "start"},
-        "range": {"category": list(T.cat),
-                  "diverging": [T.coral, "#5a1d14", T.glass, "#0f5c33", T.phosphor],
-                  "heatmap": [T.glass, T.phosphor_dim, T.phosphor],
-                  "ramp": [T.glass, T.phosphor_dim, T.phosphor]},
-        "line": {"strokeWidth": 2, "color": T.phosphor},
-        "area": {"color": T.cyan, "opacity": 0.25},
-        "bar": {"color": T.phosphor},
-        "point": {"color": T.phosphor, "filled": True},
-        "rule": {"color": T.amber},
+        "axisX": {"grid": False},
+        "legend": {"labelColor": T.muted, "titleColor": T.faint, "labelFont": FONT, "titleFont": FONT,
+                   "labelFontSize": 10, "titleFontSize": 9, "titleFontWeight": "normal",
+                   "symbolType": "square", "symbolSize": 60, "labelLimit": 0},
+        "header": {"labelColor": T.muted, "titleColor": T.faint, "labelFont": FONT, "titleFont": FONT},
+        "title": {"color": T.text, "font": FONT, "fontSize": 11, "fontWeight": "normal",
+                  "anchor": "start", "offset": 10},
+        "range": {"category": list(T.cat), "diverging": DIVERGING,
+                  "heatmap": ["#0b1a1a", "#145a55", T.teal, T.mint],
+                  "ramp": ["#0b1a1a", "#145a55", T.teal, T.mint]},
+        "line": {"strokeWidth": 1.6, "color": T.teal},
+        "area": {"color": T.teal, "opacity": 0.22},
+        "bar": {"color": T.teal},
+        "rect": {"color": T.teal},
+        "point": {"color": T.teal, "filled": True, "size": 36},
+        "circle": {"color": T.teal},
+        "rule": {"color": T.faint},
+        "text": {"font": FONT, "color": T.text, "fontSize": 10},
+        "tick": {"color": T.teal},
     }}
 
 

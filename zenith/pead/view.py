@@ -583,6 +583,38 @@ def _eap_section() -> None:
 
 
 # ------------------------------------------------------------------ render --
+@st.cache_data(ttl=3600, show_spinner=False)
+def _drift_paths() -> pd.DataFrame:
+    out = []
+    for k, r in enumerate(load("history", {}).get("rows", [])):
+        hz = r.get("horizons") or {}
+        pts = [(0, 0.0)] + [(d, (hz.get(f"h{d}") or {}).get("excess_ret")) for d in (5, 20, 60)
+                            if (hz.get(f"h{d}") or {}).get("evaluated")]
+        if len(pts) < 2:
+            continue
+        for d, v in pts:
+            if v is not None:
+                out.append({"event": k, "day": d, "excess": float(v), "side": r.get("side", "?").upper()})
+    return pd.DataFrame(out)
+
+
+def _signature() -> None:
+    """THE DRIFT FAN: every tracked pick's excess return after entry, as percentile
+    bands (10-90, 25-75, median) per side, over faint individual paths."""
+    from .. import ui_kit as uk
+    from ..viz.charts import fan
+    df = _drift_paths()
+    if df.empty:
+        return
+    sample = df[df["event"].isin(df["event"].drop_duplicates().sample(min(400, df["event"].nunique()),
+                                                                       random_state=1))]
+    with uk.panel("THE DRIFT FAN", THEME.teal, f"{df['event'].nunique():,} tracked picks · excess vs SPY, side-adjusted"):
+        st.altair_chart(fan(df, "day", "excess", "side", height=320,
+                            colors={"LONG": THEME.teal, "SHORT": THEME.coral},
+                            paths=sample, path_id="event"), use_container_width=True)
+        st.caption("Trading days after entry (0, 5, 20, 60). Above zero = the pick beat the market in its direction.")
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     st.markdown(evidence_rating(
@@ -611,6 +643,7 @@ def render() -> None:
     ]), unsafe_allow_html=True)
     latest = load("signals", {})
     _banner(latest)
+    _signature()
 
     with st.expander("How PEAD works — the research in 90 seconds"):
         st.markdown(

@@ -323,6 +323,31 @@ def _methodology() -> None:
 
 # ======================================================== universe body ====
 @st.fragment
+def _signature(latest: dict) -> None:
+    """SPEED SPECTRUM: one density ridge per EWMAC speed across the universe -- the
+    trend term structure in a glance (fast speeds left-skewed = trend cracking)."""
+    from .. import ui_kit as uk
+    from ..viz.charts import ridgeline
+    rows = latest.get("rows", [])
+    speeds = [s_.replace("_", "/") for s_ in latest.get("speeds", [])]
+    if not rows or not speeds:
+        return
+    data = [{"speed": speeds[k], "forecast": f} for r in rows for k, f in enumerate(r.get("forecasts") or [])
+            if f is not None and k < len(speeds)]
+    if not data:
+        return
+    df = pd.DataFrame(data)
+    a, b = st.columns([1.4, 1], gap="medium")
+    with a, uk.panel("SPEED SPECTRUM", THEME.amber, "forecast distribution per speed · −20..+20"):
+        cols = [THEME.teal, THEME.cyan, THEME.ice, THEME.violet, THEME.magenta, THEME.amber, THEME.coral]
+        st.altair_chart(ridgeline(df, "speed", "forecast", order=speeds, step=30, overlap=1.5,
+                                  domain=(-20.0, 20.0), colors=cols), use_container_width=True)
+    with b, uk.panel("BREADTH BY SPEED", THEME.teal, "share long vs short"):
+        g = df.assign(long=df["forecast"] > 0).groupby("speed")["long"].mean().reindex(speeds)
+        st.markdown(uk.led_meter([(s_, (v - 0.5) * 2) for s_, v in g.items()], cap=1.0), unsafe_allow_html=True)
+        st.caption("Meter = (share of names long − share short). Fast speeds turn first.")
+
+
 def _universe_body(universe: str) -> None:
     art = _artefacts(universe, _status_bust(universe))
     latest = art["latest"]
@@ -333,6 +358,7 @@ def _universe_body(universe: str) -> None:
     st.markdown(stamp(latest.get("as_of", "—"), f"TREND FOLLOWING · {UNIVERSE_LABELS[universe]}"),
                 unsafe_allow_html=True)
     _status_line(universe, art)
+    _signature(latest)
     key = f"trend_sub_{universe}"
     pending = st.session_state.pop(f"trend_nav_{universe}", None)
     if pending in SUBVIEWS:

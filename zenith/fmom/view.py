@@ -756,6 +756,30 @@ def _aqr_drilldown(ts_rows: list[dict], backtest: dict) -> None:
 
 
 # ------------------------------------------------------------------ render --
+def _signature() -> None:
+    """FACTOR RACE: monthly rank of each factor (bump chart) beside the month x factor
+    return calendar -- persistence is literally visible as flat lines."""
+    from .. import ui_kit as uk
+    from ..viz.charts import bump, calendar_heat
+    fams = (load("backtest", {}) or {}).get("families", {})
+    fam = st.segmented_control("Family", [f for f in ("etf", "man", "aqr", "osap") if f in fams],
+                               default="etf" if "etf" in fams else None, key="fmom_sig_fam",
+                               label_visibility="collapsed")
+    panel = pd.DataFrame((fams.get(fam) or {}).get("recent_panel") or [])
+    if panel.empty:
+        return
+    months = sorted(panel["d"].unique())[-12:]
+    panel = panel[panel["d"].isin(months)].copy()
+    panel["rank"] = panel.groupby("d")["ret"].rank(ascending=False, method="first")
+    last = panel[panel["d"] == months[-1]].sort_values("rank")["factor"].head(3).tolist()
+    a, b = st.columns([1.3, 1], gap="medium")
+    with a, uk.panel("FACTOR RACE", THEME.violet, "monthly return rank · top 3 highlighted"):
+        st.altair_chart(bump(panel, "d", "factor", "rank", height=330, highlight=last), use_container_width=True)
+    with b, uk.panel("RETURN CALENDAR", THEME.teal, "month × factor"):
+        cap = float(panel["ret"].abs().quantile(0.9) or 0.02)
+        st.altair_chart(calendar_heat(panel, "d", "factor", "ret", cap, fmt="+.2%"), use_container_width=True)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     from ..ui_theme import evidence_rating, key_findings
@@ -793,6 +817,7 @@ def render() -> None:
     st.markdown(stamp(signals.get("as_of", "?"), "FACTOR MOMENTUM"),
                 unsafe_allow_html=True)
     _freshness_chips(signals)
+    _signature()
 
     with st.expander("How factor momentum works — the research in 60 seconds"):
         st.markdown(

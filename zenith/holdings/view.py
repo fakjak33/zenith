@@ -716,6 +716,41 @@ def _book_table(positions: list[dict], events: list[dict], key: str,
 
 
 # ------------------------------------------------------------------ render --
+def _signature(hist: dict, ticker: str) -> None:
+    """THE EXPOSURE STREAM: every position's weight through time, stacked by asset
+    class -- longs above the zero line, shorts below -- so regime shifts in the
+    fund's book read as a single shape."""
+    import altair as alt
+
+    from .. import ui_kit as uk
+    dates = hist.get("dates") or []
+    series = hist.get("series") or {}
+    if not dates or not series:
+        return
+    rows = []
+    for pid, s_ in series.items():
+        for d, w in zip(dates, s_.get("w") or []):
+            if w is not None:
+                rows.append({"date": d, "position": s_.get("name", pid), "asset_class": s_.get("asset_class", "?"),
+                             "weight": float(w)})
+    if not rows:
+        return
+    df = pd.DataFrame(rows)
+    classes = sorted(df["asset_class"].unique())
+    cols = [THEME.teal, THEME.amber, THEME.violet, THEME.cyan, THEME.coral, THEME.mint][: len(classes)]
+    with uk.panel("THE EXPOSURE STREAM", THEME.mint, f"{ticker} · weight by position, stacked by asset class"):
+        ch = alt.Chart(df).mark_area(interpolate="monotone", opacity=0.85, stroke=THEME.bg, strokeWidth=0.4).encode(
+            x=alt.X("date:T", title=None),
+            y=alt.Y("weight:Q", title="weight (% of NAV)", axis=alt.Axis(format="%"), stack="zero"),
+            color=alt.Color("asset_class:N", scale=alt.Scale(domain=classes, range=cols),
+                            legend=alt.Legend(orient="top", title=None)),
+            detail="position:N",
+            tooltip=["date:T", "position", "asset_class", alt.Tooltip("weight:Q", format="+.1%")],
+        ).properties(height=320)
+        zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=THEME.text, opacity=0.5).encode(y="y:Q")
+        st.altair_chart(ch + zero, use_container_width=True)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     reg = load_funds() or {}
@@ -755,6 +790,7 @@ def render() -> None:
         "no third-party interpretation sits in between."), unsafe_allow_html=True)
     st.markdown(stamp(latest.get("as_of", "—"), meta["ticker"]),
                 unsafe_allow_html=True)
+    _signature(hist, meta["ticker"])
 
     with st.expander(f"What {meta['ticker']} is, and how to read this book"):
         st.markdown(f"**{meta['name']}** — {meta['adviser']}, sub-advised by "

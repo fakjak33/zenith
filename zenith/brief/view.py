@@ -65,6 +65,7 @@ def render() -> None:
     st.markdown(stamp(brief.get("as_of", "?"), "Weekly Brief"), unsafe_allow_html=True)
 
     _talking_points(brief.get("talking_points", []))
+    _signature(brief)
     _overview(brief.get("market_overview", {}), brief.get("intraday", {}))
     _sectors_industries(brief)
     _rates(brief.get("rates", {}))
@@ -72,6 +73,45 @@ def render() -> None:
     _earnings(brief.get("earnings", {}))
     _cas(brief.get("cas", {}), brief.get("gex", []))
     _news(brief.get("news", []))
+
+
+def _signature(brief: dict) -> None:
+    """MARKET MOSAIC: every sector and industry ETF as one squarified map (area =
+    size of the move, colour = direction), beside sector sparkline small multiples."""
+    from .. import ui_kit as uk
+    from ..viz.treemap import treemap
+    sectors, inds = brief.get("sectors", []), brief.get("industries", [])
+    if not sectors and not inds:
+        return
+    win = st.segmented_control("Mosaic window", ["1W", "1M"], default="1W", key="brief_mosaic_w",
+                               label_visibility="collapsed") or "1W"
+    k = {"1W": "w1", "1M": "m1"}[win]
+    cap = 0.04 if k == "w1" else 0.10
+
+    def kids(rows):
+        return [{"name": r.get("label", r.get("ticker", "?")), "size": abs(r.get(k) or 0) + cap * 0.15,
+                 "value": r.get(k) or 0, "sub": r.get("ticker", "")} for r in rows if r.get(k) is not None]
+    a, b = st.columns([1.7, 1], gap="medium")
+    with a, uk.panel("MARKET MOSAIC", THEME.teal, f"{win} return · area = size of the move"):
+        st.markdown(treemap([{"name": "SPDR sectors", "children": kids(sectors)},
+                             {"name": "industries & themes", "children": kids(inds)}], 980, 470, cap),
+                    unsafe_allow_html=True)
+    with b, uk.panel("SECTOR TAPE", THEME.amber, "1 year · rebased"):
+        cells = []
+        for r in sorted(sectors, key=lambda r: -(r.get(k) or 0)):
+            ser = [p["c"] for p in r.get("series", [])][-252:]
+            if len(ser) < 2:
+                continue
+            ret = ser[-1] / ser[0] - 1
+            col = THEME.teal if (r.get(k) or 0) >= 0 else THEME.coral
+            cells.append(f'<div style="border-top:1px solid {THEME.line}; padding:0.4rem 0.2rem;">'
+                         f'<div style="display:flex; justify-content:space-between; font-size:0.66rem;">'
+                         f'<span style="letter-spacing:0.1em;">{r.get("label", "")[:16].upper()}</span>'
+                         f'<span style="color:{col};">{(r.get(k) or 0):+.1%}</span></div>'
+                         f'{uk.sparkline_svg(ser, THEME.teal if ret >= 0 else THEME.coral, 150, 26, fill=True)}'
+                         f'<div style="font-size:0.58rem; color:{THEME.faint};">1Y {ret:+.0%}</div></div>')
+        st.markdown(f'<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:0 0.8rem;">'
+                    f'{"".join(cells)}</div>', unsafe_allow_html=True)
 
 
 def _talking_points(pts: list[str]) -> None:

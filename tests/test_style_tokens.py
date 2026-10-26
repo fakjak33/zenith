@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-ALLOWED = {"config.py", "ui_term.py", "ui_theme.py", "ui_charts.py", "ui_altair.py"}
+ALLOWED = {"config.py", "ui_theme.py", "ui_charts.py", "ui_altair.py", "ui_kit.py", "art.py"}
 HEX = re.compile(r"#[0-9a-fA-F]{6}\b")
 # black text on bright fills is deliberate; '#588' etc. in data strings are not colours
 OK_SHORT = {"#000"}
@@ -45,4 +45,15 @@ def test_streamlit_config_matches_theme():
 def test_altair_theme_registered():
     import altair as alt
     import zenith.ui_theme  # noqa: F401  (registers on import)
-    assert alt.theme.active == "zenith_term"
+    assert alt.theme.active == "zenith_v2"
+
+
+def test_no_arcade_chrome_left():
+    """v2 is institutional monospace: no pixel fonts, scanlines or CRT flicker."""
+    bad = []
+    for p in (ROOT / "zenith").rglob("*.py"):
+        text = p.read_text(encoding="utf-8")
+        for needle in ("VT323", "Silkscreen", "Share+Tech+Mono", "ztflicker", "repeating-linear-gradient(0deg"):
+            if needle in text:
+                bad.append(f"{p.relative_to(ROOT)}: {needle}")
+    assert not bad, bad

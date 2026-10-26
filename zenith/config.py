@@ -925,39 +925,43 @@ THETA_START = "2005-01-01"                          # earliest sim date (earning
 
 @dataclass(frozen=True)
 class Theme:
-    """ZENITH//TERM tokens: a CRT phosphor console. Zenith's meaning colours
-    (teal = up, coral = down, mustard, mauve, navy, mint) are kept; phosphor,
-    amber, cyan and magenta are the terminal chrome. `.streamlit/config.toml`
-    is generated from these (scripts/gen_streamlit_config.py)."""
-    bg: str = "#030605"
-    glass: str = "#06100b"
-    panel: str = "#081510"
-    grid: str = "#0f2a1b"
-    line: str = "#1d4b31"
-    border: str = "#1d4b31"            # = line; kept for older call sites
-    phosphor: str = "#39ff88"
-    phosphor_dim: str = "#1c7a46"
-    amber: str = "#ffb000"
-    cyan: str = "#22e4ff"
-    magenta: str = "#ff2bd6"
+    """ZENITH v2 tokens: institutional monospace on pure black. Teal = up /
+    primary, coral = down; amber, violet, cyan, magenta, mint and ice carry
+    categories. Chrome stays quiet (hairlines, no glow); colour lives in the data.
+    `.streamlit/config.toml` is generated from these (scripts/gen_streamlit_config.py)."""
+    bg: str = "#000000"
+    glass: str = "#050608"
+    panel: str = "#07090c"
+    raised: str = "#0c1015"
+    grid: str = "#11161c"
+    line: str = "#1b222b"
+    border: str = "#1b222b"            # = line; kept for older call sites
     teal: str = "#2ec4b6"
-    coral: str = "#ff4d3a"
+    cyan: str = "#3fd0e6"
+    amber: str = "#f2a93b"
+    coral: str = "#ff5a3c"
+    violet: str = "#8b6cf6"
+    magenta: str = "#e04f9e"
+    mint: str = "#7bdcb5"
+    ice: str = "#9ec9ff"
     orange: str = "#ff8c2b"
     mustard: str = "#ffc857"
     mauve: str = "#c46b8b"
-    mint: str = "#7bdcb5"
     navy: str = "#2a9bc4"
-    text: str = "#d6ffe6"
-    muted: str = "#7fa892"
+    phosphor: str = "#2ec4b6"          # legacy alias: the primary accent
+    phosphor_dim: str = "#1a6f68"
+    text: str = "#e6edf3"
+    muted: str = "#7d8794"
+    faint: str = "#4a525c"
     pos: str = "#2ec4b6"
-    neg: str = "#ff4d3a"
-    warn: str = "#ffb000"
-    info: str = "#22e4ff"
-    font_display: str = "'VT323', 'Share Tech Mono', monospace"
-    font_body: str = "'Share Tech Mono', 'Space Mono', monospace"
-    font_label: str = "'Silkscreen', 'VT323', monospace"
-    section_colors: tuple = ("#39ff88", "#ffb000", "#22e4ff", "#ff2bd6", "#2ec4b6", "#ffc857")
-    cat: tuple = ("#39ff88", "#22e4ff", "#ffb000", "#ff2bd6", "#2ec4b6", "#ff4d3a", "#c46b8b", "#ffc857")
+    neg: str = "#ff5a3c"
+    warn: str = "#f2a93b"
+    info: str = "#3fd0e6"
+    font_display: str = "'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace"
+    font_body: str = "'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace"
+    font_label: str = "'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace"
+    section_colors: tuple = ("#2ec4b6", "#f2a93b", "#8b6cf6", "#3fd0e6", "#ff5a3c", "#7bdcb5")
+    cat: tuple = ("#2ec4b6", "#f2a93b", "#8b6cf6", "#3fd0e6", "#ff5a3c", "#7bdcb5", "#e04f9e", "#9ec9ff")
 
 
 THEME = Theme()

@@ -123,6 +123,48 @@ def _signal_bar(rows: list[dict], value: str = "signal", label: str = "label",
         st.dataframe(df, use_container_width=True, hide_index=True)
 
 
+@st.cache_data(ttl=3600, show_spinner=False)
+def _sig_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+    hist = pd.DataFrame(store_cas.load("history", []))
+    if not hist.empty:
+        last = sorted(hist["date"].unique())[-13:]
+        hist = hist[hist["date"].isin(last)]
+    return hist, pd.DataFrame(store_cas.load("consensus", []))
+
+
+def _signature() -> None:
+    """FAMILY RIDGELINE (how each model family currently leans across assets) and the
+    CONSENSUS FIELD (composite vs confidence, sized by how many signals agree)."""
+    import altair as alt
+
+    from .. import ui_kit as uk
+    from ..viz.charts import ridgeline
+    hist, cons = _sig_data()
+    a, b = st.columns([1, 1.25], gap="medium")
+    with a, uk.panel("FAMILY RIDGELINE", THEME.violet, "signal distribution · last 13 dates"):
+        if hist.empty:
+            st.caption("No signal history yet.")
+        else:
+            order = list(hist.groupby("family")["signal"].mean().sort_values(ascending=False).index)
+            st.altair_chart(ridgeline(hist, "family", "signal", order=order, step=26, overlap=1.6,
+                                      domain=(-1.0, 1.0)), use_container_width=True)
+    with b, uk.panel("CONSENSUS FIELD", THEME.teal, "every asset · composite × confidence"):
+        if cons.empty:
+            st.caption("No consensus yet.")
+        else:
+            ch = alt.Chart(cons).mark_circle(opacity=0.75, stroke=THEME.bg, strokeWidth=0.5).encode(
+                x=alt.X("composite:Q", title="composite (sell ← → buy)", scale=alt.Scale(domain=[-1, 1])),
+                y=alt.Y("confidence:Q", title="confidence"),
+                size=alt.Size("n_signals:Q", legend=None, scale=alt.Scale(range=[10, 160])),
+                color=alt.Color("composite:Q", legend=None,
+                                scale=alt.Scale(range=uc.DIV3, domain=[-0.6, -0.3, 0, 0.3, 0.6], clamp=True)),
+                tooltip=["asset", "asset_class", "state", alt.Tooltip("composite:Q", format="+.2f"),
+                         alt.Tooltip("confidence:Q", format=".2f"), alt.Tooltip("entropy:Q", format=".2f")],
+            ).properties(height=380)
+            zero = alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(color=THEME.line).encode(x="x:Q")
+            st.altair_chart(zero + ch, use_container_width=True)
+
+
 def render() -> None:
     status = store_cas.load("status", {})
     st.caption(DISCLAIMER)
@@ -156,6 +198,7 @@ def render() -> None:
     st.caption(f"cadence {status.get('cadence','?')} · {status.get('n_signals',0)} signals · "
                f"{status.get('n_assets',0)} assets · regime: **{regime}**")
 
+    _signature()
     seg = st.radio("CAS segment", SEGMENT_TABS, horizontal=True, label_visibility="collapsed")
     if _TAB_HELP.get(seg):
         st.caption(f"ⓘ {_TAB_HELP[seg]}")

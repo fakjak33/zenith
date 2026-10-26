@@ -125,6 +125,7 @@ def render() -> None:
             "Forecast/Speculation, mined from this app's own research archive) for policy-driven "
             "ones — never an invented probability with no series behind it.")
 
+    _signature(art)
     sub = st.radio("View", SUBVIEWS, horizontal=True, label_visibility="collapsed", key="regimes_sub")
     if sub == "Overview":
         _overview(current, art["alerts"])
@@ -150,6 +151,54 @@ def render() -> None:
         _alerts(art["alerts"])
     else:
         _history(art["timeline"])
+
+
+# ------------------------------------------------------------------ signature
+def _signature(art: dict) -> None:
+    """REGIME CLOCK (growth x inflation trajectory), DIMENSION RADAR and ANALOG FAN."""
+    import altair as alt
+
+    from .. import ui_kit as uk
+    from ..viz.radial import radar, regime_quadrant
+    months = (art.get("timeline") or {}).get("months", [])
+    dims = (art.get("dimensions") or {}).get("dimensions", {})
+    an = art.get("analogs") or {}
+    a, b, c = st.columns([1.15, 1, 1.1], gap="medium")
+    with a, uk.panel("REGIME CLOCK", THEME.violet, "growth z × inflation z"):
+        n = st.segmented_control("Trail", ["12M", "36M", "10Y"], default="36M", key="reg_trail",
+                                 label_visibility="collapsed") or "36M"
+        k = {"12M": 12, "36M": 36, "10Y": 120}[n]
+        trail = [(m.get("growth_z"), m.get("infl_z")) for m in months[-k:]
+                 if m.get("growth_z") is not None and m.get("infl_z") is not None]
+        st.markdown(regime_quadrant(trail, 320), unsafe_allow_html=True)
+        st.caption("The dot pulses at the latest month; the trail fades back in time.")
+    with b, uk.panel("DIMENSION RADAR", THEME.cyan, "composite z"):
+        names = [k for k, v in dims.items() if isinstance(v, dict) and v.get("composite_z") is not None]
+        if len(names) >= 3:
+            st.markdown(radar([n_.replace("_", " ").upper()[:12] for n_ in names],
+                              [("now", [dims[n_]["composite_z"] for n_ in names], THEME.cyan)], 320),
+                        unsafe_allow_html=True)
+            st.caption("Dashed ring = neutral (z = 0). Outside = stronger/looser than normal.")
+        else:
+            st.caption("No dimension scores yet.")
+    with c, uk.panel("ANALOG FAN", THEME.amber, "forward returns after similar months"):
+        rows = [{"h": int(h), "ret": v, "month": x["month"]} for x in an.get("analogs", [])
+                for h, v in (x.get("forward") or {}).items() if v is not None]
+        if rows:
+            df = pd.DataFrame(rows)
+            dots = alt.Chart(df).mark_circle(size=70, opacity=0.85).encode(
+                x=alt.X("h:O", title="months ahead", axis=alt.Axis(labelAngle=0)),
+                y=alt.Y("ret:Q", title=None, axis=alt.Axis(format="+%")),
+                color=alt.Color("ret:Q", legend=None, scale=alt.Scale(range=[THEME.coral, THEME.faint, THEME.teal],
+                                                                      domainMid=0)),
+                tooltip=["month", "h", alt.Tooltip("ret:Q", format="+.1%")])
+            med = alt.Chart(df).mark_line(color=THEME.amber, strokeWidth=1.6, point=True).encode(
+                x="h:O", y="median(ret):Q")
+            zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=THEME.line).encode(y="y:Q")
+            st.altair_chart((zero + dots + med).properties(height=290), use_container_width=True)
+            st.caption(f"{len(an.get('analogs', []))} nearest historical analogs; amber = median path.")
+        else:
+            st.caption("No analogs yet.")
 
 
 # -------------------------------------------------------------------- overview

@@ -41,7 +41,8 @@ def mix(a: str, b: str, t: float) -> str:
 # Colour ranges replacing Vega's named schemes (redyellowgreen, tableau20, reds,
 # tealblues): coral -> a dim terminal midpoint -> teal, keeping the app's sign
 # convention while the midpoint sinks into the glass instead of glowing yellow.
-DIV3 = [THEME.coral, THEME.line, THEME.teal]
+DIV3 = [THEME.coral, mix(THEME.coral, THEME.raised, 0.55), THEME.raised,
+        mix(THEME.teal, THEME.raised, 0.55), THEME.teal]
 SEQ_TEAL = [mix(THEME.teal, THEME.panel, 0.78), THEME.teal]
 SEQ_CORAL = [mix(THEME.coral, THEME.panel, 0.72), THEME.coral]
 CAT20 = list(THEME.cat) + [mix(c, THEME.panel, 0.4) for c in THEME.cat] + [THEME.mint, THEME.navy,
@@ -118,14 +119,14 @@ def colcfg(cols, help_map: dict) -> dict:
 
 
 def state_banner(color: str, label: str, message: str) -> str:
-    """Full-width gradient state bar — the app's loudest status signal."""
+    """The page's status line: a colour block, the state, and its one-line reason."""
     return (
-        f'<div style="font-family:{THEME.font_display}; font-size:1.25rem; '
-        f'letter-spacing:0.14em; text-transform:uppercase; color:#000; '
-        f'background:linear-gradient(90deg, {color}, {THEME.panel}); '
-        f'border-left:6px solid {color}; padding:0.45rem 0.9rem; '
-        f'margin:0.2rem 0 0.8rem 0;">'
-        f'<b>{_html.escape(label)}</b> · {_html.escape(message)}</div>')
+        f'<div style="display:flex; align-items:center; gap:0.8rem; border:1px solid {THEME.line}; '
+        f'border-left:3px solid {color}; background:linear-gradient(90deg, {color}1f, transparent 60%); '
+        f'padding:0.55rem 0.9rem; margin:0.2rem 0 0.9rem 0;">'
+        f'<span style="font-size:0.95rem; font-weight:300; letter-spacing:0.18em; color:{color}; '
+        f'text-transform:uppercase; white-space:nowrap;">{_html.escape(label)}</span>'
+        f'<span style="font-size:0.74rem; color:{THEME.muted};">{_html.escape(message)}</span></div>')
 
 
 def chip(text: str, color: str = THEME.teal, sub: str = "") -> str:
@@ -157,8 +158,8 @@ def numeric_slab(items: list[dict], min_width: int = 150) -> str:
             f'letter-spacing:0.16em; color:{THEME.muted}; '
             f'text-transform:uppercase; margin-bottom:0.15rem;">'
             f'{_html.escape(str(it.get("label", "")))}</div>'
-            f'<div style="font-family:{THEME.font_display}; font-size:2.6rem; '
-            f'line-height:1.05; color:{c}; text-shadow:0 0 10px {c}88;">'
+            f'<div style="font-family:{THEME.font_display}; font-size:1.9rem; font-weight:300; '
+            f'line-height:1.05; color:{c};">'
             f'{_html.escape(str(it.get("value", "—")))}</div>'
             + (f'<div style="font-size:0.74rem; color:{THEME.muted}; '
                f'margin-top:0.1rem;">{_html.escape(str(sub))}</div>' if sub else "")
