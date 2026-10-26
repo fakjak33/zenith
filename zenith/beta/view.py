@@ -133,6 +133,50 @@ def today_badge() -> str | None:
 
 
 # ================================================================= main ====
+def _signature(latest: dict) -> None:
+    """THE FUNNEL (how the Russell 1000 is whittled to clean beta) and the BETA FIELD
+    (beta vs idiosyncratic vol: clean beta lives top-left)."""
+    import altair as alt
+
+    from .. import ui_kit as uk
+    fc = latest.get("filter_counts") or {}
+    rows = pd.DataFrame(latest.get("rows") or [])
+    a, b = st.columns([1, 1.3], gap="medium")
+    with a, uk.panel("THE FUNNEL", THEME.amber, "names surviving each test"):
+        steps = [("universe", latest.get("n") or 0), ("priced", latest.get("n_priced") or 0),
+                 ("liquid", fc.get("f_liquid")), ("high beta", fc.get("f_beta")), ("correlated", fc.get("f_rho")),
+                 ("low idio vol", fc.get("f_ivol")), ("no events", fc.get("f_events")),
+                 ("quality", fc.get("f_quality")), ("pass all", latest.get("n_pass") or 0)]
+        top = max((v or 0) for _, v in steps) or 1
+        out = []
+        for k, (lab, v) in enumerate(steps):
+            if v is None:
+                continue
+            w = 100 * v / top
+            c = THEME.teal if lab == "pass all" else THEME.amber
+            out.append(f'<div style="display:grid; grid-template-columns:7rem 1fr 3rem; gap:0.6rem; align-items:center; '
+                       f'font-size:0.7rem; margin:0.18rem 0;"><span style="color:{THEME.muted};">{lab.upper()}</span>'
+                       f'<div style="height:12px; background:{THEME.grid}; display:flex; justify-content:center;">'
+                       f'<div style="width:{w:.1f}%; background:{c}; opacity:{0.35 + 0.65 * (1 - k / len(steps)):.2f};"></div></div>'
+                       f'<span style="text-align:right;">{v:,}</span></div>')
+        st.markdown("".join(out), unsafe_allow_html=True)
+        st.caption("Each bar is how many names pass that test on its own; the last bar passes them all.")
+    with b, uk.panel("THE BETA FIELD", THEME.teal, "beta (bswa) × idiosyncratic vol"):
+        if rows.empty or "bswa" not in rows:
+            st.caption("No screen yet.")
+        else:
+            d = rows.dropna(subset=["bswa", "ivol"])
+            ch = alt.Chart(d).mark_circle(opacity=0.55).encode(
+                x=alt.X("ivol:Q", title="idiosyncratic vol", axis=alt.Axis(format="%")),
+                y=alt.Y("bswa:Q", title="beta"),
+                size=alt.Size("mktcap:Q", legend=None, scale=alt.Scale(range=[6, 180])),
+                color=alt.Color("rho:Q", legend=alt.Legend(orient="top", title="ρ to market"),
+                                scale=alt.Scale(range=[THEME.violet, THEME.teal])),
+                tooltip=["ticker", "sector", alt.Tooltip("bswa:Q", format=".2f"), alt.Tooltip("ivol:Q", format=".1%"),
+                         alt.Tooltip("rho:Q", format=".2f")]).properties(height=330)
+            st.altair_chart(ch, use_container_width=True)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     st.markdown(evidence_rating("B", "BAB is robust; the clean-beta refinement is newer", _EVIDENCE_NOTE),
@@ -146,6 +190,7 @@ def render() -> None:
         _methodology()
         return
     st.markdown(stamp(art["latest"].get("as_of", "—"), "CLEAN BETA · screen"), unsafe_allow_html=True)
+    _signature(art["latest"])
     _methodology()
     sub = st.radio("View", SUBVIEWS, horizontal=True, key="beta_sub", label_visibility="collapsed")
     {"Screener": _screener, "Basket": _basket, "Hedge Monitor": _hedge,

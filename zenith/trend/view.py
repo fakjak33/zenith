@@ -323,6 +323,31 @@ def _methodology() -> None:
 
 # ======================================================== universe body ====
 @st.fragment
+def _signature(latest: dict) -> None:
+    """SPEED SPECTRUM: one density ridge per EWMAC speed across the universe -- the
+    trend term structure in a glance (fast speeds left-skewed = trend cracking)."""
+    from .. import ui_kit as uk
+    from ..viz.charts import ridgeline
+    rows = latest.get("rows", [])
+    speeds = [s_.replace("_", "/") for s_ in latest.get("speeds", [])]
+    if not rows or not speeds:
+        return
+    data = [{"speed": speeds[k], "forecast": f} for r in rows for k, f in enumerate(r.get("forecasts") or [])
+            if f is not None and k < len(speeds)]
+    if not data:
+        return
+    df = pd.DataFrame(data)
+    a, b = st.columns([1.4, 1], gap="medium")
+    with a, uk.panel("SPEED SPECTRUM", THEME.amber, "forecast distribution per speed · −20..+20"):
+        cols = [THEME.teal, THEME.cyan, THEME.ice, THEME.violet, THEME.magenta, THEME.amber, THEME.coral]
+        st.altair_chart(ridgeline(df, "speed", "forecast", order=speeds, step=30, overlap=1.5,
+                                  domain=(-20.0, 20.0), colors=cols), use_container_width=True)
+    with b, uk.panel("BREADTH BY SPEED", THEME.teal, "share long vs short"):
+        g = df.assign(long=df["forecast"] > 0).groupby("speed")["long"].mean().reindex(speeds)
+        st.markdown(uk.led_meter([(s_, (v - 0.5) * 2) for s_, v in g.items()], cap=1.0), unsafe_allow_html=True)
+        st.caption("Meter = (share of names long − share short). Fast speeds turn first.")
+
+
 def _universe_body(universe: str) -> None:
     art = _artefacts(universe, _status_bust(universe))
     latest = art["latest"]
@@ -333,6 +358,7 @@ def _universe_body(universe: str) -> None:
     st.markdown(stamp(latest.get("as_of", "—"), f"TREND FOLLOWING · {UNIVERSE_LABELS[universe]}"),
                 unsafe_allow_html=True)
     _status_line(universe, art)
+    _signature(latest)
     key = f"trend_sub_{universe}"
     pending = st.session_state.pop(f"trend_nav_{universe}", None)
     if pending in SUBVIEWS:
@@ -558,7 +584,7 @@ def _structure_map(universe: str, df: pd.DataFrame) -> None:
     def build(alt):
         pick = alt.selection_point(name="pick", fields=["ticker"], on="click", empty=False)
         axis = alt.Chart(pd.DataFrame({"v": [0]}))
-        pts = alt.Chart(m).mark_circle(size=46, stroke="#6b6b6b", strokeWidth=0.6).encode(
+        pts = alt.Chart(m).mark_circle(size=46, stroke=THEME.phosphor_dim, strokeWidth=0.6).encode(
             x=alt.X("slow:Q", title="slow speeds (32/128 · 64/256 · 128/512) →",
                     scale=alt.Scale(domain=[-20, 20])),
             y=alt.Y("fast:Q", title="fast speeds (2/8 · 4/16 · 8/32) →", scale=alt.Scale(domain=[-20, 20])),
@@ -634,7 +660,7 @@ def _trend_vs_momentum(universe: str, df: pd.DataFrame) -> None:
         pick = alt.selection_point(name="pick", fields=["ticker"], on="click", empty=False)
         diag = alt.Chart(pd.DataFrame({"x": [-20, 20], "y": [-20, 20]})).mark_line(
             color=THEME.grid, strokeWidth=1).encode(x="x:Q", y="y:Q")
-        pts = alt.Chart(m).mark_circle(size=40, stroke="#6b6b6b", strokeWidth=0.6).encode(
+        pts = alt.Chart(m).mark_circle(size=40, stroke=THEME.phosphor_dim, strokeWidth=0.6).encode(
             x=alt.X("momentum:Q", title=f"{src} composite", scale=alt.Scale(domain=[-20, 20])),
             y=alt.Y("score:Q", title="Trend Score", scale=alt.Scale(domain=[-20, 20])),
             color=alt.Color("trend_minus_mom:Q", scale=uc.diverging_scale(15, alt), title="Trend − Mom"),
@@ -1057,7 +1083,7 @@ def _term_curve(row: dict) -> None:
 
     def build(alt):
         color = alt.Color("When:N", scale=alt.Scale(domain=whens,
-                                                    range=[THEME.text, THEME.mustard, "#8a8a8a", "#4a4a4a"]),
+                                                    range=[THEME.text, THEME.mustard, THEME.muted, THEME.line]),
                           legend=alt.Legend(orient="top", title=None))
         lines = alt.Chart(cdf).mark_line(point=alt.OverlayMarkDef(size=60, filled=True), strokeWidth=2).encode(
             x=alt.X("Speed:N", sort=order, title="fast → slow", axis=alt.Axis(labelAngle=0, labelLimit=0)),

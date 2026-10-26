@@ -147,6 +147,39 @@ def today_badge() -> str | None:
 
 
 # ============================================================== main ====
+def _signature(a: dict) -> None:
+    """THE EVIDENCE MAP: every strategy card and edge placed by tier (A/B/C) and kind
+    (edge / convention / mechanic) -- where the vault's confidence actually sits."""
+    import altair as alt
+
+    from .. import ui_kit as uk
+    rows = []
+    for c in a["strategies"].get("cards", []):
+        ev = c.get("evidence") or {}
+        rows.append({"what": "card", "name": c.get("name", c.get("slug")), "tier": str(ev.get("tier", "C"))[:1],
+                     "kind": ev.get("kind", "EDGE")})
+    for e in a.get("edges", {}).get("edges", []) if isinstance(a.get("edges"), dict) else []:
+        rows.append({"what": "edge", "name": e.get("title", e.get("slug")), "tier": str(e.get("tier", "C"))[:1],
+                     "kind": e.get("kind", "EDGE")})
+    if not rows:
+        return
+    df = pd.DataFrame(rows)
+    df["j"] = df.groupby(["tier", "kind"]).cumcount()
+    with uk.panel("THE EVIDENCE MAP", THEME.violet, f"{len(df)} cards & edges · tier × kind"):
+        ch = alt.Chart(df).mark_point(filled=True, size=120).encode(
+            x=alt.X("tier:N", sort=["A", "B", "C"], title=None, axis=alt.Axis(labelAngle=0, labelFontSize=13)),
+            y=alt.Y("kind:N", sort=["EDGE", "CONVENTION", "MECHANIC"], title=None),
+            xOffset=alt.XOffset("j:O"),
+            shape=alt.Shape("what:N", scale=alt.Scale(domain=["card", "edge"], range=["square", "diamond"]),
+                            legend=alt.Legend(orient="top", title=None)),
+            color=alt.Color("tier:N", scale=alt.Scale(domain=["A", "B", "C"],
+                                                      range=[THEME.teal, THEME.amber, THEME.coral]), legend=None),
+            tooltip=["name", "what", "tier", "kind"]).properties(height=220)
+        st.altair_chart(ch, use_container_width=True)
+        st.caption("Squares = strategy cards, diamonds = edges. Hover for the name; most of the vault is "
+                   "honest tier C until a study or reproduction backs it.")
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     st.markdown(evidence_rating("B", "mixed by card — A for the variance premium, C for most rules",
@@ -165,6 +198,7 @@ def render() -> None:
         st.markdown(uc.state_banner(THEME.mustard, "Draft",
                                     "cards, edges and trees are Phase 05 drafts; check each linked "
                                     "source before acting on a number"), unsafe_allow_html=True)
+    _signature(a)
     sub = st.radio("Section", SUBVIEWS, horizontal=True, key="vault_sub",
                    label_visibility="collapsed")
     refs = a["build"].get("refs", {})
@@ -312,7 +346,7 @@ def _tile(c: dict, selected: bool) -> str:
     border = THEME.text if selected else tc
     return (f'<div style="flex:1 1 170px; min-width:160px; max-width:240px; border:1px solid {border}; '
             f'border-left:5px solid {tc}; padding:0.35rem 0.5rem; background:rgba(0,0,0,0.3);">'
-            f'<div style="font-size:0.86rem; color:#eee;">{html.escape(c["name"])}</div>'
+            f'<div style="font-size:0.86rem; color:{THEME.text};">{html.escape(c["name"])}</div>'
             f'<div style="font-size:0.68rem; color:{THEME.muted};">'
             f'<span style="color:{tc};">{ev["tier"]}</span> · {html.escape(ev["kind"])} · '
             f'{html.escape(c["risk"])}{thin}</div></div>')
@@ -652,10 +686,10 @@ def tree_dot(t: dict) -> str:
     """DOT for one decision tree (decision = mustard diamond-ish box, action = teal, info = muted note)."""
     style = {"decision": f'shape=box, style="rounded,bold", color="{THEME.mustard}"',
              "action": f'shape=box, color="{THEME.teal}"',
-             "info": f'shape=note, color="{THEME.muted}", fontcolor="#bbbbbb"'}
+             "info": f'shape=note, color="{THEME.muted}", fontcolor=THEME.muted'}
     out = ['digraph G {', 'bgcolor="transparent"; rankdir=TB; nodesep=0.3; ranksep=0.35;',
-           'node [fontname="Courier", fontsize=10, margin="0.18,0.08", fontcolor="#eeeeee", penwidth=1.4];',
-           'edge [color="#888888", fontcolor="#bbbbbb", fontsize=9, fontname="Courier"];']
+           'node [fontname="Courier", fontsize=10, margin="0.18,0.08", fontcolor=THEME.text, penwidth=1.4];',
+           'edge [color=THEME.muted, fontcolor=THEME.muted, fontsize=9, fontname="Courier"];']
     for n in t.get("nodes", []):
         txt = re.sub(r"\s*\[[^\]]+\]", "", n["text"]).replace('"', "'")
         out.append(f'"{n["id"]}" [label="{_wrap(txt)}", {style.get(n["type"], style["action"])}];')
@@ -899,7 +933,7 @@ def _sources(a: dict, refs: dict) -> None:
                 color=alt.Color("transcript %:Q", title="transcript %",
                                 scale=alt.Scale(range=[THEME.panel, THEME.teal], domain=[0, 100])),
                 tooltip=["show", "year", "episodes", "transcripts", "transcript %"])
-            text = base.mark_text(fontSize=9, color="#dddddd").encode(text="episodes:Q")
+            text = base.mark_text(fontSize=9, color=THEME.text).encode(text="episodes:Q")
             return (rect + text).properties(height=34 * df["show"].nunique() + 30, width="container")
         uc.render_chart(build, fallback=df)
         tr = cov.get("transcripts", {})

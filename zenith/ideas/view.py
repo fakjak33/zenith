@@ -106,7 +106,7 @@ def _idea_card(idea: dict) -> str:
             sections.append(
                 f'<div style="margin-top:0.4rem;"><b style="color:{THEME.mustard}; '
                 f'font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase;">{label}</b>'
-                f'<div style="font-size:0.88rem; color:#ddd; line-height:1.4;">'
+                f'<div style="font-size:0.88rem; color:{THEME.text}; line-height:1.4;">'
                 f'{_html.escape(str(val))}</div></div>')
     change = nar.get("change_my_mind") or []
     if change:
@@ -114,7 +114,7 @@ def _idea_card(idea: dict) -> str:
         sections.append(
             f'<div style="margin-top:0.4rem;"><b style="color:{THEME.mustard}; font-size:0.78rem; '
             f'letter-spacing:0.06em; text-transform:uppercase;">What Would Change My Mind?</b>'
-            f'<ul style="margin:0.2rem 0 0 1.1rem; font-size:0.88rem; color:#ddd;">{items}</ul></div>')
+            f'<ul style="margin:0.2rem 0 0 1.1rem; font-size:0.88rem; color:{THEME.text};">{items}</ul></div>')
 
     rr_html = (f'<div style="margin-top:0.5rem; font-size:0.85rem; color:{THEME.text}; '
               f'border-top:1px solid {THEME.grid}; padding-top:0.4rem;">{_rr_line(idea)}</div>')
@@ -140,6 +140,41 @@ def _thin_day_banner(doc: dict) -> None:
 
 
 # -------------------------------------------------------------------- main --
+def _signature(doc: dict) -> None:
+    """RISK RADAR: the market backdrop every idea is scored against (VIX and HY-spread
+    percentiles, curve, trend), plus the day's idea count -- with a designed empty
+    state when nothing clears the bar."""
+    from .. import art, ui_kit as uk
+    from ..viz.radial import radar
+    rg = doc.get("regime") or {}
+    axes = [("RISK SCORE", rg.get("risk_score"), 1.0), ("VIX PCTL", rg.get("vix_percentile"), None),
+            ("HY OAS PCTL", rg.get("hy_oas_percentile"), None), ("CURVE 10-2", rg.get("curve_10y2y"), 1.0),
+            ("SPY TREND", rg.get("spy_trend"), 1.0)]
+    vals = []
+    for _, v, sc in axes:
+        if v is None:
+            vals.append(0.0)
+        elif sc is None:
+            vals.append((float(v) - 0.5) * 2)       # percentile -> [-1, 1]
+        else:
+            vals.append(max(-1.0, min(1.0, float(v))))
+    a, b = st.columns([1, 1.4], gap="medium")
+    with a, uk.panel("RISK RADAR", THEME.coral, str(rg.get("label", "")).upper()):
+        st.markdown(radar([n for n, _, _ in axes], [("today", vals, THEME.coral)], 300, -1, 1),
+                    unsafe_allow_html=True)
+    with b, uk.panel("TODAY'S BOOK", THEME.teal, "ideas that cleared the bar"):
+        nb, ns = int(doc.get("n_buy") or 0), int(doc.get("n_sell") or 0)
+        st.markdown(uk.kpis([{"label": "buy ideas", "value": nb, "color": THEME.teal},
+                             {"label": "sell ideas", "value": ns, "color": THEME.coral},
+                             {"label": "regime", "value": str(rg.get("label", "—")).split("/")[0].strip()[:12],
+                              "color": THEME.amber}]), unsafe_allow_html=True)
+        if not nb and not ns:
+            st.markdown(uk.empty_state(art.grid_globe(120, seed=3),
+                                       "Nothing cleared the conviction and unusualness bars today. Zenith "
+                                       "says so rather than padding the list — a quiet tape is an answer too."),
+                        unsafe_allow_html=True)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     doc = _artefacts(cache_bust=str(load("ideas", {}).get("as_of", "")))["ideas"]
@@ -155,6 +190,7 @@ def render() -> None:
         return
 
     st.markdown(stamp(doc["as_of"], "IDEAS"), unsafe_allow_html=True)
+    _signature(doc)
 
     sub = st.radio("View", SUBVIEWS, horizontal=True, label_visibility="collapsed", key="ideas_sub")
     if sub == "Overview":

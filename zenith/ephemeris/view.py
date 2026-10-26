@@ -714,11 +714,41 @@ def _history(repo, player: dict) -> None:
 
 
 # ================================================================= main ====
+def _signature() -> None:
+    """THE BASE-RATE ATLAS: P(up) by horizon for every asset class, one small multiple
+    per timeframe -- the coin you are trying to beat before you call a chart."""
+    import altair as alt
+
+    from .. import ui_kit as uk
+    try:
+        br = json.loads(EPHEMERIS_FILES["base_rates"].read_text(encoding="utf-8"))
+    except Exception:
+        return
+    rows = [{"tf": tf, "cls": cls, "h": int(h), "p": v["p"]}
+            for tf, d in br.items() if tf in ("Daily", "Weekly", "Monthly") and isinstance(d, dict)
+            for cls, hs in d.items() if isinstance(hs, dict)
+            for h, v in hs.items() if isinstance(v, dict) and v.get("p") is not None]
+    if not rows:
+        return
+    df = pd.DataFrame(rows)
+    with uk.panel("THE BASE-RATE ATLAS", THEME.cyan, "P(up over N candles) by asset class · the bar to beat"):
+        base = alt.Chart(df).encode(
+            x=alt.X("h:O", title="candles ahead", axis=alt.Axis(labelAngle=0)),
+            y=alt.Y("p:Q", title=None, scale=alt.Scale(domain=[0.4, 0.75]), axis=alt.Axis(format="%")),
+            color=alt.Color("cls:N", legend=alt.Legend(orient="top", title=None, columns=6)),
+            tooltip=["tf", "cls", "h", alt.Tooltip("p:Q", format=".1%")])
+        line = base.mark_line(strokeWidth=1.5, point=alt.OverlayMarkDef(size=18))
+        half = alt.Chart(pd.DataFrame({"y": [0.5]})).mark_rule(color=THEME.faint, strokeDash=[2, 3]).encode(y="y:Q")
+        st.altair_chart(alt.layer(half, line, data=df).properties(height=200, width=260).facet(
+            column=alt.Column("tf:N", sort=["Daily", "Weekly", "Monthly"], title=None)), use_container_width=False)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     st.markdown(evidence_rating("B", "practice method well supported; chart-reading edge is contested",
                                 _EVIDENCE_NOTE), unsafe_allow_html=True)
     st.markdown(key_findings(_FINDINGS), unsafe_allow_html=True)
+    _signature()
     with st.expander("How it works — scoring, benchmarks, data"):
         st.markdown(_HOW)
 

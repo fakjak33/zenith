@@ -12,8 +12,8 @@ House conventions baked in here so callers cannot forget them:
   * every chart is wrapped so a failure degrades to a dataframe, never to a
     traceback in the middle of the page.
 
-Existing tabs each carry their own copy of some of these; they are deliberately
-left alone. This module is for new work.
+Every colour here derives from `THEME`, so the ZENITH//TERM token set restyles
+all tabs that use these helpers at once.
 """
 
 from __future__ import annotations
@@ -27,9 +27,30 @@ from .config import THEME
 
 # Panel black is the zero point of every ramp, so "no change" recedes into the
 # page instead of competing with the changes that matter.
-_PANEL = (11, 11, 11)
-_TEAL = (46, 196, 182)
-_CORAL = (255, 90, 60)
+def rgb(hex_: str) -> tuple[int, int, int]:
+    h = hex_.lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+def mix(a: str, b: str, t: float) -> str:
+    """Hex colour t of the way from a to b."""
+    ra, rb = rgb(a), rgb(b)
+    return "#" + "".join(f"{int(x + (y - x) * t):02x}" for x, y in zip(ra, rb))
+
+
+# Colour ranges replacing Vega's named schemes (redyellowgreen, tableau20, reds,
+# tealblues): coral -> a dim terminal midpoint -> teal, keeping the app's sign
+# convention while the midpoint sinks into the glass instead of glowing yellow.
+DIV3 = [THEME.coral, mix(THEME.coral, THEME.raised, 0.55), THEME.raised,
+        mix(THEME.teal, THEME.raised, 0.55), THEME.teal]
+SEQ_TEAL = [mix(THEME.teal, THEME.panel, 0.78), THEME.teal]
+SEQ_CORAL = [mix(THEME.coral, THEME.panel, 0.72), THEME.coral]
+CAT20 = list(THEME.cat) + [mix(c, THEME.panel, 0.4) for c in THEME.cat] + [THEME.mint, THEME.navy,
+                                                                            THEME.orange, THEME.muted]
+
+_PANEL = rgb(THEME.panel)
+_TEAL = rgb(THEME.teal)
+_CORAL = rgb(THEME.coral)
 
 
 def grad(v, cap: float, color: tuple[int, int, int]) -> str:
@@ -38,7 +59,7 @@ def grad(v, cap: float, color: tuple[int, int, int]) -> str:
         return ""
     a = max(0.0, min(1.0, abs(float(v)) / cap)) if cap else 0.0
     r, g, b = (int(p + (c - p) * a) for p, c in zip(_PANEL, color))
-    return f"background-color: rgb({r},{g},{b}); color: #fff;"
+    return f"background-color: rgb({r},{g},{b}); color: {THEME.text};"
 
 
 def grad_teal(v, cap: float = 1.0) -> str:
@@ -66,7 +87,8 @@ def diverging_scale(cap: float, alt):
     cap = max(float(cap or 0), 1e-9)
     return alt.Scale(
         domain=[-cap, -cap / 2, 0, cap / 2, cap],
-        range=[THEME.coral, "#7a2d1e", THEME.panel, "#1a6b64", THEME.teal],
+        range=[THEME.coral, mix(THEME.coral, THEME.panel, 0.55), THEME.panel,
+               mix(THEME.teal, THEME.panel, 0.55), THEME.teal],
         clamp=True,
     )
 
@@ -97,14 +119,14 @@ def colcfg(cols, help_map: dict) -> dict:
 
 
 def state_banner(color: str, label: str, message: str) -> str:
-    """Full-width gradient state bar — the app's loudest status signal."""
+    """The page's status line: a colour block, the state, and its one-line reason."""
     return (
-        f'<div style="font-family:{THEME.font_display}; font-size:1.25rem; '
-        f'letter-spacing:0.14em; text-transform:uppercase; color:#000; '
-        f'background:linear-gradient(90deg, {color}, {THEME.panel}); '
-        f'border-left:6px solid {color}; padding:0.45rem 0.9rem; '
-        f'margin:0.2rem 0 0.8rem 0;">'
-        f'<b>{_html.escape(label)}</b> · {_html.escape(message)}</div>')
+        f'<div style="display:flex; align-items:center; gap:0.8rem; border:1px solid {THEME.line}; '
+        f'border-left:3px solid {color}; background:linear-gradient(90deg, {color}1f, transparent 60%); '
+        f'padding:0.55rem 0.9rem; margin:0.2rem 0 0.9rem 0;">'
+        f'<span style="font-size:0.95rem; font-weight:300; letter-spacing:0.18em; color:{color}; '
+        f'text-transform:uppercase; white-space:nowrap;">{_html.escape(label)}</span>'
+        f'<span style="font-size:0.74rem; color:{THEME.muted};">{_html.escape(message)}</span></div>')
 
 
 def chip(text: str, color: str = THEME.teal, sub: str = "") -> str:
@@ -113,8 +135,8 @@ def chip(text: str, color: str = THEME.teal, sub: str = "") -> str:
             f'font-size:0.72rem;">{_html.escape(sub)}</span>') if sub else ""
     return (f'<span style="display:inline-block; border:1px solid {color}; '
             f'border-left:4px solid {color}; padding:0.18rem 0.5rem; '
-            f'margin:0 0.35rem 0.35rem 0; font-size:0.8rem; color:#eee; '
-            f'background:rgba(0,0,0,0.3);">{_html.escape(text)}{tail}</span>')
+            f'margin:0 0.35rem 0.35rem 0; font-size:0.8rem; color:{THEME.text}; '
+            f'background:rgba(0,0,0,0.45); box-shadow:0 0 10px {color}22;">{_html.escape(text)}{tail}</span>')
 
 
 def numeric_slab(items: list[dict], min_width: int = 150) -> str:
@@ -136,7 +158,7 @@ def numeric_slab(items: list[dict], min_width: int = 150) -> str:
             f'letter-spacing:0.16em; color:{THEME.muted}; '
             f'text-transform:uppercase; margin-bottom:0.15rem;">'
             f'{_html.escape(str(it.get("label", "")))}</div>'
-            f'<div style="font-family:{THEME.font_display}; font-size:2.6rem; '
+            f'<div style="font-family:{THEME.font_display}; font-size:1.9rem; font-weight:300; '
             f'line-height:1.05; color:{c};">'
             f'{_html.escape(str(it.get("value", "—")))}</div>'
             + (f'<div style="font-size:0.74rem; color:{THEME.muted}; '
@@ -155,11 +177,11 @@ def note_strip(title: str, items: list[str]) -> str:
         cards.append(
             f'<div style="flex:1 1 230px; min-width:200px; border-left:4px solid {c}; '
             f'padding:0.4rem 0.6rem; background:rgba(0,0,0,0.28);">'
-            f'<div style="font-size:0.82rem; line-height:1.4; color:#ddd;">'
+            f'<div style="font-size:0.82rem; line-height:1.4; color:{THEME.text};">'
             f'{_html.escape(text)}</div></div>')
     return (f'<div style="margin:0.2rem 0 1rem 0;">'
             f'<div style="font-family:{THEME.font_display}; font-size:0.8rem; '
-            f'letter-spacing:0.14em; color:#999; text-transform:uppercase; '
+            f'letter-spacing:0.14em; color:{THEME.muted}; text-transform:uppercase; '
             f'margin-bottom:0.35rem;">{_html.escape(title)}</div>'
             f'<div style="display:flex; gap:0.6rem; flex-wrap:wrap;">'
             + "".join(cards) + '</div>')

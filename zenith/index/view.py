@@ -365,8 +365,8 @@ def _directory_cards(rows: list[dict], rels: dict) -> None:
         name = _html.escape(e["name"])
         link = e.get("url", "")
         title = (f'<a href="{_html.escape(link)}" target="_blank" rel="noopener" '
-                 f'style="color:#fff; text-decoration:none; font-weight:700;">{name} ↗</a>'
-                 if link else f'<span style="color:#fff; font-weight:700;">{name}</span>')
+                 f'style="color:{THEME.text}; text-decoration:none; font-weight:700;">{name} ↗</a>'
+                 if link else f'<span style="color:{THEME.text}; font-weight:700;">{name}</span>')
         meta = " · ".join(x for x in (
             tx.label_of("entity_type", e.get("entity_type", "")),
             tx.label_of("primary_category", e.get("primary_category", "")),
@@ -377,7 +377,7 @@ def _directory_cards(rows: list[dict], rels: dict) -> None:
         related = rels.get(e["id"], [])[:4]
         rel_html = ("".join(
             f'<div style="font-size:0.74rem; color:{THEME.muted};">{_html.escape(lbl)}: '
-            f'<span style="color:#ddd;">{_html.escape(nm)}</span></div>'
+            f'<span style="color:{THEME.text};">{_html.escape(nm)}</span></div>'
             for lbl, nm, _i in related)) if related else ""
         zsrc = (f'<div style="font-size:0.72rem; color:{THEME.teal}; margin-top:0.3rem;">'
                 f'in Zenith: {_html.escape(e["zenith_source"])}</div>') if e.get("zenith_source") else ""
@@ -1156,6 +1156,34 @@ def _data_management(art: dict) -> None:
 
 
 # ------------------------------------------------------------------ render --
+def _signature() -> None:
+    """THE ECOSYSTEM: what the master list is made of (categories as a ring) and who
+    the finance podcast circuit keeps coming back to (most-interviewed guests)."""
+    import altair as alt
+
+    from .. import ui_kit as uk
+    ents = load("entities", []) or []
+    if not ents:
+        return
+    cats = pd.Series([e.get("primary_category") or "other" for e in ents]).value_counts().head(8)
+    cols = list(THEME.cat)
+    guests = sorted(({"name": e["name"], "n": len(e.get("podcast_appearances") or [])} for e in ents
+                     if e.get("entity_type") == "person"), key=lambda r: -r["n"])[:20]
+    a, b = st.columns([1, 1.5], gap="medium")
+    with a, uk.panel("THE ECOSYSTEM", THEME.mint, f"{len(ents):,} entities by category"):
+        st.markdown(uk.ring_donut([(k.upper(), float(v), cols[i % len(cols)]) for i, (k, v) in enumerate(cats.items())],
+                                  170, f"{len(ents):,}", "ENTITIES"), unsafe_allow_html=True)
+    with b, uk.panel("THE PODCAST CIRCUIT", THEME.amber, "most-interviewed guests"):
+        gdf = pd.DataFrame([g for g in guests if g["n"] > 0])
+        if gdf.empty:
+            st.caption("No guest appearances harvested yet.")
+        else:
+            base = alt.Chart(gdf).encode(y=alt.Y("name:N", sort="-x", title=None), x=alt.X("n:Q", title="appearances"))
+            st.altair_chart((base.mark_rule(color=THEME.line, strokeWidth=2)
+                             + base.mark_circle(size=90, color=THEME.amber)).properties(height=max(240, 16 * len(gdf))),
+                            use_container_width=True)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     status = load("status", {})
@@ -1169,6 +1197,7 @@ def render() -> None:
 
     st.markdown(stamp(status.get("date", "—"), "Index"), unsafe_allow_html=True)
     st.markdown(key_findings(_FINDINGS), unsafe_allow_html=True)
+    _signature()
 
     sub = st.radio("View", SUBVIEWS, horizontal=True, key="idx_sub", label_visibility="collapsed")
     if sub == "Overview":

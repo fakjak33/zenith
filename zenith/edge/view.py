@@ -94,11 +94,7 @@ _SCREEN_OF = {c["seg"]: k for k, c in CFG.items()}
 
 
 def _grad(v, cap, color):
-    if v is None or (isinstance(v, float) and pd.isna(v)):
-        return ""
-    a = max(0.0, min(1.0, abs(float(v)) / cap))
-    r, g, b = (int(11 + (c - 11) * a) for c in color)
-    return f"background-color: rgb({r},{g},{b}); color:#fff;"
+    return uc.grad(v, cap, color)          # panel -> colour ramp from THEME
 
 
 def _table(rows: list[dict], measure: str, extra: list[str], key: str) -> None:
@@ -110,7 +106,7 @@ def _table(rows: list[dict], measure: str, extra: list[str], key: str) -> None:
     df = pd.DataFrame([{c: r.get(c) for c in cols} for r in rows])
     cap = max(1e-9, df[measure].abs().max()) if measure in df else 1.0
     try:
-        sty = df.style.map(lambda v: _grad(v, cap, (46, 196, 182)), subset=[measure])
+        sty = df.style.map(lambda v: _grad(v, cap, uc.rgb(THEME.teal)), subset=[measure])
         st.dataframe(sty, use_container_width=True, hide_index=True,
                      height=min(430, 45 + 34 * len(df)))
     except Exception:
@@ -276,12 +272,47 @@ def _stale_cut() -> str:
     return (date.today() - timedelta(days=5)).isoformat()
 
 
+_SIG_SCREENS = (("ivspread", "IV SPREAD", 1), ("revisions", "REVISIONS", 1),
+                ("shortint", "SHORT INT", -1), ("lottery", "LOTTERY", -1))
+
+
+def _signature() -> None:
+    """CROSS-SCREEN MATRIX: names that light up on several screens at once (teal =
+    each screen's long side, coral = its short side), and the four screens as dot
+    swarms so you see how extreme today's tails are."""
+    from .. import ui_kit as uk
+    from ..viz.charts import beeswarm
+    score: dict[str, dict] = {}
+    swarm = []
+    for key, lab, sign in _SIG_SCREENS:
+        for r in (load(key, {}) or {}).get("ranked", []):
+            if r.get("pctile") is None:
+                continue
+            v = sign * (float(r["pctile"]) - 50) / 50
+            score.setdefault(r["ticker"], {})[lab] = v
+            swarm.append({"screen": lab, "score": v, "ticker": r["ticker"]})
+    if not score:
+        return
+    multi = {t: d for t, d in score.items() if len(d) >= 2}
+    top = sorted(multi, key=lambda t: -abs(sum(multi[t].values())))[:36]
+    a, b = st.columns([1, 1.15], gap="medium")
+    with a, uk.panel("CROSS-SCREEN MATRIX", THEME.violet, f"{len(multi)} names on 2+ screens · top 36"):
+        cols = [lab for _, lab, _ in _SIG_SCREENS]
+        vals = {(t, c): multi[t].get(c) for t in top for c in cols}
+        st.markdown(uk.dot_matrix(top, cols, vals, cap=1.0, size=14), unsafe_allow_html=True)
+    with b, uk.panel("THE TAILS", THEME.amber, "every ranked name per screen · signed percentile"):
+        df = pd.DataFrame(swarm)
+        st.altair_chart(beeswarm(df, "score", "screen", color="score", size=14, height_per=62,
+                                 tooltip=["ticker", "screen", "score"]), use_container_width=True)
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     st.markdown(section("EDGE SCREENS — four cross-sectional signals, rated", 3,
                         help="Four ranked long/short screens from the empirical "
                              "cross-section, each with an honest evidence tier. "
                              "Pick a screen below."), unsafe_allow_html=True)
+    _signature()
     seg = st.radio("Screen", SEGMENTS, horizontal=True, label_visibility="collapsed")
     st.caption({"IV spread": "Option-implied direction (put-call parity deviations).",
                 "Revisions": "Analyst EPS-estimate revision drift.",

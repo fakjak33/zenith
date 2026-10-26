@@ -97,19 +97,15 @@ COLS = {
 
 # ---------------------------------------------------------------- helpers ---
 def _grad(v, cap: float, color: tuple[int, int, int]) -> str:
-    if v is None or (isinstance(v, float) and pd.isna(v)):
-        return ""
-    a = max(0.0, min(1.0, abs(float(v)) / cap))
-    r, g, b = (int(11 + (c - 11) * a) for c in color)
-    return f"background-color: rgb({r},{g},{b}); color: #fff;"
+    return uc.grad(v, cap, color)          # panel -> colour ramp from THEME
 
 
 def _grad_teal(v, cap=1.0):
-    return _grad(v, cap, (46, 196, 182))
+    return _grad(v, cap, uc.rgb(THEME.teal))
 
 
 def _grad_coral(v, cap=1.0):
-    return _grad(v, cap, (255, 90, 60))
+    return _grad(v, cap, uc.rgb(THEME.coral))
 
 
 def _grad_diverging(v, cap=0.05):
@@ -234,8 +230,8 @@ def _signal_table(rows: list[dict], key: str) -> None:
                .map(lambda v: _grad_teal((v or 0) / 100, 1.0),
                     subset=["SUE", "EAR", "AVOL", "ANCHOR", "RUE"])
                .map(lambda v: _grad_diverging(v, 0.08), subset=["EAR raw"])
-               .map(lambda v: ("color: #2ec4b6;" if isinstance(v, str) and "LONG" in v
-                               else "color: #ff5a3c; font-weight: 700;"
+               .map(lambda v: (f"color: {THEME.teal};" if isinstance(v, str) and "LONG" in v
+                               else f"color: {THEME.coral}; font-weight: 700;"
                                if isinstance(v, str) and "SHORT" in v else ""),
                     subset=["Side"])
                .format({"Comp": "{:.0f}", "SUE": "{:.0f}", "EAR": "{:.0f}",
@@ -267,7 +263,7 @@ def _component_bars(row: dict) -> None:
                     scale=alt.Scale(domain=[0, 100])),
             y=alt.Y("component:N", sort=list(df["component"]), title=None,
                     axis=alt.Axis(labelLimit=0)),
-            color=alt.Color("rank:Q", scale=alt.Scale(scheme="tealblues",
+            color=alt.Color("rank:Q", scale=alt.Scale(range=uc.SEQ_TEAL,
                                                       domain=[0, 100]), legend=None),
             tooltip=["component", alt.Tooltip("rank:Q", format=".0f"),
                      alt.Tooltip("contrib:Q", title="points into composite")],
@@ -430,7 +426,7 @@ def _tracker(history: dict) -> None:
                         axis=alt.Axis(labelLimit=0)),
                 y=alt.Y("group:N", sort=order, title="side · score tercile",
                         axis=alt.Axis(labelLimit=0)),
-                color=alt.Color("win:Q", scale=alt.Scale(scheme="redyellowgreen",
+                color=alt.Color("win:Q", scale=alt.Scale(range=uc.DIV3,
                                                          domain=[30, 70]),
                                 legend=alt.Legend(title="win %")),
                 tooltip=["group", "horizon",
@@ -587,6 +583,38 @@ def _eap_section() -> None:
 
 
 # ------------------------------------------------------------------ render --
+@st.cache_data(ttl=3600, show_spinner=False)
+def _drift_paths() -> pd.DataFrame:
+    out = []
+    for k, r in enumerate(load("history", {}).get("rows", [])):
+        hz = r.get("horizons") or {}
+        pts = [(0, 0.0)] + [(d, (hz.get(f"h{d}") or {}).get("excess_ret")) for d in (5, 20, 60)
+                            if (hz.get(f"h{d}") or {}).get("evaluated")]
+        if len(pts) < 2:
+            continue
+        for d, v in pts:
+            if v is not None:
+                out.append({"event": k, "day": d, "excess": float(v), "side": r.get("side", "?").upper()})
+    return pd.DataFrame(out)
+
+
+def _signature() -> None:
+    """THE DRIFT FAN: every tracked pick's excess return after entry, as percentile
+    bands (10-90, 25-75, median) per side, over faint individual paths."""
+    from .. import ui_kit as uk
+    from ..viz.charts import fan
+    df = _drift_paths()
+    if df.empty:
+        return
+    sample = df[df["event"].isin(df["event"].drop_duplicates().sample(min(400, df["event"].nunique()),
+                                                                       random_state=1))]
+    with uk.panel("THE DRIFT FAN", THEME.teal, f"{df['event'].nunique():,} tracked picks · excess vs SPY, side-adjusted"):
+        st.altair_chart(fan(df, "day", "excess", "side", height=320,
+                            colors={"LONG": THEME.teal, "SHORT": THEME.coral},
+                            paths=sample, path_id="event"), use_container_width=True)
+        st.caption("Trading days after entry (0, 5, 20, 60). Above zero = the pick beat the market in its direction.")
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     st.markdown(evidence_rating(
@@ -615,6 +643,7 @@ def render() -> None:
     ]), unsafe_allow_html=True)
     latest = load("signals", {})
     _banner(latest)
+    _signature()
 
     with st.expander("How PEAD works — the research in 90 seconds"):
         st.markdown(

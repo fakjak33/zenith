@@ -462,19 +462,42 @@ def test_beta_today_badge_never_raises():
     assert b is None or "CLEAN BETA" in b
 
 
-def test_full_app_renders_with_trend_following_tab():
-    """app.py itself -- every tab in one run. Catches a broken app.py (which
-    no per-view test imports) and confirms the new tab is registered."""
+def test_full_app_renders_home_with_navigation():
+    """app.py itself: password gate, CSS, sidebar navigation and the DASHBOARD."""
     from pathlib import Path
     at = AppTest.from_file(str(Path(config.PROJECT_ROOT) / "app.py"), default_timeout=300)
     at.run()
     assert not at.exception, [e.value for e in at.exception]
-    labels = [t.label for t in at.tabs]
-    assert "TREND FOLLOWING" in labels and "MOMENTUM" in labels and "ETF MOMENTUM" in labels
-    assert "CLEAN BETA" in labels
-    assert "EPHEMERIS" in labels
-    assert "OPTIONS VAULT" in labels
-    assert "THETA RUN" in labels
+    text = " ".join(str(m.value) for m in at.markdown)
+    assert "MARKET OVERVIEW" in text and "MODULE STATUS" in text and "MOMENTUM SIGNALS" in text
+    errors = " ".join(str(e.value) for e in at.error)
+    assert "could not be loaded" not in errors, errors
+
+
+def test_nav_registry_covers_every_page():
+    from zenith import nav
+    labels = {f.label for f in nav.FEATURES}
+    assert {"TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM", "EDGE SCREENS",
+            "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM", "TREND FOLLOWING", "CLEAN BETA",
+            "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "OPTIONS VAULT", "THETA RUN", "ARCHIVE",
+            "SOURCES"} == labels
+    slugs = [f.slug for f in nav.FEATURES]
+    assert len(slugs) == len(set(slugs)) and "home" not in slugs
+    assert set(f.group for f in nav.FEATURES) <= set(nav.GROUPS)
+
+
+@pytest.mark.parametrize("slug", [
+    "today", "brief", "regimes", "nightday", "cas", "momentum", "etf-momentum", "trend",
+    "factor-momentum", "edge", "pead", "pretom", "ideas", "clean-beta", "holdings",
+    "options-vault", "theta-run", "ephemeris", "index", "archive", "sources"])
+def test_every_nav_page_renders(slug):
+    at = AppTest.from_string("\n".join([
+        "from zenith import nav",
+        f"f = next(x for x in nav.FEATURES if x.slug == {slug!r})",
+        "nav._page_fn(f)()",
+    ]), default_timeout=300)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
     errors = " ".join(str(e.value) for e in at.error)
     assert "could not be loaded" not in errors, errors
 
@@ -577,16 +600,32 @@ def test_theta_view_renders_without_market():
 
 
 @pytest.mark.skipif(not config.THETA_FILES["local_parquet"].exists(), reason="no local THETA data")
-def test_theta_view_lobby_and_run_render():
+def test_theta_view_lobby_renders():
     at, text = _render("from zenith.theta import view\nview.render()\n")
     assert "QUICK RUN" in text and "CHALLENGES" in text
-    # easy = visible tickers: AppTest matches selectbox values against formatted labels,
-    # which blind runs alias (ASSET-0xx) mid-session
-    at.radio(key="th_diff").set_value("easy")
-    at.button(key="th_go_quick").click().run()
+    assert any(b.label == "▶ START RUN" for b in at.button)
+
+
+@pytest.mark.skipif(not config.THETA_FILES["local_parquet"].exists(), reason="no local THETA data")
+def test_theta_cockpit_trade_event_end():
+    """The cockpit flow: one click SELLs the default SPY strangle, NEXT EVENT advances
+    to the first management event, END RUN reaches the debrief."""
+    at = AppTest.from_string("\n".join([
+        "import streamlit as st",
+        "from zenith.theta import view",
+        "from zenith.theta.engine import scenario",
+        "m = view._market()",
+        "if st.session_state.get('th_run') is None and not st.session_state.get('th_debrief'):",
+        "    view._start(m, None, None, scenario.random_scenario(m, 7, 63, 'easy'), 'quick')",
+        "view.render()",
+    ]), default_timeout=180)
+    at.run()
     assert not at.exception, [e.value for e in at.exception]
     labels = [b.label for b in at.button]
-    assert "▶▶ NEXT EVENT" in labels
+    assert "▶▶ NEXT EVENT" in labels and any(lb.startswith("SELL STRANGLE") for lb in labels)
+    at.button(key="th_send").click().run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert len(at.session_state["th_run"].book.positions) == 1
     at.button(key="th_event").click().run()
     assert not at.exception, [e.value for e in at.exception]
     at.button(key="th_end").click().run()

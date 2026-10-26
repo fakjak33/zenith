@@ -174,7 +174,7 @@ def to_html(rep: dict, player: str, filters: str = "") -> str:
     when = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     return f"""<!doctype html><html><head><meta charset="utf-8"><title>EPHEMERIS Read — {html.escape(player)}</title>
 <style>body{{background:{THEME.bg};color:{THEME.text};font-family:'Space Mono','Courier New',monospace;
-max-width:820px;margin:2rem auto;padding:0 1rem;line-height:1.5}}h1{{font-family:'VT323',monospace;letter-spacing:.14em}}
+max-width:820px;margin:2rem auto;padding:0 1rem;line-height:1.5}}h1{{font-family:'JetBrains Mono',monospace;font-weight:300;letter-spacing:.14em}}
 h2{{font-size:1rem;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid #333}}
 li{{margin:.35rem 0}} .m{{color:{THEME.muted};font-size:.8rem}}
 @media print{{body{{background:#fff;color:#000}}}}</style></head><body>

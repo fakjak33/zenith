@@ -13,6 +13,8 @@ import streamlit as st
 
 from . import load, DISCLAIMER
 from .sources import GROUPS
+from .. import ui_charts as uc
+from ..config import THEME
 from ..ui_theme import section, card_html
 from ..cas.universe import REGION_LABEL
 
@@ -49,13 +51,7 @@ def _grad_css(v, cap: float = 0.12) -> str:
     coral for losses; sized to read under white text. cap = saturation at ±12%."""
     if v is None or (isinstance(v, float) and pd.isna(v)):
         return ""
-    x = max(-1.0, min(1.0, float(v) / cap))
-    if x >= 0:                                   # gains: #0b0b0b -> seafoam #2ec4b6
-        r, g, b = int(11 + 35 * x), int(11 + 185 * x), int(11 + 171 * x)
-    else:                                        # losses: #0b0b0b -> coral #ff5a3c
-        a = -x
-        r, g, b = int(11 + 244 * a), int(11 + 79 * a), int(11 + 49 * a)
-    return f"background-color: rgb({r},{g},{b}); color: #fff;"
+    return uc.grad_diverging(v, cap)             # panel -> teal (gains) / coral (losses)
 
 
 def render() -> None:
@@ -69,6 +65,7 @@ def render() -> None:
     st.markdown(stamp(brief.get("as_of", "?"), "Weekly Brief"), unsafe_allow_html=True)
 
     _talking_points(brief.get("talking_points", []))
+    _signature(brief)
     _overview(brief.get("market_overview", {}), brief.get("intraday", {}))
     _sectors_industries(brief)
     _rates(brief.get("rates", {}))
@@ -76,6 +73,45 @@ def render() -> None:
     _earnings(brief.get("earnings", {}))
     _cas(brief.get("cas", {}), brief.get("gex", []))
     _news(brief.get("news", []))
+
+
+def _signature(brief: dict) -> None:
+    """MARKET MOSAIC: every sector and industry ETF as one squarified map (area =
+    size of the move, colour = direction), beside sector sparkline small multiples."""
+    from .. import ui_kit as uk
+    from ..viz.treemap import treemap
+    sectors, inds = brief.get("sectors", []), brief.get("industries", [])
+    if not sectors and not inds:
+        return
+    win = st.segmented_control("Mosaic window", ["1W", "1M"], default="1W", key="brief_mosaic_w",
+                               label_visibility="collapsed") or "1W"
+    k = {"1W": "w1", "1M": "m1"}[win]
+    cap = 0.04 if k == "w1" else 0.10
+
+    def kids(rows):
+        return [{"name": r.get("label", r.get("ticker", "?")), "size": abs(r.get(k) or 0) + cap * 0.15,
+                 "value": r.get(k) or 0, "sub": r.get("ticker", "")} for r in rows if r.get(k) is not None]
+    a, b = st.columns([1.7, 1], gap="medium")
+    with a, uk.panel("MARKET MOSAIC", THEME.teal, f"{win} return · area = size of the move"):
+        st.markdown(treemap([{"name": "SPDR sectors", "children": kids(sectors)},
+                             {"name": "industries & themes", "children": kids(inds)}], 980, 470, cap),
+                    unsafe_allow_html=True)
+    with b, uk.panel("SECTOR TAPE", THEME.amber, "1 year · rebased"):
+        cells = []
+        for r in sorted(sectors, key=lambda r: -(r.get(k) or 0)):
+            ser = [p["c"] for p in r.get("series", [])][-252:]
+            if len(ser) < 2:
+                continue
+            ret = ser[-1] / ser[0] - 1
+            col = THEME.teal if (r.get(k) or 0) >= 0 else THEME.coral
+            cells.append(f'<div style="border-top:1px solid {THEME.line}; padding:0.4rem 0.2rem;">'
+                         f'<div style="display:flex; justify-content:space-between; font-size:0.66rem;">'
+                         f'<span style="letter-spacing:0.1em;">{r.get("label", "")[:16].upper()}</span>'
+                         f'<span style="color:{col};">{(r.get(k) or 0):+.1%}</span></div>'
+                         f'{uk.sparkline_svg(ser, THEME.teal if ret >= 0 else THEME.coral, 150, 26, fill=True)}'
+                         f'<div style="font-size:0.58rem; color:{THEME.faint};">1Y {ret:+.0%}</div></div>')
+        st.markdown(f'<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:0 0.8rem;">'
+                    f'{"".join(cells)}</div>', unsafe_allow_html=True)
 
 
 def _talking_points(pts: list[str]) -> None:
@@ -120,7 +156,7 @@ def _rebased_chart(rows: list[dict], window, intraday: dict | None = None,
             x=alt.X("d:T", title=None, axis=alt.Axis(labelOverlap=False)),
             y=alt.Y("pct:Q", title="% change"),
             color=alt.Color("label:N", legend=alt.Legend(title=None, columns=2, labelLimit=0),
-                            scale=alt.Scale(scheme="tableau20")))
+                            scale=alt.Scale(range=uc.CAT20)))
         line = base.mark_line(interpolate="monotone", strokeWidth=2)
         pts = base.mark_circle(size=42).encode(opacity=alt.condition(sel, alt.value(1), alt.value(0)),
             tooltip=["label", alt.Tooltip("d:T", title="time"),
@@ -198,7 +234,7 @@ def _bar(rows: list[dict], value: str, title: str, height_per: int = 22) -> None
         ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
             x=alt.X(f"{value}_pct:Q", title=f"{title} (%)"),
             y=alt.Y("label:N", sort="-x", title=None, axis=alt.Axis(labelLimit=0)),
-            color=alt.Color(f"{value}_pct:Q", scale=alt.Scale(scheme="redyellowgreen"), legend=None),
+            color=alt.Color(f"{value}_pct:Q", scale=alt.Scale(range=uc.DIV3), legend=None),
             tooltip=["label", f"{value}_pct"],
         ).properties(height=max(180, height_per * len(df))))
         st.altair_chart(ch, use_container_width=True)
@@ -297,8 +333,8 @@ def _curve_chart(curve: dict) -> None:
         base = alt.Chart(df).encode(
             x=alt.X("i:O", sort=None, axis=alt.Axis(title="tenor", labelExpr="")),
             y=alt.Y("yield:Q", title="yield %", scale=alt.Scale(zero=False)))
-        st.altair_chart(base.mark_line(point=True, color="#2a9bc4")
-                        + base.mark_text(dy=-12, color="#fff").encode(text="tenor"),
+        st.altair_chart(base.mark_line(point=True, color=THEME.navy)
+                        + base.mark_text(dy=-12, color=THEME.text).encode(text="tenor"),
                         use_container_width=True)
     except Exception:
         st.line_chart(df.set_index("tenor")["yield"])
@@ -325,7 +361,7 @@ def _rotation(rot: dict) -> None:
             ch = (alt.Chart(df).mark_rect().encode(
                 x=alt.X("region_lbl:N", title=None),
                 y=alt.Y("label:N", title=None),
-                color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
+                color=alt.Color("signal:Q", scale=alt.Scale(range=uc.DIV3, domain=[-1, 1])),
                 tooltip=["label", "region_lbl", "signal"],
             ).properties(height=300))
             st.altair_chart(ch, use_container_width=True)
@@ -415,7 +451,7 @@ def _cas(cas: dict, gx: list[dict]) -> None:
             ch = (alt.Chart(df).mark_bar().encode(
                 x=alt.X("signal:Q", title="composite signal", scale=alt.Scale(domain=[-1, 1])),
                 y=alt.Y("label:N", sort="-x", title=None),
-                color=alt.condition(alt.datum.signal >= 0, alt.value("#2ec4b6"), alt.value("#ff5a3c")),
+                color=alt.condition(alt.datum.signal >= 0, alt.value(THEME.teal), alt.value(THEME.coral)),
                 tooltip=["label", "signal"],
             ).properties(height=max(180, 26 * len(df))))
             st.altair_chart(ch, use_container_width=True)
@@ -447,7 +483,7 @@ def _news(news: list[dict]) -> None:
     chips = []
     for n in news:
         mv = n.get("move")
-        col = "#2ec4b6" if (isinstance(mv, (int, float)) and mv >= 0) else "#ff5a3c"
+        col = THEME.teal if (isinstance(mv, (int, float)) and mv >= 0) else THEME.coral
         tag = f" {mv*100:+.1f}%" if isinstance(mv, (int, float)) else ""
         chips.append(f'<a href="#news-{n["ticker"].lower()}" style="text-decoration:none;'
                      f'border:1px solid {col};color:{col};padding:2px 8px;margin:2px;'

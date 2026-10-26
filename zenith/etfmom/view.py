@@ -168,6 +168,43 @@ def _mvt_banner(scores: dict, status: dict) -> None:
 
 
 # -------------------------------------------------------------------- main --
+def _signature(rows: list[dict]) -> None:
+    """THE ETF ORBIT: asset class -> region -> category as a sunburst, angle = AUM,
+    colour = average composite."""
+    from .. import ui_kit as uk
+    from ..viz.radial import sunburst
+    rows = [r for r in rows if r.get("composite") is not None and not r.get("excluded")]
+    if not rows:
+        return
+    tree: dict = {}
+    for r in rows:
+        ac = r.get("asset_class") or "Other"
+        rg = r.get("region") or "Global"
+        cat = r.get("category") or "Other"
+        tree.setdefault(ac, {}).setdefault(rg, {}).setdefault(cat, []).append(r)
+
+    def node(name, members, children=None):
+        aum = sum(max(float(m.get("aum_m") or 0), 5.0) ** 0.5 for m in members)   # sqrt: small classes stay visible
+        w = [max(float(m.get("aum_m") or 0), 5.0) for m in members]
+        cv = sum(m["composite"] * x for m, x in zip(members, w)) / sum(w)
+        return {"name": name, "value": aum, "color_value": cv, "children": children or []}
+    nodes = []
+    for ac, regions in tree.items():
+        rnodes = []
+        for rg, cats in regions.items():
+            cnodes = [node(c, ms) for c, ms in cats.items()]
+            rnodes.append(node(rg, [m for ms in cats.values() for m in ms], cnodes))
+        nodes.append(node(ac, [m for cats in regions.values() for ms in cats.values() for m in ms], rnodes))
+    nodes.sort(key=lambda n_: -n_["value"])
+    a, b = st.columns([1.2, 1], gap="medium")
+    with a, uk.panel("THE ETF ORBIT", THEME.amber, "asset class → region → category · angle = √AUM"):
+        st.markdown(sunburst(nodes, 520, cap=10.0, rings=3), unsafe_allow_html=True)
+    with b, uk.panel("WHERE THE MONEY IS LEANING", THEME.cyan, "AUM-weighted composite by asset class"):
+        st.markdown(uk.led_meter([(n_["name"][:16], n_["color_value"]) for n_ in nodes], cap=10.0),
+                    unsafe_allow_html=True)
+        st.caption("Inner ring = asset class, middle = region, outer = category. Teal leans long, coral short.")
+
+
 def render() -> None:
     st.caption(DISCLAIMER)
     status = load("status", {})
@@ -187,6 +224,7 @@ def render() -> None:
         return
 
     st.markdown(stamp(scores.get("as_of", "—"), "ETF MOMENTUM"), unsafe_allow_html=True)
+    _signature(scores.get("rows", []))
     _mvt_banner(scores, status)
 
     with st.expander("Methodology — the same six factors, a different universe"):
