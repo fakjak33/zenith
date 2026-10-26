@@ -61,19 +61,15 @@ COLS = {
 # ---------------------------------------------------------------- helpers ---
 def _grad(v, cap: float, color: tuple[int, int, int]) -> str:
     """Panel-black -> `color` ramp, saturating at |v| = cap."""
-    if v is None or (isinstance(v, float) and pd.isna(v)):
-        return ""
-    a = max(0.0, min(1.0, abs(float(v)) / cap))
-    r, g, b = (int(11 + (c - 11) * a) for c in color)
-    return f"background-color: rgb({r},{g},{b}); color: #fff;"
+    return uc.grad(v, cap, color)          # panel -> colour ramp from THEME
 
 
 def _grad_coral(v, cap=0.6):
-    return _grad(v, cap, (255, 90, 60))
+    return _grad(v, cap, uc.rgb(THEME.coral))
 
 
 def _grad_teal(v, cap=1.0):
-    return _grad(v, cap, (46, 196, 182))
+    return _grad(v, cap, uc.rgb(THEME.teal))
 
 
 def _grad_diverging(v, cap=0.05):
@@ -194,7 +190,7 @@ def _score_bar(names: list[dict], top: int = 20) -> None:
             x=alt.X("score:Q", title="composite short score",
                     scale=alt.Scale(domain=[0, 1])),
             y=alt.Y("label:N", sort="-x", title=None, axis=alt.Axis(labelLimit=0)),
-            color=alt.Color("score:Q", scale=alt.Scale(scheme="reds",
+            color=alt.Color("score:Q", scale=alt.Scale(range=uc.SEQ_CORAL,
                                                        domain=[0.3, 1.0]), legend=None),
             tooltip=["ticker", "name", "sector",
                      alt.Tooltip("score:Q", format=".3f"),
@@ -223,7 +219,7 @@ def _dispensability_scatter(names: list[dict]) -> None:
                     scale=alt.Scale(type="log")),
             size=alt.Size("weight:Q", title="index weight",
                           scale=alt.Scale(range=[25, 600]), legend=None),
-            color=alt.Color("score:Q", scale=alt.Scale(scheme="reds",
+            color=alt.Color("score:Q", scale=alt.Scale(range=uc.SEQ_CORAL,
                                                        domain=[0.3, 1.0]),
                             legend=alt.Legend(title="score")),
             tooltip=["ticker", "name", "sector",
@@ -289,7 +285,7 @@ def _name_heatmap(panel: dict, names: list[dict], sched: dict, top: int) -> None
         ch = (alt.Chart(df).mark_rect().encode(
             x=alt.X("d:O", title=None),
             y=alt.Y("ticker:N", sort=order, title=None),
-            color=alt.Color("ret:Q", scale=alt.Scale(scheme="redyellowgreen",
+            color=alt.Color("ret:Q", scale=alt.Scale(range=uc.DIV3,
                                                      domain=[-4, 4]),
                             legend=alt.Legend(title="daily %")),
             tooltip=["ticker", "d", alt.Tooltip("ret:Q", format="+.2f")],
@@ -316,7 +312,7 @@ def _marks_bar(marks: dict, names: list[dict]) -> None:
         ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
             x=alt.X("ret:Q", title="% return over the window (negative = short win)"),
             y=alt.Y("label:N", sort="x", title=None),
-            color=alt.Color("ret:Q", scale=alt.Scale(scheme="redyellowgreen",
+            color=alt.Color("ret:Q", scale=alt.Scale(range=uc.DIV3,
                                                      domain=[-10, 10]), legend=None),
             tooltip=["label", alt.Tooltip("ret:Q", format="+.1f", title="window %"),
                      alt.Tooltip("min:Q", format="+.1f", title="worst mark %")],

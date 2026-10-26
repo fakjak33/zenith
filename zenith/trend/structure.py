@@ -25,7 +25,7 @@ while the slow group is still bullish.
 
 from __future__ import annotations
 
-from ..config import (MOM_STATES, TREND_DISAGREE_MIN, TREND_FAST_IDX,
+from ..config import (THEME, MOM_STATES, TREND_DISAGREE_MIN, TREND_FAST_IDX,
                       TREND_PERSISTENT_MIN_SPEEDS, TREND_SLOW_IDX, THEME)
 
 BULL_BAND = next(t for t, lbl in MOM_STATES if lbl == "BULLISH")        # +5
@@ -36,11 +36,11 @@ STRUCTURES = ("Persistent Uptrend", "Uptrend", "Emerging Uptrend", "Mixed",
 
 STRUCTURE_COLORS = {
     "Persistent Uptrend": THEME.teal,
-    "Uptrend": "#1f8f85",
+    "Uptrend": THEME.teal,
     "Emerging Uptrend": THEME.mint,
     "Mixed": THEME.muted,
     "Deteriorating Uptrend": THEME.mustard,
-    "Downtrend": "#b8452f",
+    "Downtrend": THEME.coral,
     "Persistent Downtrend": THEME.coral,
 }
 

@@ -558,7 +558,7 @@ def _structure_map(universe: str, df: pd.DataFrame) -> None:
     def build(alt):
         pick = alt.selection_point(name="pick", fields=["ticker"], on="click", empty=False)
         axis = alt.Chart(pd.DataFrame({"v": [0]}))
-        pts = alt.Chart(m).mark_circle(size=46, stroke="#6b6b6b", strokeWidth=0.6).encode(
+        pts = alt.Chart(m).mark_circle(size=46, stroke=THEME.phosphor_dim, strokeWidth=0.6).encode(
             x=alt.X("slow:Q", title="slow speeds (32/128 · 64/256 · 128/512) →",
                     scale=alt.Scale(domain=[-20, 20])),
             y=alt.Y("fast:Q", title="fast speeds (2/8 · 4/16 · 8/32) →", scale=alt.Scale(domain=[-20, 20])),
@@ -634,7 +634,7 @@ def _trend_vs_momentum(universe: str, df: pd.DataFrame) -> None:
         pick = alt.selection_point(name="pick", fields=["ticker"], on="click", empty=False)
         diag = alt.Chart(pd.DataFrame({"x": [-20, 20], "y": [-20, 20]})).mark_line(
             color=THEME.grid, strokeWidth=1).encode(x="x:Q", y="y:Q")
-        pts = alt.Chart(m).mark_circle(size=40, stroke="#6b6b6b", strokeWidth=0.6).encode(
+        pts = alt.Chart(m).mark_circle(size=40, stroke=THEME.phosphor_dim, strokeWidth=0.6).encode(
             x=alt.X("momentum:Q", title=f"{src} composite", scale=alt.Scale(domain=[-20, 20])),
             y=alt.Y("score:Q", title="Trend Score", scale=alt.Scale(domain=[-20, 20])),
             color=alt.Color("trend_minus_mom:Q", scale=uc.diverging_scale(15, alt), title="Trend − Mom"),
@@ -1057,7 +1057,7 @@ def _term_curve(row: dict) -> None:
 
     def build(alt):
         color = alt.Color("When:N", scale=alt.Scale(domain=whens,
-                                                    range=[THEME.text, THEME.mustard, "#8a8a8a", "#4a4a4a"]),
+                                                    range=[THEME.text, THEME.mustard, THEME.muted, THEME.line]),
                           legend=alt.Legend(orient="top", title=None))
         lines = alt.Chart(cdf).mark_line(point=alt.OverlayMarkDef(size=60, filled=True), strokeWidth=2).encode(
             x=alt.X("Speed:N", sort=order, title="fast → slow", axis=alt.Axis(labelAngle=0, labelLimit=0)),

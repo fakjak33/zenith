@@ -7,92 +7,44 @@ import html
 from pathlib import Path
 
 from .config import THEME
+from .ui_term import CSS as _TERM_CSS
 
 _ROOT = Path(__file__).resolve().parent.parent
 _ASSETS = _ROOT / "assets"
 
-CSS = f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&family=Share+Tech+Mono&display=swap');
-
-html, body, .stApp, [class*="css"],
-input, button, select, textarea, .stMarkdown, p, label, span, div, td, th {{
-    font-family: {THEME.font_body} !important;
-}}
-[data-testid="stIconMaterial"], span.material-icons, [class*="material-symbols"], [class*="material-icons"] {{
-    font-family: 'Material Symbols Rounded','Material Symbols Outlined','Material Icons' !important;
-}}
-.stApp {{ background: {THEME.bg}; color: {THEME.text}; }}
-.stApp, .stMarkdown, p, label, span, div {{ color: {THEME.text}; }}
-
-/* parallax-depth background: layered fixed palette gradients + slow drift */
-.stApp::before {{
-    content: ""; position: fixed; inset: -20%; z-index: 0; pointer-events: none; opacity: 0.45;
-    background:
-      radial-gradient(40rem 40rem at 12% 8%, {THEME.navy}22, transparent 60%),
-      radial-gradient(34rem 34rem at 88% 18%, {THEME.mauve}22, transparent 60%),
-      radial-gradient(46rem 46rem at 70% 88%, {THEME.teal}1c, transparent 62%),
-      radial-gradient(30rem 30rem at 20% 80%, {THEME.coral}1a, transparent 60%);
-    animation: zdrift 40s ease-in-out infinite alternate;
-}}
-@keyframes zdrift {{ from {{ transform: translate3d(0,0,0) scale(1); }}
-                     to {{ transform: translate3d(-2%, -2%, 0) scale(1.06); }} }}
-/* faint scanlines */
-.stApp::after {{
-    content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.18;
-    background: repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.22) 3px, rgba(0,0,0,0) 4px);
-}}
-.block-container {{ position: relative; z-index: 2; }}
-section[data-testid="stSidebar"] {{ background: {THEME.panel}; border-right: 2px solid {THEME.border}; z-index: 3; }}
-
-h1, h2, h3, h4 {{ font-family: {THEME.font_display}; color: #fff; }}
-
-.stSelectbox div[data-baseweb="select"] > div, .stMultiSelect div[data-baseweb="select"] > div,
-.stTextInput input, .stDateInput input, div[data-baseweb="select"] {{
-    border-radius: 0 !important; border: 2px solid {THEME.border} !important;
-    background: {THEME.bg} !important; color: #fff !important;
-}}
-.stButton>button, .stDownloadButton>button {{
-    border-radius: 0 !important; border: 2px solid {THEME.border} !important; background: {THEME.bg};
-    color: #fff; font-family: {THEME.font_display};
-}}
-.stButton>button:hover {{ background: linear-gradient(90deg, {THEME.navy}, {THEME.mauve}, {THEME.coral}); color:#fff; }}
-.stTabs [data-baseweb="tab-list"] {{ gap: 16px; border-bottom: 2px solid {THEME.border}; }}
-.stTabs [data-baseweb="tab"] {{
-    font-family: {THEME.font_display}; letter-spacing: 0.06em; color: {THEME.muted};
-    background: {THEME.panel}; border: 2px solid {THEME.border}; border-bottom: none;
-    border-radius: 0 !important; padding: 10px 22px;
-}}
-.stTabs [aria-selected="true"] {{ color: #fff !important;
-    background: linear-gradient(120deg, {THEME.navy}, {THEME.mauve}, {THEME.coral}); }}
-[data-testid="stTooltipIcon"] svg, label svg {{ border: none !important; background: transparent !important;
-    color: {THEME.muted} !important; fill: {THEME.muted} !important; }}
-
-/* item cards */
-.z-card {{ border: 2px solid {THEME.border}; background: {THEME.panel}; padding: 0.7rem 0.9rem;
-    margin-bottom: 0.6rem; }}
-.z-src {{ font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; }}
-.z-title a {{ color: #fff !important; font-weight: 700; text-decoration: none; }}
-.z-title a:hover {{ text-decoration: underline; }}
-.z-sum {{ color: {THEME.muted}; font-size: 0.85rem; margin-top: 0.25rem; }}
-.parallax-sec {{ font-family: {THEME.font_display}; font-size: 0.9rem; text-transform: uppercase;
-    letter-spacing: 0.16em; margin: 0.5rem 0 0.3rem 0; padding: 0.2rem 0.5rem;
-    border-left: 4px solid var(--sec, {THEME.teal}); }}
-.parallax-tag {{ color: {THEME.muted}; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; }}
+CSS = _TERM_CSS.replace("</style>", f"""
+/* --- zenith components on the terminal glass --------------------------------- */
+.z-card {{ border: 1px solid {THEME.line}; border-left: 3px solid {THEME.phosphor_dim};
+    background: linear-gradient(180deg, {THEME.panel}ee, {THEME.glass}ee); padding: 0.65rem 0.9rem;
+    margin-bottom: 0.55rem; }}
+.z-card:hover {{ border-left-color: {THEME.phosphor}; box-shadow: 0 0 14px {THEME.phosphor}22; }}
+.z-src {{ font-family: {THEME.font_label} !important; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; }}
+.z-title a {{ color: {THEME.text} !important; font-weight: 400; text-decoration: none; font-size: 0.98rem; }}
+.z-title a:hover {{ color: {THEME.phosphor} !important; text-shadow: 0 0 8px {THEME.phosphor}88; }}
+.z-sum {{ color: {THEME.muted}; font-size: 0.84rem; margin-top: 0.25rem; }}
+.parallax-sec {{ font-family: {THEME.font_display} !important; font-size: 1.25rem; text-transform: uppercase;
+    letter-spacing: 0.1em; margin: 0.9rem 0 0.45rem 0; padding: 0.05rem 0.55rem 0.1rem 0;
+    display: flex; align-items: center; gap: 0.55rem; color: var(--sec, {THEME.phosphor});
+    text-shadow: 0 0 8px color-mix(in srgb, var(--sec, {THEME.phosphor}) 60%, transparent); }}
+.parallax-sec::before {{ content: ""; width: 0.6rem; height: 0.95rem; background: var(--sec, {THEME.phosphor});
+    box-shadow: 0 0 10px var(--sec, {THEME.phosphor}); flex: none; }}
+.parallax-sec::after {{ content: ""; flex: 1; border-bottom: 1px dashed {THEME.line}; margin-left: 0.4rem; }}
+.parallax-sec * {{ color: inherit; }}
+.parallax-tag {{ color: {THEME.muted}; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; }}
 
 /* "?" help badge with a hover tooltip (for custom HTML where Streamlit's native
    help= doesn't reach: section headers, cards, metrics) */
 .z-help {{ display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px;
-    border:1px solid {THEME.muted}; border-radius:50%; color:{THEME.muted}; font-size:0.62rem;
+    border:1px solid {THEME.muted}; color:{THEME.muted}; font-size:0.62rem; text-shadow:none;
     line-height:1; cursor:help; position:relative; margin-left:0.4rem; vertical-align:middle;
     font-family:{THEME.font_body}; text-transform:none; letter-spacing:0; }}
-.z-help:hover {{ color:{THEME.teal}; border-color:{THEME.teal}; }}
+.z-help:hover {{ color:{THEME.phosphor}; border-color:{THEME.phosphor}; }}
 .z-help .z-tip {{ visibility:hidden; opacity:0; position:absolute; z-index:60; bottom:150%; left:50%;
     transform:translateX(-50%); width:max-content; max-width:min(340px,72vw); background:{THEME.panel};
-    color:{THEME.text}; border:2px solid {THEME.border}; padding:0.5rem 0.65rem; font-size:0.74rem;
+    color:{THEME.text}; border:1px solid {THEME.phosphor_dim}; padding:0.5rem 0.65rem; font-size:0.74rem;
     line-height:1.3; letter-spacing:0.01em; text-transform:none; text-align:left; font-weight:400;
-    box-shadow:0 6px 24px rgba(0,0,0,0.55); transition:opacity 0.12s ease; pointer-events:none;
-    white-space:normal; }}
+    box-shadow:0 0 18px {THEME.phosphor}22, 0 6px 24px rgba(0,0,0,0.6); transition:opacity 0.12s ease;
+    pointer-events:none; white-space:normal; }}
 .z-help:hover .z-tip {{ visibility:visible; opacity:1; }}
 
 /* breathing room around charts & tables so axis labels never crowd/clip */
@@ -102,10 +54,20 @@ h1, h2, h3, h4 {{ font-family: {THEME.font_display}; color: #fff; }}
 }}
 [data-testid="stVegaLiteChart"] svg, [data-testid="stArrowVegaLiteChart"] svg {{ overflow: visible !important; }}
 [data-testid="stDataFrame"] {{ margin: 0.5rem 0 1.4rem 0 !important; }}
-[data-testid="stMetric"] {{ padding: 0.3rem 0.2rem; }}
+[data-testid="stMetric"] {{ padding: 0.35rem 0.6rem; border: 1px solid {THEME.line}; background: {THEME.glass}cc; }}
+[data-testid="stMetricValue"] {{ font-family: {THEME.font_display} !important; color: {THEME.phosphor};
+    text-shadow: 0 0 8px {THEME.phosphor}66; }}
+[data-testid="stExpander"] details {{ border: 1px solid {THEME.line} !important; border-radius: 0 !important;
+    background: {THEME.glass}cc; }}
+[data-testid="stExpander"] summary:hover {{ color: {THEME.phosphor}; }}
+[data-testid="stAlert"] {{ border-radius: 0 !important; border: 1px solid {THEME.line}; }}
 .block-container {{ padding-left: 2.2rem; padding-right: 2.2rem; }}
-</style>
-"""
+/* top navigation (st.navigation position=top) */
+[data-testid="stTopNavLinkContainer"] a, [data-testid="stNavSectionHeader"], header [data-testid="stNavLink"] {{
+    font-family: {THEME.font_display} !important; letter-spacing: 0.08em; }}
+header[data-testid="stHeader"] {{ background: {THEME.bg}e6; border-bottom: 1px solid {THEME.line};
+    backdrop-filter: none; }}
+</style>""")
 
 
 def _logo_svg(size: int = 84) -> str:
@@ -257,12 +219,12 @@ def _logo_mark(size: int = 64) -> str:
 
 
 BANNER = f"""
-<div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.3em; position:relative; z-index:2;">
-  <div style="line-height:0;">{_logo_vector(84)}</div>
+<div class="zt-boot" style="display:flex; align-items:center; gap:1.1rem; position:relative; z-index:2;">
+  <div style="line-height:0; filter: drop-shadow(0 0 10px {THEME.phosphor}55);">{_logo_vector(76)}</div>
   <div>
-    <div style="font-family:{THEME.font_display}; font-size:4.4rem; letter-spacing:0.16em;
-                color:#fff; line-height:0.9; -webkit-text-stroke:1px #fff;">ZENITH</div>
-    <div class="parallax-tag">daily insights &amp; research aggregator</div>
+    <div class="zt-logo">ZENITH<b>//</b>TERM</div>
+    <div class="zt-status zt-cursor">&gt; research terminal · <b>ONLINE</b> · free data only ·
+      evidence-graded · not investment advice</div>
   </div>
 </div>
 """
@@ -270,11 +232,12 @@ BANNER = f"""
 
 def stamp(as_of: str, page: str = "") -> str:
     """A prominent 'data as of' banner so every page shows its anchor date."""
-    pre = f"{page} · " if page else ""
-    return (f'<div style="font-family:{THEME.font_display}; font-size:0.95rem; '
-            f'letter-spacing:0.12em; color:{THEME.mustard}; border-left:4px solid {THEME.mustard}; '
-            f'padding:0.2rem 0.7rem; margin:0.1rem 0 0.7rem 0; text-transform:uppercase;">'
-            f'{pre}data as of {as_of}</div>')
+    pre = f"{html.escape(page)} · " if page else ""
+    return (f'<div style="font-family:{THEME.font_label}; font-size:0.66rem; letter-spacing:0.1em; '
+            f'color:{THEME.amber}; border:1px solid {THEME.amber}66; border-left:4px solid {THEME.amber}; '
+            f'display:inline-block; padding:0.25rem 0.7rem; margin:0.1rem 0 0.8rem 0; text-transform:uppercase; '
+            f'background:{THEME.glass}cc; box-shadow:0 0 12px {THEME.amber}22;">'
+            f'◉ {pre}data as of {html.escape(str(as_of))}</div>')
 
 
 def help_badge(text: str) -> str:
@@ -300,22 +263,22 @@ def key_findings(items: list[dict]) -> str:
         stat = html.escape(str(it.get("stat", "")))
         cite = html.escape(str(it.get("cite", "")))
         cards.append(
-            f'<div style="flex:1 1 200px; min-width:180px; border:1px solid {c}; '
-            f'border-left:4px solid {c}; border-radius:4px; padding:0.45rem 0.6rem; '
-            f'background:rgba(0,0,0,0.25);">'
-            f'<div style="font-size:0.86rem; line-height:1.35; color:#eee;">{stat}</div>'
-            f'<div style="font-family:{THEME.font_display}; font-size:0.72rem; '
-            f'letter-spacing:0.1em; color:{c}; margin-top:0.3rem; '
-            f'text-transform:uppercase;">{cite}</div></div>')
+            f'<div style="flex:1 1 200px; min-width:180px; border:1px solid {c}55; '
+            f'border-top:3px solid {c}; padding:0.45rem 0.6rem; '
+            f'background:linear-gradient(180deg, {c}14, {THEME.glass}dd); box-shadow:0 0 14px {c}14;">'
+            f'<div style="font-size:0.85rem; line-height:1.38; color:{THEME.text};">{stat}</div>'
+            f'<div style="font-family:{THEME.font_label}; font-size:0.6rem; '
+            f'letter-spacing:0.08em; color:{c}; margin-top:0.35rem; '
+            f'text-transform:uppercase;">» {cite}</div></div>')
     return (f'<div style="margin:0.2rem 0 0.8rem 0;">'
-            f'<div style="font-family:{THEME.font_display}; font-size:0.8rem; '
-            f'letter-spacing:0.14em; color:#999; text-transform:uppercase; '
+            f'<div style="font-family:{THEME.font_label}; font-size:0.62rem; '
+            f'letter-spacing:0.1em; color:{THEME.muted}; text-transform:uppercase; '
             f'margin-bottom:0.35rem;">key findings — the research behind this tab</div>'
             f'<div style="display:flex; gap:0.6rem; flex-wrap:wrap;">'
             + "".join(cards) + '</div></div>')
 
 
-_TIER_COLORS = {"A": "#2ec4b6", "B": "#ffc857", "C": "#ff5a3c"}
+_TIER_COLORS = {"A": THEME.phosphor, "B": THEME.amber, "C": THEME.coral}
 
 
 def evidence_rating(tier: str, label: str, note: str) -> str:
@@ -332,32 +295,25 @@ def evidence_rating(tier: str, label: str, note: str) -> str:
     return (
         f'<div style="display:flex; align-items:center; gap:0.6rem; '
         f'margin:0.2rem 0 0.6rem 0;">'
-        f'<div style="font-family:{THEME.font_display}; font-size:1.5rem; '
+        f'<div style="font-family:{THEME.font_display}; font-size:1.9rem; '
         f'line-height:1; color:{color}; border:2px solid {color}; '
-        f'border-radius:4px; padding:0.25rem 0.55rem; min-width:2.4rem; '
+        f'padding:0.2rem 0.55rem; min-width:2.6rem; text-shadow:0 0 10px {color}; '
+        f'box-shadow:0 0 14px {color}33, inset 0 0 12px rgba(0,0,0,0.6); background:rgba(0,0,0,0.45); '
         f'text-align:center;">{html.escape(tier)}</div>'
-        f'<div><div style="font-family:{THEME.font_display}; font-size:0.78rem; '
-        f'letter-spacing:0.12em; color:{color}; text-transform:uppercase;">'
+        f'<div><div style="font-family:{THEME.font_label}; font-size:0.62rem; '
+        f'letter-spacing:0.08em; color:{color}; text-transform:uppercase;">'
         f'evidence strength — {safe_label}</div>'
-        f'<div style="font-size:0.82rem; color:#ccc; line-height:1.35;">'
+        f'<div style="font-size:0.82rem; color:{THEME.text}; opacity:0.85; line-height:1.38;">'
         f'{safe_note}</div></div></div>')
 
 
 def section(label: str, idx: int = 0, help: str | None = None) -> str:
+    """Terminal section header: a glowing block, the label, a dashed rule to the edge."""
     cols = THEME.section_colors
-    c1, c2 = cols[idx % len(cols)], cols[(idx + 1) % len(cols)]
-    grad = f"linear-gradient(90deg, {c1}, {c2})"
+    c1 = cols[idx % len(cols)]
     badge = help_badge(help) if help else ""
-    # gradient clip applies to the label text only; the help badge stays muted
-    # background-IMAGE (a longhand), not the `background` shorthand: when a
-    # rerun reuses this DOM node for a header with different colours, React's
-    # style diff re-sets only the changed property. Re-setting the shorthand
-    # silently resets background-clip to its default, and the gradient then
-    # fills the whole header box instead of the text.
     return (f'<div class="parallax-sec" style="--sec:{c1};">'
-            f'<span style="background-image:{grad}; -webkit-background-clip:text; '
-            f'background-clip:text; -webkit-text-fill-color:transparent;">{label}</span>'
-            f'{badge}</div>')
+            f'<span>{label}</span>{badge}</div>')
 
 
 def card_html(item: dict) -> str:
@@ -374,3 +330,9 @@ def card_html(item: dict) -> str:
         + (f'<div class="z-sum">{sm}</div>' if sm else '')
         + '</div>'
     )
+
+
+# One registered Altair theme for every chart (fonts, axes, grid, colour ranges).
+from . import ui_altair as _ui_altair  # noqa: E402
+
+_ui_altair.enable()

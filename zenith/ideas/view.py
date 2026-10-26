@@ -106,7 +106,7 @@ def _idea_card(idea: dict) -> str:
             sections.append(
                 f'<div style="margin-top:0.4rem;"><b style="color:{THEME.mustard}; '
                 f'font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase;">{label}</b>'
-                f'<div style="font-size:0.88rem; color:#ddd; line-height:1.4;">'
+                f'<div style="font-size:0.88rem; color:{THEME.text}; line-height:1.4;">'
                 f'{_html.escape(str(val))}</div></div>')
     change = nar.get("change_my_mind") or []
     if change:
@@ -114,7 +114,7 @@ def _idea_card(idea: dict) -> str:
         sections.append(
             f'<div style="margin-top:0.4rem;"><b style="color:{THEME.mustard}; font-size:0.78rem; '
             f'letter-spacing:0.06em; text-transform:uppercase;">What Would Change My Mind?</b>'
-            f'<ul style="margin:0.2rem 0 0 1.1rem; font-size:0.88rem; color:#ddd;">{items}</ul></div>')
+            f'<ul style="margin:0.2rem 0 0 1.1rem; font-size:0.88rem; color:{THEME.text};">{items}</ul></div>')
 
     rr_html = (f'<div style="margin-top:0.5rem; font-size:0.85rem; color:{THEME.text}; '
               f'border-top:1px solid {THEME.grid}; padding-top:0.4rem;">{_rr_line(idea)}</div>')

@@ -16,6 +16,7 @@ from .catalog import (AQR65, AQR_DEFS, AQR_SUPPLEMENTAL, CHAR_META, ETF_PROXIES,
                       MAN_STYLES, OSAP_CHAR_MAP)
 from .history import MODELS, family_of, summarize
 from ..config import THEME
+from .. import ui_charts as uc
 from ..ui_theme import section, stamp
 
 ROW_PX = 22                      # px per factor row in bar charts
@@ -92,18 +93,14 @@ COLS = {
 
 # ---------------------------------------------------------------- helpers ---
 def _grad(v, cap: float, color: tuple[int, int, int]) -> str:
-    if v is None or (isinstance(v, float) and pd.isna(v)):
-        return ""
-    a = max(0.0, min(1.0, abs(float(v)) / cap))
-    r, g, b = (int(11 + (c - 11) * a) for c in color)
-    return f"background-color: rgb({r},{g},{b}); color: #fff;"
+    return uc.grad(v, cap, color)          # panel -> colour ramp from THEME
 
 
 def _grad_diverging(v, cap=0.05):
     if v is None or (isinstance(v, float) and pd.isna(v)):
         return ""
-    return (_grad(v, cap, (46, 196, 182)) if float(v) >= 0
-            else _grad(v, cap, (255, 90, 60)))
+    return (_grad(v, cap, uc.rgb(THEME.teal)) if float(v) >= 0
+            else _grad(v, cap, uc.rgb(THEME.coral)))
 
 
 def _colcfg(cols) -> dict:
@@ -348,7 +345,7 @@ def _perf_heatmap(recent: list[dict], order: list[str]) -> None:
             y=alt.Y("factor:N", sort=order, title=None,
                     axis=alt.Axis(labelLimit=0, labelFontSize=11)),
             color=alt.Color("ret:Q",
-                            scale=alt.Scale(scheme="redyellowgreen",
+                            scale=alt.Scale(range=uc.DIV3,
                                             domain=[-cap, cap], clamp=True),
                             legend=alt.Legend(title="monthly ret", format="+.1%")),
             tooltip=["factor", "d", alt.Tooltip("ret:Q", format="+.2%")],
@@ -449,7 +446,7 @@ def _tracker(hist: dict, family: str) -> None:
             sty = (df.style
                    .map(lambda v: _grad_diverging(v, 0.02), subset=["Avg month"])
                    .map(lambda v: _grad_diverging(v, 1.0), subset=["Cumulative"])
-                   .map(lambda v: _grad(v, 1.0, (46, 196, 182)),
+                   .map(lambda v: _grad(v, 1.0, uc.rgb(THEME.teal)),
                         subset=["Hit rate"])
                    .format({"Hit rate": "{:.0%}", "Avg month": _fmt_pct,
                             "Cumulative": _fmt_pct}))
@@ -539,7 +536,7 @@ def _buy_view(ts_block: dict, catalog: dict) -> None:
     df = pd.DataFrame(recs)
     try:
         sty = (df.style
-               .map(lambda v: _grad(v, 0.35, (46, 196, 182)),
+               .map(lambda v: _grad(v, 0.35, uc.rgb(THEME.teal)),
                     subset=["Long-only weight"])
                .format({"Long-only weight": "{:.1%}", "Signal": "{:+.3f}",
                         "AUM $m": lambda v: "" if v is None or pd.isna(v) else f"{v:,.0f}",
@@ -738,7 +735,7 @@ def _aqr_drilldown(ts_rows: list[dict], backtest: dict) -> None:
                     df = pd.DataFrame(rows)
                     try:
                         sty = (df.style
-                               .map(lambda v: _grad(v, 0.08, (46, 196, 182)),
+                               .map(lambda v: _grad(v, 0.08, uc.rgb(THEME.teal)),
                                     subset=["Weight in bin"])
                                .format({"Weight in bin": "{:.2%}",
                                         "Characteristic": "{:.4g}"}))

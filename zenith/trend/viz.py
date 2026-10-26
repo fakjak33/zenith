@@ -143,7 +143,7 @@ def speed_pips(speeds: list[str], direction: int) -> str:
     out = []
     for k in SPEED_KEYS:
         on = k in (speeds or [])
-        out.append(f'<span title="{_esc(SPEED_SHORT[k])}" style="color:{col if on else "#444"};'
+        out.append(f'<span title="{_esc(SPEED_SHORT[k])}" style="color:{col if on else THEME.line};'
                    f'font-size:0.9rem;letter-spacing:1px;">{"●" if on else "○"}</span>')
     return "".join(out)
 
@@ -211,7 +211,7 @@ def universe_panel(summaries: list[dict]) -> str:
         neutral = max(0.0, 1 - bull - bear)
         bar = (f'<div style="display:flex;height:8px;margin:0.45rem 0 0.35rem 0;gap:2px;">'
                f'<div style="flex:{bear};background:{THEME.coral};border-radius:2px 0 0 2px;"></div>'
-               f'<div style="flex:{neutral};background:#333;"></div>'
+               f'<div style="flex:{neutral};background:{THEME.grid};"></div>'
                f'<div style="flex:{bull};background:{THEME.teal};border-radius:0 2px 2px 0;"></div></div>')
         speeds = "".join(
             f'<div title="{_esc(SPEED_SHORT[k])}: {p:.0%} of assets bullish" style="flex:1;text-align:center;">'
@@ -226,7 +226,7 @@ def universe_panel(summaries: list[dict]) -> str:
             f'background:rgba(0,0,0,0.35);padding:0.6rem 0.8rem;">'
             f'<div style="display:flex;justify-content:space-between;align-items:baseline;">'
             f'<div style="font-family:{THEME.font_display};font-size:1.3rem;letter-spacing:0.14em;'
-            f'color:#fff;">{_esc(s["label"]).upper()}</div>'
+            f'color:{THEME.text};">{_esc(s["label"]).upper()}</div>'
             f'<div style="font-size:0.7rem;color:{THEME.muted};">{s["n"]} scored · {_esc(s.get("as_of", ""))}'
             f'</div></div>'
             f'<div style="display:flex;gap:1.2rem;margin-top:0.2rem;font-family:{THEME.font_display};">'
@@ -234,13 +234,13 @@ def universe_panel(summaries: list[dict]) -> str:
             f'<span style="font-size:0.75rem;color:{THEME.muted};"> BULLISH</span></div>'
             f'<div><span style="font-size:2rem;color:{THEME.coral};">{bear:.0%}</span>'
             f'<span style="font-size:0.75rem;color:{THEME.muted};"> BEARISH</span></div>'
-            f'<div><span style="font-size:2rem;color:#fff;">{s["median"]:+.1f}</span>'
+            f'<div><span style="font-size:2rem;color:{THEME.text};">{s["median"]:+.1f}</span>'
             f'<span style="font-size:0.75rem;color:{THEME.muted};"> MEDIAN</span></div></div>'
             f'{bar}'
             f'<div style="font-size:0.7rem;color:{THEME.muted};letter-spacing:0.1em;">'
             f'% BULLISH AT EACH SPEED · FAST → SLOW</div>'
             f'<div style="display:flex;gap:4px;margin-top:0.2rem;">{speeds}</div>'
-            f'<div style="font-size:0.74rem;color:#ccc;margin-top:0.35rem;">'
+            f'<div style="font-size:0.74rem;color:{THEME.text};margin-top:0.35rem;">'
             f'{s["persist_up"]} persistent uptrends · {s["persist_down"]} persistent downtrends</div></div>')
     return ('<div style="display:flex;gap:0.9rem;flex-wrap:wrap;margin:0.3rem 0 1rem 0;">'
             + "".join(cards) + '</div>')
@@ -282,15 +282,15 @@ def event_card(e: dict, name: str = "", forecasts: list | None = None) -> str:
         f'align-items:center;flex-wrap:wrap;">'
         f'<div style="min-width:5.6rem;font-size:0.74rem;color:{THEME.muted};">{_esc(e["date"])}</div>'
         f'<div style="min-width:4.5rem;font-family:{THEME.font_display};font-size:{1.45 if big else 1.2}rem;'
-        f'color:#fff;letter-spacing:0.06em;">{_esc(e["ticker"])}</div>'
+        f'color:{THEME.text};letter-spacing:0.06em;">{_esc(e["ticker"])}</div>'
         f'<div style="flex:1 1 220px;min-width:180px;">'
-        f'<div style="font-size:{0.9 if big else 0.82}rem;color:#eee;">'
+        f'<div style="font-size:{0.9 if big else 0.82}rem;color:{THEME.text};">'
         f'<span style="color:{col};">{"▲" if d > 0 else "▼"}</span> {_esc(event_title(e))}</div>'
         f'<div style="font-size:0.7rem;color:{THEME.muted};overflow:hidden;text-overflow:ellipsis;'
         f'white-space:nowrap;">{_esc(name)}</div></div>'
         f'<div title="speeds involved, fast → slow">{speed_pips(e.get("speeds") or [], d)}</div>'
         + (f'<div>{speed_ribbon(forecasts, cell=10, gap=1)}</div>' if forecasts else "")
-        + f'<div style="min-width:9rem;text-align:right;font-size:0.8rem;color:#ddd;">{move}'
+        + f'<div style="min-width:9rem;text-align:right;font-size:0.8rem;color:{THEME.text};">{move}'
           f'<div style="font-size:0.66rem;color:{THEME.muted};">{states or _esc(e.get("horizon") or "")}'
           f'</div></div></div>')
 
@@ -298,5 +298,5 @@ def event_card(e: dict, name: str = "", forecasts: list | None = None) -> str:
 def structure_chip(label: str) -> str:
     c = STRUCTURE_COLORS.get(label, THEME.muted)
     return (f'<span style="display:inline-block;border:1px solid {c};border-left:4px solid {c};'
-            f'padding:0.15rem 0.5rem;font-size:0.78rem;color:#eee;background:rgba(0,0,0,0.3);">'
+            f'padding:0.15rem 0.5rem;font-size:0.78rem;color:{THEME.text};background:rgba(0,0,0,0.3);">'
             f'{_esc(label)}</span>')

@@ -13,6 +13,8 @@ import streamlit as st
 
 from . import load, DISCLAIMER
 from .sources import GROUPS
+from .. import ui_charts as uc
+from ..config import THEME
 from ..ui_theme import section, card_html
 from ..cas.universe import REGION_LABEL
 
@@ -49,13 +51,7 @@ def _grad_css(v, cap: float = 0.12) -> str:
     coral for losses; sized to read under white text. cap = saturation at ±12%."""
     if v is None or (isinstance(v, float) and pd.isna(v)):
         return ""
-    x = max(-1.0, min(1.0, float(v) / cap))
-    if x >= 0:                                   # gains: #0b0b0b -> seafoam #2ec4b6
-        r, g, b = int(11 + 35 * x), int(11 + 185 * x), int(11 + 171 * x)
-    else:                                        # losses: #0b0b0b -> coral #ff5a3c
-        a = -x
-        r, g, b = int(11 + 244 * a), int(11 + 79 * a), int(11 + 49 * a)
-    return f"background-color: rgb({r},{g},{b}); color: #fff;"
+    return uc.grad_diverging(v, cap)             # panel -> teal (gains) / coral (losses)
 
 
 def render() -> None:
@@ -120,7 +116,7 @@ def _rebased_chart(rows: list[dict], window, intraday: dict | None = None,
             x=alt.X("d:T", title=None, axis=alt.Axis(labelOverlap=False)),
             y=alt.Y("pct:Q", title="% change"),
             color=alt.Color("label:N", legend=alt.Legend(title=None, columns=2, labelLimit=0),
-                            scale=alt.Scale(scheme="tableau20")))
+                            scale=alt.Scale(range=uc.CAT20)))
         line = base.mark_line(interpolate="monotone", strokeWidth=2)
         pts = base.mark_circle(size=42).encode(opacity=alt.condition(sel, alt.value(1), alt.value(0)),
             tooltip=["label", alt.Tooltip("d:T", title="time"),
@@ -198,7 +194,7 @@ def _bar(rows: list[dict], value: str, title: str, height_per: int = 22) -> None
         ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
             x=alt.X(f"{value}_pct:Q", title=f"{title} (%)"),
             y=alt.Y("label:N", sort="-x", title=None, axis=alt.Axis(labelLimit=0)),
-            color=alt.Color(f"{value}_pct:Q", scale=alt.Scale(scheme="redyellowgreen"), legend=None),
+            color=alt.Color(f"{value}_pct:Q", scale=alt.Scale(range=uc.DIV3), legend=None),
             tooltip=["label", f"{value}_pct"],
         ).properties(height=max(180, height_per * len(df))))
         st.altair_chart(ch, use_container_width=True)
@@ -297,8 +293,8 @@ def _curve_chart(curve: dict) -> None:
         base = alt.Chart(df).encode(
             x=alt.X("i:O", sort=None, axis=alt.Axis(title="tenor", labelExpr="")),
             y=alt.Y("yield:Q", title="yield %", scale=alt.Scale(zero=False)))
-        st.altair_chart(base.mark_line(point=True, color="#2a9bc4")
-                        + base.mark_text(dy=-12, color="#fff").encode(text="tenor"),
+        st.altair_chart(base.mark_line(point=True, color=THEME.navy)
+                        + base.mark_text(dy=-12, color=THEME.text).encode(text="tenor"),
                         use_container_width=True)
     except Exception:
         st.line_chart(df.set_index("tenor")["yield"])
@@ -325,7 +321,7 @@ def _rotation(rot: dict) -> None:
             ch = (alt.Chart(df).mark_rect().encode(
                 x=alt.X("region_lbl:N", title=None),
                 y=alt.Y("label:N", title=None),
-                color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
+                color=alt.Color("signal:Q", scale=alt.Scale(range=uc.DIV3, domain=[-1, 1])),
                 tooltip=["label", "region_lbl", "signal"],
             ).properties(height=300))
             st.altair_chart(ch, use_container_width=True)
@@ -415,7 +411,7 @@ def _cas(cas: dict, gx: list[dict]) -> None:
             ch = (alt.Chart(df).mark_bar().encode(
                 x=alt.X("signal:Q", title="composite signal", scale=alt.Scale(domain=[-1, 1])),
                 y=alt.Y("label:N", sort="-x", title=None),
-                color=alt.condition(alt.datum.signal >= 0, alt.value("#2ec4b6"), alt.value("#ff5a3c")),
+                color=alt.condition(alt.datum.signal >= 0, alt.value(THEME.teal), alt.value(THEME.coral)),
                 tooltip=["label", "signal"],
             ).properties(height=max(180, 26 * len(df))))
             st.altair_chart(ch, use_container_width=True)
@@ -447,7 +443,7 @@ def _news(news: list[dict]) -> None:
     chips = []
     for n in news:
         mv = n.get("move")
-        col = "#2ec4b6" if (isinstance(mv, (int, float)) and mv >= 0) else "#ff5a3c"
+        col = THEME.teal if (isinstance(mv, (int, float)) and mv >= 0) else THEME.coral
         tag = f" {mv*100:+.1f}%" if isinstance(mv, (int, float)) else ""
         chips.append(f'<a href="#news-{n["ticker"].lower()}" style="text-decoration:none;'
                      f'border:1px solid {col};color:{col};padding:2px 8px;margin:2px;'

@@ -365,8 +365,8 @@ def _directory_cards(rows: list[dict], rels: dict) -> None:
         name = _html.escape(e["name"])
         link = e.get("url", "")
         title = (f'<a href="{_html.escape(link)}" target="_blank" rel="noopener" '
-                 f'style="color:#fff; text-decoration:none; font-weight:700;">{name} ↗</a>'
-                 if link else f'<span style="color:#fff; font-weight:700;">{name}</span>')
+                 f'style="color:{THEME.text}; text-decoration:none; font-weight:700;">{name} ↗</a>'
+                 if link else f'<span style="color:{THEME.text}; font-weight:700;">{name}</span>')
         meta = " · ".join(x for x in (
             tx.label_of("entity_type", e.get("entity_type", "")),
             tx.label_of("primary_category", e.get("primary_category", "")),
@@ -377,7 +377,7 @@ def _directory_cards(rows: list[dict], rels: dict) -> None:
         related = rels.get(e["id"], [])[:4]
         rel_html = ("".join(
             f'<div style="font-size:0.74rem; color:{THEME.muted};">{_html.escape(lbl)}: '
-            f'<span style="color:#ddd;">{_html.escape(nm)}</span></div>'
+            f'<span style="color:{THEME.text};">{_html.escape(nm)}</span></div>'
             for lbl, nm, _i in related)) if related else ""
         zsrc = (f'<div style="font-size:0.72rem; color:{THEME.teal}; margin-top:0.3rem;">'
                 f'in Zenith: {_html.escape(e["zenith_source"])}</div>') if e.get("zenith_source") else ""

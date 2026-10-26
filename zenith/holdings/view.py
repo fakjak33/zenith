@@ -318,7 +318,7 @@ def _change_heatmap(hist: dict, caps: dict, key: str) -> str | None:
         layers = [base]
         if not absent.empty:
             layers.insert(0, alt.Chart(absent).mark_rect(
-                color="#141414", stroke=THEME.bg, strokeWidth=0.5).encode(
+                color=THEME.panel, stroke=THEME.bg, strokeWidth=0.5).encode(
                     x=alt.X("d:O", title=None),
                     y=alt.Y("label:N", sort=label_order, title=None),
                     tooltip=["label", "d", alt.Tooltip("event:N", title="state")]))
@@ -388,7 +388,7 @@ def _event_heatmap(df: pd.DataFrame, label_order: list[str], key: str,
                             scale=alt.Scale(
                                 domain=["opened", "closed", "held", "not held"],
                                 range=[THEME.mustard, THEME.coral,
-                                       "#1d4f4a", "#141414"]),
+                                       THEME.line, THEME.panel]),
                             legend=alt.Legend(orient="top", labelLimit=0)),
             opacity=alt.condition(pick, alt.value(1.0), alt.value(0.92)),
             tooltip=["label", "d", "state", "asset_class",
@@ -461,7 +461,7 @@ def _matrix(hist: dict, key: str) -> None:
             layers = []
             if not absent.empty:
                 layers.append(alt.Chart(absent).mark_rect(
-                    color="#141414", stroke=THEME.bg, strokeWidth=0.4).encode(
+                    color=THEME.panel, stroke=THEME.bg, strokeWidth=0.4).encode(
                         x=alt.X("d:O", title=None),
                         y=alt.Y("label:N", sort=order, title=None)))
             layers.append(alt.Chart(live).mark_rect(
@@ -585,7 +585,7 @@ def _rankings(changes: dict, key: str) -> None:
         st.markdown(
             "".join(uc.chip(n["name"], THEME.mint, uc.fmt_pct(n["w_to"]))
                     for n in new) or
-            '<span style="color:#888;">None opened in this window.</span>',
+            f'<span style="color:{THEME.muted};">None opened in this window.</span>',
             unsafe_allow_html=True)
     with c4:
         st.markdown(section("Closed positions", 2), unsafe_allow_html=True)
@@ -593,7 +593,7 @@ def _rankings(changes: dict, key: str) -> None:
         st.markdown(
             "".join(uc.chip(n["name"], THEME.coral,
                             f"was {uc.fmt_pct(n['w_from'])}") for n in shut) or
-            '<span style="color:#888;">None closed in this window.</span>',
+            f'<span style="color:{THEME.muted};">None closed in this window.</span>',
             unsafe_allow_html=True)
 
 

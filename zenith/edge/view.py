@@ -94,11 +94,7 @@ _SCREEN_OF = {c["seg"]: k for k, c in CFG.items()}
 
 
 def _grad(v, cap, color):
-    if v is None or (isinstance(v, float) and pd.isna(v)):
-        return ""
-    a = max(0.0, min(1.0, abs(float(v)) / cap))
-    r, g, b = (int(11 + (c - 11) * a) for c in color)
-    return f"background-color: rgb({r},{g},{b}); color:#fff;"
+    return uc.grad(v, cap, color)          # panel -> colour ramp from THEME
 
 
 def _table(rows: list[dict], measure: str, extra: list[str], key: str) -> None:
@@ -110,7 +106,7 @@ def _table(rows: list[dict], measure: str, extra: list[str], key: str) -> None:
     df = pd.DataFrame([{c: r.get(c) for c in cols} for r in rows])
     cap = max(1e-9, df[measure].abs().max()) if measure in df else 1.0
     try:
-        sty = df.style.map(lambda v: _grad(v, cap, (46, 196, 182)), subset=[measure])
+        sty = df.style.map(lambda v: _grad(v, cap, uc.rgb(THEME.teal)), subset=[measure])
         st.dataframe(sty, use_container_width=True, hide_index=True,
                      height=min(430, 45 + 34 * len(df)))
     except Exception:

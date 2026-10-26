@@ -177,7 +177,7 @@ def _nudge_html(n: dict) -> str:
             f'padding:0.45rem 0.65rem; margin:0 0 0.45rem 0;">'
             f'<div style="font-family:{THEME.font_display}; letter-spacing:0.12em; color:{c}; '
             f'font-size:0.95rem; text-transform:uppercase;">{html.escape(n["title"])}</div>'
-            f'<div style="font-size:0.8rem; color:#ddd; line-height:1.4;">{html.escape(n["text"])}</div>'
+            f'<div style="font-size:0.8rem; color:{THEME.text}; line-height:1.4;">{html.escape(n["text"])}</div>'
             + (f'<div style="font-size:0.66rem; color:{THEME.muted}; margin-top:0.2rem;">'
                f'{html.escape(src)}</div>' if src else "") + '</div>')
 
@@ -218,7 +218,7 @@ def _badges(have: set[str]) -> str:
         on = k in have
         c = THEME.teal if on else THEME.grid
         cells.append(f'<div title="{html.escape(desc)}" style="border:1px solid {c}; '
-                     f'padding:0.3rem 0.55rem; color:{"#eee" if on else THEME.muted}; '
+                     f'padding:0.3rem 0.55rem; color:{THEME.text if on else THEME.muted}; '
                      f'font-family:{THEME.font_display}; letter-spacing:0.1em; font-size:0.85rem; '
                      f'{"box-shadow:0 0 8px " + c + ";" if on else "opacity:0.55;"}">'
                      f'{"◆" if on else "◇"} {html.escape(name)}</div>')
@@ -765,7 +765,7 @@ def _log(m: Market, run: clock.Run) -> None:
         out.append(f'<div style="font-size:0.8rem; border-left:3px solid {c}; padding:0.1rem 0.5rem; '
                    f'margin-bottom:0.2rem;"><span style="color:{c}; font-family:{THEME.font_display}; '
                    f'letter-spacing:0.1em;">{html.escape(_day(m, r["i"]))} · {r["kind"].upper()}</span> '
-                   f'<span style="color:#ddd;">{html.escape(_alias_text(r["msg"]))}</span></div>')
+                   f'<span style="color:{THEME.text};">{html.escape(_alias_text(r["msg"]))}</span></div>')
     st.markdown("".join(out), unsafe_allow_html=True)
 
 

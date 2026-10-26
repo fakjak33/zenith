@@ -312,7 +312,7 @@ def _tile(c: dict, selected: bool) -> str:
     border = THEME.text if selected else tc
     return (f'<div style="flex:1 1 170px; min-width:160px; max-width:240px; border:1px solid {border}; '
             f'border-left:5px solid {tc}; padding:0.35rem 0.5rem; background:rgba(0,0,0,0.3);">'
-            f'<div style="font-size:0.86rem; color:#eee;">{html.escape(c["name"])}</div>'
+            f'<div style="font-size:0.86rem; color:{THEME.text};">{html.escape(c["name"])}</div>'
             f'<div style="font-size:0.68rem; color:{THEME.muted};">'
             f'<span style="color:{tc};">{ev["tier"]}</span> · {html.escape(ev["kind"])} · '
             f'{html.escape(c["risk"])}{thin}</div></div>')
@@ -652,10 +652,10 @@ def tree_dot(t: dict) -> str:
     """DOT for one decision tree (decision = mustard diamond-ish box, action = teal, info = muted note)."""
     style = {"decision": f'shape=box, style="rounded,bold", color="{THEME.mustard}"',
              "action": f'shape=box, color="{THEME.teal}"',
-             "info": f'shape=note, color="{THEME.muted}", fontcolor="#bbbbbb"'}
+             "info": f'shape=note, color="{THEME.muted}", fontcolor=THEME.muted'}
     out = ['digraph G {', 'bgcolor="transparent"; rankdir=TB; nodesep=0.3; ranksep=0.35;',
-           'node [fontname="Courier", fontsize=10, margin="0.18,0.08", fontcolor="#eeeeee", penwidth=1.4];',
-           'edge [color="#888888", fontcolor="#bbbbbb", fontsize=9, fontname="Courier"];']
+           'node [fontname="Courier", fontsize=10, margin="0.18,0.08", fontcolor=THEME.text, penwidth=1.4];',
+           'edge [color=THEME.muted, fontcolor=THEME.muted, fontsize=9, fontname="Courier"];']
     for n in t.get("nodes", []):
         txt = re.sub(r"\s*\[[^\]]+\]", "", n["text"]).replace('"', "'")
         out.append(f'"{n["id"]}" [label="{_wrap(txt)}", {style.get(n["type"], style["action"])}];')
@@ -899,7 +899,7 @@ def _sources(a: dict, refs: dict) -> None:
                 color=alt.Color("transcript %:Q", title="transcript %",
                                 scale=alt.Scale(range=[THEME.panel, THEME.teal], domain=[0, 100])),
                 tooltip=["show", "year", "episodes", "transcripts", "transcript %"])
-            text = base.mark_text(fontSize=9, color="#dddddd").encode(text="episodes:Q")
+            text = base.mark_text(fontSize=9, color=THEME.text).encode(text="episodes:Q")
             return (rect + text).properties(height=34 * df["show"].nunique() + 30, width="container")
         uc.render_chart(build, fallback=df)
         tr = cov.get("transcripts", {})

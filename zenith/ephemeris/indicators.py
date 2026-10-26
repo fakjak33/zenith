@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import numpy as np
 
+from ..config import THEME
+
 NAN = np.nan
 
 
@@ -240,7 +242,7 @@ REGISTRY = {
 DEFAULT_SET = [{"id": "sma", "params": {"lengths": "20,50,200"}}, {"id": "volume", "params": {"n": 20}}]
 DAILY_FIVE_SET = DEFAULT_SET
 
-_OV_COLORS = ["#ffc857", "#c46b8b", "#2a9bc4", "#7bdcb5", "#ff8c2b", "#b8b8b8"]
+_OV_COLORS = [THEME.mustard, THEME.mauve, THEME.navy, THEME.mint, THEME.orange, THEME.muted]
 
 
 def _lengths(s) -> list[int]:
@@ -306,29 +308,29 @@ def compute(specs: list[dict], o, h, l, c, v, anchor: int) -> dict:
                          {"name": "DC lo", "color": cc, "values": lo, "style": 0}]
         elif sid == "swings":
             hi, lo = swing_levels(h, l, int(p["k"]))
-            overlays += [{"name": "swing hi", "color": "#ff5a3c", "values": hi, "style": 3, "step": True},
-                         {"name": "swing lo", "color": "#2ec4b6", "values": lo, "style": 3, "step": True}]
+            overlays += [{"name": "swing hi", "color": THEME.coral, "values": hi, "style": 3, "step": True},
+                         {"name": "swing lo", "color": THEME.teal, "values": lo, "style": 3, "step": True}]
         elif sid == "volume":
             vv = np.asarray(v, float)
             panes.append({"name": "VOL", "series": [
                 {"name": "vol", "type": "hist", "values": vv, "updown": True},
-                {"name": f"MA {int(p['n'])}", "type": "line", "color": "#ffc857", "values": sma(vv, int(p["n"]))}],
+                {"name": f"MA {int(p['n'])}", "type": "line", "color": THEME.mustard, "values": sma(vv, int(p["n"]))}],
                 "levels": [], "volume": True})
         elif sid == "rsi":
             panes.append({"name": f"RSI {int(p['n'])}", "series": [
-                {"name": "rsi", "type": "line", "color": "#c46b8b", "values": rsi(c, int(p["n"]))}],
+                {"name": "rsi", "type": "line", "color": THEME.mauve, "values": rsi(c, int(p["n"]))}],
                 "levels": [30, 70], "fixed": [0, 100]})
         elif sid == "macd":
             line, sig, hist = macd(c, int(p["fast"]), int(p["slow"]), int(p["signal"]))
             panes.append({"name": "MACD", "series": [
                 {"name": "hist", "type": "hist", "values": hist, "signed": True},
-                {"name": "macd", "type": "line", "color": "#2a9bc4", "values": line},
-                {"name": "signal", "type": "line", "color": "#ffc857", "values": sig}], "levels": [0]})
+                {"name": "macd", "type": "line", "color": THEME.navy, "values": line},
+                {"name": "signal", "type": "line", "color": THEME.mustard, "values": sig}], "levels": [0]})
         elif sid == "atr":
             with np.errstate(divide="ignore", invalid="ignore"):
                 vals = atr(h, l, c, int(p["n"])) / np.asarray(c, float) * 100
             panes.append({"name": f"ATR% {int(p['n'])}", "series": [
-                {"name": "atr%", "type": "line", "color": "#7bdcb5", "values": vals}], "levels": []})
+                {"name": "atr%", "type": "line", "color": THEME.mint, "values": vals}], "levels": []})
         elif sid == "slope":
             panes.append({"name": f"SMA{int(p['n'])} slope {int(p['m'])}", "series": [
                 {"name": "slope", "type": "hist", "values": ma_slope(c, int(p["n"]), int(p["m"])),
@@ -336,14 +338,14 @@ def compute(specs: list[dict], o, h, l, c, v, anchor: int) -> dict:
         elif sid == "adx":
             a, pdi, mdi = adx(h, l, c, int(p["n"]))
             panes.append({"name": f"ADX {int(p['n'])}", "series": [
-                {"name": "adx", "type": "line", "color": "#ffffff", "values": a},
-                {"name": "+DI", "type": "line", "color": "#2ec4b6", "values": pdi},
-                {"name": "-DI", "type": "line", "color": "#ff5a3c", "values": mdi}], "levels": [25]})
+                {"name": "adx", "type": "line", "color": THEME.text, "values": a},
+                {"name": "+DI", "type": "line", "color": THEME.teal, "values": pdi},
+                {"name": "-DI", "type": "line", "color": THEME.coral, "values": mdi}], "levels": [25]})
         elif sid == "roc":
             panes.append({"name": f"ROC {int(p['n'])}", "series": [
                 {"name": "roc", "type": "hist", "values": roc(c, int(p["n"])), "signed": True}], "levels": [0]})
         elif sid == "obv":
             panes.append({"name": "OBV", "series": [
-                {"name": "obv", "type": "line", "color": "#2a9bc4", "values": obv(c, v)}], "levels": [],
+                {"name": "obv", "type": "line", "color": THEME.navy, "values": obv(c, v)}], "levels": [],
                 "volume": True})
     return {"overlays": overlays, "panes": panes[:4]}

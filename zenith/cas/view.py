@@ -10,11 +10,12 @@ import streamlit as st
 from . import store_cas, registry, contingency
 from .universe import label_of
 from ..config import THEME
+from .. import ui_charts as uc
 from ..ui_theme import section, help_badge
 from . import DISCLAIMER
 from .help_text import HELP
 
-_STATE_COLOR = {"buy": "#2ec4b6", "neutral": "#b8b8b8", "sell": "#ff5a3c"}
+_STATE_COLOR = {"buy": THEME.teal, "neutral": THEME.muted, "sell": THEME.coral}
 
 SEGMENT_TABS = ["Overview", "Signals", "Factor Rotation", "Asset detail",
                 "History & hit-rate", "Calendar", "Playbook", "Models & notes"]
@@ -113,7 +114,7 @@ def _signal_bar(rows: list[dict], value: str = "signal", label: str = "label",
         ch = (alt.Chart(df).mark_bar(cornerRadiusEnd=2).encode(
             x=alt.X(f"{value}:Q", title=None, scale=alt.Scale(domain=list(dom))),
             y=alt.Y(f"{label}:N", sort="-x", title=None, axis=alt.Axis(labelLimit=0)),
-            color=alt.Color(f"{value}:Q", scale=alt.Scale(scheme="redyellowgreen", domain=list(dom)),
+            color=alt.Color(f"{value}:Q", scale=alt.Scale(range=uc.DIV3, domain=list(dom)),
                             legend=None),
             tooltip=[c for c in df.columns if c in (label, value, "region", "group", "family")],
         ).properties(height=max(170, height_per * len(df))))
@@ -280,7 +281,7 @@ def _segment_heatmap(df: pd.DataFrame, cons: list[dict]) -> None:
         ch = (alt.Chart(sub).mark_rect().encode(
             x=alt.X("segment:N", title=None, axis=alt.Axis(labelAngle=-30, labelLimit=0)),
             y=alt.Y("label:N", title=None, sort=order, axis=alt.Axis(labelLimit=0)),
-            color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1]),
+            color=alt.Color("signal:Q", scale=alt.Scale(range=uc.DIV3, domain=[-1, 1]),
                             legend=alt.Legend(title="signal")),
             tooltip=["asset", "segment", alt.Tooltip("signal:Q", format="+.2f")],
         ).properties(height=max(300, 24 * len(picks))))
@@ -363,10 +364,10 @@ def _theme_heatmap(sub: pd.DataFrame) -> None:
     rs["row"] = rs["asset"].map(lambda t: f"{t} · {label_of(t)}"[:26])
     try:
         import altair as alt
-        ch = (alt.Chart(rs).mark_rect(stroke="#0b0b0b", strokeWidth=1).encode(
+        ch = (alt.Chart(rs).mark_rect(stroke=THEME.panel, strokeWidth=1).encode(
             x=alt.X("family:N", title=None, axis=alt.Axis(labelAngle=-30, labelLimit=0)),
             y=alt.Y("row:N", title=None, axis=alt.Axis(labelLimit=0)),
-            color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
+            color=alt.Color("signal:Q", scale=alt.Scale(range=uc.DIV3, domain=[-1, 1])),
             tooltip=["asset", "family", alt.Tooltip("signal:Q", format="+.2f"), "rationale"],
         ).properties(height=max(300, 24 * len(top))))
         st.altair_chart(ch, use_container_width=True)
@@ -401,10 +402,10 @@ def _expanded_heatmap() -> None:
         st.caption("**Core styles × region**")
         try:
             import altair as alt
-            ch = (alt.Chart(styles).mark_rect(stroke="#0b0b0b", strokeWidth=1).encode(
+            ch = (alt.Chart(styles).mark_rect(stroke=THEME.panel, strokeWidth=1).encode(
                 x=alt.X("region:N", title=None, axis=alt.Axis(labelLimit=0)),
                 y=alt.Y("label:N", title=None, axis=alt.Axis(labelLimit=0)),
-                color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
+                color=alt.Color("signal:Q", scale=alt.Scale(range=uc.DIV3, domain=[-1, 1])),
                 tooltip=["asset", "label", "region", alt.Tooltip("signal:Q", format="+.2f")],
             ).properties(height=340))
             st.altair_chart(ch, use_container_width=True)
@@ -493,10 +494,10 @@ def _rotation_timeframe() -> None:
         df = pd.DataFrame(styles)
         try:
             import altair as alt
-            ch = (alt.Chart(df).mark_rect(stroke="#0b0b0b", strokeWidth=1).encode(
+            ch = (alt.Chart(df).mark_rect(stroke=THEME.panel, strokeWidth=1).encode(
                 x=alt.X("region_lbl:N", title=None, axis=alt.Axis(labelLimit=0)),
                 y=alt.Y("label:N", title=None, axis=alt.Axis(labelLimit=0)),
-                color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1])),
+                color=alt.Color("signal:Q", scale=alt.Scale(range=uc.DIV3, domain=[-1, 1])),
                 tooltip=["ticker", "label", "region_lbl", alt.Tooltip("signal:Q", format="+.2f")],
             ).properties(height=340))
             st.altair_chart(ch, use_container_width=True)
@@ -511,10 +512,10 @@ def _frm_heatmap(comp: pd.DataFrame) -> None:
         return
     try:
         import altair as alt
-        chart = (alt.Chart(comp).mark_rect(stroke="#0b0b0b", strokeWidth=1).encode(
+        chart = (alt.Chart(comp).mark_rect(stroke=THEME.panel, strokeWidth=1).encode(
             x=alt.X("region:N", title=None, axis=alt.Axis(labelLimit=0)),
             y=alt.Y("label:N", title=None, axis=alt.Axis(labelLimit=0)),
-            color=alt.Color("signal:Q", scale=alt.Scale(scheme="redyellowgreen", domain=[-1, 1]),
+            color=alt.Color("signal:Q", scale=alt.Scale(range=uc.DIV3, domain=[-1, 1]),
                             legend=alt.Legend(title="composite")),
             tooltip=["asset", "label", "region", "signal", "state"],
         ).properties(height=340))
@@ -565,7 +566,7 @@ def _price_signal_overlay(ticker: str, hist_rows: list[dict] | None = None) -> N
         pdf.columns = ["date", "close"]
         pdf["date"] = pd.to_datetime(pdf["date"])
         pdf["price %"] = (pdf["close"] / pdf["close"].iloc[0] - 1.0) * 100
-        layers.append(alt.Chart(pdf).mark_line(color="#b8b8b8").encode(
+        layers.append(alt.Chart(pdf).mark_line(color=THEME.muted).encode(
             x=alt.X("date:T", title=None),
             y=alt.Y("price %:Q", axis=alt.Axis(title="price % (rebased)")),
             tooltip=["date:T", alt.Tooltip("price %:Q", format="+.1f")]))

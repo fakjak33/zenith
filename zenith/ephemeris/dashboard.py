@@ -16,7 +16,7 @@ from . import START_BALANCE
 from . import report as R
 from . import stats as S
 
-_GREY = "#555555"
+_GREY = THEME.line
 
 
 def _fmt_pct(x, d=1, signed=False):
@@ -99,7 +99,7 @@ def _equity(eq: pd.DataFrame) -> None:
         line = base.mark_line(color=THEME.teal, strokeWidth=2).encode(
             y=alt.Y("equity:Q", title="paper equity ($)", scale=alt.Scale(zero=False)),
             tooltip=["i", alt.Tooltip("equity:Q", format="$,.0f"), alt.Tooltip("ts:T", format="%Y-%m-%d")])
-        start = alt.Chart(pd.DataFrame({"y": [START_BALANCE]})).mark_rule(color="#444", strokeDash=[4, 4]).encode(y="y:Q")
+        start = alt.Chart(pd.DataFrame({"y": [START_BALANCE]})).mark_rule(color=THEME.line, strokeDash=[4, 4]).encode(y="y:Q")
         resets = base.transform_filter("datum.reset").mark_rule(color=THEME.mustard).encode(
             tooltip=[alt.Tooltip("i:Q", title="reset before call")])
         top = (start + line + resets).properties(height=240)
@@ -134,7 +134,7 @@ def _heatmap(t: pd.DataFrame) -> None:
             tooltip=["timeframe", "hz", "n", alt.Tooltip("hit:Q", format=".1%"),
                      alt.Tooltip("base:Q", format=".1%"), alt.Tooltip("edge_pp:Q", format="+.1f", title="edge pp"),
                      alt.Tooltip("exp_ret:Q", format="+.2%", title="avg return"), "small_n"])
-        txt = base.mark_text(fontSize=12, color="#fff", lineBreak="\n", lineHeight=15).encode(text="label:N")
+        txt = base.mark_text(fontSize=12, color=THEME.text, lineBreak="\n", lineHeight=15).encode(text="label:N")
         return (rect + txt).properties(height=84 * rows)
     uc.render_chart(build, fallback=t)
 
@@ -148,7 +148,7 @@ def _table(t: pd.DataFrame, cols: list[str], title: str) -> None:
         "n", "Hit", "Hit lo", "Hit hi", "Base", "Edge", "Edge lo", "Edge hi", "Avg ret", "vs rule", "n<30"]
 
     def grey(row):
-        return ["color:#666" if row["n<30"] else "" for _ in row]
+        return [f"color:{THEME.muted}" if row["n<30"] else "" for _ in row]
     st.markdown(f"**{title}**")
     st.dataframe(show.style.apply(grey, axis=1).format({
         "Hit": "{:.1%}", "Hit lo": "{:.0%}", "Hit hi": "{:.0%}", "Base": "{:.1%}", "Edge": "{:+.1%}",
@@ -232,7 +232,7 @@ def render_stats(repo, player: dict) -> None:
                 y=alt.Y("hit:Q", title="hit rate", axis=alt.Axis(format="%"), scale=alt.Scale(domain=[0, 1])),
                 opacity=alt.condition("datum.small_n", alt.value(0.3), alt.value(1.0)),
                 tooltip=["conviction", "n", alt.Tooltip("hit:Q", format=".1%")])
-            err = alt.Chart(t).mark_rule(color="#fff").encode(
+            err = alt.Chart(t).mark_rule(color=THEME.text).encode(
                 x=alt.X("conviction:N", sort=["Low", "Medium", "High"]), y="hit_lo:Q", y2="hit_hi:Q")
             imp = alt.Chart(t).mark_tick(color=THEME.mustard, thickness=3, size=40).encode(
                 x=alt.X("conviction:N", sort=["Low", "Medium", "High"]), y="implied:Q")

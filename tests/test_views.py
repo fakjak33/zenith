@@ -462,19 +462,42 @@ def test_beta_today_badge_never_raises():
     assert b is None or "CLEAN BETA" in b
 
 
-def test_full_app_renders_with_trend_following_tab():
-    """app.py itself -- every tab in one run. Catches a broken app.py (which
-    no per-view test imports) and confirms the new tab is registered."""
+def test_full_app_renders_home_with_navigation():
+    """app.py itself: password gate, CSS, grouped navigation and the HOME dashboard."""
     from pathlib import Path
     at = AppTest.from_file(str(Path(config.PROJECT_ROOT) / "app.py"), default_timeout=300)
     at.run()
     assert not at.exception, [e.value for e in at.exception]
-    labels = [t.label for t in at.tabs]
-    assert "TREND FOLLOWING" in labels and "MOMENTUM" in labels and "ETF MOMENTUM" in labels
-    assert "CLEAN BETA" in labels
-    assert "EPHEMERIS" in labels
-    assert "OPTIONS VAULT" in labels
-    assert "THETA RUN" in labels
+    text = " ".join(str(m.value) for m in at.markdown)
+    assert "ZENITH<b>//</b>TERM" in text and "MARKET STATUS" in text and "MODULE STATUS" in text
+    errors = " ".join(str(e.value) for e in at.error)
+    assert "could not be loaded" not in errors, errors
+
+
+def test_nav_registry_covers_every_page():
+    from zenith import nav
+    labels = {f.label for f in nav.FEATURES}
+    assert {"TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM", "EDGE SCREENS",
+            "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM", "TREND FOLLOWING", "CLEAN BETA",
+            "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "OPTIONS VAULT", "THETA RUN", "ARCHIVE",
+            "SOURCES"} == labels
+    slugs = [f.slug for f in nav.FEATURES]
+    assert len(slugs) == len(set(slugs)) and "home" not in slugs
+    assert set(f.group for f in nav.FEATURES) <= set(nav.GROUPS)
+
+
+@pytest.mark.parametrize("slug", [
+    "today", "brief", "regimes", "nightday", "cas", "momentum", "etf-momentum", "trend",
+    "factor-momentum", "edge", "pead", "pretom", "ideas", "clean-beta", "holdings",
+    "options-vault", "theta-run", "ephemeris", "index", "archive", "sources"])
+def test_every_nav_page_renders(slug):
+    at = AppTest.from_string("\n".join([
+        "from zenith import nav",
+        f"f = next(x for x in nav.FEATURES if x.slug == {slug!r})",
+        "nav._page_fn(f)()",
+    ]), default_timeout=300)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
     errors = " ".join(str(e.value) for e in at.error)
     assert "could not be loaded" not in errors, errors
 

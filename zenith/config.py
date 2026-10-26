@@ -925,22 +925,39 @@ THETA_START = "2005-01-01"                          # earliest sim date (earning
 
 @dataclass(frozen=True)
 class Theme:
-    bg: str = "#000000"
-    panel: str = "#0b0b0b"
-    grid: str = "#2c2c2c"
-    border: str = "#ffffff"
+    """ZENITH//TERM tokens: a CRT phosphor console. Zenith's meaning colours
+    (teal = up, coral = down, mustard, mauve, navy, mint) are kept; phosphor,
+    amber, cyan and magenta are the terminal chrome. `.streamlit/config.toml`
+    is generated from these (scripts/gen_streamlit_config.py)."""
+    bg: str = "#030605"
+    glass: str = "#06100b"
+    panel: str = "#081510"
+    grid: str = "#0f2a1b"
+    line: str = "#1d4b31"
+    border: str = "#1d4b31"            # = line; kept for older call sites
+    phosphor: str = "#39ff88"
+    phosphor_dim: str = "#1c7a46"
+    amber: str = "#ffb000"
+    cyan: str = "#22e4ff"
+    magenta: str = "#ff2bd6"
     teal: str = "#2ec4b6"
-    coral: str = "#ff5a3c"
+    coral: str = "#ff4d3a"
     orange: str = "#ff8c2b"
     mustard: str = "#ffc857"
     mauve: str = "#c46b8b"
     mint: str = "#7bdcb5"
     navy: str = "#2a9bc4"
-    text: str = "#ffffff"
-    muted: str = "#b8b8b8"
-    font_display: str = "'VT323', 'Space Mono', 'Courier New', monospace"
-    font_body: str = "'Space Mono', 'Share Tech Mono', 'Courier New', monospace"
-    section_colors: tuple = ("#2ec4b6", "#ffc857", "#ff5a3c", "#c46b8b", "#2a9bc4", "#7bdcb5")
+    text: str = "#d6ffe6"
+    muted: str = "#7fa892"
+    pos: str = "#2ec4b6"
+    neg: str = "#ff4d3a"
+    warn: str = "#ffb000"
+    info: str = "#22e4ff"
+    font_display: str = "'VT323', 'Share Tech Mono', monospace"
+    font_body: str = "'Share Tech Mono', 'Space Mono', monospace"
+    font_label: str = "'Silkscreen', 'VT323', monospace"
+    section_colors: tuple = ("#39ff88", "#ffb000", "#22e4ff", "#ff2bd6", "#2ec4b6", "#ffc857")
+    cat: tuple = ("#39ff88", "#22e4ff", "#ffb000", "#ff2bd6", "#2ec4b6", "#ff4d3a", "#c46b8b", "#ffc857")
 
 
 THEME = Theme()
