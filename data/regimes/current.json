@@ -1,26 +1,26 @@
 {
-  "as_of": "2026-10-26",
+  "as_of": "2026-10-27",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-10-31",
   "regime": "Goldilocks / Reflation",
-  "raw_regime": "Goldilocks / Reflation",
-  "transitioning": false,
-  "streak_months": 4,
-  "confidence": 4.5,
+  "raw_regime": "Overheating",
+  "transitioning": true,
+  "streak_months": 1,
+  "confidence": 22.0,
   "growth": {
     "rising": true,
-    "breadth": 0.5454545454545454,
-    "n_rising": 6,
+    "breadth": 0.6363636363636364,
+    "n_rising": 7,
     "n_total": 11,
-    "z": 0.3,
+    "z": 0.305,
     "indicators": [
       {
         "id": "CFNAI",
         "label": "Chicago Fed National Activity Index",
-        "raw_value": -0.04,
-        "z": 0.014,
+        "raw_value": 0.07,
+        "z": 0.071,
         "direction": 1,
-        "rising": false,
+        "rising": true,
         "lag_days": 35,
         "freq": "M"
       },
@@ -127,11 +127,11 @@
     ]
   },
   "inflation": {
-    "rising": false,
-    "breadth": 0.5,
-    "n_rising": 6,
+    "rising": true,
+    "breadth": 0.5833333333333334,
+    "n_rising": 7,
     "n_total": 12,
-    "z": 0.055,
+    "z": 0.106,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -206,8 +206,8 @@
       {
         "id": "T5YIFR",
         "label": "5y5y Forward Inflation Expectation",
-        "raw_value": 2.2,
-        "z": 0.342,
+        "raw_value": 2.21,
+        "z": 0.384,
         "direction": 1,
         "rising": false,
         "lag_days": 0,
@@ -226,10 +226,10 @@
       {
         "id": "MICH",
         "label": "U Mich 1y Inflation Expectation",
-        "raw_value": 4.0,
-        "z": 0.466,
+        "raw_value": 4.6,
+        "z": 1.035,
         "direction": 1,
-        "rising": false,
+        "rising": true,
         "lag_days": 15,
         "freq": "M"
       },
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 2.3,
-    "growth_slope": 0.0197,
-    "growth_r2": 0.579,
-    "infl_slope": -0.0587,
-    "infl_r2": 0.587,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.58) while inflation signals have moderated (trend R²=0.59)."
+    "score": 1.6,
+    "growth_slope": 0.0203,
+    "growth_r2": 0.581,
+    "infl_slope": -0.0473,
+    "infl_r2": 0.417,
+    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.58) while inflation signals have moderated (trend R²=0.42)."
   }
 }

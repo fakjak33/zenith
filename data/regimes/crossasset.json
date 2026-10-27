@@ -1,37 +1,37 @@
 {
-  "as_of": "2026-10-26",
+  "as_of": "2026-10-27",
   "trends": {
     "SPY": {
-      "trend_3m": 0.0283,
+      "trend_3m": 0.0518,
       "direction": "up"
     },
     "TLT": {
-      "trend_3m": -0.0229,
+      "trend_3m": -0.0024,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": -0.0075,
+      "trend_3m": -0.0088,
       "direction": "down"
     },
     "DBC": {
-      "trend_3m": 0.1923,
+      "trend_3m": 0.1482,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.0133,
+      "trend_3m": 0.0208,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": -0.0576,
+      "trend_3m": -0.0376,
       "direction": "down"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 1.084,
-    "defensives_avg": 0.786,
+    "cyclicals_avg": 1.235,
+    "defensives_avg": 0.657,
     "cyclicals_leading": true,
-    "as_of": "2026-10-23"
+    "as_of": "2026-10-27"
   },
   "confirmation": {
     "checks": [
@@ -49,15 +49,15 @@
       },
       {
         "check": "Gold trend (inflation-hedge proxy)",
-        "expects": "falling",
+        "expects": "rising",
         "observed": "falling",
-        "confirms": true
+        "confirms": false
       },
       {
         "check": "Long Treasuries (rate-expectation proxy)",
-        "expects": "rising (yields down)",
+        "expects": "falling (yields up)",
         "observed": "falling",
-        "confirms": false
+        "confirms": true
       }
     ],
     "n_confirming": 2,
@@ -72,8 +72,8 @@
       "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
     },
     {
-      "flag": "Long Treasuries (rate-expectation proxy)",
-      "classifier_expects": "rising (yields down)",
+      "flag": "Gold trend (inflation-hedge proxy)",
+      "classifier_expects": "rising",
       "market_shows": "falling",
       "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
     }
