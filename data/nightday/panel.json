@@ -1,21 +1,21 @@
 {
-  "as_of": "2026-10-27",
+  "as_of": "2026-10-28",
   "disclaimer": "NIGHT & DAY decomposes yfinance OHLC into overnight (close->open) and intraday (open->close) streams (Lou-Polk-Skouras 2019). The overnight tilt is real and persistent in the data but NOT cheaply tradable — capturing it literally pays the open/close spread daily. A research monitor and tilt input, not a trading system.",
   "etfs": {
     "SPY": {
       "name": "SPY",
       "stats": {
-        "cum_overnight": 0.2193,
-        "cum_intraday": 0.1056,
-        "cum_total": 0.3481,
-        "share_overnight": 0.6749,
-        "overnight_avg_bp": 4.18,
-        "intraday_avg_bp": 2.4,
-        "overnight_t": 1.44,
-        "intraday_t": 0.6,
-        "on_mom": 0.0303,
-        "tug": 0.1137,
-        "n_days": 499
+        "cum_overnight": 0.2225,
+        "cum_intraday": 0.109,
+        "cum_total": 0.3557,
+        "share_overnight": 0.6712,
+        "overnight_avg_bp": 4.23,
+        "intraday_avg_bp": 2.46,
+        "overnight_t": 1.46,
+        "intraday_t": 0.62,
+        "on_mom": 0.3671,
+        "tug": 0.1135,
+        "n_days": 500
       },
       "series": [
         {
@@ -328,7 +328,7 @@
           "d": "2025-01-14",
           "overnight": 0.04084,
           "intraday": -0.03375,
-          "total": 0.00571
+          "total": 0.00572
         },
         {
           "d": "2025-01-15",
@@ -682,7 +682,7 @@
           "d": "2025-04-09",
           "overnight": -0.06272,
           "intraday": 0.01418,
-          "total": -0.04943
+          "total": -0.04942
         },
         {
           "d": "2025-04-10",
@@ -998,7 +998,7 @@
         },
         {
           "d": "2025-06-26",
-          "overnight": -0.01416,
+          "overnight": -0.01415,
           "intraday": 0.07857,
           "total": 0.0633
         },
@@ -1088,7 +1088,7 @@
         },
         {
           "d": "2025-07-18",
-          "overnight": -0.0029,
+          "overnight": -0.00289,
           "intraday": 0.09377,
           "total": 0.0906
         },
@@ -1264,7 +1264,7 @@
           "d": "2025-08-28",
           "overnight": 0.02807,
           "intraday": 0.09689,
-          "total": 0.12768
+          "total": 0.12769
         },
         {
           "d": "2025-08-29",
@@ -1964,7 +1964,7 @@
         },
         {
           "d": "2026-02-17",
-          "overnight": 0.12906,
+          "overnight": 0.12907,
           "intraday": 0.05703,
           "total": 0.19345
         },
@@ -2312,7 +2312,7 @@
         },
         {
           "d": "2026-05-11",
-          "overnight": 0.13859,
+          "overnight": 0.1386,
           "intraday": 0.13793,
           "total": 0.29564
         },
@@ -2414,7 +2414,7 @@
         },
         {
           "d": "2026-06-04",
-          "overnight": 0.12657,
+          "overnight": 0.12658,
           "intraday": 0.17775,
           "total": 0.32682
         },
@@ -2482,7 +2482,7 @@
           "d": "2026-06-22",
           "overnight": 0.17077,
           "intraday": 0.11715,
-          "total": 0.30792
+          "total": 0.30793
         },
         {
           "d": "2026-06-23",
@@ -2872,7 +2872,7 @@
           "d": "2026-09-23",
           "overnight": 0.22225,
           "intraday": 0.10651,
-          "total": 0.35242
+          "total": 0.35243
         },
         {
           "d": "2026-09-24",
@@ -2996,7 +2996,7 @@
         },
         {
           "d": "2026-10-22",
-          "overnight": 0.22217,
+          "overnight": 0.22218,
           "intraday": 0.10102,
           "total": 0.34564
         },
@@ -3011,23 +3011,29 @@
           "overnight": 0.21933,
           "intraday": 0.10563,
           "total": 0.34813
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.22247,
+          "intraday": 0.10897,
+          "total": 0.35568
         }
       ]
     },
     "QQQ": {
       "name": "QQQ",
       "stats": {
-        "cum_overnight": 0.3121,
-        "cum_intraday": 0.1068,
-        "cum_total": 0.4522,
-        "share_overnight": 0.7451,
-        "overnight_avg_bp": 5.83,
-        "intraday_avg_bp": 2.65,
-        "overnight_t": 1.48,
-        "intraday_t": 0.53,
-        "on_mom": -0.4848,
-        "tug": 0.2053,
-        "n_days": 499
+        "cum_overnight": 0.3175,
+        "cum_intraday": 0.1163,
+        "cum_total": 0.4706,
+        "share_overnight": 0.732,
+        "overnight_avg_bp": 5.9,
+        "intraday_avg_bp": 2.82,
+        "overnight_t": 1.5,
+        "intraday_t": 0.56,
+        "on_mom": -0.2198,
+        "tug": 0.2012,
+        "n_days": 500
       },
       "series": [
         {
@@ -3134,7 +3140,7 @@
         },
         {
           "d": "2024-11-21",
-          "overnight": 0.01056,
+          "overnight": 0.01055,
           "intraday": 0.00869,
           "total": 0.01934
         },
@@ -3302,7 +3308,7 @@
         },
         {
           "d": "2025-01-03",
-          "overnight": 0.04062,
+          "overnight": 0.04061,
           "intraday": 0.00756,
           "total": 0.04848
         },
@@ -3482,7 +3488,7 @@
         },
         {
           "d": "2025-02-19",
-          "overnight": 0.04646,
+          "overnight": 0.04645,
           "intraday": 0.04239,
           "total": 0.09082
         },
@@ -3572,7 +3578,7 @@
         },
         {
           "d": "2025-03-12",
-          "overnight": 0.04129,
+          "overnight": 0.04128,
           "intraday": -0.07398,
           "total": -0.03575
         },
@@ -4186,7 +4192,7 @@
           "d": "2025-08-07",
           "overnight": 0.05926,
           "intraday": 0.08936,
-          "total": 0.15392
+          "total": 0.15391
         },
         {
           "d": "2025-08-08",
@@ -4564,7 +4570,7 @@
           "d": "2025-11-05",
           "overnight": 0.16498,
           "intraday": 0.08579,
-          "total": 0.26493
+          "total": 0.26492
         },
         {
           "d": "2025-11-06",
@@ -4666,7 +4672,7 @@
           "d": "2025-12-01",
           "overnight": 0.17236,
           "intraday": 0.06838,
-          "total": 0.25253
+          "total": 0.25252
         },
         {
           "d": "2025-12-02",
@@ -4684,7 +4690,7 @@
           "d": "2025-12-04",
           "overnight": 0.17486,
           "intraday": 0.07607,
-          "total": 0.26424
+          "total": 0.26423
         },
         {
           "d": "2025-12-05",
@@ -4846,7 +4852,7 @@
           "d": "2026-01-14",
           "overnight": 0.20268,
           "intraday": 0.04681,
-          "total": 0.25898
+          "total": 0.25897
         },
         {
           "d": "2026-01-15",
@@ -5344,7 +5350,7 @@
           "d": "2026-05-14",
           "overnight": 0.2408,
           "intraday": 0.1803,
-          "total": 0.46452
+          "total": 0.46451
         },
         {
           "d": "2026-05-15",
@@ -5368,7 +5374,7 @@
           "d": "2026-05-20",
           "overnight": 0.22464,
           "intraday": 0.18485,
-          "total": 0.45101
+          "total": 0.451
         },
         {
           "d": "2026-05-21",
@@ -5686,7 +5692,7 @@
           "d": "2026-08-06",
           "overnight": 0.30997,
           "intraday": 0.11122,
-          "total": 0.45566
+          "total": 0.45565
         },
         {
           "d": "2026-08-07",
@@ -5704,7 +5710,7 @@
           "d": "2026-08-11",
           "overnight": 0.32331,
           "intraday": 0.10586,
-          "total": 0.4634
+          "total": 0.46339
         },
         {
           "d": "2026-08-12",
@@ -5902,7 +5908,7 @@
           "d": "2026-09-28",
           "overnight": 0.32878,
           "intraday": 0.13019,
-          "total": 0.50179
+          "total": 0.50178
         },
         {
           "d": "2026-09-29",
@@ -6023,23 +6029,29 @@
           "overnight": 0.31208,
           "intraday": 0.10677,
           "total": 0.45218
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.31746,
+          "intraday": 0.11626,
+          "total": 0.47063
         }
       ]
     },
     "IWM": {
       "name": "IWM",
       "stats": {
-        "cum_overnight": 0.2479,
-        "cum_intraday": 0.0189,
-        "cum_total": 0.2714,
-        "share_overnight": 0.9292,
-        "overnight_avg_bp": 4.82,
-        "intraday_avg_bp": 1.01,
-        "overnight_t": 1.23,
-        "intraday_t": 0.2,
-        "on_mom": -0.4853,
-        "tug": 0.229,
-        "n_days": 499
+        "cum_overnight": 0.2522,
+        "cum_intraday": 0.027,
+        "cum_total": 0.2861,
+        "share_overnight": 0.9032,
+        "overnight_avg_bp": 4.88,
+        "intraday_avg_bp": 1.17,
+        "overnight_t": 1.24,
+        "intraday_t": 0.23,
+        "on_mom": -0.116,
+        "tug": 0.2252,
+        "n_days": 500
       },
       "series": [
         {
@@ -6274,7 +6286,7 @@
           "d": "2024-12-23",
           "overnight": 0.10117,
           "intraday": -0.09348,
-          "total": -0.00176
+          "total": -0.00177
         },
         {
           "d": "2024-12-24",
@@ -9035,23 +9047,29 @@
           "overnight": 0.24787,
           "intraday": 0.01888,
           "total": 0.27143
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.25224,
+          "intraday": 0.02702,
+          "total": 0.28607
         }
       ]
     },
     "MTUM": {
       "name": "MTUM",
       "stats": {
-        "cum_overnight": 0.4601,
-        "cum_intraday": -0.0062,
-        "cum_total": 0.451,
-        "share_overnight": 0.9867,
-        "overnight_avg_bp": 8.21,
-        "intraday_avg_bp": 0.62,
-        "overnight_t": 1.64,
-        "intraday_t": 0.11,
-        "on_mom": -0.8662,
-        "tug": 0.4663,
-        "n_days": 499
+        "cum_overnight": 0.4704,
+        "cum_intraday": 0.0035,
+        "cum_total": 0.4755,
+        "share_overnight": 0.9927,
+        "overnight_avg_bp": 8.33,
+        "intraday_avg_bp": 0.82,
+        "overnight_t": 1.67,
+        "intraday_t": 0.15,
+        "on_mom": -0.6286,
+        "tug": 0.467,
+        "n_days": 500
       },
       "series": [
         {
@@ -9206,7 +9224,7 @@
         },
         {
           "d": "2024-12-04",
-          "overnight": 0.06031,
+          "overnight": 0.06032,
           "intraday": -0.01058,
           "total": 0.0491
         },
@@ -9434,7 +9452,7 @@
         },
         {
           "d": "2025-01-31",
-          "overnight": 0.12016,
+          "overnight": 0.12017,
           "intraday": -0.04947,
           "total": 0.06475
         },
@@ -9890,7 +9908,7 @@
         },
         {
           "d": "2025-05-21",
-          "overnight": -0.00036,
+          "overnight": -0.00035,
           "intraday": 0.10199,
           "total": 0.1016
         },
@@ -10264,7 +10282,7 @@
           "d": "2025-08-20",
           "overnight": 0.07656,
           "intraday": 0.10122,
-          "total": 0.18552
+          "total": 0.18553
         },
         {
           "d": "2025-08-21",
@@ -10300,7 +10318,7 @@
           "d": "2025-08-28",
           "overnight": 0.07483,
           "intraday": 0.1187,
-          "total": 0.20241
+          "total": 0.20242
         },
         {
           "d": "2025-08-29",
@@ -10382,7 +10400,7 @@
         },
         {
           "d": "2025-09-18",
-          "overnight": 0.11512,
+          "overnight": 0.11513,
           "intraday": 0.11753,
           "total": 0.24618
         },
@@ -10460,7 +10478,7 @@
         },
         {
           "d": "2025-10-07",
-          "overnight": 0.12348,
+          "overnight": 0.12349,
           "intraday": 0.10843,
           "total": 0.2453
         },
@@ -11072,7 +11090,7 @@
         },
         {
           "d": "2026-03-05",
-          "overnight": 0.18429,
+          "overnight": 0.1843,
           "intraday": 0.02341,
           "total": 0.21202
         },
@@ -11320,7 +11338,7 @@
           "d": "2026-05-04",
           "overnight": 0.25809,
           "intraday": 0.10969,
-          "total": 0.39608
+          "total": 0.39609
         },
         {
           "d": "2026-05-05",
@@ -11780,7 +11798,7 @@
         },
         {
           "d": "2026-08-24",
-          "overnight": 0.51399,
+          "overnight": 0.514,
           "intraday": -0.02393,
           "total": 0.47776
         },
@@ -12047,23 +12065,29 @@
           "overnight": 0.46008,
           "intraday": -0.0062,
           "total": 0.45104
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.47044,
+          "intraday": 0.00345,
+          "total": 0.47552
         }
       ]
     },
     "VLUE": {
       "name": "VLUE",
       "stats": {
-        "cum_overnight": 0.2787,
-        "cum_intraday": 0.4548,
-        "cum_total": 0.8602,
-        "share_overnight": 0.3799,
-        "overnight_avg_bp": 5.24,
-        "intraday_avg_bp": 8.03,
-        "overnight_t": 1.47,
-        "intraday_t": 1.76,
-        "on_mom": -0.8676,
-        "tug": -0.1762,
-        "n_days": 499
+        "cum_overnight": 0.2875,
+        "cum_intraday": 0.4599,
+        "cum_total": 0.8795,
+        "share_overnight": 0.3847,
+        "overnight_avg_bp": 5.37,
+        "intraday_avg_bp": 8.09,
+        "overnight_t": 1.51,
+        "intraday_t": 1.77,
+        "on_mom": -0.5357,
+        "tug": -0.1724,
+        "n_days": 500
       },
       "series": [
         {
@@ -12446,7 +12470,7 @@
         },
         {
           "d": "2025-01-31",
-          "overnight": 0.03671,
+          "overnight": 0.03672,
           "intraday": -0.02289,
           "total": 0.01298
         },
@@ -12662,7 +12686,7 @@
         },
         {
           "d": "2025-03-25",
-          "overnight": 0.00315,
+          "overnight": 0.00316,
           "intraday": 0.00157,
           "total": 0.00473
         },
@@ -12818,7 +12842,7 @@
         },
         {
           "d": "2025-05-01",
-          "overnight": -0.09772,
+          "overnight": -0.09771,
           "intraday": 0.05448,
           "total": -0.04856
         },
@@ -13018,7 +13042,7 @@
           "d": "2025-06-18",
           "overnight": -0.08564,
           "intraday": 0.11607,
-          "total": 0.02049
+          "total": 0.02048
         },
         {
           "d": "2025-06-20",
@@ -13132,7 +13156,7 @@
           "d": "2025-07-17",
           "overnight": -0.07844,
           "intraday": 0.15402,
-          "total": 0.06349
+          "total": 0.0635
         },
         {
           "d": "2025-07-18",
@@ -13216,7 +13240,7 @@
           "d": "2025-08-06",
           "overnight": -0.07614,
           "intraday": 0.14196,
-          "total": 0.055
+          "total": 0.05501
         },
         {
           "d": "2025-08-07",
@@ -13256,7 +13280,7 @@
         },
         {
           "d": "2025-08-15",
-          "overnight": -0.06359,
+          "overnight": -0.06358,
           "intraday": 0.1652,
           "total": 0.09111
         },
@@ -13274,7 +13298,7 @@
         },
         {
           "d": "2025-08-20",
-          "overnight": -0.06502,
+          "overnight": -0.06501,
           "intraday": 0.16788,
           "total": 0.09195
         },
@@ -13334,7 +13358,7 @@
         },
         {
           "d": "2025-09-04",
-          "overnight": -0.08051,
+          "overnight": -0.0805,
           "intraday": 0.21749,
           "total": 0.11947
         },
@@ -13516,7 +13540,7 @@
           "d": "2025-10-16",
           "overnight": -0.02895,
           "intraday": 0.21063,
-          "total": 0.17557
+          "total": 0.17558
         },
         {
           "d": "2025-10-17",
@@ -14086,7 +14110,7 @@
           "d": "2026-03-05",
           "overnight": -0.01914,
           "intraday": 0.42031,
-          "total": 0.39312
+          "total": 0.39313
         },
         {
           "d": "2026-03-06",
@@ -14188,7 +14212,7 @@
           "d": "2026-03-30",
           "overnight": -0.03304,
           "intraday": 0.35729,
-          "total": 0.31244
+          "total": 0.31245
         },
         {
           "d": "2026-03-31",
@@ -14428,11 +14452,11 @@
           "d": "2026-05-27",
           "overnight": 0.13694,
           "intraday": 0.63059,
-          "total": 0.85389
+          "total": 0.8539
         },
         {
           "d": "2026-05-28",
-          "overnight": 0.13816,
+          "overnight": 0.13817,
           "intraday": 0.63168,
           "total": 0.85712
         },
@@ -14530,7 +14554,7 @@
           "d": "2026-06-22",
           "overnight": 0.24616,
           "intraday": 0.55827,
-          "total": 0.94184
+          "total": 0.94185
         },
         {
           "d": "2026-06-23",
@@ -14854,7 +14878,7 @@
           "d": "2026-09-08",
           "overnight": 0.29689,
           "intraday": 0.49056,
-          "total": 0.93309
+          "total": 0.9331
         },
         {
           "d": "2026-09-09",
@@ -14948,7 +14972,7 @@
         },
         {
           "d": "2026-09-30",
-          "overnight": 0.32902,
+          "overnight": 0.32903,
           "intraday": 0.4237,
           "total": 0.89213
         },
@@ -15059,6 +15083,12 @@
           "overnight": 0.27866,
           "intraday": 0.45482,
           "total": 0.86021
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.28746,
+          "intraday": 0.45986,
+          "total": 0.87952
         }
       ]
     },
@@ -15066,16 +15096,16 @@
       "name": "QUAL",
       "stats": {
         "cum_overnight": 0.0967,
-        "cum_intraday": 0.1536,
-        "cum_total": 0.2651,
-        "share_overnight": 0.3863,
-        "overnight_avg_bp": 2.04,
-        "intraday_avg_bp": 3.2,
+        "cum_intraday": 0.1517,
+        "cum_total": 0.2631,
+        "share_overnight": 0.3893,
+        "overnight_avg_bp": 2.03,
+        "intraday_avg_bp": 3.16,
         "overnight_t": 0.74,
-        "intraday_t": 0.87,
-        "on_mom": -0.0646,
-        "tug": -0.0569,
-        "n_days": 499
+        "intraday_t": 0.86,
+        "on_mom": 0.0637,
+        "tug": -0.055,
+        "n_days": 500
       },
       "series": [
         {
@@ -15794,7 +15824,7 @@
         },
         {
           "d": "2025-04-23",
-          "overnight": -0.06921,
+          "overnight": -0.0692,
           "intraday": -0.01847,
           "total": -0.0864
         },
@@ -16808,7 +16838,7 @@
         },
         {
           "d": "2025-12-23",
-          "overnight": 0.02567,
+          "overnight": 0.02568,
           "intraday": 0.09774,
           "total": 0.12592
         },
@@ -17006,7 +17036,7 @@
         },
         {
           "d": "2026-02-11",
-          "overnight": 0.03983,
+          "overnight": 0.03984,
           "intraday": 0.10243,
           "total": 0.14634
         },
@@ -17774,7 +17804,7 @@
         },
         {
           "d": "2026-08-17",
-          "overnight": 0.08477,
+          "overnight": 0.08478,
           "intraday": 0.16939,
           "total": 0.26853
         },
@@ -17848,7 +17878,7 @@
           "d": "2026-09-02",
           "overnight": 0.07678,
           "intraday": 0.16113,
-          "total": 0.25028
+          "total": 0.25029
         },
         {
           "d": "2026-09-03",
@@ -17932,7 +17962,7 @@
           "d": "2026-09-23",
           "overnight": 0.09994,
           "intraday": 0.14294,
-          "total": 0.25716
+          "total": 0.25717
         },
         {
           "d": "2026-09-24",
@@ -18071,23 +18101,29 @@
           "overnight": 0.09668,
           "intraday": 0.15361,
           "total": 0.26514
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.09668,
+          "intraday": 0.1517,
+          "total": 0.26305
         }
       ]
     },
     "USMV": {
       "name": "USMV",
       "stats": {
-        "cum_overnight": 0.0074,
-        "cum_intraday": 0.1606,
-        "cum_total": 0.1693,
-        "share_overnight": 0.0442,
-        "overnight_avg_bp": 0.21,
-        "intraday_avg_bp": 3.19,
-        "overnight_t": 0.13,
+        "cum_overnight": 0.0048,
+        "cum_intraday": 0.1595,
+        "cum_total": 0.1651,
+        "share_overnight": 0.0292,
+        "overnight_avg_bp": 0.16,
+        "intraday_avg_bp": 3.17,
+        "overnight_t": 0.1,
         "intraday_t": 1.1,
-        "on_mom": 0.3934,
-        "tug": -0.1532,
-        "n_days": 499
+        "on_mom": 0.5852,
+        "tug": -0.1547,
+        "n_days": 500
       },
       "series": [
         {
@@ -18172,7 +18208,7 @@
           "d": "2024-11-15",
           "overnight": 0.01979,
           "intraday": -0.01941,
-          "total": -0.0
+          "total": 0.0
         },
         {
           "d": "2024-11-18",
@@ -18212,7 +18248,7 @@
         },
         {
           "d": "2024-11-26",
-          "overnight": 0.02619,
+          "overnight": 0.0262,
           "intraday": 0.01104,
           "total": 0.03752
         },
@@ -18308,7 +18344,7 @@
         },
         {
           "d": "2024-12-19",
-          "overnight": 0.03531,
+          "overnight": 0.03532,
           "intraday": -0.05692,
           "total": -0.02361
         },
@@ -18746,7 +18782,7 @@
         },
         {
           "d": "2025-04-08",
-          "overnight": -0.02398,
+          "overnight": -0.02397,
           "intraday": -0.03205,
           "total": -0.05526
         },
@@ -18964,7 +19000,7 @@
           "d": "2025-05-30",
           "overnight": -0.02831,
           "intraday": 0.06434,
-          "total": 0.03421
+          "total": 0.03422
         },
         {
           "d": "2025-06-02",
@@ -19024,7 +19060,7 @@
           "d": "2025-06-13",
           "overnight": -0.02956,
           "intraday": 0.06002,
-          "total": 0.02868
+          "total": 0.02869
         },
         {
           "d": "2025-06-16",
@@ -19214,7 +19250,7 @@
         },
         {
           "d": "2025-07-31",
-          "overnight": -0.01856,
+          "overnight": -0.01855,
           "intraday": 0.04728,
           "total": 0.02785
         },
@@ -19280,7 +19316,7 @@
         },
         {
           "d": "2025-08-15",
-          "overnight": -0.011,
+          "overnight": -0.01099,
           "intraday": 0.04949,
           "total": 0.03795
         },
@@ -19402,7 +19438,7 @@
           "d": "2025-09-15",
           "overnight": -0.01821,
           "intraday": 0.06094,
-          "total": 0.04161
+          "total": 0.04162
         },
         {
           "d": "2025-09-16",
@@ -19534,7 +19570,7 @@
           "d": "2025-10-15",
           "overnight": -0.00732,
           "intraday": 0.05784,
-          "total": 0.0501
+          "total": 0.05011
         },
         {
           "d": "2025-10-16",
@@ -20756,7 +20792,7 @@
         },
         {
           "d": "2026-08-10",
-          "overnight": -0.00164,
+          "overnight": -0.00163,
           "intraday": 0.13812,
           "total": 0.13626
         },
@@ -20816,7 +20852,7 @@
         },
         {
           "d": "2026-08-24",
-          "overnight": -0.00023,
+          "overnight": -0.00022,
           "intraday": 0.14486,
           "total": 0.1446
         },
@@ -20872,7 +20908,7 @@
           "d": "2026-09-04",
           "overnight": -0.00953,
           "intraday": 0.14686,
-          "total": 0.13592
+          "total": 0.13593
         },
         {
           "d": "2026-09-08",
@@ -20954,7 +20990,7 @@
         },
         {
           "d": "2026-09-25",
-          "overnight": 0.00232,
+          "overnight": 0.00233,
           "intraday": 0.10926,
           "total": 0.11184
         },
@@ -21083,23 +21119,29 @@
           "overnight": 0.00743,
           "intraday": 0.16065,
           "total": 0.16928
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.0048,
+          "intraday": 0.15952,
+          "total": 0.16509
         }
       ]
     },
     "SPHB": {
       "name": "SPHB",
       "stats": {
-        "cum_overnight": 0.4869,
-        "cum_intraday": 0.0469,
-        "cum_total": 0.5566,
-        "share_overnight": 0.9122,
-        "overnight_avg_bp": 8.68,
-        "intraday_avg_bp": 1.95,
-        "overnight_t": 1.61,
-        "intraday_t": 0.3,
-        "on_mom": -0.8897,
-        "tug": 0.4401,
-        "n_days": 499
+        "cum_overnight": 0.5042,
+        "cum_intraday": 0.065,
+        "cum_total": 0.6021,
+        "share_overnight": 0.8857,
+        "overnight_avg_bp": 8.9,
+        "intraday_avg_bp": 2.3,
+        "overnight_t": 1.65,
+        "intraday_t": 0.35,
+        "on_mom": -0.5588,
+        "tug": 0.4392,
+        "n_days": 500
       },
       "series": [
         {
@@ -21212,7 +21254,7 @@
         },
         {
           "d": "2024-11-22",
-          "overnight": -0.0045,
+          "overnight": -0.00449,
           "intraday": 0.03556,
           "total": 0.03091
         },
@@ -21644,7 +21686,7 @@
         },
         {
           "d": "2025-03-12",
-          "overnight": 0.06381,
+          "overnight": 0.0638,
           "intraday": -0.16018,
           "total": -0.1066
         },
@@ -21724,7 +21766,7 @@
           "d": "2025-03-31",
           "overnight": 0.03288,
           "intraday": -0.15493,
-          "total": -0.12715
+          "total": -0.12714
         },
         {
           "d": "2025-04-01",
@@ -22072,7 +22114,7 @@
           "d": "2025-06-24",
           "overnight": 0.01528,
           "intraday": 0.04746,
-          "total": 0.06348
+          "total": 0.06347
         },
         {
           "d": "2025-06-25",
@@ -22820,7 +22862,7 @@
         },
         {
           "d": "2025-12-19",
-          "overnight": 0.25457,
+          "overnight": 0.25456,
           "intraday": 0.06029,
           "total": 0.3302
         },
@@ -22978,7 +23020,7 @@
           "d": "2026-01-29",
           "overnight": 0.31301,
           "intraday": 0.05793,
-          "total": 0.38908
+          "total": 0.38907
         },
         {
           "d": "2026-01-30",
@@ -24095,23 +24137,29 @@
           "overnight": 0.48692,
           "intraday": 0.04686,
           "total": 0.5566
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.50423,
+          "intraday": 0.06505,
+          "total": 0.60208
         }
       ]
     },
     "IVLU": {
       "name": "IVLU",
       "stats": {
-        "cum_overnight": 0.2313,
-        "cum_intraday": 0.295,
-        "cum_total": 0.5946,
-        "share_overnight": 0.4395,
-        "overnight_avg_bp": 4.51,
-        "intraday_avg_bp": 5.42,
+        "cum_overnight": 0.2307,
+        "cum_intraday": 0.3005,
+        "cum_total": 0.6006,
+        "share_overnight": 0.4343,
+        "overnight_avg_bp": 4.49,
+        "intraday_avg_bp": 5.49,
         "overnight_t": 1.22,
-        "intraday_t": 1.75,
-        "on_mom": -0.8194,
-        "tug": -0.0637,
-        "n_days": 499
+        "intraday_t": 1.78,
+        "on_mom": -0.6673,
+        "tug": -0.0698,
+        "n_days": 500
       },
       "series": [
         {
@@ -24538,7 +24586,7 @@
           "d": "2025-02-11",
           "overnight": 0.03938,
           "intraday": -0.01005,
-          "total": 0.02893
+          "total": 0.02894
         },
         {
           "d": "2025-02-12",
@@ -25804,7 +25852,7 @@
           "d": "2025-12-12",
           "overnight": 0.15037,
           "intraday": 0.21265,
-          "total": 0.395
+          "total": 0.39499
         },
         {
           "d": "2025-12-15",
@@ -27107,23 +27155,29 @@
           "overnight": 0.23132,
           "intraday": 0.29501,
           "total": 0.59458
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.23074,
+          "intraday": 0.30053,
+          "total": 0.60062
         }
       ]
     },
     "FNDE": {
       "name": "FNDE",
       "stats": {
-        "cum_overnight": 0.1973,
-        "cum_intraday": 0.1623,
-        "cum_total": 0.3916,
-        "share_overnight": 0.5487,
-        "overnight_avg_bp": 3.96,
+        "cum_overnight": 0.2037,
+        "cum_intraday": 0.1628,
+        "cum_total": 0.3998,
+        "share_overnight": 0.5558,
+        "overnight_avg_bp": 4.06,
         "intraday_avg_bp": 3.24,
-        "overnight_t": 1.06,
+        "overnight_t": 1.09,
         "intraday_t": 1.08,
-        "on_mom": -1.5988,
-        "tug": 0.035,
-        "n_days": 499
+        "on_mom": -1.3423,
+        "tug": 0.0409,
+        "n_days": 500
       },
       "series": [
         {
@@ -27298,7 +27352,7 @@
           "d": "2024-12-09",
           "overnight": 0.01126,
           "intraday": -0.01113,
-          "total": 0.0
+          "total": -0.0
         },
         {
           "d": "2024-12-10",
@@ -27386,7 +27440,7 @@
         },
         {
           "d": "2024-12-31",
-          "overnight": -0.02134,
+          "overnight": -0.02135,
           "intraday": -0.03523,
           "total": -0.05582
         },
@@ -27568,7 +27622,7 @@
           "d": "2025-02-14",
           "overnight": 0.00732,
           "intraday": -0.00331,
-          "total": 0.00399
+          "total": 0.00398
         },
         {
           "d": "2025-02-18",
@@ -29398,7 +29452,7 @@
           "d": "2026-05-05",
           "overnight": 0.21788,
           "intraday": 0.13955,
-          "total": 0.38784
+          "total": 0.38783
         },
         {
           "d": "2026-05-06",
@@ -29584,7 +29638,7 @@
           "d": "2026-06-18",
           "overnight": 0.23548,
           "intraday": 0.12332,
-          "total": 0.38784
+          "total": 0.38783
         },
         {
           "d": "2026-06-22",
@@ -30119,23 +30173,29 @@
           "overnight": 0.1973,
           "intraday": 0.16227,
           "total": 0.39159
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.20375,
+          "intraday": 0.16284,
+          "total": 0.39977
         }
       ]
     },
     "IMTM": {
       "name": "IMTM",
       "stats": {
-        "cum_overnight": 0.0827,
-        "cum_intraday": 0.2792,
-        "cum_total": 0.385,
-        "share_overnight": 0.2285,
-        "overnight_avg_bp": 1.99,
-        "intraday_avg_bp": 5.24,
-        "overnight_t": 0.5,
-        "intraday_t": 1.5,
-        "on_mom": -1.2746,
-        "tug": -0.1965,
-        "n_days": 499
+        "cum_overnight": 0.0872,
+        "cum_intraday": 0.2872,
+        "cum_total": 0.3994,
+        "share_overnight": 0.2328,
+        "overnight_avg_bp": 2.06,
+        "intraday_avg_bp": 5.35,
+        "overnight_t": 0.52,
+        "intraday_t": 1.54,
+        "on_mom": -0.9968,
+        "tug": -0.2,
+        "n_days": 500
       },
       "series": [
         {
@@ -30272,7 +30332,7 @@
         },
         {
           "d": "2024-11-29",
-          "overnight": -0.01716,
+          "overnight": -0.01715,
           "intraday": 0.00833,
           "total": -0.00897
         },
@@ -33131,23 +33191,29 @@
           "overnight": 0.0827,
           "intraday": 0.2792,
           "total": 0.38499
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.08717,
+          "intraday": 0.2872,
+          "total": 0.3994
         }
       ]
     },
     "PIE": {
       "name": "PIE",
       "stats": {
-        "cum_overnight": -0.0337,
-        "cum_intraday": 0.6997,
-        "cum_total": 0.6424,
-        "share_overnight": -0.046,
-        "overnight_avg_bp": 0.16,
-        "intraday_avg_bp": 11.16,
-        "overnight_t": 0.03,
-        "intraday_t": 2.44,
-        "on_mom": -0.6888,
-        "tug": -0.7335,
-        "n_days": 499
+        "cum_overnight": -0.0352,
+        "cum_intraday": 0.7124,
+        "cum_total": 0.652,
+        "share_overnight": -0.0471,
+        "overnight_avg_bp": 0.13,
+        "intraday_avg_bp": 11.28,
+        "overnight_t": 0.02,
+        "intraday_t": 2.47,
+        "on_mom": -0.4602,
+        "tug": -0.7476,
+        "n_days": 500
       },
       "series": [
         {
@@ -33194,7 +33260,7 @@
         },
         {
           "d": "2024-11-07",
-          "overnight": 0.00464,
+          "overnight": 0.00463,
           "intraday": -0.00752,
           "total": -0.00292
         },
@@ -33224,7 +33290,7 @@
         },
         {
           "d": "2024-11-14",
-          "overnight": 0.01591,
+          "overnight": 0.0159,
           "intraday": -0.05835,
           "total": -0.04337
         },
@@ -33232,7 +33298,7 @@
           "d": "2024-11-15",
           "overnight": 0.01849,
           "intraday": -0.06744,
-          "total": -0.05019
+          "total": -0.0502
         },
         {
           "d": "2024-11-18",
@@ -33436,7 +33502,7 @@
           "d": "2025-01-07",
           "overnight": 0.08952,
           "intraday": -0.13779,
-          "total": -0.0606
+          "total": -0.06061
         },
         {
           "d": "2025-01-08",
@@ -33562,7 +33628,7 @@
           "d": "2025-02-07",
           "overnight": 0.02497,
           "intraday": -0.10254,
-          "total": -0.08013
+          "total": -0.08014
         },
         {
           "d": "2025-02-10",
@@ -33610,7 +33676,7 @@
           "d": "2025-02-20",
           "overnight": 0.02161,
           "intraday": -0.08048,
-          "total": -0.0606
+          "total": -0.06061
         },
         {
           "d": "2025-02-21",
@@ -33982,7 +34048,7 @@
           "d": "2025-05-20",
           "overnight": 0.0162,
           "intraday": -0.05644,
-          "total": -0.04115
+          "total": -0.04116
         },
         {
           "d": "2025-05-21",
@@ -34048,7 +34114,7 @@
           "d": "2025-06-05",
           "overnight": 0.02864,
           "intraday": -0.04933,
-          "total": -0.0221
+          "total": -0.02211
         },
         {
           "d": "2025-06-06",
@@ -34060,7 +34126,7 @@
           "d": "2025-06-09",
           "overnight": 0.02502,
           "intraday": -0.03358,
-          "total": -0.0094
+          "total": -0.00941
         },
         {
           "d": "2025-06-10",
@@ -34106,13 +34172,13 @@
         },
         {
           "d": "2025-06-20",
-          "overnight": -0.00109,
+          "overnight": -0.0011,
           "intraday": -0.01223,
           "total": -0.01331
         },
         {
           "d": "2025-06-23",
-          "overnight": -0.01568,
+          "overnight": -0.01569,
           "intraday": 0.01986,
           "total": 0.00386
         },
@@ -34144,7 +34210,7 @@
           "d": "2025-06-30",
           "overnight": 0.01258,
           "intraday": 0.02063,
-          "total": 0.03348
+          "total": 0.03347
         },
         {
           "d": "2025-07-01",
@@ -34216,7 +34282,7 @@
           "d": "2025-07-17",
           "overnight": -0.04363,
           "intraday": 0.08939,
-          "total": 0.04187
+          "total": 0.04186
         },
         {
           "d": "2025-07-18",
@@ -34246,7 +34312,7 @@
           "d": "2025-07-24",
           "overnight": -0.03592,
           "intraday": 0.09655,
-          "total": 0.05717
+          "total": 0.05716
         },
         {
           "d": "2025-07-25",
@@ -34292,7 +34358,7 @@
         },
         {
           "d": "2025-08-05",
-          "overnight": -0.00312,
+          "overnight": -0.00313,
           "intraday": 0.08226,
           "total": 0.07888
         },
@@ -34418,7 +34484,7 @@
         },
         {
           "d": "2025-09-04",
-          "overnight": -0.00616,
+          "overnight": -0.00617,
           "intraday": 0.1695,
           "total": 0.16229
         },
@@ -34582,7 +34648,7 @@
           "d": "2025-10-13",
           "overnight": -0.02191,
           "intraday": 0.21508,
-          "total": 0.18846
+          "total": 0.18845
         },
         {
           "d": "2025-10-14",
@@ -34606,7 +34672,7 @@
           "d": "2025-10-17",
           "overnight": -0.05359,
           "intraday": 0.24162,
-          "total": 0.17509
+          "total": 0.17508
         },
         {
           "d": "2025-10-20",
@@ -34664,7 +34730,7 @@
         },
         {
           "d": "2025-10-31",
-          "overnight": -0.06695,
+          "overnight": -0.06696,
           "intraday": 0.29178,
           "total": 0.20529
         },
@@ -34688,7 +34754,7 @@
         },
         {
           "d": "2025-11-06",
-          "overnight": -0.08732,
+          "overnight": -0.08733,
           "intraday": 0.31193,
           "total": 0.19737
         },
@@ -34790,7 +34856,7 @@
         },
         {
           "d": "2025-12-02",
-          "overnight": -0.11636,
+          "overnight": -0.11637,
           "intraday": 0.34272,
           "total": 0.18647
         },
@@ -34814,7 +34880,7 @@
         },
         {
           "d": "2025-12-08",
-          "overnight": -0.12039,
+          "overnight": -0.1204,
           "intraday": 0.36126,
           "total": 0.19737
         },
@@ -35000,7 +35066,7 @@
         },
         {
           "d": "2026-01-23",
-          "overnight": -0.14642,
+          "overnight": -0.14643,
           "intraday": 0.52748,
           "total": 0.30382
         },
@@ -35078,7 +35144,7 @@
         },
         {
           "d": "2026-02-11",
-          "overnight": -0.14097,
+          "overnight": -0.14098,
           "intraday": 0.58416,
           "total": 0.36084
         },
@@ -35104,7 +35170,7 @@
           "d": "2026-02-18",
           "overnight": -0.1446,
           "intraday": 0.58444,
-          "total": 0.35534
+          "total": 0.35533
         },
         {
           "d": "2026-02-19",
@@ -35192,13 +35258,13 @@
         },
         {
           "d": "2026-03-11",
-          "overnight": -0.21848,
+          "overnight": -0.21849,
           "intraday": 0.71248,
           "total": 0.33833
         },
         {
           "d": "2026-03-12",
-          "overnight": -0.22987,
+          "overnight": -0.22988,
           "intraday": 0.68391,
           "total": 0.29682
         },
@@ -35258,7 +35324,7 @@
         },
         {
           "d": "2026-03-26",
-          "overnight": -0.20649,
+          "overnight": -0.2065,
           "intraday": 0.62649,
           "total": 0.29063
         },
@@ -35372,7 +35438,7 @@
         },
         {
           "d": "2026-04-23",
-          "overnight": -0.14956,
+          "overnight": -0.14957,
           "intraday": 0.75132,
           "total": 0.48938
         },
@@ -35380,7 +35446,7 @@
           "d": "2026-04-24",
           "overnight": -0.1347,
           "intraday": 0.76,
-          "total": 0.52293
+          "total": 0.52292
         },
         {
           "d": "2026-04-27",
@@ -35648,7 +35714,7 @@
         },
         {
           "d": "2026-06-30",
-          "overnight": -0.04079,
+          "overnight": -0.0408,
           "intraday": 0.75445,
           "total": 0.68288
         },
@@ -35716,7 +35782,7 @@
           "d": "2026-07-16",
           "overnight": -0.06723,
           "intraday": 0.72098,
-          "total": 0.60529
+          "total": 0.60528
         },
         {
           "d": "2026-07-17",
@@ -35726,7 +35792,7 @@
         },
         {
           "d": "2026-07-20",
-          "overnight": -0.11668,
+          "overnight": -0.11669,
           "intraday": 0.70953,
           "total": 0.51006
         },
@@ -35734,7 +35800,7 @@
           "d": "2026-07-21",
           "overnight": -0.08132,
           "intraday": 0.71611,
-          "total": 0.57657
+          "total": 0.57656
         },
         {
           "d": "2026-07-22",
@@ -35806,17 +35872,17 @@
           "d": "2026-08-06",
           "overnight": -0.08723,
           "intraday": 0.78023,
-          "total": 0.62494
+          "total": 0.62493
         },
         {
           "d": "2026-08-07",
-          "overnight": -0.08015,
+          "overnight": -0.08016,
           "intraday": 0.78132,
           "total": 0.63854
         },
         {
           "d": "2026-08-10",
-          "overnight": -0.08411,
+          "overnight": -0.08412,
           "intraday": 0.78462,
           "total": 0.63451
         },
@@ -35920,7 +35986,7 @@
           "d": "2026-09-02",
           "overnight": -0.00322,
           "intraday": 0.69439,
-          "total": 0.68893
+          "total": 0.68892
         },
         {
           "d": "2026-09-03",
@@ -35996,7 +36062,7 @@
         },
         {
           "d": "2026-09-22",
-          "overnight": -0.00423,
+          "overnight": -0.00424,
           "intraday": 0.75592,
           "total": 0.74848
         },
@@ -36050,7 +36116,7 @@
         },
         {
           "d": "2026-10-05",
-          "overnight": 0.02558,
+          "overnight": 0.02557,
           "intraday": 0.75637,
           "total": 0.80128
         },
@@ -36064,7 +36130,7 @@
           "d": "2026-10-07",
           "overnight": 0.02153,
           "intraday": 0.75238,
-          "total": 0.79012
+          "total": 0.79011
         },
         {
           "d": "2026-10-08",
@@ -36092,7 +36158,7 @@
         },
         {
           "d": "2026-10-14",
-          "overnight": 0.00678,
+          "overnight": 0.00677,
           "intraday": 0.73672,
           "total": 0.74848
         },
@@ -36143,23 +36209,29 @@
           "overnight": -0.03375,
           "intraday": 0.69974,
           "total": 0.64238
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": -0.03524,
+          "intraday": 0.71237,
+          "total": 0.65202
         }
       ]
     },
     "IQLT": {
       "name": "IQLT",
       "stats": {
-        "cum_overnight": 0.1044,
-        "cum_intraday": 0.1911,
-        "cum_total": 0.3155,
-        "share_overnight": 0.3534,
-        "overnight_avg_bp": 2.26,
-        "intraday_avg_bp": 3.74,
-        "overnight_t": 0.69,
-        "intraday_t": 1.21,
-        "on_mom": -0.1684,
-        "tug": -0.0867,
-        "n_days": 499
+        "cum_overnight": 0.1071,
+        "cum_intraday": 0.1968,
+        "cum_total": 0.325,
+        "share_overnight": 0.3524,
+        "overnight_avg_bp": 2.31,
+        "intraday_avg_bp": 3.83,
+        "overnight_t": 0.7,
+        "intraday_t": 1.24,
+        "on_mom": 0.1468,
+        "tug": -0.0897,
+        "n_days": 500
       },
       "series": [
         {
@@ -36214,7 +36286,7 @@
           "d": "2024-11-08",
           "overnight": -0.02744,
           "intraday": 0.00249,
-          "total": -0.02502
+          "total": -0.02503
         },
         {
           "d": "2024-11-11",
@@ -36352,7 +36424,7 @@
           "d": "2024-12-12",
           "overnight": -0.01327,
           "intraday": -0.01191,
-          "total": -0.02502
+          "total": -0.02503
         },
         {
           "d": "2024-12-13",
@@ -36994,7 +37066,7 @@
           "d": "2025-05-20",
           "overnight": 0.01753,
           "intraday": 0.06639,
-          "total": 0.08508
+          "total": 0.08507
         },
         {
           "d": "2025-05-21",
@@ -37150,7 +37222,7 @@
           "d": "2025-06-27",
           "overnight": 0.02369,
           "intraday": 0.08061,
-          "total": 0.10621
+          "total": 0.1062
         },
         {
           "d": "2025-06-30",
@@ -37688,7 +37760,7 @@
         },
         {
           "d": "2025-11-04",
-          "overnight": -0.01362,
+          "overnight": -0.01363,
           "intraday": 0.14569,
           "total": 0.13008
         },
@@ -37736,7 +37808,7 @@
         },
         {
           "d": "2025-11-14",
-          "overnight": -0.01648,
+          "overnight": -0.01649,
           "intraday": 0.16886,
           "total": 0.14959
         },
@@ -38176,7 +38248,7 @@
           "d": "2026-03-04",
           "overnight": 0.00484,
           "intraday": 0.24031,
-          "total": 0.24632
+          "total": 0.24631
         },
         {
           "d": "2026-03-05",
@@ -38188,7 +38260,7 @@
           "d": "2026-03-06",
           "overnight": -0.02764,
           "intraday": 0.24521,
-          "total": 0.2108
+          "total": 0.21079
         },
         {
           "d": "2026-03-09",
@@ -38686,7 +38758,7 @@
           "d": "2026-07-07",
           "overnight": 0.0467,
           "intraday": 0.24398,
-          "total": 0.30208
+          "total": 0.30207
         },
         {
           "d": "2026-07-08",
@@ -38734,7 +38806,7 @@
           "d": "2026-07-17",
           "overnight": 0.03805,
           "intraday": 0.25435,
-          "total": 0.30208
+          "total": 0.30207
         },
         {
           "d": "2026-07-20",
@@ -38912,13 +38984,13 @@
         },
         {
           "d": "2026-08-28",
-          "overnight": 0.10657,
+          "overnight": 0.10656,
           "intraday": 0.22901,
           "total": 0.35998
         },
         {
           "d": "2026-08-31",
-          "overnight": 0.10914,
+          "overnight": 0.10913,
           "intraday": 0.22142,
           "total": 0.35472
         },
@@ -38978,7 +39050,7 @@
         },
         {
           "d": "2026-09-15",
-          "overnight": 0.09599,
+          "overnight": 0.09598,
           "intraday": 0.20269,
           "total": 0.31813
         },
@@ -39002,7 +39074,7 @@
         },
         {
           "d": "2026-09-21",
-          "overnight": 0.11847,
+          "overnight": 0.11846,
           "intraday": 0.18958,
           "total": 0.3305
         },
@@ -39046,7 +39118,7 @@
           "d": "2026-09-30",
           "overnight": 0.10166,
           "intraday": 0.18192,
-          "total": 0.30208
+          "total": 0.30207
         },
         {
           "d": "2026-10-01",
@@ -39118,7 +39190,7 @@
           "d": "2026-10-16",
           "overnight": 0.10844,
           "intraday": 0.19321,
-          "total": 0.32261
+          "total": 0.3226
         },
         {
           "d": "2026-10-19",
@@ -39155,23 +39227,29 @@
           "overnight": 0.10444,
           "intraday": 0.1911,
           "total": 0.3155
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": 0.10709,
+          "intraday": 0.1968,
+          "total": 0.32497
         }
       ]
     },
     "XSOE": {
       "name": "XSOE",
       "stats": {
-        "cum_overnight": -0.0076,
-        "cum_intraday": 0.3836,
-        "cum_total": 0.373,
-        "share_overnight": -0.0195,
-        "overnight_avg_bp": 0.49,
-        "intraday_avg_bp": 6.85,
-        "overnight_t": 0.1,
-        "intraday_t": 1.84,
-        "on_mom": -1.5914,
-        "tug": -0.3912,
-        "n_days": 499
+        "cum_overnight": -0.004,
+        "cum_intraday": 0.3915,
+        "cum_total": 0.386,
+        "share_overnight": -0.01,
+        "overnight_avg_bp": 0.56,
+        "intraday_avg_bp": 6.95,
+        "overnight_t": 0.11,
+        "intraday_t": 1.87,
+        "on_mom": -1.3231,
+        "tug": -0.3955,
+        "n_days": 500
       },
       "series": [
         {
@@ -39614,7 +39692,7 @@
         },
         {
           "d": "2025-02-14",
-          "overnight": -0.04007,
+          "overnight": -0.04008,
           "intraday": 0.0131,
           "total": -0.0275
         },
@@ -39932,7 +40010,7 @@
         },
         {
           "d": "2025-05-02",
-          "overnight": -0.06662,
+          "overnight": -0.06663,
           "intraday": 0.05643,
           "total": -0.01396
         },
@@ -39944,7 +40022,7 @@
         },
         {
           "d": "2025-05-06",
-          "overnight": -0.06433,
+          "overnight": -0.06434,
           "intraday": 0.05647,
           "total": -0.01149
         },
@@ -40064,7 +40142,7 @@
         },
         {
           "d": "2025-06-04",
-          "overnight": -0.0472,
+          "overnight": -0.04719,
           "intraday": 0.07268,
           "total": 0.02205
         },
@@ -41066,7 +41144,7 @@
         },
         {
           "d": "2026-02-03",
-          "overnight": 0.13728,
+          "overnight": 0.13729,
           "intraday": 0.15572,
           "total": 0.31438
         },
@@ -41078,7 +41156,7 @@
         },
         {
           "d": "2026-02-05",
-          "overnight": 0.13364,
+          "overnight": 0.13363,
           "intraday": 0.13958,
           "total": 0.29187
         },
@@ -41554,7 +41632,7 @@
           "d": "2026-06-01",
           "overnight": 0.08004,
           "intraday": 0.44947,
-          "total": 0.56548
+          "total": 0.56549
         },
         {
           "d": "2026-06-02",
@@ -42167,6 +42245,12 @@
           "overnight": -0.00763,
           "intraday": 0.38356,
           "total": 0.37301
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": -0.00397,
+          "intraday": 0.3915,
+          "total": 0.38597
         }
       ]
     },
@@ -42174,16 +42258,16 @@
       "name": "EFAV",
       "stats": {
         "cum_overnight": -0.0003,
-        "cum_intraday": 0.3707,
-        "cum_total": 0.3702,
-        "share_overnight": -0.0009,
+        "cum_intraday": 0.365,
+        "cum_total": 0.3645,
+        "share_overnight": -0.001,
         "overnight_avg_bp": 0.14,
-        "intraday_avg_bp": 6.43,
+        "intraday_avg_bp": 6.33,
         "overnight_t": 0.06,
-        "intraday_t": 3.07,
-        "on_mom": 0.8842,
-        "tug": -0.371,
-        "n_days": 499
+        "intraday_t": 3.02,
+        "on_mom": 1.1278,
+        "tug": -0.3653,
+        "n_days": 500
       },
       "series": [
         {
@@ -42614,7 +42698,7 @@
         },
         {
           "d": "2025-02-12",
-          "overnight": -0.01426,
+          "overnight": -0.01425,
           "intraday": 0.01598,
           "total": 0.00149
         },
@@ -42742,7 +42826,7 @@
           "d": "2025-03-14",
           "overnight": 0.01302,
           "intraday": 0.0438,
-          "total": 0.05739
+          "total": 0.0574
         },
         {
           "d": "2025-03-17",
@@ -42928,7 +43012,7 @@
           "d": "2025-04-29",
           "overnight": 0.03253,
           "intraday": 0.07573,
-          "total": 0.11072
+          "total": 0.11073
         },
         {
           "d": "2025-04-30",
@@ -45179,23 +45263,29 @@
           "overnight": -0.00035,
           "intraday": 0.37065,
           "total": 0.37018
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": -0.00035,
+          "intraday": 0.36495,
+          "total": 0.36448
         }
       ]
     },
     "EEMV": {
       "name": "EEMV",
       "stats": {
-        "cum_overnight": -0.1001,
-        "cum_intraday": 0.3771,
-        "cum_total": 0.2393,
-        "share_overnight": -0.2098,
-        "overnight_avg_bp": -1.84,
-        "intraday_avg_bp": 6.58,
-        "overnight_t": -0.55,
-        "intraday_t": 2.58,
-        "on_mom": -1.4838,
-        "tug": -0.4773,
-        "n_days": 499
+        "cum_overnight": -0.0956,
+        "cum_intraday": 0.3819,
+        "cum_total": 0.2498,
+        "share_overnight": -0.2002,
+        "overnight_avg_bp": -1.73,
+        "intraday_avg_bp": 6.63,
+        "overnight_t": -0.52,
+        "intraday_t": 2.61,
+        "on_mom": -1.1334,
+        "tug": -0.4775,
+        "n_days": 500
       },
       "series": [
         {
@@ -45316,7 +45406,7 @@
           "d": "2024-11-25",
           "overnight": -0.01055,
           "intraday": -0.01557,
-          "total": -0.02596
+          "total": -0.02595
         },
         {
           "d": "2024-11-26",
@@ -46450,7 +46540,7 @@
           "d": "2025-08-29",
           "overnight": -0.06641,
           "intraday": 0.13757,
-          "total": 0.06202
+          "total": 0.06203
         },
         {
           "d": "2025-09-02",
@@ -46888,7 +46978,7 @@
           "d": "2025-12-12",
           "overnight": -0.05689,
           "intraday": 0.15351,
-          "total": 0.08789
+          "total": 0.0879
         },
         {
           "d": "2025-12-15",
@@ -47086,7 +47176,7 @@
           "d": "2026-02-02",
           "overnight": -0.04097,
           "intraday": 0.203,
-          "total": 0.15371
+          "total": 0.15372
         },
         {
           "d": "2026-02-03",
@@ -47228,7 +47318,7 @@
         },
         {
           "d": "2026-03-09",
-          "overnight": -0.11252,
+          "overnight": -0.11251,
           "intraday": 0.27077,
           "total": 0.12779
         },
@@ -47974,7 +48064,7 @@
           "d": "2026-09-03",
           "overnight": -0.04953,
           "intraday": 0.38547,
-          "total": 0.31684
+          "total": 0.31685
         },
         {
           "d": "2026-09-04",
@@ -48191,6 +48281,12 @@
           "overnight": -0.10012,
           "intraday": 0.37714,
           "total": 0.23926
+        },
+        {
+          "d": "2026-10-27",
+          "overnight": -0.09559,
+          "intraday": 0.38192,
+          "total": 0.24983
         }
       ]
     }
