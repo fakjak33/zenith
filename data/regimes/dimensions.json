@@ -1,8 +1,8 @@
 {
-  "as_of": "2026-10-27",
+  "as_of": "2026-10-28",
   "dimensions": {
     "monetary": {
-      "composite_z": -0.394,
+      "composite_z": -0.398,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Neutral",
@@ -30,8 +30,8 @@
         {
           "id": "T10Y3M",
           "label": "10y-3m Curve",
-          "raw_value": 0.78,
-          "z": 0.419,
+          "raw_value": 0.77,
+          "z": 0.409,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -48,7 +48,7 @@
         {
           "id": "NET_LIQ",
           "label": "Fed Net Liquidity (WALCL - RRP - TGA)",
-          "raw_value": -24.936,
+          "raw_value": -24.962,
           "z": -0.19,
           "direction": 1,
           "rising": false,
@@ -68,7 +68,7 @@
       ]
     },
     "credit": {
-      "composite_z": 0.812,
+      "composite_z": 0.838,
       "coverage_n": 5,
       "min_coverage": 3,
       "state": "Easy / Expansionary",
@@ -76,8 +76,8 @@
         {
           "id": "BAA10Y",
           "label": "Baa Corporate - 10y Treasury Spread",
-          "raw_value": 1.47,
-          "z": 1.342,
+          "raw_value": 1.45,
+          "z": 1.392,
           "direction": -1,
           "rising": true,
           "lag_days": 0,
@@ -86,8 +86,8 @@
         {
           "id": "AAA10Y",
           "label": "Aaa Corporate - 10y Treasury Spread",
-          "raw_value": 1.0,
-          "z": 0.61,
+          "raw_value": 0.98,
+          "z": 0.686,
           "direction": -1,
           "rising": true,
           "lag_days": 0,
@@ -126,7 +126,7 @@
       ]
     },
     "financial_conditions": {
-      "composite_z": 0.191,
+      "composite_z": 0.229,
       "coverage_n": 4,
       "min_coverage": 3,
       "state": "Neutral",
@@ -164,8 +164,8 @@
         {
           "id": "VIXCLS",
           "label": "VIX",
-          "raw_value": 19.45,
-          "z": -0.111,
+          "raw_value": 18.39,
+          "z": 0.041,
           "direction": -1,
           "rising": false,
           "lag_days": 0,
@@ -222,7 +222,7 @@
       ]
     },
     "volatility": {
-      "composite_z": 0.662,
+      "composite_z": 0.559,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Elevated / Expansion",
@@ -230,8 +230,8 @@
         {
           "id": "OVXCLS",
           "label": "Oil Volatility (OVX)",
-          "raw_value": 60.02,
-          "z": 1.047,
+          "raw_value": 58.71,
+          "z": 0.976,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -240,18 +240,18 @@
         {
           "id": "GVZCLS",
           "label": "Gold Volatility (GVZ)",
-          "raw_value": 24.34,
-          "z": 1.309,
+          "raw_value": 23.55,
+          "z": 1.172,
           "direction": 1,
-          "rising": true,
+          "rising": false,
           "lag_days": 0,
           "freq": "D"
         },
         {
           "id": "TLT_RVOL",
           "label": "TLT Realized Volatility (MOVE proxy)",
-          "raw_value": 11.1537,
-          "z": -0.37,
+          "raw_value": 10.5308,
+          "z": -0.471,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
