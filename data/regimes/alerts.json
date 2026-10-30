@@ -1,21 +1,13 @@
 {
-  "as_of": "2026-10-29",
+  "as_of": "2026-10-30",
   "alerts": [
     {
       "id": "confidence_crossed_30",
       "severity": "medium",
-      "title": "Confidence crossed below 30",
-      "description": "Regime confidence moved from 38 to 22 over 30 days.",
-      "what_changed": "38 → 22",
+      "title": "Confidence crossed above 30",
+      "description": "Regime confidence moved from 30 to 31 over 30 days.",
+      "what_changed": "30 → 31",
       "watch_next": "Check whether breadth is genuinely broadening or concentrated in a few indicators."
-    },
-    {
-      "id": "transition_underway",
-      "severity": "high",
-      "title": "Transition underway toward Overheating",
-      "description": "The raw (unpersisted) regime signal has newly diverged from the declared regime.",
-      "what_changed": "raw regime now reads Overheating",
-      "watch_next": "If this persists 2 more monthly readings it will become the new declared regime."
     }
   ]
 }
