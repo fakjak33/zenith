@@ -1,0 +1,79 @@
+name: VOL SCREENER chains
+
+on:
+  schedule:
+    # 15:35 / 15:50 ET in both EDT (19:xx UTC) and EST (20:xx UTC). The compute
+    # gate runs once per trading day from 15:30 ET, while markets are still live
+    # (delayed quotes ~15 min): after the bell, spreads balloon.
+    - cron: "35 19 * * 1-5"
+    - cron: "50 19 * * 1-5"
+    - cron: "35 20 * * 1-5"
+    - cron: "50 20 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "auto (gated) or force"
+        default: "auto"
+
+permissions:
+  contents: write               # commit data/volscreen/ + publish the history assets
+
+concurrency:
+  group: volscreen
+  cancel-in-progress: false
+
+jobs:
+  volscreen:
+    runs-on: ubuntu-latest
+    # ~320 Cboe chains at a polite 0.35 s gap + IV / GARCH fits: ~15-25 min.
+    timeout-minutes: 75
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Gate (trading day, from 15:30 ET, once a day)
+        id: gate
+        run: echo "go=$(python -m zenith.volscreen.compute --check --action '${{ github.event.inputs.action || 'auto' }}' | tail -1)" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch price store + IV history (release ephemeris-px)
+        if: steps.gate.outputs.go == 'RUN'
+        run: |
+          mkdir -p data/ephemeris/px
+          gh release download ephemeris-px -p daily.parquet -p theta.parquet -D data/ephemeris/px --clobber || true
+          gh release download ephemeris-px -p 'volscreen_*.parquet' -D data/ephemeris/px --clobber || true
+
+      - name: Build screen
+        if: steps.gate.outputs.go == 'RUN'
+        run: python -m zenith.volscreen.compute --action "${{ github.event.inputs.action || 'auto' }}"
+
+      - name: Publish IV history assets
+        if: steps.gate.outputs.go == 'RUN'
+        run: |
+          if [ -f data/volscreen/cache/built.flag ]; then
+            gh release upload ephemeris-px data/ephemeris/px/volscreen_term.parquet data/ephemeris/px/volscreen_surf.parquet --clobber
+            # observed IV history cannot be rebuilt: keep a weekly backup copy
+            if [ "$(date -u +%u)" = "5" ]; then
+              cp data/ephemeris/px/volscreen_term.parquet data/ephemeris/px/volscreen_term_bak.parquet
+              gh release upload ephemeris-px data/ephemeris/px/volscreen_term_bak.parquet --clobber
+            fi
+          fi
+
+      - name: Commit VOL SCREENER data
+        if: steps.gate.outputs.go == 'RUN'
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git pull --rebase --autostash
+          git add -A data/volscreen/
+          if git diff --cached --quiet; then
+            echo "No VOL SCREENER changes."
+          else
+            git commit -m "volscreen: $(date -u +%Y-%m-%d) chains"
+            git push
+          fi

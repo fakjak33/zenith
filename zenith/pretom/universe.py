@@ -23,8 +23,28 @@ VONE_URL = ("https://investor.vanguard.com/investment-products/etfs/profile/api/
             "VONE/portfolio-holding/stock")
 
 
+def dedupe_rows(rows: list[dict]) -> list[dict]:
+    """One row per ticker, keeping the larger weight_pct (None loses).
+
+    VONE is paged 500 at a time and sorted by weight; when weights drift
+    between page requests, names near the page boundary come back on both
+    pages (observed 2026-09: 17 tickers, 0.03 vs 0.02). Keeps first-seen order.
+    """
+    best: dict[str, dict] = {}
+    for r in rows:
+        t = r.get("ticker")
+        cur = best.get(t)
+        if cur is None:
+            best[t] = r
+            continue
+        w, cw = r.get("weight_pct"), cur.get("weight_pct")
+        if w is not None and (cw is None or w > cw):
+            best[t] = r
+    return list(best.values())
+
+
 def parse_vone_items(items: list[dict]) -> list[dict]:
-    """Normalize Vanguard portfolio-holding entities to universe rows."""
+    """Normalize Vanguard portfolio-holding entities to unique universe rows."""
     out = []
     for it in items:
         t = str(it.get("ticker", "")).strip().replace(".", "-").upper()
@@ -37,7 +57,7 @@ def parse_vone_items(items: list[dict]) -> list[dict]:
         out.append({"ticker": t,
                     "name": str(it.get("longName") or it.get("shortName") or t).strip(),
                     "sector": "", "weight_pct": w})
-    return out
+    return dedupe_rows(out)
 
 
 def _fetch_vone() -> list[dict]:
@@ -84,7 +104,7 @@ def _fetch_wikipedia() -> list[dict]:
                     "name": str(row[name]).strip() if name else "",
                     "sector": str(row[sect]).strip() if sect else "",
                     "weight_pct": None})
-    return out
+    return dedupe_rows(out)
 
 
 def _enrich_sectors(rows: list[dict]) -> None:
@@ -106,9 +126,10 @@ def russell1000(max_age_hours: float = 168.0) -> tuple[list[dict], dict]:
     """
     cached = store_cas.cache_get("russell1000", max_age_hours)
     if cached:
-        return cached["rows"], {"source": cached.get("source", "cache"),
-                                "n": len(cached["rows"]),
-                                "weights_source": cached.get("weights_source", "vone")}
+        rows = dedupe_rows(cached["rows"])     # caches written before the fix
+        return rows, {"source": cached.get("source", "cache"),
+                      "n": len(rows),
+                      "weights_source": cached.get("weights_source", "vone")}
     for fn, source, wsrc in ((_fetch_vone, "vanguard_vone", "vone"),
                              (_fetch_wikipedia, "wikipedia", "fallback_equal")):
         try:
@@ -125,7 +146,7 @@ def russell1000(max_age_hours: float = 168.0) -> tuple[list[dict], dict]:
                                      "as_of": store_cas.today_str()})
             return rows, {"source": source, "n": len(rows), "weights_source": wsrc}
     last = pretom_load("universe", {})
-    rows = last.get("rows", [])
+    rows = dedupe_rows(last.get("rows", []))
     return rows, {"source": f"stale:{last.get('source', 'none')}", "n": len(rows),
                   "weights_source": last.get("weights_source", "fallback_equal")}
 

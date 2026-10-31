@@ -1422,6 +1422,56 @@ def screen_vault() -> None:
           f"status {vload('strategies', {}).get('status')}")
 
 
+def screen_volscreen() -> None:
+    from zenith.volscreen import load as vs_load
+    print("\n[VOL SCREENER]")
+    sc = vs_load("screen", {}) or {}
+    rows = sc.get("rows") or []
+    if not rows:
+        warn(True, "volscreen: no screen.json yet")
+        return
+    warn(_days_old(sc.get("as_of", "")) > 4, f"volscreen: as_of {sc.get('as_of')} is stale")
+    tks = [r["ticker"] for r in rows]
+    check(len(tks) == len(set(tks)), "volscreen: no duplicate tickers")
+    bad_iv = [r["ticker"] for r in rows if not (0.02 < ((r.get("iv") or {}).get("30") or 0) < 3.0)]
+    check(not bad_iv, f"volscreen: IV30 inside (2%, 300%) ({bad_iv[:6] if bad_iv else 'ok'})")
+    bad_gap = [r["ticker"] for r in rows if r.get("iv30_cboe") and (r.get("iv") or {}).get("30")
+               and abs(r["iv"]["30"] - r["iv30_cboe"]) > 0.08]
+    warn(bool(bad_gap), f"volscreen: IV30 far from Cboe's own iv30 {bad_gap[:8]}")
+    bad_star = [r["ticker"] for r in rows if (r.get("liq") or {}).get("stars") not in (1, 2, 3, 4)]
+    check(not bad_star, "volscreen: every row has a 1-4 star rating")
+    bad_g = [r["ticker"] for r in rows if (r.get("check") or {}).get("sell", {}).get("grade") not in tuple("ABCDF")]
+    check(not bad_g, "volscreen: every row has a checklist grade")
+    from zenith.volscreen.checklist import STATES
+    check(all(r.get("state") in STATES for r in rows), "volscreen: VRP states are registered labels")
+    sf = (vs_load("surfaces", {}) or {}).get("surf") or {}
+    check(set(sf) == set(tks), "volscreen: a surface for every screened ticker")
+    st = vs_load("status", {}) or {}
+    warn(len(st.get("failures") or {}) > 0.15 * max(1, st.get("n_universe") or 1),
+         f"volscreen: {len(st.get('failures') or {})} chains failed")
+    warn(st.get("session") == "post-close", "volscreen: quotes captured post-close (spreads overstated)")
+
+
+def screen_stratidx() -> None:
+    from zenith.stratidx import load as si_load
+    from zenith.stratidx.registry import INDICES
+    print("\n[STRATEGY INDICES]")
+    ind = (si_load("indices", {}) or {}).get("indices") or {}
+    if not ind:
+        warn(True, "stratidx: no indices.json yet")
+        return
+    check(set(ind) <= set(INDICES), "stratidx: only registered indices")
+    warn(len(ind) < len(INDICES), f"stratidx: missing {sorted(set(INDICES) - set(ind))}")
+    stale = [t for t, v in ind.items() if _days_old(v["perf"]["date"]) > 6]
+    warn(bool(stale), f"stratidx: stale index closes {stale}")
+    meth = (si_load("methodology", {}) or {}).get("links") or {}
+    broken = [t for t, v in meth.items() if not v.get("ok")]
+    warn(bool(broken), f"stratidx: methodology links failing {broken}")
+    br = si_load("breadth", {}) or {}
+    vals = [v for v in (br.get("s5fi") or []) if v is not None]
+    check(all(0 <= v <= 1 for v in vals), "stratidx: breadth inside [0, 1]")
+
+
 def main() -> None:
     screen_brief()
     screen_cas()
@@ -1441,6 +1491,8 @@ def main() -> None:
     screen_index()
     screen_ephemeris()
     screen_vault()
+    screen_volscreen()
+    screen_stratidx()
     print()
     if fails:
         print(f"SCREEN FAILED — {len(fails)} error(s), {len(warns)} warning(s).")
