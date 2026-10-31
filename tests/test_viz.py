@@ -95,3 +95,46 @@ def test_brand_art_well_formed():
                 art.contours(300, 80), art.grid_globe(90)):
         _well_formed(svg)
     assert "<animateTransform" in art.mark(48) and "<animateTransform" not in art.mark(48, animate=False)
+
+
+# ------------------------------------------------------------- volatility --
+
+def _surface_payload():
+    from zenith.viz import surface3d
+    g = [[0.2 + 0.01 * i + 0.005 * j for j in range(9)] for i in range(7)]
+    g[0][0] = None
+    return surface3d.payload("SPY", [str(j) for j in range(9)], [str(i) for i in range(7)],
+                             [("2026-10-29", g), ("2026-10-30", g)],
+                             extras=[{"name": "z", "fmt": "sigma", "grid": g}])
+
+
+def test_surface3d_scene_fills_every_placeholder():
+    from zenith.viz import surface3d
+    p = _surface_payload()
+    assert p["masks"][0][0] is True and p["frames"][-1]["z"][0][0] is not None   # gap filled, flagged
+    p["title"] = "</script><b>x"
+    out = surface3d.scene_html(p, 500)
+    assert not re.search(r"__[A-Z]+__", out)
+    assert "</script><b>" not in out                              # payload cannot close the script
+    assert re.search(r"three@\d+\.\d+\.\d+/", out)                # exact version pinned
+
+
+def test_surface3d_template_has_no_hex_literals():
+    from pathlib import Path
+    tpl = (Path(__file__).resolve().parents[1] / "zenith" / "viz" / "surface3d" / "scene.html").read_text(encoding="utf-8")
+    assert not re.search(r"#[0-9a-fA-F]{6}\b", tpl)
+    for needle in ("text-shadow", "scanline", "VT323"):
+        assert needle not in tpl
+
+
+def test_volviz_svgs_well_formed():
+    from zenith.viz import volviz
+    _well_formed(volviz.state_diagram("ALARM", 3))
+    cell = volviz.term_cell("SPY", {"7": 0.2, "30": 0.18, "90": 0.19}, {"7": 0.2, "30": 0.17, "90": 0.19},
+                            [7, 30, 90], "ALL-CLEAR", True, True)
+    _well_formed(cell)
+    _well_formed(volviz.sigma_strip("30D", 0.25, 0.2, 0.03, 0.15, 0.3))
+    merges = [[0, 1, 0.2, 2], [2, 3, 0.3, 2], [4, 5, 0.9, 4]]
+    _well_formed(volviz.circular_dendrogram(merges, ["A", "B", "C", "D"], [0, 1, 2, 3], [0, 0, 1, 1],
+                                            {"A": "#000000"}, {"A"}))
+    _well_formed(volviz.vix_curve([("9D", 9, 19.0), ("30D", 30, 17.2), ("3M", 93, 20.8)]))

@@ -923,6 +923,83 @@ THETA_FILES = {
 THETA_START = "2005-01-01"                          # earliest sim date (earnings coverage)
 
 
+# --- VOL SCREENER / VOL SURFACE (real option chains, nightly) -----------------
+# Chains come from Cboe's public delayed-quote JSON (free, no key) once a day
+# after the close. Only DERIVED metrics are published: raw chains stay in the
+# gitignored cache. The IV history cannot be rebuilt after the fact (no free
+# historical IV), so it rides on the `ephemeris-px` release like THETA's table.
+VOLSCREEN_DIR = DATA_DIR / "volscreen"
+VOLSCREEN_CACHE_DIR = VOLSCREEN_DIR / "cache"       # raw chains of the day (gitignored)
+VOLSCREEN_TERM_ASSET = "volscreen_term.parquet"     # ticker x date: tenor IVs, RV, VRP, liquidity
+VOLSCREEN_SURF_ASSET = "volscreen_surf.parquet"     # ticker x date x tenor: delta-bucket IVs
+VOLSCREEN_FILES = {
+    "universe": VOLSCREEN_DIR / "universe.json",    # screened symbols + kind / sector
+    "screen": VOLSCREEN_DIR / "screen.json",        # one row per underlying: every metric + checklist
+    "surfaces": VOLSCREEN_DIR / "surfaces.json",    # today's delta x tenor and moneyness grids
+    "baskets": VOLSCREEN_DIR / "baskets.json",      # correlation clusters + uncorrelated basket
+    "garch": VOLSCREEN_DIR / "garch_params.json",   # warm starts for tomorrow's fits
+    "earnings": VOLSCREEN_DIR / "earnings.json",    # report dates per stock, refreshed weekly
+    "status": VOLSCREEN_DIR / "status.json",        # coverage, failures, quote freshness
+    "term_local": EPHEMERIS_PX_DIR / VOLSCREEN_TERM_ASSET,
+    "surf_local": EPHEMERIS_PX_DIR / VOLSCREEN_SURF_ASSET,
+}
+CBOE_QUOTES_URL = "https://cdn.cboe.com/api/global/delayed_quotes/options/{sym}.json"
+VOLSCREEN_TENORS = (7, 14, 30, 60, 90, 180, 365)    # constant-maturity calendar days
+# delta buckets across the smile, left (put wing) to right (call wing); 50 = ATM
+VOLSCREEN_DELTAS = (("10P", -0.10), ("15P", -0.15), ("25P", -0.25), ("35P", -0.35), ("50", 0.50),
+                    ("35C", 0.35), ("25C", 0.25), ("15C", 0.15), ("10C", 0.10))
+VOLSCREEN_MNY = tuple(round(0.80 + 0.025 * i, 3) for i in range(17))   # K/F grid 0.80..1.20
+# Liquidity: points per metric (the star rating is OUR thresholds, in the spirit
+# of tastytrade's 1-4 star rating, not its proprietary formula).
+VOLSCREEN_LIQ = {
+    "opt_vol": ((200_000, 3), (40_000, 2), (8_000, 1)),      # contracts / day (20d avg when known)
+    "oi": ((2_000_000, 3), (400_000, 2), (80_000, 1)),       # total open interest
+    "atm_spread": ((0.01, 3), (0.03, 2), (0.07, 1)),         # (ask-bid)/mid, ~30 DTE ATM
+    "d25_spread": ((0.03, 2), (0.08, 1)),                    # same at the 25-delta wings
+    "strikes": ((15, 1),),                                   # strikes within +-10% (30 DTE)
+    "stars": ((10, 4), (7, 3), (4, 2)),                      # total points -> stars (else 1)
+    # post-close snapshots: spreads are not representative, so rate on volume / OI / depth only
+    "stars_no_spread": ((6, 4), (4, 3), (2, 2)),
+    "surge_x": 2.0,          # today's option volume / 20d median that marks a SURGE
+    "fade_x": 0.55,          # 5d / 20d volume below this marks FADING
+    "core_cv": 0.65,         # coefficient of variation of daily volume for CORE
+    "core_n": 30,            # size of the Core Liquid Basket
+}
+# VRP state machine ("slope is the alarm, VRP the confirmation, slope direction
+# the all-clear"): a practitioner heuristic, thresholds deliberately exposed.
+VOLSCREEN_STATE = {
+    "slope_days": 5,         # OLS window for the VRP slope (vol points / day)
+    "z_window": 60,          # std of daily VRP changes used to standardise the slope
+    "alarm_z": -1.5,         # standardised slope at/below this while VRP > 0 -> ALARM
+    "confirm_buffer": 0.0,   # VRP (decimal vol) at/below -buffer -> CONFIRMED
+    "recover_days": 2,       # consecutive positive-slope days to leave ALARM/CONFIRMED
+    "clear_days": 3,         # consecutive non-negative-slope days with VRP > 0 -> ALL-CLEAR
+}
+# Checklist weights (sum 100). pass = full weight, warn = half, fail = 0.
+VOLSCREEN_CHECK_WEIGHTS = {
+    "sell": {"liquidity": 10, "vrp": 20, "state": 15, "ivr": 15, "term": 10, "rv_trend": 10,
+             "earnings": 10, "skew": 5, "garch": 5},
+    "buy": {"liquidity": 10, "vrp": 20, "state": 10, "ivr": 20, "term": 10, "rv_trend": 15,
+            "earnings": 10, "skew": 5},
+}
+VOLSCREEN_N_STOCKS = 260                            # top Russell 1000 names by dollar volume
+VOLSCREEN_THROTTLE_S = 0.35                         # polite gap between Cboe requests
+
+
+# --- STRATEGY INDICES (Cboe options-strategy benchmarks + breadth) ------------
+STRATIDX_DIR = DATA_DIR / "stratidx"
+STRATIDX_CACHE_DIR = STRATIDX_DIR / "cache"         # raw CSVs (gitignored)
+STRATIDX_FILES = {
+    "indices": STRATIDX_DIR / "indices.json",       # per index: returns, drawdown, Sharpe, signals
+    "regime": STRATIDX_DIR / "regime.json",         # what's-working matrix + environment read
+    "vol_context": STRATIDX_DIR / "vol_context.json",  # VIX term, VVIX, SKEW, COR1M, DSPX
+    "breadth": STRATIDX_DIR / "breadth.json",       # % of S&P 500 above 20/50/200-day SMA
+    "methodology": STRATIDX_DIR / "methodology.json",  # verified methodology links
+    "status": STRATIDX_DIR / "status.json",
+}
+CBOE_INDEX_CSV = "https://cdn.cboe.com/api/global/us_indices/daily_prices/{name}_History.csv"
+
+
 @dataclass(frozen=True)
 class Theme:
     """ZENITH v2 tokens: institutional monospace on pure black. Teal = up /

@@ -479,8 +479,8 @@ def test_nav_registry_covers_every_page():
     labels = {f.label for f in nav.FEATURES}
     assert {"TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM", "EDGE SCREENS",
             "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM", "TREND FOLLOWING", "CLEAN BETA",
-            "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "OPTIONS VAULT", "THETA RUN", "ARCHIVE",
-            "SOURCES"} == labels
+            "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "OPTIONS VAULT", "VOL SCREENER", "VOL SURFACE",
+            "STRATEGY INDICES", "THETA RUN", "ARCHIVE", "SOURCES"} == labels
     slugs = [f.slug for f in nav.FEATURES]
     assert len(slugs) == len(set(slugs)) and "home" not in slugs
     assert set(f.group for f in nav.FEATURES) <= set(nav.GROUPS)
@@ -489,7 +489,8 @@ def test_nav_registry_covers_every_page():
 @pytest.mark.parametrize("slug", [
     "today", "brief", "regimes", "nightday", "cas", "momentum", "etf-momentum", "trend",
     "factor-momentum", "edge", "pead", "pretom", "ideas", "clean-beta", "holdings",
-    "options-vault", "theta-run", "ephemeris", "index", "archive", "sources"])
+    "options-vault", "vol-screener", "vol-surface", "strategy-indices", "theta-run", "ephemeris", "index",
+    "archive", "sources"])
 def test_every_nav_page_renders(slug):
     at = AppTest.from_string("\n".join([
         "from zenith import nav",
@@ -637,3 +638,59 @@ def test_theta_today_badge_never_raises():
     from zenith.theta import view
     b = view.today_badge()
     assert b is None or "THETA RUN" in b
+
+
+# ------------------------------------------------------- VOL SCREENER / SURFACE --
+@pytest.mark.parametrize("sub", ["LIQUIDITY", "SCREEN", "CHECKLIST", "BASKETS", "LEARN"])
+def test_volscreen_sections_render(sub):
+    at, text = _render("\n".join([
+        "import streamlit as st",
+        f"st.session_state['vs_sub'] = {sub!r}",
+        "from zenith.volscreen import view",
+        "view.render()"]))
+    low = text.lower()
+    assert "key findings" in low and "evidence strength" in low
+
+
+@pytest.mark.parametrize("mode", ["SURFACE", "MONEYNESS", "TERRAIN", "CHANGE", "VRP LANDSCAPE"])
+def test_vol_surface_modes_render(mode):
+    at, text = _render("\n".join([
+        "import streamlit as st",
+        f"st.session_state['vsf_mode'] = {mode!r}",
+        "from zenith.volscreen import surface_view",
+        "surface_view.render()"]))
+    assert "key findings" in text.lower()
+
+
+@pytest.mark.parametrize("sub", ["OVERVIEW", "INDICES", "LEARN"])
+def test_strategy_indices_sections_render(sub):
+    at, text = _render("\n".join([
+        "import streamlit as st",
+        f"st.session_state['si_sub'] = {sub!r}",
+        "from zenith.stratidx import view",
+        "view.render()"]))
+    low = text.lower()
+    assert "key findings" in low and "evidence strength" in low
+
+
+def test_vol_pages_render_with_no_data(tmp_path, monkeypatch):
+    for k in ("screen", "baskets", "status", "surfaces"):
+        monkeypatch.setitem(config.VOLSCREEN_FILES, k, tmp_path / f"{k}.json")
+    for k in ("indices", "regime", "vol_context", "breadth", "methodology", "status"):
+        monkeypatch.setitem(config.STRATIDX_FILES, k, tmp_path / f"si_{k}.json")
+    from zenith.stratidx import view as sv
+    from zenith.volscreen import view as vv
+    assert vv.today_badge() is None and sv.today_badge() is None
+    for src in ("from zenith.volscreen import view\nview._data.clear()\nview.render()\n",
+                "from zenith.volscreen import surface_view\nsurface_view._data.clear()\nsurface_view.render()\n",
+                "from zenith.stratidx import view\nview._data.clear()\nview.render()\n"):
+        at = AppTest.from_string(src, default_timeout=120)
+        at.run()
+        assert not at.exception, [e.value for e in at.exception]
+
+
+def test_vol_badges_never_raise():
+    from zenith.stratidx import view as sv
+    from zenith.volscreen import view as vv
+    for b in (vv.today_badge(), sv.today_badge()):
+        assert b is None or "VOL SCREENER" in b or "STRATEGY INDICES" in b

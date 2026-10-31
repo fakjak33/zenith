@@ -1,0 +1,366 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: __BG__; color: __TEXT__; overflow: hidden;
+               font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  #wrap { position: relative; width: 100%; height: __HEIGHT__px; border: 1px solid __LINE__;
+          box-sizing: border-box; background: __BG__; user-select: none; }
+  #gl { position: absolute; inset: 0; cursor: grab; }
+  #gl:active { cursor: grabbing; }
+  .hd { position: absolute; left: 14px; top: 11px; font-size: 11px; letter-spacing: .2em;
+        text-transform: uppercase; pointer-events: none; }
+  .hd small { display: block; color: __MUTED__; font-size: 9.5px; letter-spacing: .13em; margin-top: 4px;
+              text-transform: none; }
+  .ax { position: absolute; font-size: 9px; color: __MUTED__; pointer-events: none; white-space: nowrap;
+        transform: translate(-50%, -50%); }
+  .axt { color: __FAINT__; letter-spacing: .18em; font-size: 8.5px; }
+  #tip { position: absolute; display: none; pointer-events: none; background: __PANEL__;
+         border: 1px solid __LINE__; border-left: 2px solid __ACCENT__; padding: 7px 10px;
+         font-size: 10px; line-height: 1.6; min-width: 160px; }
+  #tip .k { color: __MUTED__; } #tip .v { float: right; margin-left: 14px; }
+  #bar { position: absolute; left: 14px; right: 14px; bottom: 9px; display: flex; gap: 10px;
+         align-items: center; font-size: 10px; color: __MUTED__; }
+  #bar input[type=range] { flex: 1; accent-color: __ACCENT__; }
+  #bar .lab { min-width: 92px; color: __TEXT__; letter-spacing: .1em; }
+  button { background: transparent; border: 1px solid __LINE__; color: __TEXT__; font: inherit;
+           font-size: 10px; padding: 3px 10px; cursor: pointer; letter-spacing: .12em; }
+  button:hover { border-color: __ACCENT__; }
+  #legend { position: absolute; right: 14px; top: 12px; width: 170px; font-size: 9px; color: __MUTED__;
+            text-align: right; pointer-events: none; letter-spacing: .1em; }
+  #legend canvas { width: 170px; height: 7px; display: block; margin: 5px 0 3px auto; }
+  #legend .ends { display: flex; justify-content: space-between; }
+  #inset { position: absolute; right: 14px; bottom: 40px; width: 300px; height: 150px; display: none;
+           background: __PANEL__; border: 1px solid __LINE__; }
+  #msg { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+         color: __MUTED__; font-size: 11px; letter-spacing: .14em; text-align: center; padding: 20px; }
+  #help { position: absolute; left: 14px; bottom: 34px; font-size: 8.5px; color: __FAINT__;
+          letter-spacing: .14em; pointer-events: none; }
+</style></head>
+<body>
+<div id="wrap">
+  <div id="gl"></div>
+  <div class="hd" id="hd"></div>
+  <div id="legend"></div>
+  <div id="labels"></div>
+  <div id="tip"></div>
+  <canvas id="inset"></canvas>
+  <div id="help">DRAG ROTATE · SCROLL ZOOM · HOVER READ · CLICK SLICE · DOUBLE-CLICK RESET</div>
+  <div id="bar"></div>
+  <div id="msg">3D VIEW UNAVAILABLE IN THIS BROWSER — THE 2D VIEWS BELOW CARRY THE SAME DATA</div>
+</div>
+<script type="module">
+const P = __PAYLOAD__;
+const RAMP = __RAMP__;
+const C = { bg: "__BG__", panel: "__PANEL__", line: "__LINE__", text: "__TEXT__", muted: "__MUTED__",
+            faint: "__FAINT__", accent: "__ACCENT__", amber: "__AMBER__" };
+let THREE = null;
+for (const url of ["https://unpkg.com/three@0.160.0/build/three.module.js",
+                   "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"]) {
+  try { THREE = await import(url); break; } catch (e) { /* try the next CDN */ }
+}
+const $ = (id) => document.getElementById(id);
+function fail(e) { if (e) console.error(e); $("msg").style.display = "flex"; $("help").style.display = "none"; }
+if (!THREE) fail(); else { try { main(); } catch (e) { fail(e); } }
+
+function rgb(h) { h = h.replace("#", ""); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16) / 255); }
+function rampAt(t) {
+  t = Math.max(0, Math.min(1, t));
+  for (let i = 1; i < RAMP.length; i++) {
+    if (t <= RAMP[i][0] + 1e-9) {
+      const a = RAMP[i - 1], b = RAMP[i], u = (t - a[0]) / ((b[0] - a[0]) || 1);
+      const ca = rgb(a[1]), cb = rgb(b[1]);
+      return [0, 1, 2].map(k => ca[k] + (cb[k] - ca[k]) * u);
+    }
+  }
+  return rgb(RAMP[RAMP.length - 1][1]);
+}
+function fmt(v, f) {
+  if (v === null || v === undefined || !isFinite(v)) return "—";
+  if (f === "pct") return (v * 100).toFixed(1) + "%";
+  if (f === "pts") return (v >= 0 ? "+" : "") + (v * 100).toFixed(2) + " pts";
+  if (f === "sigma") return (v >= 0 ? "+" : "") + v.toFixed(2) + "σ";
+  return v.toFixed(2);
+}
+// Catmull-Rom resample of one row (smooth surface without inventing extremes)
+function cr(p0, p1, p2, p3, t) {
+  const t2 = t * t, t3 = t2 * t;
+  return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3);
+}
+function resample(arr, S) {
+  const n = arr.length, out = [];
+  for (let i = 0; i < n - 1; i++) for (let s = 0; s < S; s++) {
+    const a = arr[Math.max(0, i - 1)], b = arr[i], c = arr[i + 1], d = arr[Math.min(n - 1, i + 2)];
+    const v = cr(a, b, c, d, s / S), lo = Math.min(b, c), hi = Math.max(b, c);
+    out.push(Math.max(lo, Math.min(hi, v)));
+  }
+  out.push(arr[n - 1]);
+  return out;
+}
+function fine(grid, S) {                     // rows x cols -> fine rows x fine cols
+  const rows = grid.map(r => resample(r, S));
+  const nc = rows[0].length, cols = [];
+  for (let c = 0; c < nc; c++) cols.push(resample(rows.map(r => r[c]), S));
+  const nr = cols[0].length, out = [];
+  for (let r = 0; r < nr; r++) out.push(cols.map(col => col[r]));
+  return out;
+}
+
+function main() {
+  const NY = P.y.ticks.length, NX = P.x.ticks.length, S = 6;
+  const FR = P.frames, last = FR.length - 1;
+  const zmin = P.zmin, zmax = P.zmax, div = !!P.diverging;
+  const W = 2.6, D = 2.0, H = 1.15;
+  const X = (u) => -W / 2 + W * u / (NX - 1);
+  const Z = (v) => D / 2 - D * v / (NY - 1);          // short tenor in front
+  const Yh = (z) => div ? H * 0.5 + H * 0.5 * z / Math.max(Math.abs(zmin), Math.abs(zmax), 1e-9)
+                        : H * (z - zmin) / ((zmax - zmin) || 1);
+  const Tn = (z) => div ? 0.5 + 0.5 * z / Math.max(Math.abs(zmin), Math.abs(zmax), 1e-9)
+                        : (z - zmin) / ((zmax - zmin) || 1);
+
+  $("hd").innerHTML = P.title + (P.subtitle ? `<small>${P.subtitle}</small>` : "");
+  const box = $("gl");
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(new THREE.Color(C.bg), 1);
+  box.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 100);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.78));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(-2, 4, 3); scene.add(sun);
+
+  // ---- surface geometry (rebuilt in place per frame) ----
+  const FY = (NY - 1) * S + 1, FX = (NX - 1) * S + 1, NV = FY * FX;
+  const pos = new Float32Array(NV * 3), col = new Float32Array(NV * 3);
+  const idx = [];
+  for (let r = 0; r < FY - 1; r++) for (let c = 0; c < FX - 1; c++) {
+    const a = r * FX + c, b = a + 1, d = a + FX, e = d + 1;
+    idx.push(a, d, b, b, d, e);
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  geo.setIndex(idx);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide,
+    polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }));
+  scene.add(mesh);
+  // floor heat-shadow: the same colours flattened, faint
+  const fpos = new Float32Array(NV * 3);
+  const fgeo = new THREE.BufferGeometry();
+  fgeo.setAttribute("position", new THREE.BufferAttribute(fpos, 3));
+  fgeo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  fgeo.setIndex(idx);
+  scene.add(new THREE.Mesh(fgeo, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true,
+    opacity: 0.16, side: THREE.DoubleSide, depthWrite: false })));
+  // wire: original grid lines following the surface
+  const wireN = (NY * (FX - 1) + NX * (FY - 1)) * 2;
+  const wpos = new Float32Array(wireN * 3);
+  const wgeo = new THREE.BufferGeometry();
+  wgeo.setAttribute("position", new THREE.BufferAttribute(wpos, 3));
+  scene.add(new THREE.LineSegments(wgeo, new THREE.LineBasicMaterial({ color: C.bg, transparent: true, opacity: 0.55 })));
+  // frame: floor rectangle, back walls, height ticks
+  const fr = [];
+  const y0 = 0, x0 = -W / 2, x1 = W / 2, z0 = -D / 2, z1 = D / 2;
+  const seg = (a, b) => fr.push(...a, ...b);
+  seg([x0, y0, z1], [x1, y0, z1]); seg([x1, y0, z1], [x1, y0, z0]); seg([x1, y0, z0], [x0, y0, z0]); seg([x0, y0, z0], [x0, y0, z1]);
+  seg([x0, y0, z0], [x0, H, z0]); seg([x1, y0, z0], [x1, H, z0]); seg([x0, y0, z1], [x0, H, z1]);
+  for (let k = 1; k <= 4; k++) { const h = H * k / 4; seg([x0, h, z0], [x1, h, z0]); seg([x0, h, z0], [x0, h, z1]); }
+  for (let i = 0; i < NX; i++) seg([X(i), 0, z0], [X(i), 0, z1]);
+  for (let j = 0; j < NY; j++) seg([x0, 0, Z(j)], [x1, 0, Z(j)]);
+  const fgeo2 = new THREE.BufferGeometry();
+  fgeo2.setAttribute("position", new THREE.BufferAttribute(new Float32Array(fr), 3));
+  scene.add(new THREE.LineSegments(fgeo2, new THREE.LineBasicMaterial({ color: C.line })));
+  // hover cross-hairs + marker
+  const hl = new THREE.BufferGeometry();
+  const hpos = new Float32Array((FX + FY) * 3 * 2);
+  hl.setAttribute("position", new THREE.BufferAttribute(hpos, 3));
+  const hline = new THREE.LineSegments(hl, new THREE.LineBasicMaterial({ color: C.text }));
+  hline.visible = false; scene.add(hline);
+  const dot = new THREE.Mesh(new THREE.SphereGeometry(0.022, 12, 12), new THREE.MeshBasicMaterial({ color: C.text }));
+  dot.visible = false; scene.add(dot);
+
+  let cur = null;                                    // current fine grid (values)
+  function setGrid(grid) {
+    cur = fine(grid, S);
+    for (let r = 0; r < FY; r++) for (let c = 0; c < FX; c++) {
+      const i = r * FX + c, z = cur[r][c];
+      const x = X(c / S), zz = Z(r / S), y = Yh(z);
+      pos[3 * i] = x; pos[3 * i + 1] = y; pos[3 * i + 2] = zz;
+      fpos[3 * i] = x; fpos[3 * i + 1] = 0.001; fpos[3 * i + 2] = zz;
+      const k = rampAt(Tn(z)); col[3 * i] = k[0]; col[3 * i + 1] = k[1]; col[3 * i + 2] = k[2];
+    }
+    let w = 0;
+    const put = (r, c) => { const i = r * FX + c; wpos[w++] = pos[3 * i]; wpos[w++] = pos[3 * i + 1] + 0.002; wpos[w++] = pos[3 * i + 2]; };
+    for (let j = 0; j < NY; j++) for (let c = 0; c < FX - 1; c++) { put(j * S, c); put(j * S, c + 1); }
+    for (let i = 0; i < NX; i++) for (let r = 0; r < FY - 1; r++) { put(r, i * S); put(r + 1, i * S); }
+    geo.attributes.position.needsUpdate = true; geo.attributes.color.needsUpdate = true;
+    fgeo.attributes.position.needsUpdate = true; fgeo.attributes.color.needsUpdate = true;
+    wgeo.attributes.position.needsUpdate = true;
+    geo.computeVertexNormals(); geo.computeBoundingSphere(); wgeo.computeBoundingSphere();
+  }
+  function lerpGrid(a, b, t) { return a.map((row, j) => row.map((v, i) => v + (b[j][i] - v) * t)); }
+
+  // ---- labels ----
+  const labels = $("labels");
+  const L = [];
+  function lab(text, v3, cls) { const d = document.createElement("div"); d.className = "ax " + (cls || ""); d.textContent = text; labels.appendChild(d); L.push([d, new THREE.Vector3(...v3)]); }
+  const ex = P.x.every || 1, ey = P.y.every || 1;
+  P.x.ticks.forEach((t, i) => { if (i % ex === 0 || i === NX - 1) lab(t, [X(i), 0, z1 + 0.13]); });
+  P.y.ticks.forEach((t, j) => { if (j % ey === 0 || j === NY - 1) lab(t, [x1 + 0.22, 0, Z(j)]); });
+  for (let k = 0; k <= 4; k++) {
+    const zv = div ? (-1 + k / 2) * Math.max(Math.abs(zmin), Math.abs(zmax)) : zmin + (zmax - zmin) * k / 4;
+    lab(fmt(zv, P.z.fmt), [x0 - 0.16, H * k / 4, z0]);
+  }
+  lab(P.x.label, [0, 0, z1 + 0.32], "axt");
+  lab(P.y.label, [x1 + 0.48, 0, 0], "axt");
+  lab(P.z.label, [x0 - 0.18, H + 0.14, z0], "axt");
+
+  // ---- legend ----
+  const lg = $("legend");
+  lg.innerHTML = `<div>${P.z.label}</div><canvas width="170" height="7"></canvas><div class="ends"><span>${fmt(zmin, P.z.fmt)}</span><span>${fmt(zmax, P.z.fmt)}</span></div>`;
+  const lc = lg.querySelector("canvas").getContext("2d");
+  for (let x = 0; x < 170; x++) { const k = rampAt(x / 169); lc.fillStyle = `rgb(${k.map(v => Math.round(v * 255)).join(",")})`; lc.fillRect(x, 0, 1, 7); }
+
+  // ---- camera (spherical orbit, render on demand) ----
+  const target = new THREE.Vector3(0, H * 0.38, 0);
+  const home = { th: 0.72, ph: 1.0, r: 5.7 };
+  const cam = { th: home.th, ph: 0.22, r: home.r };
+  function place() {
+    camera.position.set(target.x + cam.r * Math.sin(cam.ph) * Math.sin(cam.th),
+                        target.y + cam.r * Math.cos(cam.ph),
+                        target.z + cam.r * Math.sin(cam.ph) * Math.cos(cam.th));
+    camera.lookAt(target);
+  }
+  function size() {
+    const w = box.clientWidth, h = box.clientHeight;
+    renderer.setSize(w, h, false); renderer.domElement.style.width = w + "px"; renderer.domElement.style.height = h + "px";
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    // keep the whole box in frame on narrow (phone / split-pane) widths
+    home.r = Math.max(5.7, 8.2 / Math.max(camera.aspect, 0.3));
+    if (!zoomed) cam.r = home.r;
+  }
+  let zoomed = false;
+  const v = new THREE.Vector3();
+  function render() {
+    place(); renderer.render(scene, camera);
+    const w = box.clientWidth, h = box.clientHeight;
+    for (const [d, p] of L) { v.copy(p).project(camera); d.style.left = ((v.x + 1) / 2 * w) + "px"; d.style.top = ((1 - v.y) / 2 * h) + "px"; d.style.display = v.z < 1 ? "" : "none"; }
+  }
+  let pending = false;
+  const req = () => { if (!pending) { pending = true; requestAnimationFrame(() => { pending = false; render(); }); } };
+  window.addEventListener("resize", () => { size(); req(); });
+
+  let drag = null, moved = 0;
+  box.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY, th: cam.th, ph: cam.ph }; moved = 0; box.setPointerCapture(e.pointerId); });
+  box.addEventListener("pointerup", (e) => { if (drag && moved < 4) pick(e, true); drag = null; });
+  box.addEventListener("pointermove", (e) => {
+    if (drag) {
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y; moved = Math.max(moved, Math.abs(dx) + Math.abs(dy));
+      cam.th = drag.th - dx * 0.008; cam.ph = Math.max(0.12, Math.min(1.5, drag.ph - dy * 0.006));
+      $("tip").style.display = "none"; req();
+    } else pick(e, false);
+  });
+  box.addEventListener("pointerleave", () => { $("tip").style.display = "none"; hline.visible = false; dot.visible = false; req(); });
+  box.addEventListener("wheel", (e) => { e.preventDefault(); zoomed = true; cam.r = Math.max(2.2, Math.min(18, cam.r * (1 + Math.sign(e.deltaY) * 0.08))); req(); }, { passive: false });
+  box.addEventListener("dblclick", () => { zoomed = false; Object.assign(cam, home); req(); });
+
+  // ---- hover / click ----
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  let frameIdx = last, pinned = null;
+  function cellAt(e) {
+    const r = box.getBoundingClientRect();
+    ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    const hit = ray.intersectObject(mesh)[0];
+    if (!hit) return null;
+    const u = (hit.point.x + W / 2) / W * (NX - 1), vv = (D / 2 - hit.point.z) / D * (NY - 1);
+    return { i: Math.max(0, Math.min(NX - 1, Math.round(u))), j: Math.max(0, Math.min(NY - 1, Math.round(vv))), e };
+  }
+  function grid() { return FR[Math.round(frameIdx)].z; }
+  function cross(i, j) {
+    let w = 0;
+    for (let c = 0; c < FX - 1; c++) for (const cc of [c, c + 1]) { const k = (j * S) * FX + cc; hpos[w++] = pos[3 * k]; hpos[w++] = pos[3 * k + 1] + 0.004; hpos[w++] = pos[3 * k + 2]; }
+    for (let r = 0; r < FY - 1 && w < hpos.length; r++) for (const rr of [r, r + 1]) { const k = rr * FX + i * S; hpos[w++] = pos[3 * k]; hpos[w++] = pos[3 * k + 1] + 0.004; hpos[w++] = pos[3 * k + 2]; }
+    hl.setDrawRange(0, w / 3); hl.attributes.position.needsUpdate = true; hl.computeBoundingSphere();
+    const k = (j * S) * FX + i * S; dot.position.set(pos[3 * k], pos[3 * k + 1], pos[3 * k + 2]);
+    hline.visible = true; dot.visible = true;
+  }
+  function pick(e, click) {
+    const c = cellAt(e);
+    const tip = $("tip");
+    if (!c) { tip.style.display = "none"; if (hline.visible) { hline.visible = false; dot.visible = false; req(); } return; }
+    const g = grid(), val = g[c.j][c.i];
+    let rows = `<div><span class="k">${P.x.label}</span><span class="v">${P.x.ticks[c.i]}</span></div>` +
+               `<div><span class="k">${P.y.label}</span><span class="v">${P.y.ticks[c.j]}</span></div>` +
+               `<div><span class="k">${P.z.label}</span><span class="v" style="color:${C.accent}">${fmt(val, P.z.fmt)}</span></div>`;
+    if (Math.round(frameIdx) === last) for (const x of (P.extras || [])) {
+      const ev = x.grid && x.grid[c.j] ? x.grid[c.j][c.i] : null;
+      rows += `<div><span class="k">${x.name}</span><span class="v">${fmt(ev, x.fmt)}</span></div>`;
+    }
+    if (P.masks && P.masks[c.j] && P.masks[c.j][c.i]) rows += `<div class="k">interpolated (no quote)</div>`;
+    tip.innerHTML = rows;
+    const r = box.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    tip.style.display = "block"; tip.style.left = Math.min(x + 14, r.width - 200) + "px"; tip.style.top = Math.max(8, y - 90) + "px";
+    cross(c.i, c.j); req();
+    if (click) { pinned = c; drawInset(); }
+  }
+  function drawInset() {
+    if (!pinned) return;
+    const cv = $("inset"); cv.style.display = "block";
+    const dpr = Math.min(window.devicePixelRatio || 1, 2), w = 300, h = 150;
+    cv.width = w * dpr; cv.height = h * dpr;
+    const g = cv.getContext("2d"); g.scale(dpr, dpr); g.clearRect(0, 0, w, h);
+    g.font = "9px 'JetBrains Mono', monospace";
+    const now = grid(), ref = FR.length > 1 ? FR[0].z : null;
+    const panels = [{ t: `SMILE · ${P.y.ticks[pinned.j]}`, a: now[pinned.j], b: ref ? ref[pinned.j] : null, ticks: P.x.ticks, x0: 8 },
+                    { t: `TERM · ${P.x.ticks[pinned.i]}`, a: now.map(r => r[pinned.i]), b: ref ? ref.map(r => r[pinned.i]) : null, ticks: P.y.ticks, x0: 154 }];
+    for (const p of panels) {
+      const vals = p.a.concat(p.b || []).filter(isFinite), lo = Math.min(...vals), hi = Math.max(...vals), sp = (hi - lo) || 1e-6;
+      const px = (k) => p.x0 + 6 + k / (p.a.length - 1) * 126, py = (vv) => 120 - (vv - lo) / sp * 86;
+      g.fillStyle = C.muted; g.fillText(p.t, p.x0 + 4, 16);
+      g.strokeStyle = C.line; g.beginPath(); g.moveTo(p.x0 + 6, 124); g.lineTo(p.x0 + 132, 124); g.stroke();
+      const line = (arr, color, dash) => { g.setLineDash(dash); g.strokeStyle = color; g.lineWidth = 1.4; g.beginPath(); arr.forEach((vv, k) => k ? g.lineTo(px(k), py(vv)) : g.moveTo(px(k), py(vv))); g.stroke(); g.setLineDash([]); };
+      if (p.b) line(p.b, C.faint, [3, 3]);
+      line(p.a, C.accent, []);
+      g.fillStyle = C.faint; g.fillText(p.ticks[0], p.x0 + 4, 138); g.textAlign = "right"; g.fillText(p.ticks[p.ticks.length - 1], p.x0 + 134, 138); g.textAlign = "left";
+      g.fillStyle = C.text; g.fillText(fmt(hi, P.z.fmt), p.x0 + 92, 30);
+    }
+    if (FR.length > 1) { g.fillStyle = C.faint; g.fillText(`--- ${FR[0].label}`, 160, 148); }
+  }
+
+  // ---- time scrubber ----
+  const bar = $("bar");
+  if (FR.length > 1) {
+    bar.innerHTML = `<button id="play">▶ PLAY</button><input id="rng" type="range" min="0" max="${last}" step="1" value="${last}"><span class="lab" id="fl">${FR[last].label}</span>`;
+    const rng = $("rng"), fl = $("fl");
+    rng.addEventListener("input", () => { frameIdx = +rng.value; setGrid(FR[frameIdx].z); fl.textContent = FR[frameIdx].label; drawInset(); req(); });
+    let playing = false;
+    $("play").addEventListener("click", () => {
+      if (playing) { playing = false; return; }
+      playing = true; $("play").textContent = "■ STOP";
+      let f = 0, t0 = null;
+      const per = Math.max(60, Math.min(260, 9000 / FR.length));
+      const step = (ts) => {
+        if (!playing) { $("play").textContent = "▶ PLAY"; return; }
+        if (t0 === null) t0 = ts;
+        const k = (ts - t0) / per; f = Math.min(last, k);
+        const a = Math.floor(f), b = Math.min(last, a + 1);
+        setGrid(lerpGrid(FR[a].z, FR[b].z, f - a)); frameIdx = a;
+        rng.value = a; fl.textContent = FR[a].label; render();
+        if (f < last) requestAnimationFrame(step); else { playing = false; frameIdx = last; drawInset(); $("play").textContent = "▶ PLAY"; }
+      };
+      requestAnimationFrame(step);
+    });
+  } else {
+    bar.innerHTML = `<span class="lab">${FR[0].label}</span>`;
+  }
+
+  setGrid(FR[last].z);
+  size();
+  // a short establishing move from overhead (heat map) down to the 3D view, then idle
+  const t0 = performance.now();
+  const intro = (ts) => { const u = Math.min(1, (ts - t0) / 1300), e = 1 - Math.pow(1 - u, 3); cam.ph = 0.22 + (home.ph - 0.22) * e; cam.th = home.th - 0.5 * (1 - e); render(); if (u < 1) requestAnimationFrame(intro); };
+  requestAnimationFrame(intro);
+}
+</script>
+</body></html>
