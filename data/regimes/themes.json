@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-10-30",
+  "as_of": "2026-10-31",
   "themes": {
     "dollar": {
       "signal_score": 59.2,
       "composite_z": 0.733,
-      "real_yield_z": 1.669,
+      "real_yield_z": 1.635,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 72.3,
+      "signal_score": 72.2,
       "components": {
-        "DGS30": 1.73,
+        "DGS30": 1.69,
         "THREEFYTP10": 2.03,
         "GFDEBTN": 1.596
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Low",
       "usdjpy_z": 1.448,
       "usdjpy_pct_move_3m": -0.018,
-      "us_real_yield_z": 1.669,
+      "us_real_yield_z": 1.635,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": 0.0118,
+      "semis_relative_strength_3m": -0.0746,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -82,15 +82,6 @@
           "category": "Interpretation"
         },
         {
-          "title": "Estimated Contribution of Hyperscaler Capex to S&P 500 EPS Growth",
-          "source": "ISABELNET (bank chart-of-the-day mirror)",
-          "link": "https://www.isabelnet.com/oil-prices-and-consensus-capex/",
-          "published": "Thu, 01 Oct 2026 08:30:02 +0000",
-          "archive_date": "2026-10-01",
-          "summary": "Estimated Contribution of Hyperscaler Capex to S&P 500 EPS Growth The earnings tailwind from AI capex is expected to fade over the coming years, even as spending keeps climbing. With capex growth slowing and depreciation climbing, the lift to profits will shrink. Image: Goldman Sachs Global Investment Research",
-          "category": "Forecast"
-        },
-        {
           "title": "No, DataCenters are Not Crowding-Out Other Investments",
           "source": "Marginal Revolution",
           "link": "https://marginalrevolution.com/marginalrevolution/2026/10/no-datacenters-are-not-crowding-out-other-investments.html?utm_source=rss&utm_medium=rss&utm_campaign=no-datacenters-are-not-crowding-out-other-investments",
@@ -109,6 +100,15 @@
           "category": "Forecast"
         },
         {
+          "title": "When the AI Bubble Bursts",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/onpoint/ai-infrastructure-could-outlast-the-bubble-that-financed-it-by-william-h-janeway-2026-10?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+          "published": "Fri, 30 Oct 2026 09:35:23 GMT",
+          "archive_date": "2026-10-31",
+          "summary": "Speculative bubbles often leave behind valuable infrastructure while bankrupting the investors who financed them. AI could follow the same path, but the industry’s growing reliance on borrowed money raises the risk of a major financial crisis long before its world-beating applications emerge.",
+          "category": "Speculation"
+        },
+        {
           "title": "Capital Wars",
           "source": "Net Interest (Marc Rubinstein)",
           "link": "https://www.netinterest.co/p/capital-wars",
@@ -120,7 +120,7 @@
       ]
     },
     "crypto": {
-      "btc_trend_3m": -0.0096,
+      "btc_trend_3m": -0.0051,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
@@ -160,15 +160,6 @@
           "published": "Wed, 14 Oct 2026 12:00:20 +0000",
           "archive_date": "2026-10-15",
           "summary": "On today's show we discuss stock market concentration worries, how to hedge AI market risk, maxing out your 401k, who got richer this decade, AI is crowding out the economy, tariffs didn't work, higher rates are crushing the housing market, why people love parlays and longshot bets, Rotten Tomatoes inflation and more. …",
-          "category": "Interpretation"
-        },
-        {
-          "title": "The Impact of Tariff Refunds on Business Activity",
-          "source": "Atlanta Fed (macroblog)",
-          "link": "https://www.atlantafed.org/research-and-data/publications/policy-hub-macroblog/2026/07/08/impact-of-tariff-refunds-on-business-activity",
-          "published": "Wed, 08 Jul 2026 10:00:00 EST",
-          "archive_date": "2026-10-01",
-          "summary": "Investment? Expansion? Price changes? How might tariff refunds affect recipient firms? A post considers these questions and finds that their impact would vary considerably across firms.",
           "category": "Interpretation"
         },
         {
@@ -217,15 +208,6 @@
           "category": "Interpretation"
         },
         {
-          "title": "How Are Firms Using Their Tariff Refunds?",
-          "source": "Atlanta Fed (macroblog)",
-          "link": "https://www.atlantafed.org/research-and-data/publications/policy-hub-macroblog/2026/09/21/how-are-firms-using-tariff-refunds",
-          "published": "Mon, 21 Sep 2026 10:00:00 EST",
-          "archive_date": "2026-10-01",
-          "summary": "Examining recent survey data, a Policy Hub: Macroblog post looks at firms' plans for tariff refunds.",
-          "category": "Interpretation"
-        },
-        {
           "title": "How to Improve Global Mineral Governance",
           "source": "Project Syndicate (Economics)",
           "link": "https://www.project-syndicate.org/commentary/global-south-networks-key-to-sustainable-responsible-mining-governance-by-hasrul-hanif-2026-10?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
@@ -233,6 +215,15 @@
           "archive_date": "2026-10-13",
           "summary": "The race to secure critical minerals has intensified at the same time as the international community has recognized the need for more sustainable and responsible mining practices. Translating the resulting frameworks and guidelines into concrete action will require consolidating Global South policy and advocacy network…",
           "category": "Fact"
+        },
+        {
+          "title": "Two-Sided Market Power in Firm-to-Firm Trade",
+          "source": "arXiv q-fin (Quant Finance)",
+          "link": "https://arxiv.org/abs/2507.12848",
+          "published": "Mon, 12 Oct 2026 00:00:00 -0400",
+          "archive_date": "2026-10-12",
+          "summary": "arXiv:2507.12848v3 Announce Type: replace Abstract: We develop and estimate a model of two-sided market power to study tariff pass-through in firm-to-firm trade. A tariff moves the negotiated price through two channels: the bilateral markup, set by bargaining, and the supplier's marginal cost, which falls alongside qua…",
+          "category": "Interpretation"
         }
       ],
       "framework_note": "Every item below is EVIDENCE (an observable fact or a source's reported claim), not a conclusion. Where an item implies a strategic motive (for example, characterizations of US interest in Greenland as partly resource-driven), treat that as one HYPOTHESIS among several plausible explanations (which can include, and are not limited to, security policy, territorial claims context, or Arctic shipping-route strategy) — this board deliberately does not pick a winner among competing explanations for a geopolitical development; it surfaces the sourced claims so the reader can weigh them."
