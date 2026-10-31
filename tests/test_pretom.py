@@ -307,6 +307,55 @@ def test_vone_parser():
     assert rows[2]["weight_pct"] is None
 
 
+def test_vone_parser_dedupes_page_boundary_repeats():
+    """VONE paging can return a name on both sides of the 500-row boundary
+    with drifted weights; keep one row per ticker, the larger weight."""
+    items = [
+        {"ticker": "NVDA", "longName": "NVIDIA Corp.", "percentWeight": "6.72"},
+        {"ticker": "THC", "longName": "Tenet Healthcare Corp.", "percentWeight": "0.02"},
+        {"ticker": "BR", "longName": "Broadridge", "percentWeight": "0.03"},
+        {"ticker": "J", "longName": "Jacobs", "percentWeight": "n/a"},
+        # page 2 repeats
+        {"ticker": "THC", "longName": "Tenet Healthcare Corp.", "percentWeight": "0.03"},
+        {"ticker": "BR", "longName": "Broadridge", "percentWeight": "0.02"},
+        {"ticker": "J", "longName": "Jacobs", "percentWeight": "0.01"},
+        {"ticker": "BRK.B", "longName": "Berkshire", "percentWeight": "1.1"},
+        {"ticker": "BRK-B", "longName": "Berkshire", "percentWeight": "1.1"},
+    ]
+    rows = parse_vone_items(items)
+    tickers = [r["ticker"] for r in rows]
+    assert tickers == ["NVDA", "THC", "BR", "J", "BRK-B"]
+    w = {r["ticker"]: r["weight_pct"] for r in rows}
+    assert w["THC"] == pytest.approx(0.03)
+    assert w["BR"] == pytest.approx(0.03)
+    assert w["J"] == pytest.approx(0.01)       # a real weight beats None
+
+
+def test_russell1000_dedupes_stale_cache_and_snapshot(monkeypatch):
+    """Caches/snapshots written before the fix still carry repeats."""
+    from zenith.pretom import universe as uni
+    dup = [{"ticker": "ZS", "name": "Zscaler", "sector": "", "weight_pct": 0.02},
+           {"ticker": "PTC", "name": "PTC", "sector": "", "weight_pct": 0.03},
+           {"ticker": "ZS", "name": "Zscaler", "sector": "", "weight_pct": 0.03}]
+    monkeypatch.setattr(uni.store_cas, "cache_get",
+                        lambda key, age: {"rows": list(dup), "source": "vanguard_vone"})
+    rows, status = uni.russell1000()
+    assert [r["ticker"] for r in rows] == ["ZS", "PTC"]
+    assert rows[0]["weight_pct"] == pytest.approx(0.03)
+    assert status["n"] == 2
+
+    def boom():
+        raise RuntimeError("offline")
+    monkeypatch.setattr(uni.store_cas, "cache_get", lambda key, age: None)
+    monkeypatch.setattr(uni, "_fetch_vone", boom)
+    monkeypatch.setattr(uni, "_fetch_wikipedia", boom)
+    monkeypatch.setattr(uni, "pretom_load",
+                        lambda name, default: {"rows": list(dup), "source": "vanguard_vone"})
+    rows, status = uni.russell1000()
+    assert [r["ticker"] for r in rows] == ["ZS", "PTC"]
+    assert status["n"] == 2 and status["source"] == "stale:vanguard_vone"
+
+
 def test_archive_roundtrip_and_history_schema(tmp_path, monkeypatch):
     monkeypatch.setattr(pretom, "PRETOM_ARCHIVE_DIR", tmp_path)
     obj = {"month": "2026-06", "names": [{"ticker": "X"}],
