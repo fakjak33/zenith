@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-04",
+  "as_of": "2026-11-01",
   "source": "Open Source Asset Pricing (Chen & Zimmermann), openassetpricing.com — original-paper LS ports + SignalDoc",
   "n": 212,
   "n_documented": 212,
@@ -1159,7 +1159,7 @@
       "sample_end": 2001,
       "op_monthly_ret": 0.45,
       "op_tstat": 2.0,
-      "definition": "Price (prc/cfacshr) divided by the maximum price over the previous 12 months."
+      "definition": "Price (abs(prc)/cfacpr) divided by the maximum price over the previous 12 months."
     },
     "IO_ShortInterest": {
       "signal": "IO_ShortInterest",
@@ -1276,7 +1276,7 @@
       "sample_end": 2003,
       "op_monthly_ret": null,
       "op_tstat": 3.99,
-      "definition": "In each month, run a cross-sectional regression of a firm's five-year stock return on 5 year lagged BM (defined above) and a constructed regressor that is the change in BM from 5 years ago to today plus the five-year stock return. The residual from that regression is IntanBM."
+      "definition": "In each month, run a cross-sectional regression of a firm's five-year stock return on 5 year lagged log BM (book equity (ceq)/market value of equity) and a constructed regressor that is the change in log BM from 5 years ago to today plus the five-year stock return. The residual from that regression is IntanBM."
     },
     "IntanCFP": {
       "signal": "IntanCFP",
@@ -1289,7 +1289,7 @@
       "sample_end": 2003,
       "op_monthly_ret": null,
       "op_tstat": 4.89,
-      "definition": "In each month, run a cross-sectional regression of a firm's five-year stock return on the 5 year lagged  CFP = (net income (ni) plus depreciation (dp))/market value of equity and a constructed regressor that is the change in CFP from 5 years ago to today plus the five-year stock return. The residual from that regression is IntanCFP."
+      "definition": "In each month, run a cross-sectional regression of a firm's five-year stock return on the 5 year lagged log CFP, where CFP = (income before extraordinary items (ib) plus depreciation (dp))/market value of equity, and a constructed regressor that is the change in log CFP from 5 years ago to today plus the five-year stock return. The residual from that regression is IntanCFP."
     },
     "IntanEP": {
       "signal": "IntanEP",
@@ -1302,7 +1302,7 @@
       "sample_end": 2003,
       "op_monthly_ret": null,
       "op_tstat": 4.64,
-      "definition": "In each month, run a cross-sectional regression of a firm's five-year stock return on the 5 year lagged  EP = net income (ni)/market value of equity and a constructed regressor that is the change in EP from 5 years ago to today plus the five-year stock return. The residual from that regression is IntanEP."
+      "definition": "In each month, run a cross-sectional regression of a firm's five-year stock return on the 5 year lagged log EP, where EP = income before extraordinary items (ib)/market value of equity, and a constructed regressor that is the change in log EP from 5 years ago to today plus the five-year stock return. The residual from that regression is IntanEP."
     },
     "IntanSP": {
       "signal": "IntanSP",
@@ -1315,7 +1315,7 @@
       "sample_end": 2003,
       "op_monthly_ret": null,
       "op_tstat": 4.24,
-      "definition": "In each month, run a cross-sectional regression of a firm's five-year stock return on 5 year lagged SP (defined above) and a constructed regressor that is the change in SP from 5 years ago to today plus the five-year stock return. The residual from that regression is IntanSP."
+      "definition": "In each month, run a cross-sectional regression of a firm's five-year stock return on 5 year lagged log SP (sales (sale)/market value of equity) and a constructed regressor that is the change in log SP from 5 years ago to today plus the five-year stock return. The residual from that regression is IntanSP."
     },
     "InvGrowth": {
       "signal": "InvGrowth",
@@ -1690,9 +1690,9 @@
       "sign": 1.0,
       "sample_start": 1984,
       "sample_end": 2003,
-      "op_monthly_ret": 0.37,
-      "op_tstat": 2.83,
-      "definition": "Dividends (dvc) plus purchase of common and preferred stock (prstkc) minus sale of common and preferred stock (sstk), divided by market value of equity lagged 6 months.  Exclude if NetPayoutYield is 0, financial firm based on SIC code, ceq <= 0, or less than 2 years in CRSP"
+      "op_monthly_ret": 0.73,
+      "op_tstat": null,
+      "definition": "Gross payout is dividends (dvc) plus purchase of common and preferred stock (prstkc) plus max(pstkrv lagged 12 months minus pstkrv, 0). Equity issuance is sale of common and preferred stock (sstk) minus max(pstkrv minus pstkrv lagged 12 months, 0). NetPayoutYield is gross payout minus equity issuance, divided by mve_permco lagged 6 months. An unavailable preferred-stock difference contributes zero to both adjustments; missing flow inputs remain missing. Require finite nonzero yield and finite positive lagged market cap. Exclude financial firms based on SIC code, missing or nonpositive ceq, or less than 2 years in CRSP."
     },
     "NumEarnIncrease": {
       "signal": "NumEarnIncrease",
@@ -1859,9 +1859,9 @@
       "sign": 1.0,
       "sample_start": 1984,
       "sample_end": 2003,
-      "op_monthly_ret": 0.28,
-      "op_tstat": 3.92,
-      "definition": "Sum of dividends (dvc), purchase of common and preferred stock (prstkc) and max(preferred stock redemption value (pstkrv), 0) over market value of equity lagged 6 months.  Exclude if PayoutYield $\\leq$ 0, financial firm based on SIC code, ceq <= 0, or less than 2 years in CRSP"
+      "op_monthly_ret": 0.52,
+      "op_tstat": null,
+      "definition": "Sum of dividends (dvc), purchase of common and preferred stock (prstkc) and max(pstkrv lagged 12 months minus pstkrv, 0), with an unavailable preferred-stock difference treated as zero, over market value of equity lagged 6 months.  Exclude if PayoutYield $\\leq$ 0, financial firm based on SIC code, ceq <= 0, or less than 2 years in CRSP"
     },
     "PctAcc": {
       "signal": "PctAcc",
@@ -2496,7 +2496,7 @@
       "sign": -1.0,
       "sample_start": 1996,
       "sample_end": 2011,
-      "op_monthly_ret": -1.68,
+      "op_monthly_ret": 1.68,
       "op_tstat": 6.77,
       "definition": "Take difference of dVolCall and dVolPut"
     },
