@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-31",
-  "cadence": "weekly",
+  "date": "2026-11-01",
+  "cadence": "monthly",
   "n_signals": 10784,
   "n_assets": 586,
   "regime": "neutral / transition",
@@ -66,6 +66,18 @@
       "segment": "flows",
       "ok": true,
       "n": 608
+    },
+    {
+      "segment": "edgar13f",
+      "ok": true,
+      "n": 5,
+      "source": "edgar",
+      "error": ""
+    },
+    {
+      "segment": "backtest",
+      "ok": true,
+      "n": 42
     },
     {
       "segment": "history+hitrate",
