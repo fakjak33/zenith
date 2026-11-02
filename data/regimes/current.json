@@ -1,18 +1,18 @@
 {
-  "as_of": "2026-10-31",
+  "as_of": "2026-11-02",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-11-30",
   "regime": "Goldilocks / Reflation",
   "raw_regime": "Deflation / Slowdown",
   "transitioning": true,
   "streak_months": 1,
-  "confidence": 31.1,
+  "confidence": 22.7,
   "growth": {
     "rising": false,
     "breadth": 0.2727272727272727,
     "n_rising": 3,
     "n_total": 11,
-    "z": 0.271,
+    "z": 0.276,
     "indicators": [
       {
         "id": "CFNAI",
@@ -87,8 +87,8 @@
       {
         "id": "PERMIT",
         "label": "Building Permits",
-        "raw_value": -0.9901,
-        "z": -0.284,
+        "raw_value": -1.1315,
+        "z": -0.296,
         "direction": 1,
         "rising": false,
         "lag_days": 18,
@@ -97,8 +97,8 @@
       {
         "id": "NEWORDER",
         "label": "Core Capital Goods New Orders",
-        "raw_value": 12.4339,
-        "z": 1.26,
+        "raw_value": 12.9458,
+        "z": 1.329,
         "direction": 1,
         "rising": false,
         "lag_days": 35,
@@ -128,10 +128,10 @@
   },
   "inflation": {
     "rising": false,
-    "breadth": 0.4166666666666667,
-    "n_rising": 5,
+    "breadth": 0.5,
+    "n_rising": 6,
     "n_total": 12,
-    "z": 0.017,
+    "z": 0.066,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -156,18 +156,18 @@
       {
         "id": "PCEPI",
         "label": "PCE Price Index",
-        "raw_value": 2.965,
-        "z": 0.034,
+        "raw_value": 3.4956,
+        "z": 0.352,
         "direction": 1,
-        "rising": false,
+        "rising": true,
         "lag_days": 30,
         "freq": "M"
       },
       {
         "id": "PCEPILFE",
         "label": "Core PCE",
-        "raw_value": 2.5872,
-        "z": -0.172,
+        "raw_value": 2.9387,
+        "z": 0.095,
         "direction": 1,
         "rising": false,
         "lag_days": 30,
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 0.3,
-    "growth_slope": 0.0046,
-    "growth_r2": 0.076,
-    "infl_slope": -0.0242,
-    "infl_r2": 0.262,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.08) while inflation signals have moderated (trend R²=0.26)."
+    "score": 0.1,
+    "growth_slope": 0.0058,
+    "growth_r2": 0.115,
+    "infl_slope": -0.0132,
+    "infl_r2": 0.098,
+    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.11) while inflation signals have moderated (trend R²=0.10)."
   }
 }
