@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-11-02",
+  "as_of": "2026-11-03",
   "themes": {
     "dollar": {
-      "signal_score": 59.2,
-      "composite_z": 0.733,
-      "real_yield_z": 1.635,
+      "signal_score": 59.7,
+      "composite_z": 0.778,
+      "real_yield_z": 1.61,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 72.2,
+      "signal_score": 72.1,
       "components": {
-        "DGS30": 1.69,
+        "DGS30": 1.682,
         "THREEFYTP10": 2.03,
         "GFDEBTN": 1.596
       },
@@ -18,13 +18,13 @@
     },
     "yen": {
       "intervention_risk": "Low",
-      "usdjpy_z": 1.448,
-      "usdjpy_pct_move_3m": -0.018,
-      "us_real_yield_z": 1.635,
+      "usdjpy_z": 1.476,
+      "usdjpy_pct_move_3m": -0.0142,
+      "us_real_yield_z": 1.61,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.0746,
+      "semis_relative_strength_3m": -0.0872,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -73,6 +73,15 @@
           "category": "Forecast"
         },
         {
+          "title": "The Changing Shape of the U.S. AI Capex Boom",
+          "source": "The Overshoot (Matthew Klein)",
+          "link": "https://theovershoot.co/p/the-changing-shape-of-the-us-ai-capex",
+          "published": "Tue, 03 Nov 2026 08:51:58 GMT",
+          "archive_date": "2026-11-03",
+          "summary": "The labs are becoming hyperscalers, imports are continuing to surge, and investment further up the supply chain is rising in response to the tight supply of GPUs and memory.",
+          "category": "Interpretation"
+        },
+        {
           "title": "Hyperscaler Cloud Revenue Backlogs",
           "source": "ISABELNET (bank chart-of-the-day mirror)",
           "link": "https://www.isabelnet.com/percent-of-sp-500-companies-beating-revenue-and-eps-estimates/",
@@ -107,20 +116,11 @@
           "archive_date": "2026-10-31",
           "summary": "Speculative bubbles often leave behind valuable infrastructure while bankrupting the investors who financed them. AI could follow the same path, but the industry’s growing reliance on borrowed money raises the risk of a major financial crisis long before its world-beating applications emerge.",
           "category": "Speculation"
-        },
-        {
-          "title": "Capital Wars",
-          "source": "Net Interest (Marc Rubinstein)",
-          "link": "https://www.netinterest.co/p/capital-wars",
-          "published": "Fri, 23 Oct 2026 16:24:17 GMT",
-          "archive_date": "2026-10-24",
-          "summary": "CoreWeave and the Economics of a Data Center Build",
-          "category": "Interpretation"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": 0.0012,
+      "btc_trend_3m": -0.0006,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
@@ -226,13 +226,13 @@
           "category": "Interpretation"
         },
         {
-          "title": "Manufacturing Renaissance Meets Time-Inconsistent Tariffs -- by Christoph Boehm, Andrei A. Levchenko, Wei Xiang",
-          "source": "NBER Working Papers",
-          "link": "https://www.nber.org/papers/w35976#fromrss",
-          "published": "",
-          "archive_date": "2026-11-02",
-          "summary": "We analyze optimal tariffs in a dynamic version of the Venables (1987) framework with a time-to-build lag in firm creation. In this environment, trade protection is driven by the desire to increase firm creation at home at the expense of the foreign trade partner. When firm creation takes time, the benefits of protecti…",
-          "category": "Interpretation"
+          "title": "Trump’s Tariff Fiasco Could Save Free Trade",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/commentary/failure-of-trump-trade-agenda-could-pave-way-for-retreat-from-protectionism-by-anne-o-krueger-2026-11?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+          "published": "Mon, 02 Nov 2026 16:13:17 GMT",
+          "archive_date": "2026-11-03",
+          "summary": "US President Donald Trump’s tariffs have raised prices and hurt businesses without reducing the trade deficit or creating manufacturing jobs. But global trade has held up better than expected, and growing public opposition to tariffs could pave the way for a retreat from protectionism.",
+          "category": "Forecast"
         }
       ],
       "framework_note": "Every item below is EVIDENCE (an observable fact or a source's reported claim), not a conclusion. Where an item implies a strategic motive (for example, characterizations of US interest in Greenland as partly resource-driven), treat that as one HYPOTHESIS among several plausible explanations (which can include, and are not limited to, security policy, territorial claims context, or Arctic shipping-route strategy) — this board deliberately does not pick a winner among competing explanations for a geopolitical development; it surfaces the sourced claims so the reader can weigh them."

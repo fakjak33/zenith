@@ -1,45 +1,45 @@
 {
-  "as_of": "2026-11-02",
+  "as_of": "2026-11-03",
   "trends": {
     "SPY": {
-      "trend_3m": -0.0178,
+      "trend_3m": -0.0206,
       "direction": "down"
     },
     "TLT": {
-      "trend_3m": -0.0041,
+      "trend_3m": -0.0075,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": -0.0491,
+      "trend_3m": -0.0718,
       "direction": "down"
     },
     "DBC": {
-      "trend_3m": 0.1872,
+      "trend_3m": 0.1397,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.0298,
+      "trend_3m": 0.031,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": -0.0718,
+      "trend_3m": -0.0664,
       "direction": "down"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 1.59,
-    "defensives_avg": 1.088,
-    "cyclicals_leading": true,
-    "as_of": "2026-10-30"
+    "cyclicals_avg": 1.651,
+    "defensives_avg": 1.788,
+    "cyclicals_leading": false,
+    "as_of": "2026-11-03"
   },
   "confirmation": {
     "checks": [
       {
         "check": "Cyclicals vs Defensives (MOMENTUM sector breadth)",
         "expects": "defensives leading",
-        "observed": "cyclicals leading",
-        "confirms": false
+        "observed": "defensives leading",
+        "confirms": true
       },
       {
         "check": "Small-cap vs Large-cap (risk appetite proxy)",
@@ -60,17 +60,11 @@
         "confirms": false
       }
     ],
-    "n_confirming": 2,
+    "n_confirming": 3,
     "n_total": 4,
-    "confirmation_ratio": 0.5
+    "confirmation_ratio": 0.75
   },
   "divergences": [
-    {
-      "flag": "Cyclicals vs Defensives (MOMENTUM sector breadth)",
-      "classifier_expects": "defensives leading",
-      "market_shows": "cyclicals leading",
-      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
-    },
     {
       "flag": "Long Treasuries (rate-expectation proxy)",
       "classifier_expects": "rising (yields down)",
