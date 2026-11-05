@@ -1,19 +1,25 @@
 name: VOL SCREENER chains
 
+# Three snapshots per trading day (ET): am 10:15, mid 12:45, close 15:30.
+# GitHub starts this repo's scheduled runs hours late (4-8 h has been typical),
+# so the run is triggered in the middle of the night and each job sleeps until
+# its slot. `hold` absorbs the early part of the night (a job lives 6 h at most).
+# The later crons are backups if the first is dropped: they queue behind the
+# day's run and the gate skips every slot already built or already past.
+
 on:
   schedule:
-    # 15:35 / 15:50 ET in both EDT (19:xx UTC) and EST (20:xx UTC). The compute
-    # gate runs once per trading day from 15:30 ET, while markets are still live
-    # (delayed quotes ~15 min): after the bell, spreads balloon.
-    - cron: "35 19 * * 1-5"
-    - cron: "50 19 * * 1-5"
-    - cron: "35 20 * * 1-5"
-    - cron: "50 20 * * 1-5"
+    - cron: "0 6 * * 1-5"       # 01:00 EST / 02:00 EDT
+    - cron: "15 15 * * 1-5"     # backup
+    - cron: "35 19 * * 1-5"     # backup
   workflow_dispatch:
     inputs:
       action:
-        description: "auto (gated) or force"
+        description: "auto (gated, waits for each slot) or force (build now)"
         default: "auto"
+      slot:
+        description: "all, am, mid or close"
+        default: "all"
 
 permissions:
   contents: write               # commit data/volscreen/ + publish the history assets
@@ -23,57 +29,43 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  volscreen:
+  hold:
+    if: (github.event.inputs.slot || 'all') == 'all' && (github.event.inputs.action || 'auto') != 'force'
     runs-on: ubuntu-latest
-    # ~320 Cboe chains at a polite 0.35 s gap + IV / GARCH fits: ~15-25 min.
-    timeout-minutes: 75
-    env:
-      GH_TOKEN: ${{ github.token }}
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt
+      - name: Sleep until 5 h before the am slot
+        run: python -m zenith.volscreen.compute --wait --slot am --lead 300 --max-wait 340
 
-      - name: Gate (trading day, from 15:30 ET, once a day)
-        id: gate
-        run: echo "go=$(python -m zenith.volscreen.compute --check --action '${{ github.event.inputs.action || 'auto' }}' | tail -1)" >> "$GITHUB_OUTPUT"
+  # force + all builds ONCE, as whichever slot is open now ("now"): forcing all
+  # three back to back would write a midday snapshot into the close history
+  am:
+    needs: hold
+    if: ${{ !cancelled() && contains(fromJSON('["all", "am"]'), github.event.inputs.slot || 'all') }}
+    uses: ./.github/workflows/volscreen-build.yml
+    with:
+      slot: ${{ (github.event.inputs.action == 'force' && (github.event.inputs.slot || 'all') == 'all') && 'now' || 'am' }}
+      action: ${{ github.event.inputs.action || 'auto' }}
 
-      - name: Fetch price store + IV history (release ephemeris-px)
-        if: steps.gate.outputs.go == 'RUN'
-        run: |
-          mkdir -p data/ephemeris/px
-          gh release download ephemeris-px -p daily.parquet -p theta.parquet -D data/ephemeris/px --clobber || true
-          gh release download ephemeris-px -p 'volscreen_*.parquet' -D data/ephemeris/px --clobber || true
+  mid:
+    needs: am
+    if: ${{ !cancelled() && contains(fromJSON('["all", "mid"]'), github.event.inputs.slot || 'all') && !(github.event.inputs.action == 'force' && (github.event.inputs.slot || 'all') == 'all') }}
+    uses: ./.github/workflows/volscreen-build.yml
+    with:
+      slot: mid
+      action: ${{ github.event.inputs.action || 'auto' }}
 
-      - name: Build screen
-        if: steps.gate.outputs.go == 'RUN'
-        run: python -m zenith.volscreen.compute --action "${{ github.event.inputs.action || 'auto' }}"
-
-      - name: Publish IV history assets
-        if: steps.gate.outputs.go == 'RUN'
-        run: |
-          if [ -f data/volscreen/cache/built.flag ]; then
-            gh release upload ephemeris-px data/ephemeris/px/volscreen_term.parquet data/ephemeris/px/volscreen_surf.parquet --clobber
-            # observed IV history cannot be rebuilt: keep a weekly backup copy
-            if [ "$(date -u +%u)" = "5" ]; then
-              cp data/ephemeris/px/volscreen_term.parquet data/ephemeris/px/volscreen_term_bak.parquet
-              gh release upload ephemeris-px data/ephemeris/px/volscreen_term_bak.parquet --clobber
-            fi
-          fi
-
-      - name: Commit VOL SCREENER data
-        if: steps.gate.outputs.go == 'RUN'
-        run: |
-          git config user.name "zenith-bot"
-          git config user.email "zenith-bot@users.noreply.github.com"
-          git pull --rebase --autostash
-          git add -A data/volscreen/
-          if git diff --cached --quiet; then
-            echo "No VOL SCREENER changes."
-          else
-            git commit -m "volscreen: $(date -u +%Y-%m-%d) chains"
-            git push
-          fi
+  close:
+    needs: mid
+    if: ${{ !cancelled() && contains(fromJSON('["all", "close"]'), github.event.inputs.slot || 'all') && !(github.event.inputs.action == 'force' && (github.event.inputs.slot || 'all') == 'all') }}
+    uses: ./.github/workflows/volscreen-build.yml
+    with:
+      slot: close
+      action: ${{ github.event.inputs.action || 'auto' }}

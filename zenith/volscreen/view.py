@@ -20,7 +20,7 @@ from ..config import THEME as T
 from ..config import VOLSCREEN_FILES, VOLSCREEN_STATE, VOLSCREEN_TERM_ASSET
 from ..ui_theme import evidence_rating, help_badge, key_findings, section, stamp
 from ..viz import volviz
-from . import DISCLAIMER, glossary, load
+from . import DISCLAIMER, glossary, load, snapshot_label
 
 SUBVIEWS = ["LIQUIDITY", "SCREEN", "CHECKLIST", "BASKETS", "LEARN"]
 MODES = ["SELL PREMIUM", "BUY PREMIUM"]
@@ -605,13 +605,20 @@ def render() -> None:
     st.markdown(evidence_rating("B", "VRP strong for indices, weaker for single names", _EVIDENCE),
                 unsafe_allow_html=True)
     if not rows:
-        st.info("No screen yet — the nightly VOL SCREENER job has not produced data/volscreen/screen.json.")
+        st.info("No screen yet — the VOL SCREENER job has not produced data/volscreen/screen.json.")
         _learn()
         st.caption(DISCLAIMER)
         return
-    st.markdown(stamp(f"{sc.get('as_of')} · quotes {sc.get('quote_ts', '')} ET", "VOL SCREENER"),
-                unsafe_allow_html=True)
+    st.markdown(stamp(f"{sc.get('as_of')} · {snapshot_label(sc)} · quotes {sc.get('quote_ts', '')} ET",
+                      "VOL SCREENER"), unsafe_allow_html=True)
     notes = []
+    if sc.get("slot") in ("am", "mid"):
+        notes.append(f"{'Morning' if sc['slot'] == 'am' else 'Midday'} intraday snapshot: IVs, skew, spreads and "
+                     "option volume are "
+                     f"as of {str(sc.get('quote_ts', ''))[-5:]} ET (Cboe, ~15 min delayed); option volume is "
+                     "the day so far. Realized vol, GARCH and price stats run through yesterday's close, and IV "
+                     "rank / VRP history compare this intraday IV with end-of-day history. The next snapshot "
+                     "replaces it; only the 15:30 ET one is kept in the history.")
     if sc.get("session") == "post-close":
         notes.append("Quotes were captured after the close, when market makers widen or pull them: today's "
                      "star ratings use volume, open interest and strike depth only, and the spread columns "

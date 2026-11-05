@@ -295,3 +295,73 @@ def test_offline_compute_writes_clean_json(tmp_path, monkeypatch):
         assert r["liq"]["stars"] in (1, 2, 3, 4)
     surf = json.loads((tmp_path / "surfaces.json").read_text(encoding="utf-8"))
     assert len(surf["surf"]["SPY"]["delta"]) == 7 and len(surf["surf"]["SPY"]["delta"][0]) == 9
+
+
+# ------------------------------------------------------------------ slots --
+
+def _at(monkeypatch, hh, mm, day="2026-11-05", trading=True):
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from zenith.pretom import calendar
+    from zenith.volscreen import compute
+    now = datetime.fromisoformat(f"{day}T{hh:02d}:{mm:02d}").replace(tzinfo=ZoneInfo("America/New_York"))
+    monkeypatch.setattr(compute, "_now_et", lambda: now)
+    monkeypatch.setattr(calendar, "is_trading_day", lambda d: trading)
+    return compute
+
+
+@pytest.mark.parametrize("hh,mm,status,slot,want", [
+    (9, 50, {}, None, False),                                               # before the am slot
+    (10, 20, {}, None, True),                                               # am open
+    (10, 40, {"ok": True, "quote_date": "2026-11-05", "slot": "am"}, None, False),
+    (13, 0, {"ok": True, "quote_date": "2026-11-05", "slot": "am"}, "mid", True),
+    (13, 0, {"ok": True, "quote_date": "2026-11-04", "slot": "close"}, "am", False),  # am window passed
+    (13, 0, {"ok": True, "quote_date": "2026-11-05"}, None, False),         # pre-slot status = close done
+    (15, 40, {"ok": True, "quote_date": "2026-11-05", "slot": "mid"}, "close", True),
+    (21, 0, {"ok": True, "quote_date": "2026-11-05", "slot": "close"}, "close", False),
+    (11, 0, {"ok": True, "quote_date": "2026-11-05", "slot": "am"}, "mid", False),    # mid not open yet
+    (12, 0, {"ok": False, "quote_date": "2026-11-05", "slot": "am"}, "am", True),     # failed am retries
+])
+def test_slot_gate(monkeypatch, hh, mm, status, slot, want):
+    compute = _at(monkeypatch, hh, mm)
+    ok, why = compute.gate("auto", status, slot)
+    assert ok is want, why
+
+
+def test_slot_gate_weekend_and_force(monkeypatch):
+    compute = _at(monkeypatch, 11, 0, trading=False)
+    assert compute.gate("auto", {}, "am")[0] is False
+    assert compute.gate("force", {"ok": True, "quote_date": "2026-11-05", "slot": "close"}, "am")[0] is True
+
+
+def test_resolve_slot(monkeypatch):
+    from datetime import datetime
+    from zenith.volscreen import compute
+    assert compute.resolve_slot("mid") == "mid"
+    assert compute.resolve_slot(None, datetime(2026, 11, 5, 8, 0)) == "am"          # pre-open: never history
+    assert compute.resolve_slot(None, datetime(2026, 11, 5, 13, 0)) == "mid"
+    assert compute.resolve_slot(None, datetime(2026, 11, 5, 20, 0)) == "close"
+
+
+def test_wait_for_sleeps_until_slot(monkeypatch):
+    compute = _at(monkeypatch, 9, 15)
+    slept = []
+    monkeypatch.setattr(compute.time, "sleep", slept.append)
+    compute.wait_for("am")
+    assert slept == [3600.0]
+    compute.wait_for("am", lead_min=300)                                     # already inside the lead
+    compute.wait_for("close", max_wait_min=60)
+    assert slept == [3600.0, 3600.0]
+
+
+def test_intraday_slot_skips_history(tmp_path, monkeypatch):
+    from zenith import config
+    from zenith.volscreen import compute
+    for k in ("universe", "screen", "surfaces", "baskets", "garch", "status", "earnings"):
+        monkeypatch.setitem(config.VOLSCREEN_FILES, k, tmp_path / f"{k}.json")
+    writes = []
+    monkeypatch.setattr(compute.history, "write", lambda *a, **k: writes.append(a) or 0)
+    st = compute.run("force", tickers=["SPY", "AAPL"], offline=str(FIX), slot="am")
+    assert st["slot"] == "am" and not writes and not st["asset_bytes"]
+    sc = json.loads((tmp_path / "screen.json").read_text(encoding="utf-8"))
+    assert sc["slot"] == "am"
