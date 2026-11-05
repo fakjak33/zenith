@@ -11,8 +11,10 @@ THE FLOW it serves, in the trader's own order:
   4. (context only) deploy small, volatility-sized, diversified positions.
      Zenith finds candidates; it does not manage trades.
 
-DATA. Once a day after the close, every chain comes from Cboe's public
-delayed-quote JSON (free, no key; yfinance is the fallback). Implied vols are
+DATA. Three times a trading day (~10:15, ~12:45 and 15:30 ET), every chain
+comes from Cboe's public delayed-quote JSON (free, no key; yfinance is the
+fallback). Only the 15:30 snapshot enters the IV history; the morning and
+midday ones refresh the screen against it. Implied vols are
 recomputed from mid quotes against the put-call-parity forward (so dividends
 and borrow drop out), interpolated to constant maturities in TOTAL VARIANCE
 (the VIX convention), and the earnings event is stripped out of the term
@@ -42,12 +44,21 @@ import math
 
 from ..config import VOLSCREEN_FILES
 
-DISCLAIMER = ("VOL SCREENER reads real end-of-day option quotes (Cboe delayed data, free) and "
+DISCLAIMER = ("VOL SCREENER reads real option quotes (Cboe delayed data, free; refreshed morning, "
+              "midday and near the close) and "
               "publishes derived metrics only. IV rank/percentile need a year of history: names "
               "marked PROVISIONAL or MODELED are not yet on their own observed IV history. The VRP "
               "state machine is a practitioner heuristic, not a published result, and the star "
               "rating uses our thresholds, not tastytrade's formula. Screens find candidates; they "
               "are decision-support, not investment advice.")
+
+
+_SLOT_LABEL = {"am": "MORNING snapshot", "mid": "MIDDAY snapshot", "close": "CLOSE snapshot"}
+
+
+def snapshot_label(screen: dict) -> str:
+    """Which of the day's snapshots a screen is (screens from before slots = close)."""
+    return _SLOT_LABEL.get(screen.get("slot") or "close", "CLOSE snapshot")
 
 
 def _scrub(obj):

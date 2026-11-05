@@ -1,6 +1,6 @@
-"""Nightly VOL SCREENER build.
+"""VOL SCREENER build: three snapshots per trading day.
 
-    python -m zenith.volscreen.compute --action auto          # the workflow
+    python -m zenith.volscreen.compute --action auto --slot am --wait   # the workflow
     python -m zenith.volscreen.compute --action force --limit 15
     python -m zenith.volscreen.compute --offline tests/fixtures/volscreen --tickers SPY AAPL
 
@@ -11,10 +11,15 @@ GARCH / GJR term forecasts -> VRP per tenor. Then, against the stored
 history: IV rank / percentile, per-tenor sigma bands, VRP z / slope / state,
 liquidity class; then the checklist; then correlation baskets.
 
-`auto` runs once per trading day from 15:30 ET: delayed quotes are then
-~15:15-15:30 live markets. After the bell market makers pull their quotes and
-spreads balloon, so a late run is flagged `post-close` (liquidity spreads are
-then not representative; IVs still are).
+`auto` runs once per SLOT per trading day (ET): `am` from 10:15 (quotes ~10:00,
+past the opening noise), `mid` from 12:45 and `close` from 15:30. Cboe's quotes
+are ~15 min delayed, so all three see live markets. Only `close` is written into
+the permanent IV history: the intraday snapshots refresh the screen and are
+ranked against that end-of-day history, never stored in it. After the bell
+market makers pull their quotes and spreads balloon, so a late close run is
+flagged `post-close` (liquidity spreads are then not representative; IVs still
+are). GitHub starts scheduled workflows hours late, so the workflow starts early
+and `--wait` sleeps until the slot opens.
 """
 
 from __future__ import annotations
@@ -56,18 +61,71 @@ def _rd(d: dict, n: int = ROUND) -> dict:
     return {str(k): _r(v, n) for k, v in d.items()}
 
 
-def gate(action: str, status: dict) -> tuple[bool, str]:
+# intraday snapshot windows, minutes after midnight ET: [start, end)
+SLOTS = {"am": (10 * 60 + 15, 12 * 60 + 45), "mid": (12 * 60 + 45, 15 * 60 + 30), "close": (15 * 60 + 30, 24 * 60)}
+SLOT_RANK = {s: i for i, s in enumerate(SLOTS)}
+
+
+def _hhmm(m: int) -> str:
+    return f"{m // 60:02d}:{m % 60:02d}"
+
+
+def current_slot(now: datetime) -> str | None:
+    """The slot whose window holds `now`; None before the first one opens."""
+    m = now.hour * 60 + now.minute
+    for s, (a, b) in SLOTS.items():
+        if a <= m < b:
+            return s
+    return None
+
+
+def resolve_slot(slot: str | None, now: datetime | None = None) -> str:
+    """An explicit slot, else the current one (a pre-10:15 run counts as `am`, so
+    it never writes the end-of-day history)."""
+    return slot or current_slot(now or _now_et()) or "am"
+
+
+def gate(action: str, status: dict, slot: str | None = None) -> tuple[bool, str]:
     if action == "force":
         return True, "forced"
     from ..pretom.calendar import is_trading_day
     now = _now_et()
     if not is_trading_day(now.date()):
         return False, "not a trading day"
-    if now.hour * 60 + now.minute < 15 * 60 + 30:
-        return False, "before 15:30 ET"
+    m = now.hour * 60 + now.minute
+    cur = current_slot(now)
+    if slot is None:
+        if cur is None:
+            return False, f"before {_hhmm(SLOTS['am'][0])} ET"
+        slot = cur
+    a, b = SLOTS[slot]
+    if m < a:
+        return False, f"{slot} slot opens {_hhmm(a)} ET"
+    if m >= b:
+        return False, f"{slot} window passed"
     if status.get("quote_date") == now.date().isoformat() and status.get("ok"):
-        return False, "already built for today"
-    return True, "scheduled"
+        done = status.get("slot") or "close"             # a pre-slot status was the close run
+        if SLOT_RANK.get(done, 2) >= SLOT_RANK[slot]:
+            return False, f"already built for today ({done})"
+    return True, f"scheduled ({slot})"
+
+
+def wait_for(slot: str, max_wait_min: float = 300.0, lead_min: float = 0.0) -> None:
+    """Sleep until `lead_min` before `slot` opens on a trading day (capped at
+    `max_wait_min`, since a GitHub job lives 6 h at most); no-op once past it."""
+    from ..pretom.calendar import is_trading_day
+    now = _now_et()
+    if not is_trading_day(now.date()):
+        print("[volscreen] not a trading day: no wait")
+        return
+    start = now.replace(hour=SLOTS[slot][0] // 60, minute=SLOTS[slot][0] % 60, second=0, microsecond=0)
+    secs = (start - now).total_seconds() - lead_min * 60
+    if secs <= 0:
+        print(f"[volscreen] {slot} slot {'already open' if lead_min <= 0 else 'near'}: no wait")
+        return
+    secs = min(secs, max_wait_min * 60)
+    print(f"[volscreen] waiting {secs / 60:.0f} min ({slot} slot opens {_hhmm(SLOTS[slot][0])} ET)", flush=True)
+    time.sleep(secs)
 
 
 # ------------------------------------------------------------------ inputs --
@@ -363,13 +421,18 @@ def enrich(row: dict, h: pd.DataFrame, cross: dict) -> dict:
 # ---------------------------------------------------------------- main -----
 
 def run(action: str = "auto", limit: int | None = None, tickers: list[str] | None = None,
-        offline: str | None = None, write_history: bool = True) -> dict:
+        offline: str | None = None, write_history: bool = True, slot: str | None = None) -> dict:
     t0 = time.time()
     status = load("status", {}) or {}
-    ok, why = gate("force" if offline else action, status)
+    ok, why = gate("force" if offline else action, status, slot)
     if not ok:
         print(f"[volscreen] skip: {why}")
         return {"skipped": why}
+    slot = resolve_slot(slot)
+    # only the near-close snapshot enters the permanent IV history: intraday IVs
+    # are ranked against it but would make the end-of-day series inconsistent
+    write_history = write_history and slot == "close"
+    print(f"[volscreen] slot {slot}; history write {'on' if write_history else 'off'}")
 
     store = None
     if not offline:
@@ -402,8 +465,9 @@ def run(action: str = "auto", limit: int | None = None, tickers: list[str] | Non
     surf_hist = history.load_surf(surf_path)
     prev_rows, prev_surf = len(hist), len(surf_hist)
     expected = int(status.get("history_rows") or 0)
-    if write_history and not offline and prev_rows < 0.9 * expected:
+    if not offline and (write_history or os.environ.get("GITHUB_ACTIONS")) and prev_rows < 0.9 * expected:
         # the release download failed: writing now would clobber a year of IV history
+        # (and an intraday snapshot would rank today's IV against nothing)
         raise SystemExit(f"[volscreen] IV history has {prev_rows} rows, status says {expected}; "
                          "refusing to run without it")
     warm_all = load("garch", {}) or {}
@@ -503,7 +567,8 @@ def run(action: str = "auto", limit: int | None = None, tickers: list[str] | Non
     surfaces = {r["ticker"]: r.pop("_surf") for r in rows}
     market = market_context(vidx, rows)
     as_of = qdate.isoformat()
-    save("screen", {"as_of": as_of, "quote_ts": quote_ts, "session": sess, "generated": _utc(), "tenors": TEN,
+    save("screen", {"as_of": as_of, "quote_ts": quote_ts, "session": sess, "slot": slot, "generated": _utc(),
+                    "tenors": TEN,
                     "deltas": [d[0] for d in VOLSCREEN_DELTAS], "market": market,
                     "core": [r["ticker"] for r in core], "state_cfg": VOLSCREEN_STATE,
                     "rows": sorted(rows, key=lambda r: (-(r["liq"].get("score") or 0)))})
@@ -518,7 +583,7 @@ def run(action: str = "auto", limit: int | None = None, tickers: list[str] | Non
         sizes["term"] = history.write(hist, VOLSCREEN_FILES["term_local"], prev_rows, history.TERM_COLS)
         sizes["surf"] = history.write(surf_hist, VOLSCREEN_FILES["surf_local"], prev_surf,
                                       ["tenor"] + history.SURF_COLS)
-    st = {"ok": True, "quote_date": as_of, "quote_ts": quote_ts, "session": sess, "run_utc": _utc(),
+    st = {"ok": True, "quote_date": as_of, "quote_ts": quote_ts, "session": sess, "slot": slot, "run_utc": _utc(),
           "n_universe": len(uni), "n_ok": len(rows), "failures": failures, "sources": sources,
           "breaker_tripped": fetch.tripped, "stale": stale, "seconds": round(time.time() - t0, 1),
           # only a WRITTEN history counts: the next run refuses to start with less
@@ -569,12 +634,21 @@ def main(argv=None) -> None:
     ap.add_argument("--offline", default=None, help="directory of <TICKER>.json chain payloads")
     ap.add_argument("--no-history-write", action="store_true")
     ap.add_argument("--check", action="store_true", help="print RUN or SKIP for the gate and exit")
+    ap.add_argument("--slot", default=None, choices=list(SLOTS),
+                    help="snapshot slot (default: the one open now); only `close` writes IV history")
+    ap.add_argument("--wait", action="store_true", help="sleep until the slot opens, then exit")
+    ap.add_argument("--max-wait", type=float, default=300.0, help="cap on --wait, minutes")
+    ap.add_argument("--lead", type=float, default=0.0, help="--wait stops this many minutes before the slot")
     a = ap.parse_args(argv)
+    if a.wait:
+        wait_for(a.slot or "am", a.max_wait, a.lead)
+        return
     if a.check:
-        ok, why = gate(a.action, load("status", {}) or {})
+        ok, why = gate(a.action, load("status", {}) or {}, a.slot)
+        print(why)
         print("RUN" if ok else "SKIP")
         return
-    run(a.action, a.limit, a.tickers, a.offline, write_history=not a.no_history_write)
+    run(a.action, a.limit, a.tickers, a.offline, write_history=not a.no_history_write, slot=a.slot)
 
 
 if __name__ == "__main__":

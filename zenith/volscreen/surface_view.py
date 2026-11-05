@@ -24,7 +24,7 @@ from ..config import THEME as T
 from ..config import VOLSCREEN_FILES, VOLSCREEN_SURF_ASSET, VOLSCREEN_TERM_ASSET
 from ..ui_theme import evidence_rating, key_findings, section, stamp
 from ..viz import surface3d, volviz
-from . import DISCLAIMER, load
+from . import DISCLAIMER, load, snapshot_label
 
 MODES = ["SURFACE", "MONEYNESS", "TERRAIN", "CHANGE", "VRP LANDSCAPE"]
 _FINDINGS = [
@@ -263,14 +263,14 @@ def render() -> None:
     surf = sd.get("surf") or {}
     st.markdown(key_findings(_FINDINGS), unsafe_allow_html=True)
     st.markdown(evidence_rating("B", "measurement, not a signal",
-                                "The surface is a faithful read of end-of-day quotes; what it predicts is the "
+                                "The surface is a faithful read of delayed live quotes; what it predicts is the "
                                 "screener's job. Wings are interpolated where a delta was not quoted (hover "
                                 "says so)."), unsafe_allow_html=True)
     if not surf:
-        st.info("No surfaces yet — they arrive with the nightly VOL SCREENER build.")
+        st.info("No surfaces yet — they arrive with the VOL SCREENER build.")
         st.caption(DISCLAIMER)
         return
-    st.markdown(stamp(sd.get("as_of", ""), "VOL SURFACE"), unsafe_allow_html=True)
+    st.markdown(stamp(f"{sd.get('as_of', '')} · {snapshot_label(sc)}", "VOL SURFACE"), unsafe_allow_html=True)
     rows = {r["ticker"]: r for r in sc.get("rows", [])}
     order = (sc.get("core") or []) + [t for t in surf if t not in set(sc.get("core") or [])]
     order = [t for t in order if t in surf]
@@ -283,7 +283,7 @@ def render() -> None:
     row = rows.get(tk, {})
     p = _scene(mode, tk, sf, sd, row, lag)
     if p is None:
-        st.info("Not enough stored history for this view yet — it fills in as nightly sessions accrue. "
+        st.info("Not enough stored history for this view yet — it fills in as daily close snapshots accrue. "
                 "SURFACE and MONEYNESS work from day one.")
     else:
         surface3d.render(p, height=600)

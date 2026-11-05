@@ -1,0 +1,100 @@
+name: VOL SCREENER build (one slot)
+
+# Called by volscreen.yml once per snapshot slot (am / mid / close). The job
+# sleeps until its slot opens, then builds the screen from Cboe's delayed quotes.
+# Only the close slot writes and publishes the IV history; am / mid refresh the
+# committed screen JSON only. Free: the repo is public, so runner minutes
+# (sleeping included) cost nothing.
+
+on:
+  workflow_call:
+    inputs:
+      slot:
+        description: "am, mid, close, or now (forced runs: whichever slot is open)"
+        type: string
+        required: true
+      action:
+        type: string
+        default: "auto"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # up to 300 min asleep + ~15-25 min of chains and fits; 360 is GitHub's cap
+    timeout-minutes: 355
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SLOT: ${{ inputs.slot }}
+      ACTION: ${{ inputs.action }}
+      # "now" lets compute pick the slot open at build time
+      SLOT_ARG: ${{ inputs.slot != 'now' && format('--slot {0}', inputs.slot) || '' }}
+    steps:
+      # the branch tip, not the trigger commit: a run that queued for hours must
+      # see the status.json the previous slot committed, or it rebuilds a done slot
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Wait for the slot to open
+        if: inputs.action != 'force' && inputs.slot != 'now'
+        run: |
+          python -m zenith.volscreen.compute --wait $SLOT_ARG --max-wait 300
+          git pull --ff-only -q origin main
+
+      - name: Gate (trading day, slot window, not yet built)
+        id: gate
+        run: echo "go=$(python -m zenith.volscreen.compute --check $SLOT_ARG --action "$ACTION" | tail -1)" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch price store + IV history (release ephemeris-px)
+        if: steps.gate.outputs.go == 'RUN'
+        run: |
+          mkdir -p data/ephemeris/px
+          gh release download ephemeris-px -p daily.parquet -p theta.parquet -D data/ephemeris/px --clobber || true
+          gh release download ephemeris-px -p 'volscreen_*.parquet' -D data/ephemeris/px --clobber || true
+
+      - name: Build screen
+        if: steps.gate.outputs.go == 'RUN'
+        run: python -m zenith.volscreen.compute --action "$ACTION" $SLOT_ARG
+
+      - name: Publish IV history assets (close slot only)
+        if: steps.gate.outputs.go == 'RUN'
+        run: |
+          if [ -f data/volscreen/cache/built.flag ]; then
+            gh release upload ephemeris-px data/ephemeris/px/volscreen_term.parquet data/ephemeris/px/volscreen_surf.parquet --clobber
+            # observed IV history cannot be rebuilt: keep a weekly backup copy
+            if [ "$(date -u +%u)" = "5" ]; then
+              cp data/ephemeris/px/volscreen_term.parquet data/ephemeris/px/volscreen_term_bak.parquet
+              gh release upload ephemeris-px data/ephemeris/px/volscreen_term_bak.parquet --clobber
+            fi
+          fi
+
+      - name: Commit VOL SCREENER data
+        if: steps.gate.outputs.go == 'RUN'
+        run: |
+          git config user.name "zenith-bot"
+          git config user.email "zenith-bot@users.noreply.github.com"
+          git add -A data/volscreen/
+          if git diff --cached --quiet; then
+            echo "No VOL SCREENER changes."
+            exit 0
+          fi
+          BUILT=$(python -c "import json; print(json.load(open('data/volscreen/status.json', encoding='utf-8-sig')).get('slot', ''))")
+          git commit -q -m "volscreen: $(TZ=America/New_York date +%Y-%m-%d) $BUILT chains"
+          # Commit first, then rebase onto whatever landed meanwhile. No --autostash:
+          # a conflicting stash pop once committed conflict markers into the JSON.
+          # In a rebase "-X theirs" keeps the commit being replayed, i.e. this
+          # fresher snapshot.
+          for i in 1 2 3; do
+            if git pull -q --rebase -X theirs origin main && git push -q origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((i * 15))
+          done
+          echo "push failed after 3 attempts" >&2
+          exit 1
