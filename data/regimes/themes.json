@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-11-05",
+  "as_of": "2026-11-06",
   "themes": {
     "dollar": {
       "signal_score": 59.7,
       "composite_z": 0.778,
-      "real_yield_z": 1.654,
+      "real_yield_z": 1.645,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 71.9,
+      "signal_score": 71.7,
       "components": {
-        "DGS30": 1.691,
+        "DGS30": 1.657,
         "THREEFYTP10": 1.965,
         "GFDEBTN": 1.596
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Low",
       "usdjpy_z": 1.476,
       "usdjpy_pct_move_3m": -0.0142,
-      "us_real_yield_z": 1.654,
+      "us_real_yield_z": 1.645,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.1287,
+      "semis_relative_strength_3m": -0.1643,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -44,15 +44,6 @@
           "archive_date": "2026-10-08",
           "summary": "On today's show we discuss what can stop the hyperscalers from spending, why the stock market is neat all-time highs again, speedball capitalism, how capex cycles work, it's a high beta decade, how to lie with statistics, young people are going to be fine, the top 0.1% is really rich, the problem with getting rich youn…",
           "category": "Interpretation"
-        },
-        {
-          "title": "Hyperscaler Cloud Revenue",
-          "source": "ISABELNET (bank chart-of-the-day mirror)",
-          "link": "https://www.isabelnet.com/percentage-of-company-revenue-from-international-trade/",
-          "published": "Wed, 07 Oct 2026 08:30:44 +0000",
-          "archive_date": "2026-10-07",
-          "summary": "Hyperscaler Cloud Revenue Cloud revenue growth at the hyperscalers hit 48% in Q2. Goldman Sachs equity analysts forecast 55% in Q3. It’s an encouraging sign, but not proof that the AI spending boom will pay off. Image: Goldman Sachs Global Investment Research",
-          "category": "Forecast"
         },
         {
           "title": "The Closer – Midterms, Data Center Damage, Trade – 11/4/26",
@@ -100,6 +91,24 @@
           "category": "Interpretation"
         },
         {
+          "title": "AI Infrastructure Free Fall",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/think-big-blog/ai-infrastructure-free-fall/",
+          "published": "Thu, 05 Nov 2026 16:16:07 +0000",
+          "archive_date": "2026-11-06",
+          "summary": "Polls are closed, election results are in, and so too are exit polling data. While not necessarily the most in focus issue on ballots, anti-data center/AI rhetoric was prevalent during the election. As we highlighted in last night’s Closer among a number of other topics surrounding the election, NBC exit polling showed…",
+          "category": "Interpretation"
+        },
+        {
+          "title": "10 Thursday AM Reads",
+          "source": "The Big Picture (Ritholtz)",
+          "link": "https://ritholtz.com/2026/11/10-thursday-am-reads-517/",
+          "published": "Thu, 05 Nov 2026 11:30:13 +0000",
+          "archive_date": "2026-11-06",
+          "summary": "My morning reads: • Nobody Knows Anything, 2026 Midterms Edition: Everywhere I looked – stock futures, prediction markets, polls – turned out to be a panoply of errors. (The Big Picture) • AI Data Center Boom Set for Upheaval After US Election Rout: Combining Hinojosa’s victory with those of other Democrats who won gub…",
+          "category": "Fact"
+        },
+        {
           "title": "No, DataCenters are Not Crowding-Out Other Investments",
           "source": "Marginal Revolution",
           "link": "https://marginalrevolution.com/marginalrevolution/2026/10/no-datacenters-are-not-crowding-out-other-investments.html?utm_source=rss&utm_medium=rss&utm_campaign=no-datacenters-are-not-crowding-out-other-investments",
@@ -107,20 +116,11 @@
           "archive_date": "2026-10-20",
           "summary": "Based on charts like the one at right, Paul Krugman and many others are arguing that: Massive spending on data centers is crowding out investment in everything else in the economy. Not so fast. Can you see one immediate problem? How is $51b in data center construction spending crowding out $120b in everything else! Ind…",
           "category": "Fact"
-        },
-        {
-          "title": "Consensus Capex Growth Estimates for AI Hyperscalers",
-          "source": "ISABELNET (bank chart-of-the-day mirror)",
-          "link": "https://www.isabelnet.com/sp-500-consensus-long-term-growth-forecast/",
-          "published": "Mon, 19 Oct 2026 08:30:16 +0000",
-          "archive_date": "2026-10-20",
-          "summary": "Consensus Capex Growth Estimates for AI Hyperscalers Initial consensus forecasts have consistently underestimated AI hyperscalers’ capex growth in recent years. Image: Goldman Sachs Global Investment Research",
-          "category": "Forecast"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": -0.0007,
+      "btc_trend_3m": -0.0487,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
@@ -172,15 +172,6 @@
           "category": "Interpretation"
         },
         {
-          "title": "How Fast Do Tariffs Pass Through into Consumer Prices?",
-          "source": "Liberty Street Economics (NY Fed)",
-          "link": "https://libertystreeteconomics.newyorkfed.org/2026/10/how-fast-do-tariffs-pass-through-into-consumer-prices/",
-          "published": "Tue, 06 Oct 2026 11:00:00 +0000",
-          "archive_date": "2026-10-07",
-          "summary": "There has been a lot of interest in how tariffs affect consumer prices (for example, Cavallo et al. 2021, 2025). In this post, we present results from our new research paper that estimates the effects of the 2025-26 tariffs on retail consumer prices. We find that for every percentage point increase in average tariffs, …",
-          "category": "Interpretation"
-        },
-        {
           "title": "The Incoherence of the Trump Tariff Announcements",
           "source": "Conversable Economist",
           "link": "https://conversableeconomist.com/2026/10/15/the-incoherence-of-the-trump-tariff-announcements/",
@@ -197,6 +188,15 @@
           "archive_date": "2026-10-16",
           "summary": "RIP Mehrling; rare earths; American electricity; Character.ai; bonds vs equities; dark matter",
           "category": "Fact"
+        },
+        {
+          "title": "4%+ One-Day Drops",
+          "source": "Bespoke Investment Group",
+          "link": "https://www.bespokepremium.com/think-big-blog/4-one-day-drops/",
+          "published": "Thu, 05 Nov 2026 21:23:08 +0000",
+          "archive_date": "2026-11-06",
+          "summary": "The S&P 500 closed down 4.36% today for its worst day since April 4th, 2025, the 2nd day of a two-day crash from the Tariff Tantrum. Red dots in the log chart of the S&P 500 below show the 56 prior one-day drops of 4% or more for the index since 1952. In case you’re […] The post 4%+ One-Day Drops first appeared on Besp…",
+          "category": "Interpretation"
         },
         {
           "title": "A List of Cost of Living Reduction Measures",

@@ -1,37 +1,37 @@
 {
-  "as_of": "2026-11-05",
+  "as_of": "2026-11-06",
   "trends": {
     "SPY": {
-      "trend_3m": -0.0059,
+      "trend_3m": -0.0494,
       "direction": "down"
     },
     "TLT": {
-      "trend_3m": -0.0083,
-      "direction": "down"
+      "trend_3m": 0.0022,
+      "direction": "up"
     },
     "GLD": {
-      "trend_3m": -0.0652,
+      "trend_3m": -0.0672,
       "direction": "down"
     },
     "DBC": {
-      "trend_3m": 0.0823,
+      "trend_3m": 0.0515,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.0296,
+      "trend_3m": 0.0277,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": -0.0557,
+      "trend_3m": -0.0943,
       "direction": "down"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 1.57,
-    "defensives_avg": 2.283,
+    "cyclicals_avg": 1.049,
+    "defensives_avg": 2.031,
     "cyclicals_leading": false,
-    "as_of": "2026-11-05"
+    "as_of": "2026-11-06"
   },
   "confirmation": {
     "checks": [
@@ -56,20 +56,13 @@
       {
         "check": "Long Treasuries (rate-expectation proxy)",
         "expects": "rising (yields down)",
-        "observed": "falling",
-        "confirms": false
+        "observed": "rising",
+        "confirms": true
       }
     ],
-    "n_confirming": 3,
+    "n_confirming": 4,
     "n_total": 4,
-    "confirmation_ratio": 0.75
+    "confirmation_ratio": 1.0
   },
-  "divergences": [
-    {
-      "flag": "Long Treasuries (rate-expectation proxy)",
-      "classifier_expects": "rising (yields down)",
-      "market_shows": "falling",
-      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
-    }
-  ]
+  "divergences": []
 }
