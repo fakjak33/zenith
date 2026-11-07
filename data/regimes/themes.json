@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-11-06",
+  "as_of": "2026-11-07",
   "themes": {
     "dollar": {
       "signal_score": 59.7,
       "composite_z": 0.778,
-      "real_yield_z": 1.645,
+      "real_yield_z": 1.61,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 71.7,
+      "signal_score": 71.6,
       "components": {
-        "DGS30": 1.657,
+        "DGS30": 1.633,
         "THREEFYTP10": 1.965,
         "GFDEBTN": 1.596
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Low",
       "usdjpy_z": 1.476,
       "usdjpy_pct_move_3m": -0.0142,
-      "us_real_yield_z": 1.645,
+      "us_real_yield_z": 1.61,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.1643,
+      "semis_relative_strength_3m": -0.1468,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -34,15 +34,6 @@
           "published": "Wed, 28 Oct 2026 12:00:03 +0000",
           "archive_date": "2026-10-29",
           "summary": "On today's show we discuss the bull market in earnings, the bear case for AI, defining the AI bubble, the 1987 crash, the best AI hedge, why the labor market remains strong, consumers keep spending money, luxury real estate is booming, why old people are so wealthy, how to fix Netflix, Norm Macdonald and more. The post…",
-          "category": "Interpretation"
-        },
-        {
-          "title": "Animal Spirits: Sudden Wealth Syndrome",
-          "source": "A Wealth of Common Sense",
-          "link": "https://awealthofcommonsense.com/2026/10/animal-spirits-sudden-wealth-syndrome/",
-          "published": "Wed, 07 Oct 2026 12:00:13 +0000",
-          "archive_date": "2026-10-08",
-          "summary": "On today's show we discuss what can stop the hyperscalers from spending, why the stock market is neat all-time highs again, speedball capitalism, how capex cycles work, it's a high beta decade, how to lie with statistics, young people are going to be fine, the top 0.1% is really rich, the problem with getting rich youn…",
           "category": "Interpretation"
         },
         {
@@ -82,15 +73,6 @@
           "category": "Interpretation"
         },
         {
-          "title": "Hyperscaler Cloud Revenue Backlogs",
-          "source": "ISABELNET (bank chart-of-the-day mirror)",
-          "link": "https://www.isabelnet.com/percent-of-sp-500-companies-beating-revenue-and-eps-estimates/",
-          "published": "Thu, 08 Oct 2026 08:30:04 +0000",
-          "archive_date": "2026-10-08",
-          "summary": "Hyperscaler Cloud Revenue Backlogs Hyperscalers’ backlogs keep growing as cloud and AI demand accelerates. For now, the orders are there, but that’s not proof the spending will pay off. Image: Goldman Sachs Global Investment Research",
-          "category": "Interpretation"
-        },
-        {
           "title": "AI Infrastructure Free Fall",
           "source": "Bespoke Investment Group",
           "link": "https://www.bespokepremium.com/think-big-blog/ai-infrastructure-free-fall/",
@@ -116,11 +98,29 @@
           "archive_date": "2026-10-20",
           "summary": "Based on charts like the one at right, Paul Krugman and many others are arguing that: Massive spending on data centers is crowding out investment in everything else in the economy. Not so fast. Can you see one immediate problem? How is $51b in data center construction spending crowding out $120b in everything else! Ind…",
           "category": "Fact"
+        },
+        {
+          "title": "Consensus Capex Growth Estimates for AI Hyperscalers",
+          "source": "ISABELNET (bank chart-of-the-day mirror)",
+          "link": "https://www.isabelnet.com/sp-500-consensus-long-term-growth-forecast/",
+          "published": "Mon, 19 Oct 2026 08:30:16 +0000",
+          "archive_date": "2026-10-20",
+          "summary": "Consensus Capex Growth Estimates for AI Hyperscalers Initial consensus forecasts have consistently underestimated AI hyperscalers’ capex growth in recent years. Image: Goldman Sachs Global Investment Research",
+          "category": "Forecast"
+        },
+        {
+          "title": "When the AI Bubble Bursts",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/onpoint/ai-infrastructure-could-outlast-the-bubble-that-financed-it-by-william-h-janeway-2026-10?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+          "published": "Fri, 30 Oct 2026 09:35:23 GMT",
+          "archive_date": "2026-10-31",
+          "summary": "Speculative bubbles often leave behind valuable infrastructure while bankrupting the investors who financed them. AI could follow the same path, but the industry’s growing reliance on borrowed money raises the risk of a major financial crisis long before its world-beating applications emerge.",
+          "category": "Speculation"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": -0.0487,
+      "btc_trend_3m": -0.0551,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
