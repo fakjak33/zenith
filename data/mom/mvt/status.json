@@ -1,17 +1,17 @@
 {
-  "date": "2026-11-06",
+  "date": "2026-11-10",
   "disclaimer": "Multivariate Trend scores every instrument against ALL of its peers (not just its own history) across six horizons, using both a raw vol-normalized spread and a residual spread with common market/sector factors removed. The residual score is genuinely less redundant with cross-sectional momentum than the raw one (measured, not assumed) and is what feeds the Momentum composite. New, unproven signal (evidence tier C+) -- decision-support and a research monitor, not investment advice.",
   "segments": [
     {
       "segment": "mvt_equities",
       "ok": true,
-      "n": 975,
-      "history_added": 975,
+      "n": 974,
+      "history_added": 974,
       "universe": "equities",
-      "n_priced": 995,
+      "n_priced": 994,
       "panel": {
-        "n_in": 995,
-        "n_kept": 979,
+        "n_in": 994,
+        "n_kept": 978,
         "dropped": {
           "CBC": "insufficient_history(<280d)",
           "CBRS": "insufficient_history(<280d)",
@@ -33,17 +33,17 @@
         "n_days": 1254
       },
       "empirical_excluded": 2,
-      "n_scored": 975,
+      "n_scored": 974,
       "k_factors": 15,
-      "explained_variance_ratio": 0.5431,
-      "effective_factor_count": 72.19,
+      "explained_variance_ratio": 0.5449,
+      "effective_factor_count": 71.357,
       "erc_horizon_weights": {
-        "12_1": 0.1821,
-        "12m": 0.1513,
-        "9m": 0.1531,
-        "6m": 0.1578,
-        "3m": 0.1636,
-        "1m": 0.192
+        "12_1": 0.1828,
+        "12m": 0.1506,
+        "9m": 0.1519,
+        "6m": 0.1591,
+        "3m": 0.1628,
+        "1m": 0.1928
       }
     },
     {
@@ -67,8 +67,8 @@
     {
       "segment": "mvt_etfs",
       "ok": true,
-      "n": 766,
-      "history_added": 766,
+      "n": 761,
+      "history_added": 761,
       "universe": "etfs",
       "n_priced": 877,
       "panel": {
@@ -87,20 +87,20 @@
           "VDG": "insufficient_history(<280d)",
           "VDV": "insufficient_history(<280d)"
         },
-        "n_days": 753
+        "n_days": 751
       },
-      "empirical_excluded": 99,
-      "n_scored": 766,
+      "empirical_excluded": 104,
+      "n_scored": 761,
       "k_factors": 3,
-      "explained_variance_ratio": 0.6586,
-      "effective_factor_count": 11.967,
+      "explained_variance_ratio": 0.661,
+      "effective_factor_count": 11.847,
       "erc_horizon_weights": {
-        "12_1": 0.1863,
-        "12m": 0.153,
-        "9m": 0.1466,
-        "6m": 0.1576,
-        "3m": 0.1506,
-        "1m": 0.2058
+        "12_1": 0.1881,
+        "12m": 0.1533,
+        "9m": 0.146,
+        "6m": 0.1542,
+        "3m": 0.1505,
+        "1m": 0.2078
       }
     }
   ]
