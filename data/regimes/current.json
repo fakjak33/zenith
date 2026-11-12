@@ -1,12 +1,12 @@
 {
-  "as_of": "2026-11-11",
+  "as_of": "2026-11-12",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-11-30",
   "regime": "Goldilocks / Reflation",
-  "raw_regime": "Deflation / Slowdown",
+  "raw_regime": "Stagflation",
   "transitioning": true,
   "streak_months": 1,
-  "confidence": 31.1,
+  "confidence": 39.4,
   "growth": {
     "rising": false,
     "breadth": 0.2727272727272727,
@@ -127,17 +127,17 @@
     ]
   },
   "inflation": {
-    "rising": false,
-    "breadth": 0.4166666666666667,
-    "n_rising": 5,
+    "rising": true,
+    "breadth": 0.6666666666666666,
+    "n_rising": 8,
     "n_total": 12,
-    "z": 0.046,
+    "z": 0.115,
     "indicators": [
       {
         "id": "CPIAUCSL",
         "label": "CPI (headline)",
-        "raw_value": 3.4563,
-        "z": 0.06,
+        "raw_value": 3.8186,
+        "z": 0.237,
         "direction": 1,
         "rising": true,
         "lag_days": 12,
@@ -146,10 +146,10 @@
       {
         "id": "CPILFESL",
         "label": "Core CPI",
-        "raw_value": 2.3722,
-        "z": -0.521,
+        "raw_value": 2.6755,
+        "z": -0.315,
         "direction": 1,
-        "rising": false,
+        "rising": true,
         "lag_days": 12,
         "freq": "M"
       },
@@ -216,8 +216,8 @@
       {
         "id": "EXPINF1YR",
         "label": "Cleveland Fed 1y Inflation Expectation",
-        "raw_value": 2.9754,
-        "z": 1.022,
+        "raw_value": 3.0421,
+        "z": 1.114,
         "direction": 1,
         "rising": true,
         "lag_days": 5,
@@ -236,31 +236,31 @@
       {
         "id": "CUSR0000SEHA",
         "label": "CPI Shelter",
-        "raw_value": 2.6029,
-        "z": -0.921,
+        "raw_value": 2.8098,
+        "z": -0.806,
         "direction": 1,
-        "rising": false,
+        "rising": true,
         "lag_days": 12,
         "freq": "M"
       },
       {
         "id": "CUSR0000SASLE",
         "label": "CPI Services less Energy",
-        "raw_value": 2.941,
-        "z": -0.51,
+        "raw_value": 3.2906,
+        "z": -0.273,
         "direction": 1,
-        "rising": false,
+        "rising": true,
         "lag_days": 12,
         "freq": "M"
       }
     ]
   },
   "momentum": {
-    "score": 0.0,
+    "score": -0.0,
     "growth_slope": 0.0012,
     "growth_r2": 0.005,
-    "infl_slope": -0.0123,
-    "infl_r2": 0.068,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.00) while inflation signals have moderated (trend R²=0.07)."
+    "infl_slope": 0.0029,
+    "infl_r2": 0.004,
+    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.00) while inflation signals have accelerated (trend R²=0.00)."
   }
 }

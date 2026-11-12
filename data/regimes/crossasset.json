@@ -1,37 +1,37 @@
 {
-  "as_of": "2026-11-11",
+  "as_of": "2026-11-12",
   "trends": {
     "SPY": {
-      "trend_3m": -0.0335,
+      "trend_3m": -0.0189,
       "direction": "down"
     },
     "TLT": {
-      "trend_3m": -0.013,
+      "trend_3m": -0.0017,
       "direction": "down"
     },
     "GLD": {
-      "trend_3m": -0.0742,
+      "trend_3m": -0.0904,
       "direction": "down"
     },
     "DBC": {
-      "trend_3m": 0.0329,
+      "trend_3m": 0.028,
       "direction": "up"
     },
     "UUP": {
-      "trend_3m": 0.0344,
+      "trend_3m": 0.0441,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": -0.0731,
+      "trend_3m": -0.0697,
       "direction": "down"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 1.204,
-    "defensives_avg": 2.256,
+    "cyclicals_avg": 1.309,
+    "defensives_avg": 2.19,
     "cyclicals_leading": false,
-    "as_of": "2026-11-11"
+    "as_of": "2026-11-12"
   },
   "confirmation": {
     "checks": [
@@ -49,15 +49,15 @@
       },
       {
         "check": "Gold trend (inflation-hedge proxy)",
-        "expects": "falling",
+        "expects": "rising",
         "observed": "falling",
-        "confirms": true
+        "confirms": false
       },
       {
         "check": "Long Treasuries (rate-expectation proxy)",
-        "expects": "rising (yields down)",
+        "expects": "falling (yields up)",
         "observed": "falling",
-        "confirms": false
+        "confirms": true
       }
     ],
     "n_confirming": 3,
@@ -66,8 +66,8 @@
   },
   "divergences": [
     {
-      "flag": "Long Treasuries (rate-expectation proxy)",
-      "classifier_expects": "rising (yields down)",
+      "flag": "Gold trend (inflation-hedge proxy)",
+      "classifier_expects": "rising",
       "market_shows": "falling",
       "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
     }
