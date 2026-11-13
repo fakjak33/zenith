@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-11-12",
+  "as_of": "2026-11-13",
   "themes": {
     "dollar": {
       "signal_score": 60.3,
       "composite_z": 0.828,
-      "real_yield_z": 1.663,
+      "real_yield_z": 1.767,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 71.3,
+      "signal_score": 71.6,
       "components": {
-        "DGS30": 1.641,
+        "DGS30": 1.715,
         "THREEFYTP10": 1.877,
         "GFDEBTN": 1.596
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Low",
       "usdjpy_z": 1.513,
       "usdjpy_pct_move_3m": -0.0095,
-      "us_real_yield_z": 1.663,
+      "us_real_yield_z": 1.767,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.1187,
+      "semis_relative_strength_3m": -0.1377,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -100,27 +100,27 @@
           "category": "Interpretation"
         },
         {
-          "title": "Hyperscaler Debt Issuance Across Currencies",
-          "source": "ISABELNET (bank chart-of-the-day mirror)",
-          "link": "https://www.isabelnet.com/u-s-corporate-debt/",
-          "published": "Thu, 12 Nov 2026 09:30:06 +0000",
-          "archive_date": "2026-11-12",
-          "summary": "Hyperscaler Debt Issuance Across Currencies Hyperscalers have issued $296 billion of debt worldwide so far this year, with another $440 billion expected in 2027. The pace may vary from borrower to borrower, depending on market conditions. Image: Goldman Sachs Global Investment Research",
-          "category": "Forecast"
+          "title": "Data Center Construction Increasingly Constrained by Legal Barriers",
+          "source": "FactSet Insight",
+          "link": "https://insight.factset.com/data-center-construction-increasingly-constrained-by-legal-barriers",
+          "published": "Thu, 12 Nov 2026 21:00:00 GMT",
+          "archive_date": "2026-11-13",
+          "summary": "In recent months, data center construction has been increasingly constrained by the emergence of hundreds of legal barriers put in place by municipalities, counties, and even entire states across the country. FactSet recently summarized the nature, length, characteristics, and geographical dispersion of these barriers …",
+          "category": "Interpretation"
         },
         {
-          "title": "AI Infrastructure Free Fall",
-          "source": "Bespoke Investment Group",
-          "link": "https://www.bespokepremium.com/think-big-blog/ai-infrastructure-free-fall/",
-          "published": "Thu, 05 Nov 2026 16:16:07 +0000",
-          "archive_date": "2026-11-06",
-          "summary": "Polls are closed, election results are in, and so too are exit polling data. While not necessarily the most in focus issue on ballots, anti-data center/AI rhetoric was prevalent during the election. As we highlighted in last night’s Closer among a number of other topics surrounding the election, NBC exit polling showed…",
+          "title": "FEDS Paper: Artificial Intelligence and the U.S. Economy: Current Evidence",
+          "source": "Federal Reserve (Working Papers)",
+          "link": "https://www.federalreserve.gov/econres/feds/artificial-intelligence-and-the-us-economy-current-evidence.htm",
+          "published": "Thu, 12 Nov 2026 15:20:00 GMT",
+          "archive_date": "2026-11-13",
+          "summary": "Nick Carollo, Leland D. Crane, Daniel Garcia Molina, and Joseph NicholsWe assess the current evidence on how AI-related investment and the use of AI are affecting the U.S. macroeconomy. Specifically, we document the boom in data center capital investment, the current rate of adoption of AI tools in the economy, the imp…",
           "category": "Interpretation"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": -0.0607,
+      "btc_trend_3m": -0.1051,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
