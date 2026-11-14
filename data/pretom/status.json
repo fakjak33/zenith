@@ -1,11 +1,11 @@
 {
-  "date": "2026-11-13",
-  "state": "LOCKED",
+  "date": "2026-11-14",
+  "state": "WINDOW_OPEN",
   "month": "2026-11",
-  "tau_offset": -10,
-  "days_to_open": 1,
-  "days_to_close_classic": 6,
-  "days_to_close_t1": 7,
+  "tau_offset": -9,
+  "days_to_open": 0,
+  "days_to_close_classic": 5,
+  "days_to_close_t1": 6,
   "schedule": {
     "tau": "2026-11-30",
     "lock_by": "2026-11-13",
@@ -17,53 +17,12 @@
     "tom_start": "2026-11-30",
     "tom_end": "2026-12-03"
   },
-  "calendar_check": "ok",
-  "n_months": 29,
+  "calendar_check": "n/a",
   "segments": [
     {
-      "segment": "universe",
+      "segment": "gate",
       "ok": true,
-      "source": "stale:vanguard_vone",
-      "n": 1007,
-      "weights_source": "vone"
-    },
-    {
-      "segment": "prices(lock)",
-      "ok": true,
-      "n": 995,
-      "requested": 1008,
-      "error": ""
-    },
-    {
-      "segment": "lock",
-      "ok": true,
-      "n": 98,
-      "month": "2026-11",
-      "late": false
-    },
-    {
-      "segment": "prices(2026-11)",
-      "ok": true,
-      "n": 99,
-      "requested": 99,
-      "error": ""
-    },
-    {
-      "segment": "reconcile(2026-11)",
-      "ok": true,
-      "state": "locked"
-    },
-    {
-      "segment": "prices(spy-max)",
-      "ok": true,
-      "n": 1,
-      "requested": 1,
-      "error": ""
-    },
-    {
-      "segment": "tom_longrun",
-      "ok": true,
-      "n": 405
+      "note": "non-trading day"
     }
   ]
 }
