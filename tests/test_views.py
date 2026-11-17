@@ -480,7 +480,7 @@ def test_nav_registry_covers_every_page():
     assert {"TODAY", "WEEKLY BRIEF", "CAS", "PRETOM", "PEAD", "FACTOR MOMENTUM", "EDGE SCREENS",
             "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM", "TREND FOLLOWING", "CLEAN BETA",
             "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "OPTIONS VAULT", "VOL SCREENER", "VOL SURFACE",
-            "STRATEGY INDICES", "THETA RUN", "ARCHIVE", "SOURCES"} == labels
+            "STRATEGY INDICES", "THETA RUN", "LAB", "ARCHIVE", "SOURCES"} == labels
     slugs = [f.slug for f in nav.FEATURES]
     assert len(slugs) == len(set(slugs)) and "home" not in slugs
     assert set(f.group for f in nav.FEATURES) <= set(nav.GROUPS)
@@ -694,3 +694,14 @@ def test_vol_badges_never_raise():
     from zenith.volscreen import view as vv
     for b in (vv.today_badge(), sv.today_badge()):
         assert b is None or "VOL SCREENER" in b or "STRATEGY INDICES" in b
+
+
+def test_backtest_lab_renders_on_synthetic():
+    src = ("import streamlit as st\n"
+           "st.session_state['bt_src'] = 'Synthetic'\n"
+           "st.session_state['bt_synth'] = 'trending'\n"
+           "from zenith.backtest.views import lab\nlab.render()\n")
+    at, text = _render(src)
+    assert "key findings" in text.lower()
+    assert "OOS LOCKED" in text
+    assert "SHARPE" in text
