@@ -10,7 +10,7 @@ live in `zenith/config.py` (CLEAN BETA block); this file says *why*.
 | 1 | Universe: Russell 1000 vs SPY now; ~100–150 curated ADRs vs ACWI as a later toggle | Reuses the R1000 loader every other tab uses; free foreign data is patchy |
 | 2 | Score = clean-beta metrics + a yfinance fundamental quality/mispricing proxy | LSY 2018: the anomaly runs through *overpriced* high-beta names, so a mispricing layer matters |
 | 3 | Put ladder is advisory only (no manual position entry) | Monitor, not an execution engine |
-| 4 | [P]/[S]/[E] data-confidence tags scoped to this tab; dated PARALLAX export | Neither existed in ZENITH; scoped so other tabs are untouched |
+| 4 | [P]/[S]/[E] data-confidence tags scoped to this tab; dated BACKTEST (formerly PARALLAX) export | Neither existed in ZENITH; scoped so other tabs are untouched |
 | 5 | Data: yfinance only, no new dependencies, no paid API | Matches every other tab; paid upgrade path stays open |
 
 ## Implementation decisions (2026-10-03)

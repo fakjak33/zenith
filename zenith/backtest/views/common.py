@@ -327,3 +327,28 @@ def dist_fig(r: pd.Series, b: pd.Series) -> go.Figure:
 
 def esc(x) -> str:
     return html.escape(str(x))
+
+
+def spec_to_widgets(spec: StrategySpec) -> dict:
+    """LAB builder widget values that reproduce ``spec`` (used by LIBRARY › open in LAB)."""
+    w = {"bt_src": spec.src, "bt_tf": spec.tf, "bt_start": int(spec.start_year), "bt_rule": spec.rule,
+         "bt_size": spec.sizing_mode, "bt_tvol": int(round(spec.target_vol * 100)), "bt_dir": spec.direction,
+         "bt_cap": int(spec.capital), "bt_buf": int(round(spec.buffer * 100)), "bt_stop": spec.use_atr_stop,
+         "bt_tp": spec.use_atr_tp, "bt_stopk": float(spec.atr_stop_mult), "bt_tpk": float(spec.atr_tp_mult),
+         "bt_cost": float(spec.cost_bps), "bt_slip": float(spec.slippage_bps), "bt_fee": float(spec.contract_fee),
+         "bt_hold": int(spec.holdout), "bt_notes": spec.notes}
+    if spec.src == "Market":
+        if spec.name in QUICK:
+            w["bt_quick"] = spec.name
+        else:
+            w["bt_quick"], w["bt_custom"] = "custom…", spec.name
+    else:
+        w["bt_synth"] = spec.name
+    for k, v in spec.params.items():
+        w[param_key(spec.rule, k)] = v
+    on = {f["key"]: f for f in spec.filters if f.get("on", True)}
+    for fkey in FILTERS:
+        w[f"bt_f_{fkey}"] = fkey in on
+        for pn, pv in (on.get(fkey, {}).get("params") or {}).items():
+            w[f"bt_fp_{fkey}_{pn}"] = pv
+    return w

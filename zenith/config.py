@@ -1,4 +1,4 @@
-"""Zenith config: paths + ported Parallax theme."""
+"""Zenith config: paths, feature settings and the v2 theme tokens."""
 
 from __future__ import annotations
 
@@ -468,7 +468,7 @@ for _d in (TREND_DIR, *TREND_HISTORY_DIRS.values(), *TREND_EVENT_DIRS.values()):
 # monitors the cheapest ways to hedge it. Every threshold lives here; the
 # rationale for each is in zenith/beta/DECISIONS.md.
 BETA_DIR = DATA_DIR / "beta"
-BETA_EXPORT_DIR = BETA_DIR / "exports"          # point-in-time PARALLAX snapshots
+BETA_EXPORT_DIR = BETA_DIR / "exports"          # point-in-time snapshots for BACKTEST
 BETA_FILES = {
     "latest": BETA_DIR / "latest.json",           # monthly screen: every ticker, every metric
     "basket": BETA_DIR / "basket.json",           # quarterly basket (buffer-banded)

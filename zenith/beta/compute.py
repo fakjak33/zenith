@@ -256,7 +256,7 @@ def run_hedge(today: date, status: list[dict]) -> dict:
 
 
 def export(latest: dict, basket: dict, hedge_state: dict) -> None:
-    """Point-in-time PARALLAX snapshot: data/beta/exports/<as_of>.{json,csv}."""
+    """Point-in-time snapshot for BACKTEST: data/beta/exports/<as_of>.{json,csv}."""
     as_of = latest.get("as_of")
     if not as_of:
         return

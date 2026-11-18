@@ -2,8 +2,9 @@
 
 > Scrapes credible, **free** financial **insights** and **academic research**
 > every night, dedupes so nothing repeats, sorts insights into **text-only** vs
-> **visual** (charts/tables), and keeps a browsable **archive**. Parallax vintage
-> aesthetic. Links out to everything.
+> **visual** (charts/tables), and keeps a browsable **archive**. Institutional
+> monospace look. Links out to everything. The **BACKTEST** section (formerly the
+> separate PARALLAX app) is a click-built, guard-railed strategy research lab.
 
 ## How it works
 - **Nightly GitHub Action** (`.github/workflows/scrape.yml`, ~02:30 UTC) runs
