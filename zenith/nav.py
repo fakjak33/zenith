@@ -71,6 +71,8 @@ FEATURES: tuple[Feature, ...] = (
             ":material/leaderboard:"),
     Feature("OPTIONS", "THETA RUN", "theta-run", "zenith.theta.view",
             "THETA RUN — options-portfolio speedrun vs the tape and the bot", 0, True, ":material/sports_esports:"),
+    Feature("BACKTEST", "LAB", "backtest-lab", "zenith.backtest.views.lab",
+            "LAB — click-built strategies with the guard rails on", 3, icon=":material/science:"),
     Feature("GAMES", "EPHEMERIS", "ephemeris", "zenith.ephemeris.view",
             "EPHEMERIS — blind-chart tape-reading trainer", 1, True, ":material/candlestick_chart:"),
     Feature("RESEARCH", "INDEX", "index", "zenith.index.view",
@@ -78,7 +80,7 @@ FEATURES: tuple[Feature, ...] = (
     Feature("RESEARCH", "ARCHIVE", "archive", None, "ARCHIVE — every scraped day", 0, icon=":material/inventory_2:"),
     Feature("RESEARCH", "SOURCES", "sources", None, "SOURCES — the feed registry", 0, icon=":material/rss_feed:"),
 )
-GROUPS = ("MARKETS", "SIGNALS", "PORTFOLIO", "OPTIONS", "GAMES", "RESEARCH")
+GROUPS = ("MARKETS", "SIGNALS", "PORTFOLIO", "OPTIONS", "BACKTEST", "GAMES", "RESEARCH")
 PAGES: dict[str, "st.Page"] = {}          # slug -> st.Page, filled by build()
 
 
