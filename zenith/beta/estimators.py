@@ -12,7 +12,7 @@ ols   : the plain market model over the last BETA_LOOKBACK days — beta, ρ,
         with |residual| > k·σ (event days). Kept for comparison and because
         IVOL and ρ are defined on it.
 vasicek: cross-sectional Bayesian shrinkage of OLS beta toward the universe
-        mean (Vasicek 1973) — computed so the PARALLAX grid has all three.
+        mean (Vasicek 1973) — computed so the BACKTEST grid has all three.
 """
 
 from __future__ import annotations

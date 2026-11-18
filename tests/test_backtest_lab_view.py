@@ -112,3 +112,67 @@ def test_options_page_renders():
     assert not at.exception, [e.value for e in at.exception]
     t = _text(at)
     assert "MODELED" in t and "SHARPE" in t
+
+
+def test_learn_page_renders():
+    at = AppTest.from_string("from zenith.backtest.views import learn_view\nlearn_view.render()\n", default_timeout=60)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "Permutation" in _text(at)
+
+
+def test_library_lists_and_compares_synthetic():
+    from zenith.backtest import library
+    from zenith.backtest.spec import StrategySpec
+    store = {}
+    library.save(store, "trend", StrategySpec(src="Synthetic", name="trending", rule="ema"))
+    library.save(store, "mr", StrategySpec(src="Synthetic", name="mean_reverting", rule="meanrev"))
+    at = AppTest.from_string("from zenith.backtest.views import library_view\nlibrary_view.render()\n",
+                             default_timeout=300)
+    at.session_state["bt_saved"] = store
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "RESEARCH LEDGER" in _text(at)
+
+
+def test_spec_to_widgets_roundtrip():
+    """LIBRARY › open in LAB must rebuild the identical spec (same hash)."""
+    from zenith.backtest.spec import StrategySpec
+    from zenith.backtest.views import common as Cm
+    spec = StrategySpec(src="Synthetic", name="regime", rule="tsmom", params={"lookback": 120, "smooth": 3},
+                        filters=[{"key": "trend", "on": True, "params": {"length": 150}}], holdout=25,
+                        cost_bps=2.0, buffer=0.1)
+    at = AppTest.from_string(SRC, default_timeout=300)
+    for k, v in Cm.spec_to_widgets(spec).items():
+        at.session_state[k] = v
+    at.session_state["bt_step"] = "DEFINE"
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    # read the spec LAB built back out of the ledger's trial family + recompute through the builder path
+    rebuilt = StrategySpec(src=at.session_state["bt_src"], name=at.session_state["bt_synth"],
+                           tf=at.session_state["bt_tf"], start_year=at.session_state["bt_start"],
+                           rule=at.session_state["bt_rule"],
+                           params={k: at.session_state[f"bt_p_tsmom_{k}"] for k in ("lookback", "smooth")},
+                           filters=[{"key": "trend", "on": True, "params": {"length": at.session_state["bt_fp_trend_length"]}}],
+                           holdout=at.session_state["bt_hold"], cost_bps=at.session_state["bt_cost"],
+                           buffer=at.session_state["bt_buf"] / 100)
+    assert rebuilt.params == spec.params and rebuilt.filters == spec.filters and rebuilt.holdout == 25
+
+
+@pytest.mark.skipif(not (__import__("pathlib").Path(__file__).resolve().parents[1] / "data" / "backtest" / "cache"
+                         / "SPY.parquet").exists(), reason="needs cached SPY prices")
+def test_accumulation_page_renders():
+    at = AppTest.from_string("from zenith.backtest.views import accumulation_view\naccumulation_view.render()\n",
+                             default_timeout=300)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "FINAL EQUITY" in _text(at)
+
+
+def test_accumulation_page_synthetic():
+    at = AppTest.from_string("from zenith.backtest.views import accumulation_view\naccumulation_view.render()\n",
+                             default_timeout=300)
+    at.session_state["ac_src"] = "Synthetic"
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "RETURN ON SAVED" in _text(at)

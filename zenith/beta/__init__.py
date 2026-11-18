@@ -27,7 +27,7 @@ from an earlier month; the basket rebalances when it is from an earlier
 quarter-start month (config.BETA_REBALANCE_MONTHS); the hedge monitor runs
 every trading day. A monitor and screener, not an execution engine — the
 put ladder is advisory. Every monthly screen also writes a point-in-time
-snapshot to data/beta/exports/ for PARALLAX backtests.
+snapshot to data/beta/exports/ for BACKTEST.
 
 Data confidence: every column carries a [P]/[S]/[E] tag (CONF below).
 Design decisions are logged in DECISIONS.md next to this file.

@@ -53,7 +53,7 @@ COLS = {
                               + ". IVOL enters inverted (low IVOL scores high)."),
     f"bswa β {tag('bswa')}": "Welch slope-winsorized, age-decayed beta vs SPY (~2 years, half-life ~4 months).",
     f"OLS β {tag('ols')}": "Plain 252-day OLS beta vs SPY, for comparison.",
-    f"Vasicek β {tag('vasicek')}": "OLS beta shrunk toward the universe mean (for the PARALLAX grid).",
+    f"Vasicek β {tag('vasicek')}": "OLS beta shrunk toward the universe mean (for the BACKTEST grid).",
     f"β pct {tag('bswa')}": "bswa beta percentile within the liquid universe.",
     f"ρ {tag('rho')}": "252-day correlation of daily returns with SPY.",
     f"R² {tag('r2')}": "Systematic share of variance (ρ²).",
@@ -462,7 +462,7 @@ _PLAYBOOK = [
      "Frazzini & Pedersen (2014); Hong & Sraer (2016)", "12-1 return and 200-day trend both up = HEADWIND."),
     ("The null to beat", "A",
      "If the clean-beta stock sleeve does not beat SPY futures levered to the same ex-ante beta with the same "
-     "overlay, after costs, stock selection is adding cost, not value. That test belongs to PARALLAX, fed by "
+     "overlay, after costs, stock selection is adding cost, not value. That test belongs to BACKTEST, fed by "
      "this tab's monthly export.", "Spec Phase 3", "Snapshots in data/beta/exports/."),
 ]
 

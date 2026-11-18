@@ -91,11 +91,11 @@ section[data-testid="stSidebar"] > div {{ background: {T.bg}; }}
 .z-pright {{ margin-left: 0.6rem; }}
 
 /* --- section headers ------------------------------------------------------------- */
-.parallax-sec {{ display: flex; align-items: center; gap: 0.6rem; margin: 1.4rem 0 0.6rem 0;
+.z-sec {{ display: flex; align-items: center; gap: 0.6rem; margin: 1.4rem 0 0.6rem 0;
     font-size: 0.76rem; letter-spacing: 0.22em; text-transform: uppercase; color: {T.text}; }}
-.parallax-sec::before {{ content: ""; width: 2px; height: 0.9rem; background: var(--sec, {T.teal}); flex: none; }}
-.parallax-sec::after {{ content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, {T.line}, transparent); }}
-.parallax-tag {{ color: {T.muted}; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; }}
+.z-sec::before {{ content: ""; width: 2px; height: 0.9rem; background: var(--sec, {T.teal}); flex: none; }}
+.z-sec::after {{ content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, {T.line}, transparent); }}
+.z-tag {{ color: {T.muted}; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; }}
 
 /* --- figures ----------------------------------------------------------------------- */
 .z-kpis {{ display: flex; flex-wrap: wrap; border: 1px solid {T.line}; background: {T.panel}; }}
@@ -291,7 +291,7 @@ def section(label: str, idx: int = 0, help: str | None = None) -> str:
     cols = THEME.section_colors
     c1 = cols[idx % len(cols)]
     badge = help_badge(help) if help else ""
-    return (f'<div class="parallax-sec" style="--sec:{c1};">'
+    return (f'<div class="z-sec" style="--sec:{c1};">'
             f'<span>{label}</span>{badge}</div>')
 
 
