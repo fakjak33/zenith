@@ -66,3 +66,9 @@ def test_extended_stats_present():
     res = run_strategy(REGISTRY["ema"](), generate("trending", n_days=800, seed=8))
     for k in ("Vol", "Skew", "TailRatio", "Ulcer", "ProfitFactor", "MaxDD_bars"):
         assert k in res.stats and np.isfinite(res.stats[k])
+
+
+def test_dsr_with_one_trial_equals_psr():
+    r = pd.Series(np.random.default_rng(3).normal(0.0003, 0.01, 2000))
+    assert metrics.deflated_sharpe_ratio(r, n_trials=1) == pytest.approx(metrics.probabilistic_sharpe_ratio(r))
+    assert metrics.deflated_sharpe_ratio(r, n_trials=50) < metrics.probabilistic_sharpe_ratio(r)
