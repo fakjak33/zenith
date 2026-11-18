@@ -20,11 +20,12 @@ def _to_ohlcv(close: np.ndarray, index: pd.DatetimeIndex, rng: np.random.Generat
     """Build a plausible OHLCV frame from a close-price path."""
     close = np.asarray(close, dtype=float)
     intraday = np.abs(rng.normal(0, 0.005, size=close.shape)) * close
-    high = close + intraday
-    low = close - intraday
     openp = np.empty_like(close)
     openp[0] = close[0]
     openp[1:] = close[:-1]
+    # bars must contain their own open and close (PARALLAX's did not ~1/3 of the time)
+    high = np.maximum(openp, close) + intraday
+    low = np.minimum(openp, close) - intraday
     volume = rng.integers(1_000_000, 5_000_000, size=close.shape)
     return pd.DataFrame(
         {"open": openp, "high": high, "low": low, "close": close, "volume": volume},
