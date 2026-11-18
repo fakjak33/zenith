@@ -25,10 +25,10 @@ from ..engine import metrics
 from ..engine.trades import extract_trades
 from ..spec import StrategySpec, run_spec, split_holdout
 from . import common as C
-from . import steps
+from . import attribution, steps
+from .attribution import GOALS
 
 STEPS = ["DEFINE", "BUILD", "SENSITIVITY", "ROBUSTNESS", "FILTERS", "ATTRIBUTION", "OUT-OF-SAMPLE"]
-GOALS = ["Absolute return", "Beat buy-and-hold", "Crisis alpha / diversifier", "Income / carry"]
 
 _FINDINGS = [
     {"stat": "Fit as little as possible; judge a rule by how it behaves across a whole range of "
@@ -58,8 +58,8 @@ def step_define(spec: StrategySpec) -> None:
     g = st.session_state.get("bt_goal", GOALS[0])
     st.selectbox("goal", GOALS, index=GOALS.index(g), key="bt_goal_w", on_change=_keep, args=("bt_goal_w", "bt_goal"))
     st.caption("Writing the economic reason first is the cheapest overfitting defence there is: if you can't say "
-               "why the edge exists, a good backtest is more likely luck than signal. Benchmark auto-suggestion "
-               "and the verdict card arrive with ATTRIBUTION.")
+               "why the edge exists, a good backtest is more likely luck than signal. "
+               "ATTRIBUTION uses the goal to suggest the right benchmark.")
 
 
 def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades: pd.DataFrame) -> None:
@@ -120,16 +120,7 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
         st.dataframe(trades.iloc[::-1], use_container_width=True, hide_index=True)
 
 
-def _checklist(spec: StrategySpec) -> list[tuple[str, bool]]:
-    h = spec.hash()
-    m = C.memo()
-    ran = lambda prefix: any(k.startswith(f"{prefix}|{h}") for k in m)  # noqa: E731
-    return [("hypothesis written", bool(spec.notes.strip())), ("sensitivity sweep", ran("sens")),
-            ("permutation test", ran("perm")), ("noise test", ran("noise")), ("walk-forward", ran("wf")),
-            ("filter ablation", ran("abl") or not spec.filters)]
-
-
-def step_oos(spec: StrategySpec, full: pd.DataFrame, locked, aux: dict, n_trials: int) -> None:
+def step_oos(spec: StrategySpec, full: pd.DataFrame, locked, aux: dict, n_trials: int, facts: dict) -> None:
     st.markdown(section("OUT-OF-SAMPLE — one look, logged", 6), unsafe_allow_html=True)
     if locked is None:
         C.banner(T.coral, "NO HOLDOUT", "set a locked out-of-sample % in 05 · COSTS & HOLDOUT — with 0% there is "
@@ -139,15 +130,9 @@ def step_oos(spec: StrategySpec, full: pd.DataFrame, locked, aux: dict, n_trials
     fam = spec.family()
     rev = lg.revealed(led, fam)
     if not rev:
-        items = _checklist(spec)
-        done = sum(ok for _, ok in items)
-        st.markdown("".join(
-            f'<div style="font-size:0.8rem; color:{T.text if ok else T.muted}; margin:0.15rem 0;">'
-            f'<span style="color:{T.teal if ok else T.faint};">{"■" if ok else "□"}</span>&nbsp; {C.esc(lbl)}</div>'
-            for lbl, ok in items), unsafe_allow_html=True)
-        C.banner(T.teal if done == len(items) else T.amber, f"{done}/{len(items)} DONE",
-                 f"the holdout from {locked.date()} has never been shown. You get one look for this data + holdout; "
-                 f"after that any change to the strategy is flagged.")
+        attribution.card(facts)
+        C.banner(T.amber, "LOCKED", f"the holdout from {locked.date()} has never been shown. You get one look for "
+                 "this data + holdout; after that any change to the strategy is flagged.")
         sure = st.checkbox("I'm done tuning this strategy", key="bt_sure")
         if st.button("REVEAL OUT-OF-SAMPLE · ONCE", type="primary", disabled=not sure, key="bt_reveal"):
             lg.reveal(led, fam, spec.hash(), spec.to_json())
@@ -189,6 +174,7 @@ def step_oos(spec: StrategySpec, full: pd.DataFrame, locked, aux: dict, n_trials
                  use_container_width=True)
     st.caption("Expect the out-of-sample Sharpe to be lower — roughly half is common for a fairly-tuned rule. "
                "A collapse to zero or below says the in-sample result was mostly the tuning.")
+    attribution.card(facts)
 
 
 # --------------------------------------------------------------- page ----
@@ -247,7 +233,7 @@ def render() -> None:
         elif step == "FILTERS":
             steps.filters(spec, ins, aux)
         elif step == "ATTRIBUTION":
-            C.banner(T.violet, "PHASE 3", "beta / alpha split, up- vs down-market capture, returns by regime, "
-                     "factor regression and the verdict card land in the next release")
+            attribution.step(spec, ins, res, aux)
         elif step == "OUT-OF-SAMPLE":
-            step_oos(spec, full, locked, aux, n_trials)
+            step_oos(spec, full, locked, aux, n_trials,
+                     attribution.facts(spec, ins, full, locked, res, len(trades), n_trials, aux))

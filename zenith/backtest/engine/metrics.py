@@ -126,8 +126,9 @@ def deflated_sharpe_ratio(returns: pd.Series, n_trials: int,
     This is the headline overfitting metric for spectrum testing: testing many
     variants raises the bar a strategy must clear to be considered 'real'.
     """
-    if n_trials < 1:
-        n_trials = 1
+    if n_trials <= 1:
+        # one trial = no selection to deflate for (PARALLAX's formula hit ppf(0) = -inf here → DSR of 100%)
+        return probabilistic_sharpe_ratio(returns, benchmark_sr=0.0, periods=periods)
     euler = 0.5772156649
     # expected max Sharpe of n_trials random strategies (annualized)
     e_max = trial_sr_std * (

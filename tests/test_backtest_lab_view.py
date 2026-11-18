@@ -64,3 +64,15 @@ def test_oos_reveal_then_contamination():
     at.session_state["bt_p_ema_fast"] = 20
     at.run()
     assert "CONTAMINATED" in _text(at)
+
+
+def test_attribution_step_renders_with_kpis():
+    at = _app("ATTRIBUTION")
+    t = _text(at)
+    assert "ALPHA / YR" in t and "RETURN FROM BETA" in t
+
+
+def test_verdict_card_on_oos_step():
+    at = _app("OUT-OF-SAMPLE")
+    t = _text(at)
+    assert "evidence strength" in t.lower() and "Permutation test" in t
