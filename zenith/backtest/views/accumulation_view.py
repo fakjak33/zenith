@@ -138,20 +138,33 @@ def render() -> None:
             C.banner(T.amber, "DCA WINS", "the rule ended behind simply investing every contribution on schedule — "
                      "the usual result for dip-buying; check whether it bought you a smaller drawdown instead")
 
+        wa, wb = C.window_pick(close.index, "ac_win")
+        W = lambda x: C.clip(x, wa, wb)  # noqa: E731
+        if (wa, wb) != (close.index[0], close.index[-1]):
+            e0, e1 = W(res.equity), W(res.invested)
+            if len(e0) > 1:
+                added = float(e1.iloc[-1] - e1.iloc[0])
+                gain = float(e0.iloc[-1] - e0.iloc[0]) - added
+                dgain = float(W(bench["DCA"]).iloc[-1] - W(bench["DCA"]).iloc[0]) - added
+                st.caption(f"window · added \\${added:,.0f} · market gain \\${gain:,.0f} (DCA \\${dgain:,.0f}) · "
+                           f"price {W(close).iloc[-1] / W(close).iloc[0] - 1:+.1%}")
         tabs = st.tabs(["EQUITY", "SIGNALS", "DRAWDOWN", "STATS", "REGRESSION"])
         with tabs[0]:
             fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.62, 0.38], vertical_spacing=0.04)
-            fig.add_trace(go.Scatter(x=res.invested.index, y=res.invested, name="contributed",
+            inv_w = W(res.invested)
+            fig.add_trace(go.Scatter(x=inv_w.index, y=inv_w, name="contributed",
                                      line=dict(color=T.faint, dash="dash", width=1)), 1, 1)
             for i, (nm, eq) in enumerate(bench.items()):
+                eq = W(eq)
                 fig.add_trace(go.Scatter(x=eq.index, y=eq, name=nm, line=dict(color=[T.amber, T.violet][i], width=1.2)),
                               1, 1)
-            fig.add_trace(go.Scatter(x=res.equity.index, y=res.equity, name=buy.label,
+            eqw, plw = W(res.equity), W(res.profit)
+            fig.add_trace(go.Scatter(x=eqw.index, y=eqw, name=buy.label,
                                      line=dict(color=T.teal, width=1.8)), 1, 1)
-            fig.add_trace(go.Scatter(x=res.profit.index, y=res.profit, name="P/L", fill="tozeroy",
+            fig.add_trace(go.Scatter(x=plw.index, y=plw, name="P/L", fill="tozeroy",
                                      fillcolor=up.fill(T.teal, 0.15), line=dict(color=T.teal, width=1),
                                      showlegend=False), 2, 1)
-            dpl = bench["DCA"] - res.invested.reindex(bench["DCA"].index)
+            dpl = W(bench["DCA"] - res.invested.reindex(bench["DCA"].index))
             fig.add_trace(go.Scatter(x=dpl.index, y=dpl, name="DCA P/L", line=dict(color=T.amber, width=1),
                                      showlegend=False), 2, 1)
             fig.update_yaxes(title_text="$", row=1, col=1)
@@ -168,7 +181,10 @@ def render() -> None:
                 pass
             fig = make_subplots(rows=2 if pan else 1, cols=1, shared_xaxes=True,
                                 row_heights=[0.65, 0.35] if pan else [1.0], vertical_spacing=0.04)
-            fig.add_trace(go.Scatter(x=close.index, y=close, name=name, line=dict(color=T.text, width=1)), 1, 1)
+            inw = ((close.index >= wa) & (close.index <= wb))
+            bs, ss = bs & inw, ss & inw
+            cw = W(close)
+            fig.add_trace(go.Scatter(x=cw.index, y=cw, name=name, line=dict(color=T.text, width=1)), 1, 1)
             fig.add_trace(go.Scatter(x=close.index[bs], y=close.to_numpy()[bs], mode="markers", name=f"buy ({bs.sum()})",
                                      marker=dict(symbol="triangle-up", size=8, color=T.teal)), 1, 1)
             if ss.any():
@@ -177,6 +193,7 @@ def render() -> None:
                                          marker=dict(symbol="triangle-down", size=8, color=T.coral)), 1, 1)
             if pan:
                 ser, lbl, levels = pan
+                ser = W(ser)
                 fig.add_trace(go.Scatter(x=ser.index, y=ser, name=lbl, line=dict(color=T.amber, width=1)), 2, 1)
                 for v, lab in levels:
                     fig.add_hline(y=v, line=dict(color=T.coral, dash="dot", width=1), row=2, col=1)
@@ -184,7 +201,7 @@ def render() -> None:
         with tabs[2]:
             fig = go.Figure()
             for i, (nm, eq) in enumerate([(buy.label, res.equity)] + list(bench.items())):
-                dd = metrics.drawdown_series(eq.pct_change().fillna(0)) * 100
+                dd = metrics.drawdown_series(W(eq).pct_change().fillna(0)) * 100
                 fig.add_trace(go.Scatter(x=dd.index, y=dd, name=nm, line=dict(color=[T.teal, T.amber, T.violet][i], width=1)))
             fig.update_yaxes(title_text="% below peak")
             up.show(fig, 340, "drawdown of the account (contributions included)", key="ac_dd")

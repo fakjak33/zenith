@@ -622,3 +622,51 @@ def seeds_panel(spec: StrategySpec, key: str = "bt_seeds") -> None:
     with st.expander("per-seed table"):
         st.dataframe(df.set_index("seed").style.format({"Sharpe": "{:.2f}", "CAGR": "{:.1%}", "MaxDD": "{:.1%}",
                                                         "Vol": "{:.1%}"}), use_container_width=True)
+
+
+# --------------------------------------------------------------- window ----
+WINDOWS = ["ALL", "1ST HALF", "2ND HALF", "LAST 10Y", "LAST 5Y", "LAST 3Y", "LAST 1Y", "CUSTOM"]
+
+
+def window_pick(index: pd.DatetimeIndex, key: str) -> tuple[pd.Timestamp, pd.Timestamp]:
+    """Zoom window for every time-series chart below it. Charts re-slice and rebase to the window
+    start, so the y axis always fits the period you picked (Plotly's own box-zoom can't refit y)."""
+    lo, hi = pd.Timestamp(index[0]), pd.Timestamp(index[-1])
+    c1, c2 = st.columns([3, 2])
+    pick = c1.segmented_control("window", WINDOWS, default="ALL", key=f"{key}_w",
+                                label_visibility="collapsed") or "ALL"
+    if pick == "1ST HALF":
+        a, b = lo, lo + (hi - lo) / 2
+    elif pick == "2ND HALF":
+        a, b = lo + (hi - lo) / 2, hi
+    elif pick.startswith("LAST"):
+        yrs = int(pick.split()[1].rstrip("Y"))
+        a, b = max(lo, hi - pd.DateOffset(years=yrs)), hi
+    elif pick == "CUSTOM":
+        a, b = c2.slider("dates", lo.to_pydatetime(), hi.to_pydatetime(),
+                         (lo.to_pydatetime(), hi.to_pydatetime()), format="YYYY-MM", key=f"{key}_rng",
+                         label_visibility="collapsed")
+        a, b = pd.Timestamp(a), pd.Timestamp(b)
+    else:
+        a, b = lo, hi
+    if pick not in ("ALL", "CUSTOM"):
+        c2.caption(f"{a.date()} → {b.date()} · charts rebased to the window start")
+    return a, b
+
+
+def clip(x, a: pd.Timestamp, b: pd.Timestamp):
+    """Slice a Series/DataFrame to [a, b]."""
+    return x[(x.index >= a) & (x.index <= b)]
+
+
+def window_kpis(r: pd.Series, b: pd.Series | None, periods: int, label_b: str = "bench") -> None:
+    """One-line stats for the zoom window."""
+    if len(r) < 3:
+        return
+    s = metrics.summary(r, periods=periods)
+    txt = (f"window · CAGR {s['CAGR'] * 100:.1f}% · Sharpe {s['Sharpe']:.2f} · max DD {s['MaxDD'] * 100:.1f}% "
+           f"· vol {s['Vol'] * 100:.1f}%")
+    if b is not None and len(b.dropna()) > 3:
+        bs = metrics.summary(b.fillna(0), periods=periods)
+        txt += f"  |  {label_b} CAGR {bs['CAGR'] * 100:.1f}% · Sharpe {bs['Sharpe']:.2f} · max DD {bs['MaxDD'] * 100:.1f}%"
+    st.caption(txt)

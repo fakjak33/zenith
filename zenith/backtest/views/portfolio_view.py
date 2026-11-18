@@ -91,12 +91,15 @@ def render() -> None:
 
     tabs = st.tabs(["EQUITY", "CORRELATION", "RISK", "WEIGHTS & IDM", "STATS"])
     with tabs[0]:
+        wa, wb = C.window_pick(port.index, "pf_win")
+        if (wa, wb) != (port.index[0], port.index[-1]):
+            C.window_kpis(C.clip(port, wa, wb), None, periods)
         fig = go.Figure()
-        for i, (k, v) in enumerate(df.items()):
+        for i, (k, v) in enumerate(C.clip(df, wa, wb).items()):
             eq = (1 + v).cumprod()
             fig.add_trace(go.Scatter(x=eq.index, y=eq, name=k, line=dict(color=T.cat[(i + 1) % len(T.cat)], width=1),
                                      opacity=0.75))
-        peq = (1 + port).cumprod()
+        peq = (1 + C.clip(port, wa, wb)).cumprod()
         fig.add_trace(go.Scatter(x=peq.index, y=peq, name="PORTFOLIO", line=dict(color=T.teal, width=2.4)))
         fig.update_yaxes(type="log", title_text="growth of 1")
         up.show(fig, 440, "portfolio vs components", key="pf_eq")

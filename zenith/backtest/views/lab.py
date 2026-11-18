@@ -92,6 +92,11 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
     if fut:
         C.banner(T.amber, "FUTURES DATA", "Yahoo's continuous front-month series is not roll-adjusted: each roll can "
                  "show up as a fake jump, and carry/roll yield is missing. Treat trend results as approximate.")
+    wa, wb = C.window_pick(r.index, "bt_win")
+    rw, bw, insw = C.clip(r, wa, wb), C.clip(b, wa, wb), C.clip(ins, wa, wb)
+    gw = C.clip(res.gross_returns, wa, wb) if res.gross_returns is not None else None
+    if (wa, wb) != (r.index[0], r.index[-1]):
+        C.window_kpis(rw, bw, p, "b&h")
     names = ["EQUITY", "PRICE & TRADES", "ROLLING", "MONTHLY", "DISTRIBUTION", "COSTS", "STATS", "TRADES",
              "SIZING"] + (["SEEDS"] if spec.src == "Synthetic" else [])
     tabs = st.tabs(names + (["CONTRACTS"] if fut else []))
@@ -104,16 +109,19 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
         with tabs[-1]:
             _contracts_tab(spec, ins, res, fut)
     with tabs[0]:
-        up.show(C.equity_fig(r, b, res.gross_returns), 460, "growth of 1 · log scale", key="bt_eq")
+        up.show(C.equity_fig(rw, bw, gw), 460, "growth of 1 · LIN/LOG top right", key="bt_eq")
     with tabs[1]:
-        up.show(C.price_fig(ins, res, spec.strategy(), trades), 480, "price, overlays, entries, forecast",
-                key="bt_px")
+        from types import SimpleNamespace
+        tw = trades[(pd.to_datetime(trades["entry_date"]) >= wa) & (pd.to_datetime(trades["entry_date"]) <= wb)] \
+            if not trades.empty else trades
+        up.show(C.price_fig(insw, SimpleNamespace(forecast=C.clip(res.forecast, wa, wb)), spec.strategy(), tw), 480,
+                "price, overlays, entries, forecast", key="bt_px")
     with tabs[2]:
-        up.show(C.rolling_sharpe_fig(r, b, p), 320, "rolling 1-year sharpe", key="bt_roll")
+        up.show(C.rolling_sharpe_fig(rw, bw, p), 320, "rolling 1-year sharpe", key="bt_roll")
     with tabs[3]:
-        up.show(C.monthly_fig(r), max(260, 22 * len(set(r.index.year)) + 60), "monthly returns %", key="bt_mon")
+        up.show(C.monthly_fig(rw), max(260, 22 * len(set(rw.index.year)) + 60), "monthly returns %", key="bt_mon")
     with tabs[4]:
-        up.show(C.dist_fig(r, b), 320, "return distribution", key="bt_dist")
+        up.show(C.dist_fig(rw, bw), 320, "return distribution", key="bt_dist")
     with tabs[5]:
         rows = []
         for k in (0, 1, 2, 3):
