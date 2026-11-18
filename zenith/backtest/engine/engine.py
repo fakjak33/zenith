@@ -35,6 +35,31 @@ class BacktestResult:
     costs: pd.Series | None = None
 
 
+def buffer_and_round(position: pd.Series, width: pd.Series, multiplier: float | None) -> pd.Series:
+    """Only trade when the target leaves a ±width band around the current holding (Carver's
+    buffer), then hold whole contracts when ``multiplier`` is set. Causal: uses bar t only."""
+    tgt = position.to_numpy(float)
+    w = np.nan_to_num(width.reindex(position.index).to_numpy(float), nan=0.0)
+    out = np.zeros_like(tgt)
+    cur = 0.0
+    m = multiplier or 0.0
+    for i in range(len(tgt)):
+        lo, hi = tgt[i] - w[i], tgt[i] + w[i]
+        if m:
+            if w[i] <= 0:
+                cur = np.round(tgt[i] / m) * m
+            elif cur < lo or cur > hi:
+                lo_c, hi_c = np.ceil(lo / m) * m, np.floor(hi / m) * m
+                # band narrower than one contract → nearest whole contract to the target
+                cur = (lo_c if cur < lo else hi_c) if lo_c <= hi_c else np.round(tgt[i] / m) * m
+        elif cur < lo:
+            cur = lo
+        elif cur > hi:
+            cur = hi
+        out[i] = cur
+    return pd.Series(out, index=position.index)
+
+
 def run_single(
     forecast: pd.Series,
     ohlcv: pd.DataFrame,
@@ -69,6 +94,13 @@ def run_single(
         from .execution import apply_delay
         position = apply_delay(position, bt.entry_delay, bt.exit_delay)
 
+    # Carver buffering and whole-contract rounding (futures)
+    if bt.buffer > 0 or bt.multiplier:
+        f10 = position_from_forecast(forecast * 0 + 10.0, close, capital=bt.capital, target_vol=bt.target_vol,
+                                     vol_span=bt.vol_lookback, sizing_mode=bt.sizing_mode, fixed_pct=bt.fixed_pct,
+                                     fixed_dollar=bt.fixed_dollar, periods=periods).abs()
+        position = buffer_and_round(position, f10 * bt.buffer, bt.multiplier)
+
     # ATR stop/take-profit overlay
     position, events = apply_atr_overlay(position, ohlcv.reindex(forecast.index), risk)
 
@@ -85,6 +117,8 @@ def run_single(
     traded_notional = traded_units * close
     cost_rate = (bt.cost_bps + bt.slippage_bps) / 10_000.0
     cost_ret = (traded_notional * cost_rate) / bt.capital
+    if bt.multiplier and bt.fee_per_contract:
+        cost_ret = cost_ret + (traded_units / bt.multiplier) * bt.fee_per_contract / bt.capital
 
     net_ret = (gross_ret - cost_ret).fillna(0.0)
     equity = bt.capital * (1.0 + net_ret).cumprod()

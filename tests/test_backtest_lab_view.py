@@ -76,3 +76,39 @@ def test_verdict_card_on_oos_step():
     at = _app("OUT-OF-SAMPLE")
     t = _text(at)
     assert "evidence strength" in t.lower() and "Permutation test" in t
+
+
+def test_portfolio_page_renders_empty():
+    at = AppTest.from_string("from zenith.backtest.views import portfolio_view\nportfolio_view.render()\n",
+                             default_timeout=120)
+    at.session_state["bt_saved"] = {}
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "SAVE STRATEGIES FIRST" in _text(at)
+
+
+def test_portfolio_page_combines_synthetic_specs():
+    from zenith.backtest import library
+    from zenith.backtest.spec import StrategySpec
+    store = {}
+    for nm, kind, rule in (("a", "trending", "ema"), ("b", "mean_reverting", "meanrev"), ("c", "regime", "tsmom")):
+        library.save(store, nm, StrategySpec(src="Synthetic", name=kind, rule=rule))
+    at = AppTest.from_string("from zenith.backtest.views import portfolio_view\nportfolio_view.render()\n",
+                             default_timeout=300)
+    at.session_state["bt_saved"] = store
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert "PORTFOLIO SHARPE" in _text(at)
+
+
+_OPT_CACHE = __import__("pathlib").Path(__file__).resolve().parents[1] / "data" / "stratidx" / "cache" / "VIX.csv"
+
+
+@pytest.mark.skipif(not _OPT_CACHE.exists(), reason="needs cached Cboe VIX history")
+def test_options_page_renders():
+    at = AppTest.from_string("from zenith.backtest.views import options_view\noptions_view.render()\n",
+                             default_timeout=600)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    t = _text(at)
+    assert "MODELED" in t and "SHARPE" in t

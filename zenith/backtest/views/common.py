@@ -16,7 +16,7 @@ from ... import ui_plotly as up
 from ...config import THEME as T
 from ...ui_theme import section
 from .. import ledger as lg
-from ..config import caps, is_local
+from ..config import FUTURES, caps, is_local
 from ..data.providers import TIMEFRAMES, get_prices, resample_ohlcv
 from ..data.synthetic import generate
 from ..engine import metrics
@@ -51,6 +51,14 @@ def load_aux(spec: StrategySpec) -> dict:
         except Exception:  # noqa: BLE001
             aux["vix"] = None
     return aux
+
+
+# ---------------------------------------------------------------- saved ----
+def saved() -> dict:
+    if "bt_saved" not in st.session_state:
+        from .. import library
+        st.session_state["bt_saved"] = library.load_disk()
+    return st.session_state["bt_saved"]
 
 
 # ---------------------------------------------------------------- ledger ----
@@ -100,6 +108,10 @@ def builder() -> StrategySpec:
     else:
         name = st.selectbox("synthetic market", SYNTH, key="bt_synth",
                             help="Known-answer worlds: a trend rule should win on 'trending' and fail on 'gbm'.")
+    fut = FUTURES.get(name.upper()) if src == "Market" else None
+    if fut:
+        st.caption(f"{fut[0]} · ${fut[1]:,.0f} per point · tick {fut[2]:g} · margin ≈ ${fut[3]:,.0f}/contract. "
+                   "Sized in whole contracts.")
     c1, c2 = st.columns(2)
     tf = c1.selectbox("bars", list(TIMEFRAMES), key="bt_tf")
     start_year = c2.number_input("from", 1990, 2024, 2005, key="bt_start")
@@ -138,6 +150,12 @@ def builder() -> StrategySpec:
                      help="Carver's default is 20%. Ignored for fixed % sizing.") / 100
     direction = c2.selectbox("direction", ["both", "long", "short"], key="bt_dir")
     c1, c2 = st.columns(2)
+    capital = c1.number_input("capital $", 10_000, 100_000_000, 1_000_000, 50_000, key="bt_cap",
+                              help="Matters for futures: small accounts can't hold fractional contracts.")
+    buffer = c2.slider("no-trade buffer %", 0, 30, 10 if fut else 0, 5, key="bt_buf",
+                       help="Carver's buffer: only trade when the ideal position moves more than this share of an "
+                            "average position away from what you hold. Cuts turnover and costs.") / 100
+    c1, c2 = st.columns(2)
     stop = c1.toggle("ATR stop", key="bt_stop")
     tp = c2.toggle("ATR target", key="bt_tp")
     stop_k = c1.number_input("stop × ATR", 0.5, 10.0, 3.0, 0.5, key="bt_stopk", disabled=not stop)
@@ -147,13 +165,15 @@ def builder() -> StrategySpec:
     c1, c2 = st.columns(2)
     cost = c1.number_input("commission bps", 0.0, 50.0, 1.0, 0.5, key="bt_cost")
     slip = c2.number_input("slippage bps", 0.0, 50.0, 1.5, 0.5, key="bt_slip")
+    fee = st.number_input("$ per contract per side", 0.0, 20.0, 2.5, 0.25, key="bt_fee") if fut else 2.5
     hold = st.slider("locked out-of-sample %", 0, 50, 30, 5, key="bt_hold",
                      help="The most recent slice of history is hidden from every step until you reveal it "
                           "once, at the end. Setting 0 removes your only honest test.")
     return StrategySpec(src=src, name=name, tf=tf, start_year=int(start_year), rule=rule, params=params,
                         filters=filters, sizing_mode=mode, target_vol=tvol, direction=direction,
                         use_atr_stop=stop, use_atr_tp=tp, atr_stop_mult=stop_k, atr_tp_mult=tp_k,
-                        cost_bps=cost, slippage_bps=slip, holdout=int(hold),
+                        cost_bps=cost, slippage_bps=slip, holdout=int(hold), capital=float(capital),
+                        buffer=float(buffer), contract_fee=float(fee),
                         notes=st.session_state.get("bt_notes", ""))
 
 
