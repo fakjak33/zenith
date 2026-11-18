@@ -22,7 +22,6 @@ from ..accumulation import strategies as AS
 from ..accumulation.engine import AccumConfig, _accum_stats, benchmarks, run_accumulation
 from ..accumulation.regression import regression_channel
 from ..data.providers import TIMEFRAMES, resample_ohlcv
-from ..data.synthetic import generate
 from ..engine import metrics
 from . import common as C
 
@@ -55,6 +54,13 @@ def _builder():
         name = st.text_input("ticker", "AAPL", key="ac_custom").strip().upper() if pick == "custom…" else pick
     else:
         name = st.selectbox("synthetic market", C.SYNTH, key="ac_synth")
+        st.caption(C.KIND_HELP.get(name, ""))
+    seed, base = 42, "SPY"
+    if src == "Synthetic":
+        c1, c2 = st.columns(2)
+        seed = int(c1.number_input("seed", 1, 1000, 42, 1, key="ac_seed"))
+        if name in C.TICKER_KINDS:
+            base = c2.text_input("base ticker", "SPY", key="ac_base").strip().upper() or "SPY"
     c1, c2 = st.columns(2)
     start = c1.number_input("from", 1990, 2024, 2010, key="ac_start")
     tf = c2.selectbox("bars", list(TIMEFRAMES), index=1, key="ac_tf")
@@ -91,17 +97,17 @@ def _builder():
         st.caption(sc.desc)
         cfg.sell_fraction = st.slider("sell fraction per signal", 0.05, 1.0, 0.25, 0.05, key="ac_sfrac")
         sell = sc(**_params(sc, "sell"))
-    return src, name, int(start), tf, cfg, buy, sell, buy_cls
+    return src, name, int(start), tf, cfg, buy, sell, buy_cls, seed, base
 
 
 def render() -> None:
     st.markdown(key_findings(_FINDINGS), unsafe_allow_html=True)
     left, right = st.columns([1, 2.6], gap="large")
     with left:
-        src, name, start, tf, cfg, buy, sell, buy_cls = _builder()
+        src, name, start, tf, cfg, buy, sell, buy_cls, seed, base = _builder()
     with right:
         try:
-            df = generate(name, n_days=4000, seed=42) if src == "Synthetic" else C._market(name)
+            df = C._synthetic(name, seed, base) if src == "Synthetic" else C._market(name)
         except Exception as exc:  # noqa: BLE001
             C.banner(T.coral, "NO DATA", f"{name}: {exc}")
             return
@@ -187,6 +193,15 @@ def render() -> None:
             cols = ["FinalEquity", "Contributed", "Profit", "ReturnOnContributed%", "ReturnOnDeployed%", "AnnVol%",
                     "MaxDD%", "Beta", "Corr"]
             st.dataframe(pd.DataFrame(rows).T[cols].round(2), use_container_width=True)
+            # time-weighted returns: strip contributions out of the equity change
+            flow = res.invested.diff().fillna(0.0).reindex(res.equity.index).fillna(0.0)
+            prev = res.equity.shift(1)
+            twr = ((res.equity - flow) / prev - 1).where(prev > 0).fillna(0.0)
+            from ..core.volatility import bars_per_year
+            C.diversify_panel(twr, close.pct_change().reindex(twr.index), bars_per_year(close.index),
+                              f"{name} BUY & HOLD", "ac_div")
+            st.caption("Uses time-weighted returns, so contributions don't count as performance. Idle cash "
+                       "naturally lowers correlation, so compare with the DCA row above too.")
         with tabs[4]:
             c1, c2, c3 = st.columns(3)
             lb = int(c1.number_input("lookback bars", 60, 2000, 504, 10, key="ac_rlb"))

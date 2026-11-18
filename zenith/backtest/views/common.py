@@ -18,14 +18,15 @@ from ...ui_theme import section
 from .. import ledger as lg
 from ..config import FUTURES, caps, is_local
 from ..data.providers import TIMEFRAMES, get_prices, resample_ohlcv
-from ..data.synthetic import generate
+from ..data.synthetic import KIND_HELP, TICKER_KINDS, from_ticker, generate
+from ..engine import diversify as dv
 from ..engine import metrics
 from ..rules import REGISTRY
-from ..spec import FILTERS, StrategySpec
+from ..spec import FILTERS, SIZING_MODES, StrategySpec
 
 QUICK = ["SPY", "QQQ", "IWM", "EFA", "EEM", "TLT", "IEF", "GLD", "DBC", "^GSPC",
          "ES=F", "NQ=F", "ZN=F", "GC=F", "CL=F", "6E=F", "BTC-USD"]
-SYNTH = ["trending", "mean_reverting", "regime", "fat_tailed", "gbm"]
+SYNTH = ["trending", "mean_reverting", "regime", "fat_tailed", "gbm", *TICKER_KINDS]
 MIN_TRADES, MIN_YEARS = 30, 5.0
 
 
@@ -35,9 +36,19 @@ def _market(ticker: str) -> pd.DataFrame:
     return get_prices(ticker, start=None)
 
 
-def load(spec: StrategySpec, name: str | None = None) -> pd.DataFrame:
+@st.cache_data(ttl=3600, show_spinner=False)
+def _synthetic(kind: str, seed: int, base: str) -> pd.DataFrame:
+    if kind in TICKER_KINDS:
+        return from_ticker(kind, _market(base), seed=seed)
+    return generate(kind, n_days=5000, seed=seed)
+
+
+def load(spec: StrategySpec, name: str | None = None, seed: int | None = None) -> pd.DataFrame:
     name = name or spec.name
-    df = generate(name, n_days=5000, seed=42) if spec.src == "Synthetic" else _market(name)
+    if spec.src == "Synthetic":
+        df = _synthetic(name, int(spec.seed if seed is None else seed), spec.synth_base)
+    else:
+        df = _market(name)
     df = df[df.index >= pd.Timestamp(f"{spec.start_year}-01-01")]
     return resample_ohlcv(df, TIMEFRAMES[spec.tf]).dropna(subset=["close"])
 
@@ -107,7 +118,17 @@ def builder() -> StrategySpec:
         name = st.text_input("ticker", "AAPL", key="bt_custom").strip().upper() if pick == "custom…" else pick
     else:
         name = st.selectbox("synthetic market", SYNTH, key="bt_synth",
-                            help="Known-answer worlds: a trend rule should win on 'trending' and fail on 'gbm'.")
+                            help="Known-answer worlds: a trend rule should win on 'trending' and fail on 'gbm'. "
+                                 "The last four learn from a real ticker.")
+        st.caption(KIND_HELP.get(name, ""))
+    seed, base = 42, "SPY"
+    if src == "Synthetic":
+        c1, c2 = st.columns(2)
+        seed = int(c1.number_input("seed", 1, 1000, 42, 1, key="bt_seed",
+                                   help="Same seed = same path. Try several, or run SEEDS in BUILD to test "
+                                        "hundreds at once."))
+        if name in TICKER_KINDS:
+            base = c2.text_input("base ticker", "SPY", key="bt_base").strip().upper() or "SPY"
     fut = FUTURES.get(name.upper()) if src == "Market" else None
     if fut:
         st.caption(f"{fut[0]} · ${fut[1]:,.0f} per point · tick {fut[2]:g} · margin ≈ ${fut[3]:,.0f}/contract. "
@@ -142,13 +163,52 @@ def builder() -> StrategySpec:
                     fp[pn] = _num(pn, pt, f"bt_fp_{fkey}_{pn}")
             filters.append({"key": fkey, "on": True, "params": fp})
 
-    st.markdown(section("04 · SIZING & EXITS", 2), unsafe_allow_html=True)
-    mode = st.radio("sizing", ["vol_target", "fixed_pct"], horizontal=True, key="bt_size",
-                    format_func=lambda m: {"vol_target": "vol target", "fixed_pct": "fixed %"}[m])
+    st.markdown(section("04 · SIZING & EXITS", 2, help="How big each position is. Pick ONE mode: only its "
+                        "own controls are used, and the sentence under it says exactly what you are building."),
+                unsafe_allow_html=True)
+    mode = st.radio("sizing", list(SIZING_MODES), horizontal=True, key="bt_size",
+                    format_func=lambda m: SIZING_MODES[m])
+    fpct, risk, tvol, scale = 1.0, 0.01, 0.20, True
+    stop_k_now = float(st.session_state.get("bt_stopk", 3.0))
+    if mode == "fixed_pct":
+        c1, c2 = st.columns([1.4, 1])
+        fpct = c1.slider("notional % of capital", 1, 300, 100, 1, key="bt_fpct",
+                         help="Market value of the position as a share of capital. 100% = fully invested, "
+                              "no leverage; above 100% is leverage.") / 100
+        scale = c2.toggle("scale by signal", False, key="bt_scale",
+                          help="Off: every trade is the same size. On: size is proportional to forecast/10, so "
+                               "a weak signal holds less and the strongest (forecast 20) holds double.")
+        tail = (f" at a normal signal (forecast 10), up to {fpct * 200:.0f}% at the cap (20)." if scale
+                else ", whatever the signal strength.")
+        st.caption(f"Each trade holds **{fpct * 100:.0f}% of capital**{tail} No volatility adjustment: a quiet "
+                   "and a wild market get the same dollars.")
+    elif mode == "fixed_risk":
+        c1, c2 = st.columns([1.4, 1])
+        risk = c1.slider("risk % of capital per trade", 0.1, 20.0, 1.0, 0.1, key="bt_risk",
+                         help="What you lose if the ATR stop is hit. 0.5-2% is the classic range; 10% "
+                              "means a handful of straight stop-outs roughly halves the account.") / 100
+        scale = c2.toggle("scale by signal", False, key="bt_scale",
+                          help="Off: every trade risks the same amount. On: risk is proportional to forecast/10.")
+        st.caption(f"Position = {risk * 100:.1f}% x capital / ({stop_k_now:g} x ATR). If price moves "
+                   f"{stop_k_now:g} ATRs against you the stop closes the trade for a **{risk * 100:.1f}% loss** "
+                   "(more on gaps). The ATR stop is switched on for you. Tight stops mean big positions: "
+                   "the SIZING tab in BUILD shows the leverage this implies.")
+        if risk >= 0.05:
+            st.caption(f":orange[{risk * 100:.0f}% per trade is very aggressive: losing streaks of 5-10 trades "
+                       "are normal for trend rules.]")
+    else:
+        tvol = st.slider("target vol %", 5, 60, 20, key="bt_tvol",
+                         help="The annualised volatility this one position should run at. Carver: 10-25% for "
+                              "a single strategy; above about half your Sharpe (as a %) is beyond half-Kelly.") / 100
+        zone = ("conservative" if tvol < 0.10 else "typical (Carver uses ~20%)" if tvol <= 0.25
+                else "aggressive" if tvol <= 0.40 else "very risky: deep drawdowns are near-certain")
+        st.caption(f"Units = (forecast/10) x capital x {tvol * 100:.0f}% / (blended vol x price). At a normal "
+                   f"signal the position swings about **{tvol * 100:.0f}% of capital a year**: {zone}. "
+                   "Calmer market, bigger position. The SIZING tab in BUILD works today's numbers by hand.")
     c1, c2 = st.columns(2)
-    tvol = c1.slider("target vol %", 5, 40, 20, key="bt_tvol",
-                     help="Carver's default is 20%. Ignored for fixed % sizing.") / 100
-    direction = c2.selectbox("direction", ["both", "long", "short"], key="bt_dir")
+    direction = c1.selectbox("direction", ["both", "long", "short"], key="bt_dir")
+    lev = float(c2.number_input("max leverage x", 0.0, 20.0, 0.0, 0.5, key="bt_lev",
+                                help="Caps notional / capital. 0 = no cap. 1 = never borrow."))
     c1, c2 = st.columns(2)
     capital = c1.number_input("capital $", 10_000, 100_000_000, 1_000_000, 50_000, key="bt_cap",
                               help="Matters for futures: small accounts can't hold fractional contracts.")
@@ -156,10 +216,12 @@ def builder() -> StrategySpec:
                        help="Carver's buffer: only trade when the ideal position moves more than this share of an "
                             "average position away from what you hold. Cuts turnover and costs.") / 100
     c1, c2 = st.columns(2)
-    stop = c1.toggle("ATR stop", key="bt_stop")
+    if mode == "fixed_risk":
+        st.session_state["bt_stop"] = True
+    stop = c1.toggle("ATR stop", key="bt_stop", disabled=mode == "fixed_risk")
     tp = c2.toggle("ATR target", key="bt_tp")
-    stop_k = c1.number_input("stop × ATR", 0.5, 10.0, 3.0, 0.5, key="bt_stopk", disabled=not stop)
-    tp_k = c2.number_input("target × ATR", 0.5, 20.0, 6.0, 0.5, key="bt_tpk", disabled=not tp)
+    stop_k = c1.number_input("stop x ATR", 0.5, 10.0, 3.0, 0.5, key="bt_stopk", disabled=not stop)
+    tp_k = c2.number_input("target x ATR", 0.5, 20.0, 6.0, 0.5, key="bt_tpk", disabled=not tp)
 
     st.markdown(section("05 · COSTS & HOLDOUT", 4), unsafe_allow_html=True)
     c1, c2 = st.columns(2)
@@ -171,6 +233,8 @@ def builder() -> StrategySpec:
                           "once, at the end. Setting 0 removes your only honest test.")
     return StrategySpec(src=src, name=name, tf=tf, start_year=int(start_year), rule=rule, params=params,
                         filters=filters, sizing_mode=mode, target_vol=tvol, direction=direction,
+                        fixed_pct=float(fpct), risk_pct=float(risk), scale_by_forecast=bool(scale),
+                        max_leverage=lev, seed=seed, synth_base=base,
                         use_atr_stop=stop, use_atr_tp=tp, atr_stop_mult=stop_k, atr_tp_mult=tp_k,
                         cost_bps=cost, slippage_bps=slip, holdout=int(hold), capital=float(capital),
                         buffer=float(buffer), contract_fee=float(fee),
@@ -333,6 +397,9 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
     """LAB builder widget values that reproduce ``spec`` (used by LIBRARY › open in LAB)."""
     w = {"bt_src": spec.src, "bt_tf": spec.tf, "bt_start": int(spec.start_year), "bt_rule": spec.rule,
          "bt_size": spec.sizing_mode, "bt_tvol": int(round(spec.target_vol * 100)), "bt_dir": spec.direction,
+         "bt_fpct": int(round(spec.fixed_pct * 100)), "bt_risk": float(round(spec.risk_pct * 100, 1)),
+         "bt_scale": bool(spec.scale_by_forecast), "bt_lev": float(spec.max_leverage),
+         "bt_seed": int(spec.seed), "bt_base": spec.synth_base,
          "bt_cap": int(spec.capital), "bt_buf": int(round(spec.buffer * 100)), "bt_stop": spec.use_atr_stop,
          "bt_tp": spec.use_atr_tp, "bt_stopk": float(spec.atr_stop_mult), "bt_tpk": float(spec.atr_tp_mult),
          "bt_cost": float(spec.cost_bps), "bt_slip": float(spec.slippage_bps), "bt_fee": float(spec.contract_fee),
@@ -352,3 +419,206 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
         for pn, pv in (on.get(fkey, {}).get("params") or {}).items():
             w[f"bt_fp_{fkey}_{pn}"] = pv
     return w
+
+
+# ------------------------------------------------------- diversification ----
+def diversify_panel(s_ret: pd.Series, u_ret: pd.Series, periods: int, u_label: str, key: str) -> None:
+    """Correlation to the underlying, crisis behaviour, the add-to-portfolio test and the blend frontier."""
+    from ... import ui_kit as uk
+    d = dv.analyse(s_ret, u_ret, periods)
+    st.markdown(section(f"DIVERSIFICATION vs {u_label}", 3,
+                        help="Would this strategy improve a portfolio that already holds the underlying? "
+                             "Low or negative correlation, especially in the worst months, is what you want."),
+                unsafe_allow_html=True)
+    if not d.get("ok"):
+        st.caption("Not enough overlapping history to compare.")
+        return
+    cr = d["crisis"]
+    st.markdown(uk.kpis([
+        {"label": "CORRELATION", "value": f"{d['corr']:+.2f}", "sub": f"beta {d['beta']:+.2f}",
+         "color": T.teal if abs(d["corr"]) < 0.3 else T.amber if abs(d["corr"]) < 0.7 else T.coral},
+        {"label": "UP / DOWN MKT", "value": f"{d['corr_up']:+.2f} / {d['corr_down']:+.2f}",
+         "sub": "corr when it rises / falls"},
+        {"label": "CRISIS CORR", "value": "—" if not np.isfinite(cr["corr"]) else f"{cr['corr']:+.2f}",
+         "sub": f"worst {cr['months']} months · strat {cr['s_mean'] * 100:+.1f}%/mo vs {cr['u_mean'] * 100:+.1f}%",
+         "color": T.teal if cr["s_mean"] > 0 else T.coral},
+        {"label": "ADDS TO SHARPE?", "value": "YES" if d["adds"] else "NO",
+         "sub": f"SR {d['sharpe_s']:.2f} vs hurdle ρ·SR {d['hurdle']:.2f}",
+         "color": T.teal if d["adds"] else T.coral},
+        {"label": "ALPHA vs UNDERLYING", "value": f"{d['alpha'] * 100:+.1f}%/yr", "sub": "μ − β·μ_u"},
+        {"label": "BEST BLEND", "value": f"{d['best_w'] * 100:.0f}% strat", "sub": f"of risk · Sharpe {d['best_sharpe']:.2f}"},
+    ]), unsafe_allow_html=True)
+    st.caption("**Add-to-portfolio rule:** a small allocation to the strategy raises the portfolio Sharpe exactly "
+               f"when its Sharpe beats correlation x the portfolio's Sharpe ({d['corr']:+.2f} x "
+               f"{d['sharpe_u']:.2f} = {d['hurdle']:.2f}). Equivalently its return beats beta x the underlying's "
+               "return, i.e. it has positive alpha against what you already hold.")
+    c1, c2 = st.columns(2)
+    with c1:
+        fr = d["frontier"]
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+        fig.add_trace(go.Scatter(x=fr["w"] * 100, y=fr["Sharpe"], name="Sharpe", line=dict(color=T.teal, width=2)))
+        fig.add_trace(go.Scatter(x=fr["w"] * 100, y=fr["MaxDD"], name="max drawdown",
+                                 line=dict(color=T.coral, width=1.4, dash="dot")), secondary_y=True)
+        fig.add_vline(x=d["best_w"] * 100, line=dict(color=T.faint, width=1, dash="dash"))
+        fig.update_xaxes(title_text=f"% of risk in strategy (rest in {u_label}), vol-matched")
+        fig.update_yaxes(title_text="Sharpe", secondary_y=False)
+        fig.update_yaxes(title_text="max DD", tickformat=".0%", secondary_y=True, showgrid=False)
+        fig.update_layout(hovermode="x unified")
+        up.show(fig, 300, "blend frontier · rebalanced each bar", key=f"{key}_fr")
+    with c2:
+        rc = dv.rolling_corr(s_ret, u_ret, max(periods, 12))
+        fig = go.Figure()
+        fig.add_hline(y=0, line=dict(color=T.line, width=1))
+        fig.add_trace(go.Scatter(x=rc.index, y=rc, name="rolling 1y corr", line=dict(color=T.violet, width=1.4),
+                                 fill="tozeroy", fillcolor=up.fill(T.violet, 0.12)))
+        fig.update_yaxes(range=[-1, 1], title_text="correlation")
+        up.show(fig, 300, "rolling 1-year correlation", key=f"{key}_rc")
+
+
+# --------------------------------------------------------------- sizing ----
+def sizing_panel(spec: StrategySpec, ins: pd.DataFrame, res) -> None:
+    """Worked example of today's position and the leverage the sizing actually produced."""
+    from ... import ui_kit as uk
+    from ..core.volatility import blended_vol
+    from ..risk.atr import atr
+    close = ins["close"]
+    p = res.periods
+    pos = res.position.reindex(close.index).fillna(0.0)
+    lev = (pos * close).abs() / spec.capital
+    in_mkt = float((pos != 0).mean())
+    f = float(res.forecast.dropna().iloc[-1]) if res.forecast.notna().any() else 0.0
+    px = float(close.iloc[-1])
+    st.markdown(section(f"SIZING · {SIZING_MODES.get(spec.sizing_mode, spec.sizing_mode).upper()}", 2),
+                unsafe_allow_html=True)
+    st.markdown(uk.kpis([
+        {"label": "AVG EXPOSURE", "value": f"{lev[pos != 0].mean() * 100 if in_mkt else 0:.0f}%",
+         "sub": "notional / capital while in a trade"},
+        {"label": "MAX EXPOSURE", "value": f"{lev.max() * 100:.0f}%",
+         "color": T.coral if lev.max() > 3 else T.amber if lev.max() > 1 else T.teal},
+        {"label": "TIME IN MARKET", "value": f"{in_mkt * 100:.0f}%"},
+        {"label": "REALISED VOL", "value": f"{res.stats['Vol'] * 100:.1f}%",
+         "sub": f"target {spec.target_vol * 100:.0f}%" if spec.sizing_mode == "vol_target" else "not targeted"},
+    ]), unsafe_allow_html=True)
+    cap = spec.capital
+    s_txt = f"forecast/10 = {f / 10:+.2f}" if (spec.scale_by_forecast or spec.sizing_mode == "vol_target") \
+        else f"sign(forecast) = {np.sign(f):+.0f}"
+    sc = f / 10 if (spec.scale_by_forecast or spec.sizing_mode == "vol_target") else float(np.sign(f))
+    rows = [("capital", f"${cap:,.0f}"), ("price today", f"{px:,.2f}"), ("forecast today", f"{f:+.1f}"),
+            ("signal scale", s_txt)]
+    if spec.sizing_mode == "vol_target":
+        bv = float(blended_vol(close, periods=p).iloc[-1])
+        units = sc * cap * spec.target_vol / (bv * px)
+        rows += [("blended vol (70% EWMA-32 + 30% 10y mean)", f"{bv * 100:.1f}%"),
+                 ("risk budget = capital x target vol", f"${cap * spec.target_vol:,.0f}"),
+                 ("units = scale x budget / (vol x price)", f"{units:,.1f}")]
+    elif spec.sizing_mode == "fixed_risk":
+        a = float(atr(ins).iloc[-1])
+        dist = spec.atr_stop_mult * a
+        units = sc * spec.risk_pct * cap / dist if dist > 0 else 0.0
+        rows += [("ATR(14)", f"{a:,.2f}"), (f"stop distance = {spec.atr_stop_mult:g} x ATR", f"{dist:,.2f}"),
+                 ("risk $ = risk % x capital", f"${spec.risk_pct * cap:,.0f}"),
+                 ("units = scale x risk $ / stop distance", f"{units:,.1f}")]
+    else:
+        units = sc * spec.fixed_pct * cap / px
+        rows += [("notional = fixed % x capital", f"${spec.fixed_pct * cap:,.0f}"),
+                 ("units = scale x notional / price", f"{units:,.1f}")]
+    if spec.max_leverage:
+        cap_u = spec.max_leverage * cap / px
+        units = float(np.clip(units, -cap_u, cap_u))
+        rows.append((f"after {spec.max_leverage:g}x leverage cap", f"{units:,.1f}"))
+    rows += [("notional", f"${units * px:,.0f}  ({abs(units * px) / cap * 100:.0f}% of capital)")]
+    c1, c2 = st.columns([1.3, 1])
+    with c1:
+        st.markdown("**Today's position, by hand**")
+        st.dataframe(pd.DataFrame(rows, columns=["step", "value"]), hide_index=True, use_container_width=True)
+        st.caption("Positions are sized on the account capital above, and the engine trades the next bar. "
+                   "Buffer, whole-contract rounding and stops can move the held position away from this target.")
+    with c2:
+        fig = go.Figure(go.Scatter(x=lev.index, y=lev, fill="tozeroy", fillcolor=up.fill(T.cyan, 0.18),
+                                   line=dict(color=T.cyan, width=1), name="exposure"))
+        fig.add_hline(y=1, line=dict(color=T.amber, width=1, dash="dot"), annotation_text="100% (no leverage)",
+                      annotation_font=dict(size=9, color=T.amber))
+        fig.update_yaxes(tickformat=".0%", title_text="notional / capital")
+        up.show(fig, 300, "exposure over time", key="bt_lev_fig")
+    with st.expander("How the three sizing modes compare"):
+        st.markdown(
+            "| mode | you choose | position | best for |\n|---|---|---|---|\n"
+            "| **fixed notional %** | how much money is in the trade | % x capital / price | simple, "
+            "intuitive; ignores how volatile the market is |\n"
+            "| **fixed risk % / trade** | how much you lose if the stop hits | risk $ / (k x ATR) | discretionary-"
+            "style 'risk 1R per trade'; size shrinks when markets get wild |\n"
+            "| **vol target** | how much the position should swing per year | (f/10) x capital x target / "
+            "(vol x price) | Carver-style systematic trading; comparable risk across instruments and time |\n\n"
+            "**Vol target ranges** (single strategy): under 10% conservative · 10-25% typical · 25-40% aggressive · "
+            "over 40% very risky. The Kelly-optimal vol equals the Sharpe ratio (SR 0.5 means 50%); Carver "
+            "recommends at most half of that because the backtest Sharpe overstates the future one.\n\n"
+            "**To replicate a vol target by hand:** estimate annual vol (e.g. 20-day stdev x sqrt(252)), then "
+            "dollars in the trade = capital x target / vol. With a 20% target and the market at 16% vol you hold "
+            "125% of capital; at 40% vol you hold 50%.")
+
+
+# ---------------------------------------------------------------- seeds ----
+def seeds_panel(spec: StrategySpec, key: str = "bt_seeds") -> None:
+    """Run the same strategy across many synthetic seeds: is the result robust or one lucky path?"""
+    from ..robust.runner import pmap
+    from ..spec import run_spec, split_holdout
+    hi = 1000 if is_local() else 200
+    c1, c2, c3 = st.columns([1, 1, 1])
+    n = int(c1.number_input("seeds", 2, hi, min(50, hi), 1, key=f"{key}_n",
+                            help=f"Up to {hi} here ({'local' if is_local() else 'cloud'} cap)."))
+    first = int(c2.number_input("first seed", 1, 1000, 1, 1, key=f"{key}_0"))
+    go_ = c3.button("RUN SEEDS", key=f"{key}_go", use_container_width=True)
+    mk = f"seeds|{spec.hash()}|{first}|{n}"
+    if go_:
+        bar = progress_bar("running seeds")
+
+        def one(sd):
+            df, _ = split_holdout(load(spec, seed=sd), spec.holdout)
+            r = run_spec(spec, df)
+            return sd, r.stats, (1 + r.returns).cumprod()
+
+        memo()[mk] = pmap(one, range(first, first + n), bar)
+    out = memo().get(mk)
+    if not out:
+        st.caption("Each seed is a different path from the same synthetic world. A real edge should be positive "
+                   "on most seeds; if only a few seeds work, the rule found noise.")
+        return
+    df = pd.DataFrame([{"seed": sd, **{k: stt[k] for k in ("Sharpe", "CAGR", "MaxDD", "Vol")}}
+                       for sd, stt, _ in out])
+    pos = float((df["Sharpe"] > 0).mean())
+    from ... import ui_kit as uk
+    st.markdown(uk.kpis([
+        {"label": "SEEDS", "value": f"{len(df)}"},
+        {"label": "MEDIAN SHARPE", "value": f"{df['Sharpe'].median():.2f}",
+         "sub": f"5-95%: {df['Sharpe'].quantile(0.05):.2f} to {df['Sharpe'].quantile(0.95):.2f}"},
+        {"label": "SHARPE > 0", "value": f"{pos * 100:.0f}%", "color": T.teal if pos > 0.8 else T.amber if pos > 0.5
+         else T.coral},
+        {"label": "MEDIAN CAGR", "value": f"{df['CAGR'].median() * 100:.1f}%"},
+        {"label": "WORST MAX DD", "value": f"{df['MaxDD'].min() * 100:.1f}%", "color": T.coral},
+    ]), unsafe_allow_html=True)
+    c1, c2 = st.columns(2)
+    with c1:
+        fig = go.Figure(go.Histogram(x=df["Sharpe"], nbinsx=40, marker_color=up.fill(T.teal, 0.6),
+                                     marker_line=dict(width=0)))
+        fig.add_vline(x=0, line=dict(color=T.coral, width=1))
+        fig.update_xaxes(title_text="Sharpe")
+        fig.update_layout(hovermode="closest")
+        up.show(fig, 300, "sharpe across seeds", key=f"{key}_h")
+    with c2:
+        eqs = pd.concat([e.reset_index(drop=True) for _, _, e in out], axis=1)
+        q = eqs.quantile([0.05, 0.25, 0.5, 0.75, 0.95], axis=1).T
+        x = list(range(len(q)))
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=x, y=q[0.95], line=dict(width=0), showlegend=False, hoverinfo="skip"))
+        fig.add_trace(go.Scatter(x=x, y=q[0.05], fill="tonexty", fillcolor=up.fill(T.teal, 0.12),
+                                 line=dict(width=0), name="5-95%"))
+        fig.add_trace(go.Scatter(x=x, y=q[0.75], line=dict(width=0), showlegend=False, hoverinfo="skip"))
+        fig.add_trace(go.Scatter(x=x, y=q[0.25], fill="tonexty", fillcolor=up.fill(T.teal, 0.25),
+                                 line=dict(width=0), name="25-75%"))
+        fig.add_trace(go.Scatter(x=x, y=q[0.5], line=dict(color=T.teal, width=2), name="median"))
+        fig.update_yaxes(type="log", title_text="growth of 1")
+        fig.update_xaxes(title_text="bar")
+        up.show(fig, 300, "equity fan across seeds", key=f"{key}_f")
+    with st.expander("per-seed table"):
+        st.dataframe(df.set_index("seed").style.format({"Sharpe": "{:.2f}", "CAGR": "{:.1%}", "MaxDD": "{:.1%}",
+                                                        "Vol": "{:.1%}"}), use_container_width=True)

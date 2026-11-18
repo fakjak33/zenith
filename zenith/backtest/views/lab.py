@@ -75,7 +75,10 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
         {"label": "DEFLATED SR", "value": f"{s['DSR'] * 100:.0f}%", "sub": "P(real) after trials",
          "color": T.teal if s["DSR"] > 0.9 else T.amber if s["DSR"] > 0.5 else T.coral},
         {"label": "CAGR", "value": f"{s['CAGR'] * 100:.1f}%", "sub": f"b&h {bstats['CAGR'] * 100:.1f}% (vol-matched)"},
-        {"label": "VOL", "value": f"{s['Vol'] * 100:.1f}%", "sub": f"target {spec.target_vol * 100:.0f}%"},
+        {"label": "VOL", "value": f"{s['Vol'] * 100:.1f}%",
+         "sub": (f"target {spec.target_vol * 100:.0f}%" if spec.sizing_mode == "vol_target"
+                 else f"{spec.fixed_pct * 100:.0f}% notional" if spec.sizing_mode == "fixed_pct"
+                 else f"{spec.risk_pct * 100:.1f}% risk/trade")},
         {"label": "MAX DD", "value": f"{s['MaxDD'] * 100:.1f}%", "sub": f"b&h {bstats['MaxDD'] * 100:.1f}%",
          "color": T.coral},
         {"label": "CALMAR", "value": f"{s['Calmar']:.2f}", "sub": f"b&h {bstats['Calmar']:.2f}"},
@@ -89,8 +92,14 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
     if fut:
         C.banner(T.amber, "FUTURES DATA", "Yahoo's continuous front-month series is not roll-adjusted: each roll can "
                  "show up as a fake jump, and carry/roll yield is missing. Treat trend results as approximate.")
-    names = ["EQUITY", "PRICE & TRADES", "ROLLING", "MONTHLY", "DISTRIBUTION", "COSTS", "STATS", "TRADES"]
+    names = ["EQUITY", "PRICE & TRADES", "ROLLING", "MONTHLY", "DISTRIBUTION", "COSTS", "STATS", "TRADES",
+             "SIZING"] + (["SEEDS"] if spec.src == "Synthetic" else [])
     tabs = st.tabs(names + (["CONTRACTS"] if fut else []))
+    with tabs[8]:
+        C.sizing_panel(spec, ins, res)
+    if spec.src == "Synthetic":
+        with tabs[9]:
+            C.seeds_panel(spec)
     if fut:
         with tabs[-1]:
             _contracts_tab(spec, ins, res, fut)
@@ -126,6 +135,7 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
         st.dataframe(tbl, use_container_width=True)
         st.caption("DSR deflates the Sharpe by the trial count shown in the rail above. PSR/DSR are the "
                    "probability that the true Sharpe beats the bar.")
+        C.diversify_panel(r, ins["close"].pct_change().reindex(r.index), p, f"{spec.name} BUY & HOLD", "bt_div")
     with tabs[7]:
         st.dataframe(trades.iloc[::-1], use_container_width=True, hide_index=True)
 

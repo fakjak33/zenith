@@ -78,8 +78,13 @@ class BacktestConfig:
     trading_days: int | None = None  # bars/year; None = infer from the data
     use_vol_target: bool = True     # back-compat flag (see sizing_mode)
     direction: str = "both"         # "both" | "long" | "short"
-    sizing_mode: str = "vol_target"  # "vol_target" | "fixed_pct" | "fixed_dollar"
-    fixed_pct: float = 1.0
+    sizing_mode: str = "vol_target"  # "vol_target" | "fixed_pct" | "fixed_risk" | "fixed_dollar"
+    fixed_pct: float = 1.0          # fixed_pct: notional at f=10 as a share of capital (1.0 = 100%)
+    risk_pct: float = 0.01          # fixed_risk: capital lost if the stop is hit (0.01 = 1%)
+    stop_mult: float = 3.0          # fixed_risk: stop distance in ATRs (mirrors RiskConfig.atr_stop_mult)
+    atr_period: int = 14
+    scale_by_forecast: bool = True  # fixed modes: size ∝ f/10 (True) or every trade the same size (False)
+    max_leverage: float = 0.0       # cap on |notional| / capital (0 = no cap)
     fixed_dollar: float = DEFAULT_CAPITAL
     use_delay: bool = False
     entry_delay: int = 0

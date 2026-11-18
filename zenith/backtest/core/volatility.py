@@ -75,23 +75,43 @@ def position_from_forecast(
     fixed_pct: float = 1.0,
     fixed_dollar: float | None = None,
     periods: int | None = None,
+    risk_pct: float = 0.01,
+    stop_distance: pd.Series | None = None,
+    scale_by_forecast: bool = True,
+    max_leverage: float = 0.0,
 ) -> pd.Series:
     """Convert a capped forecast into a position in *units* (shares).
 
-    - ``"vol_target"``: units = (f/10) * capital*target_vol / (σ_annual * price)
-    - ``"fixed_pct"``: deploy ``fixed_pct`` of capital at f=10.
-    - ``"fixed_dollar"``: deploy ``fixed_dollar`` notional at f=10.
+    ``s`` is the sizing scale: ``f/10`` when ``scale_by_forecast`` (a forecast of 10 is a
+    "normal" bet, 20 is double), else ``sign(f)`` (every trade is the same size).
+
+    - ``"vol_target"``: units = (f/10) · capital·target_vol / (σ_annual · price) — always scales.
+    - ``"fixed_pct"``: units = s · fixed_pct · capital / price (notional as a share of capital).
+    - ``"fixed_risk"``: units = s · risk_pct · capital / stop_distance — losing the stop
+      distance on the position costs ``risk_pct`` of capital.
+    - ``"fixed_dollar"``: units = s · fixed_dollar / price.
+
+    ``max_leverage`` > 0 caps |units · price| at that multiple of capital.
     """
     if sizing_mode is None:
         sizing_mode = "vol_target" if use_vol_target else "fixed_pct"
+    scale = forecast / FORECAST_SCALAR_TARGET if (scale_by_forecast or sizing_mode == "vol_target")         else np.sign(forecast)
 
     if sizing_mode == "vol_target":
         price_vol_annual = blended_vol(prices, span=vol_span, periods=periods)
-        risk_budget = capital * target_vol
-        units = (forecast / FORECAST_SCALAR_TARGET) * risk_budget / (price_vol_annual * prices)
+        units = scale * capital * target_vol / (price_vol_annual * prices)
     elif sizing_mode == "fixed_dollar":
         dollar = capital if fixed_dollar is None else fixed_dollar
-        units = (forecast / FORECAST_SCALAR_TARGET) * dollar / prices
+        units = scale * dollar / prices
+    elif sizing_mode == "fixed_risk":
+        if stop_distance is None:
+            raise ValueError("fixed_risk sizing needs a stop distance (turn on the ATR stop)")
+        dist = stop_distance.reindex(forecast.index).where(lambda d: d > 0)
+        units = scale * risk_pct * capital / dist
     else:  # fixed_pct
-        units = (forecast / FORECAST_SCALAR_TARGET) * fixed_pct * capital / prices
-    return units.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+        units = scale * fixed_pct * capital / prices
+    units = units.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+    if max_leverage and max_leverage > 0:
+        cap = max_leverage * capital / prices.reindex(units.index)
+        units = units.clip(lower=-cap, upper=cap).fillna(0.0)
+    return units

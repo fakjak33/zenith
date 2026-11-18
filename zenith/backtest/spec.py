@@ -86,6 +86,19 @@ def apply_filters(fc: pd.Series, ohlcv: pd.DataFrame, filters: list[dict],
 
 
 # ------------------------------------------------------------------ spec ----
+# Synthetic kinds that learn from a real ticker (see data/synthetic.py).
+TICKER_SYNTH = ("bootstrap", "shuffle", "gbm_fit", "regime_fit")
+# Fields added after specs were first saved; omitted from the hash at these values.
+_LATE_DEFAULTS = {"fixed_pct": 1.0, "risk_pct": 0.01, "scale_by_forecast": True, "max_leverage": 0.0,
+                  "seed": 42, "synth_base": "SPY"}
+
+SIZING_MODES = {
+    "fixed_pct": "fixed notional %",
+    "fixed_risk": "fixed risk % / trade",
+    "vol_target": "vol target",
+}
+
+
 @dataclass
 class StrategySpec:
     src: str = "Market"                 # "Market" | "Synthetic"
@@ -108,6 +121,12 @@ class StrategySpec:
     capital: float = 1_000_000.0
     buffer: float = 0.0                 # no-trade band, share of the average position
     contract_fee: float = 2.5           # $ per futures contract per side
+    fixed_pct: float = 1.0              # fixed_pct: notional at forecast 10, share of capital
+    risk_pct: float = 0.01              # fixed_risk: capital lost when the ATR stop is hit
+    scale_by_forecast: bool = True      # fixed modes: size ∝ forecast/10, or the same size every trade
+    max_leverage: float = 0.0           # |notional| / capital cap (0 = none)
+    seed: int = 42                      # synthetic data seed
+    synth_base: str = "SPY"             # ticker the bootstrap / fitted synthetic kinds learn from
     notes: str = ""                     # hypothesis / goal — not part of the hash
 
     # ---- serialisation
@@ -126,14 +145,41 @@ class StrategySpec:
     def from_json(cls, s: str) -> "StrategySpec":
         return cls.from_dict(json.loads(s))
 
-    def hash(self) -> str:
+    def hash_dict(self) -> dict:
+        """What identifies a trial: knobs the chosen sizing mode ignores are dropped (moving an
+        unused slider is not a new trial), and fields added after the first release are left out
+        at their defaults so older saved specs keep their hashes."""
         d = self.to_dict()
         d.pop("notes", None)
+        mode = self.sizing_mode
+        if mode != "vol_target":
+            d.pop("target_vol", None)
+        if mode != "fixed_pct":
+            d.pop("fixed_pct", None)
+        if mode != "fixed_risk":
+            d.pop("risk_pct", None)
+        if mode == "vol_target":
+            d.pop("scale_by_forecast", None)
+        if self.src != "Synthetic":
+            d.pop("seed", None)
+            d.pop("synth_base", None)
+        elif self.name not in TICKER_SYNTH:
+            d.pop("synth_base", None)
+        for k, v in _LATE_DEFAULTS.items():
+            if k in d and d[k] == v:
+                d.pop(k)
+        return d
+
+    def hash(self) -> str:
+        d = self.hash_dict()
         return hashlib.sha1(json.dumps(d, sort_keys=True, default=str).encode()).hexdigest()[:12]
 
     def family(self) -> str:
         """Same data + same holdout = same pool of trials and the same OOS."""
-        return f"{self.src}:{self.name}:{self.tf}:{self.start_year}:{self.holdout}"
+        base = f"{self.src}:{self.name}:{self.tf}:{self.start_year}:{self.holdout}"
+        if self.src == "Synthetic" and (self.seed != 42 or self.name in TICKER_SYNTH):
+            base += f":s{self.seed}" + (f":{self.synth_base}" if self.name in TICKER_SYNTH else "")
+        return base
 
     def with_params(self, **kw) -> "StrategySpec":
         return replace(self, params={**self.params, **kw})
@@ -148,13 +194,17 @@ class StrategySpec:
     def bt(self, cost_mult: float = 1.0, whole_contracts: bool = True) -> BacktestConfig:
         fut = self.contract() if whole_contracts else None
         return BacktestConfig(sizing_mode=self.sizing_mode, target_vol=self.target_vol, direction=self.direction,
+                              fixed_pct=self.fixed_pct, risk_pct=self.risk_pct, stop_mult=self.atr_stop_mult,
+                              scale_by_forecast=self.scale_by_forecast, max_leverage=self.max_leverage,
                               cost_bps=self.cost_bps * cost_mult, slippage_bps=self.slippage_bps * cost_mult,
                               capital=self.capital, buffer=self.buffer,
                               multiplier=float(fut[1]) if fut else None,
                               fee_per_contract=self.contract_fee * cost_mult if fut else 0.0)
 
     def risk(self) -> RiskConfig:
-        return RiskConfig(use_atr_stop=self.use_atr_stop, use_atr_tp=self.use_atr_tp,
+        # fixed-risk sizing only means something if the stop it is sized from is live
+        stop_on = self.use_atr_stop or self.sizing_mode == "fixed_risk"
+        return RiskConfig(use_atr_stop=stop_on, use_atr_tp=self.use_atr_tp,
                           atr_stop_mult=self.atr_stop_mult, atr_tp_mult=self.atr_tp_mult)
 
     def strategy(self):
