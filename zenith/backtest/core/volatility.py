@@ -7,7 +7,8 @@ frequency actually present in the data, and derive units from the forecast.
 GUARD RAILS (fixed vs PARALLAX):
 - annualization is inferred from the index (252 daily / 52 weekly / 12
   monthly) instead of a fixed 256, so weekly and monthly runs are correct;
-- the warm-up period is left empty instead of back-filled from future vol.
+- the warm-up period is left empty instead of back-filled from future vol;
+- vol-target sizing uses Carver's blended vol (70% recent / 30% long-run), not raw recent vol.
 """
 
 from __future__ import annotations
@@ -50,6 +51,19 @@ def ew_vol(prices: pd.Series, span: int = VOL_LOOKBACK, annualize: bool = False,
     return vol
 
 
+def blended_vol(prices: pd.Series, span: int = VOL_LOOKBACK, periods: int | None = None,
+                long_weight: float = 0.3) -> pd.Series:
+    """Carver's sizing vol: 70% recent EW vol + 30% its own long-run average (up to ~10 years).
+
+    Pure short-run vol invites extreme leverage in calm markets (ES in 2006: 6% vol → 7x).
+    The long-run anchor is a trailing mean of past vol only, so it stays causal.
+    """
+    ew = ew_vol(prices, span=span, annualize=True, periods=periods)
+    n = (periods or bars_per_year(prices.index)) * 10
+    long_run = ew.rolling(n, min_periods=span).mean()
+    return ((1 - long_weight) * ew + long_weight * long_run.fillna(ew))
+
+
 def position_from_forecast(
     forecast: pd.Series,
     prices: pd.Series,
@@ -72,7 +86,7 @@ def position_from_forecast(
         sizing_mode = "vol_target" if use_vol_target else "fixed_pct"
 
     if sizing_mode == "vol_target":
-        price_vol_annual = ew_vol(prices, span=vol_span, annualize=True, periods=periods)
+        price_vol_annual = blended_vol(prices, span=vol_span, periods=periods)
         risk_budget = capital * target_vol
         units = (forecast / FORECAST_SCALAR_TARGET) * risk_budget / (price_vol_annual * prices)
     elif sizing_mode == "fixed_dollar":

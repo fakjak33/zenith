@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+from plotly.subplots import make_subplots
 
 from ... import ui_kit as uk
 from ... import ui_plotly as up
@@ -83,7 +84,16 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
     st.caption(f"{C.esc(res.label)} · {spec.name} · {spec.tf.lower()} · {p} bars/yr · "
                f"{ins.index[0].date()} → {ins.index[-1].date()} in-sample")
 
-    tabs = st.tabs(["EQUITY", "PRICE & TRADES", "ROLLING", "MONTHLY", "DISTRIBUTION", "COSTS", "STATS", "TRADES"])
+    _save_box(spec)
+    fut = spec.contract()
+    if fut:
+        C.banner(T.amber, "FUTURES DATA", "Yahoo's continuous front-month series is not roll-adjusted: each roll can "
+                 "show up as a fake jump, and carry/roll yield is missing. Treat trend results as approximate.")
+    names = ["EQUITY", "PRICE & TRADES", "ROLLING", "MONTHLY", "DISTRIBUTION", "COSTS", "STATS", "TRADES"]
+    tabs = st.tabs(names + (["CONTRACTS"] if fut else []))
+    if fut:
+        with tabs[-1]:
+            _contracts_tab(spec, ins, res, fut)
     with tabs[0]:
         up.show(C.equity_fig(r, b, res.gross_returns), 460, "growth of 1 · log scale", key="bt_eq")
     with tabs[1]:
@@ -175,6 +185,45 @@ def step_oos(spec: StrategySpec, full: pd.DataFrame, locked, aux: dict, n_trials
     st.caption("Expect the out-of-sample Sharpe to be lower — roughly half is common for a fairly-tuned rule. "
                "A collapse to zero or below says the in-sample result was mostly the tuning.")
     attribution.card(facts)
+
+
+def _save_box(spec: StrategySpec) -> None:
+    from .. import library
+    with st.expander("SAVE THIS STRATEGY — for PORTFOLIO and later comparison"):
+        c1, c2 = st.columns([3, 1])
+        name = c1.text_input("name", spec.strategy().describe()[:50] + f" · {spec.name}", key="bt_save_name",
+                             label_visibility="collapsed")
+        if c2.button("SAVE", key="bt_save", use_container_width=True):
+            library.save(C.saved(), name, spec, st.session_state.get("bt_notes", ""))
+            st.toast(f"saved '{name}'")
+        if C.saved():
+            st.caption("saved: " + " · ".join(C.esc(k) for k in C.saved()))
+
+
+def _contracts_tab(spec: StrategySpec, ins: pd.DataFrame, res, fut: tuple) -> None:
+    contracts = res.position / fut[1]
+    margin = contracts.abs() * fut[3] / spec.capital
+    frac = run_spec(spec, ins, C.load_aux(spec), whole_contracts=False)
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.6, 0.4], vertical_spacing=0.04)
+    fig.add_trace(go.Scatter(x=contracts.index, y=contracts, line=dict(color=T.teal, width=1, shape="hv"),
+                             name="contracts held"), 1, 1)
+    fig.add_trace(go.Scatter(x=margin.index, y=margin, fill="tozeroy", fillcolor=up.fill(T.violet, 0.25),
+                             line=dict(color=T.violet, width=1), name="margin / capital"), 2, 1)
+    fig.update_yaxes(title_text="contracts", row=1, col=1)
+    fig.update_yaxes(title_text="margin", tickformat=".0%", row=2, col=1)
+    up.show(fig, 400, "whole-contract position and margin use", key="bt_ctr")
+    te = (res.returns - frac.returns).std() * np.sqrt(res.periods)
+    st.markdown(uk.kpis([
+        {"label": "AVG CONTRACTS", "value": f"{contracts.abs().mean():.1f}", "sub": f"max {contracts.abs().max():.0f}"},
+        {"label": "PEAK MARGIN", "value": f"{margin.max() * 100:.0f}%", "sub": "of capital",
+         "color": T.coral if margin.max() > 0.5 else T.text},
+        {"label": "ROUNDING COST", "value": f"{(frac.stats['Sharpe'] - res.stats['Sharpe']):+.2f}",
+         "sub": f"Sharpe lost to whole contracts · TE {te * 100:.1f}%",
+         "color": T.amber if abs(frac.stats["Sharpe"] - res.stats["Sharpe"]) > 0.1 else T.teal},
+    ]), unsafe_allow_html=True)
+    if contracts.abs().mean() < 2:
+        C.banner(T.amber, "TOO SMALL", "fewer than two contracts on average: rounding dominates the sizing — raise "
+                 "capital or trade the micro contract")
 
 
 # --------------------------------------------------------------- page ----

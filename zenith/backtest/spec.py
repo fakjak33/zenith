@@ -16,7 +16,7 @@ from dataclasses import asdict, dataclass, field, fields, replace
 import numpy as np
 import pandas as pd
 
-from .config import BacktestConfig, RiskConfig, scale_params_for_tf
+from .config import FUTURES, BacktestConfig, RiskConfig, scale_params_for_tf
 from .engine.engine import BacktestResult, run_single
 from .rules import REGISTRY
 
@@ -105,6 +105,9 @@ class StrategySpec:
     cost_bps: float = 1.0
     slippage_bps: float = 1.5
     holdout: int = 30                   # % of history locked away
+    capital: float = 1_000_000.0
+    buffer: float = 0.0                 # no-trade band, share of the average position
+    contract_fee: float = 2.5           # $ per futures contract per side
     notes: str = ""                     # hypothesis / goal — not part of the hash
 
     # ---- serialisation
@@ -139,9 +142,16 @@ class StrategySpec:
         return replace(self, filters=filters)
 
     # ---- engine plumbing
-    def bt(self, cost_mult: float = 1.0) -> BacktestConfig:
+    def contract(self) -> tuple | None:
+        return FUTURES.get(self.name.upper()) if self.src == "Market" else None
+
+    def bt(self, cost_mult: float = 1.0, whole_contracts: bool = True) -> BacktestConfig:
+        fut = self.contract() if whole_contracts else None
         return BacktestConfig(sizing_mode=self.sizing_mode, target_vol=self.target_vol, direction=self.direction,
-                              cost_bps=self.cost_bps * cost_mult, slippage_bps=self.slippage_bps * cost_mult)
+                              cost_bps=self.cost_bps * cost_mult, slippage_bps=self.slippage_bps * cost_mult,
+                              capital=self.capital, buffer=self.buffer,
+                              multiplier=float(fut[1]) if fut else None,
+                              fee_per_contract=self.contract_fee * cost_mult if fut else 0.0)
 
     def risk(self) -> RiskConfig:
         return RiskConfig(use_atr_stop=self.use_atr_stop, use_atr_tp=self.use_atr_tp,
@@ -152,11 +162,11 @@ class StrategySpec:
 
 
 def run_spec(spec: StrategySpec, ohlcv: pd.DataFrame, aux: dict | None = None, n_trials: int = 1,
-             cost_mult: float = 1.0) -> BacktestResult:
-    """Forecast → filters → sizing/exits/costs → result."""
+             cost_mult: float = 1.0, whole_contracts: bool = True) -> BacktestResult:
+    """Forecast → filters → sizing/buffer/contracts/exits/costs → result."""
     strat = spec.strategy()
     fc = apply_filters(strat.forecast(ohlcv), ohlcv, spec.filters, aux)
-    return run_single(fc, ohlcv, bt=spec.bt(cost_mult), risk=spec.risk(), n_trials=n_trials,
+    return run_single(fc, ohlcv, bt=spec.bt(cost_mult, whole_contracts), risk=spec.risk(), n_trials=n_trials,
                       label=strat.describe())
 
 

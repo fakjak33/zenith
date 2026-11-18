@@ -84,6 +84,9 @@ class BacktestConfig:
     use_delay: bool = False
     entry_delay: int = 0
     exit_delay: int = 0
+    buffer: float = 0.0             # Carver no-trade buffer, as a share of the f=10 position (0.1 = ±10%)
+    multiplier: float | None = None  # futures: $ per point; positions round to whole contracts
+    fee_per_contract: float = 0.0   # futures: commission per contract per side, in $
 
     def __post_init__(self):
         if not self.use_vol_target and self.sizing_mode == "vol_target":
@@ -106,6 +109,31 @@ class RiskConfig:
     pct_stop: float = 0.10
     pct_tp: float = 0.20
     trailing_stop: bool = True
+
+
+# --- Futures contract specs (CME/ICE/COMEX/NYMEX/CBOT), for whole-contract sizing ------
+# root → (name, $ multiplier per point, tick, approx initial margin $, sector). Margins are rough,
+# exchange-published magnitudes for scale only; they change often.
+FUTURES: dict[str, tuple] = {
+    "ES=F": ("E-mini S&P 500", 50, 0.25, 13_000, "equity"),
+    "NQ=F": ("E-mini Nasdaq-100", 20, 0.25, 19_000, "equity"),
+    "YM=F": ("E-mini Dow", 5, 1.0, 9_000, "equity"),
+    "RTY=F": ("E-mini Russell 2000", 50, 0.1, 7_000, "equity"),
+    "ZN=F": ("10-Year T-Note", 1000, 1 / 64, 2_200, "rates"),
+    "ZF=F": ("5-Year T-Note", 1000, 1 / 128, 1_500, "rates"),
+    "ZB=F": ("30-Year T-Bond", 1000, 1 / 32, 4_000, "rates"),
+    "GC=F": ("Gold", 100, 0.1, 10_000, "metals"),
+    "SI=F": ("Silver", 5000, 0.005, 15_000, "metals"),
+    "HG=F": ("Copper", 25_000, 0.0005, 6_000, "metals"),
+    "CL=F": ("WTI Crude", 1000, 0.01, 6_500, "energy"),
+    "NG=F": ("Natural Gas", 10_000, 0.001, 4_000, "energy"),
+    "ZC=F": ("Corn", 50, 0.25, 1_200, "ags"),
+    "ZS=F": ("Soybeans", 50, 0.25, 2_200, "ags"),
+    "ZW=F": ("Wheat", 50, 0.25, 1_800, "ags"),
+    "6E=F": ("Euro FX", 125_000, 0.00005, 2_500, "fx"),
+    "6J=F": ("Japanese Yen", 12_500_000, 0.0000005, 3_000, "fx"),
+    "6B=F": ("British Pound", 62_500, 0.0001, 2_800, "fx"),
+}
 
 
 def scale_params_for_tf(values: dict, tf_label: str) -> dict:
