@@ -405,3 +405,48 @@ def test_curve_stats_and_score():
 def test_level_curve():
     assert scoring.level(0) == (1, 0, 500)
     assert scoring.level(500)[0] == 2
+
+
+# ------------------------------------------------------------- long vol --
+
+def test_long_templates_are_debits_with_premium_margin(mkt):
+    from zenith.theta.engine.strategies import LONG_TEMPLATES
+    assert len(LONG_TEMPLATES) >= 8
+    e = mkt.nearest_expiry("SPY", 300, 45)
+    for tpl in ("long_call", "long_put", "long_straddle", "long_strangle", "call_debit_spread"):
+        b = Book(100_000, 100_000, slip=0.0)
+        pv = b.preview(mkt, "SPY", 300, build(tpl, mkt, "SPY", 300, e))
+        assert pv["credit"] < 0, tpl                                 # you pay
+        assert pv["bpr"] == pytest.approx(-pv["credit"], rel=0.02), tpl   # risk = premium paid
+
+
+def test_calendar_uses_two_expiries(mkt):
+    e = mkt.nearest_expiry("SPY", 300, 30)
+    legs = build("long_calendar", mkt, "SPY", 300, e)
+    assert legs[0].expiry_i == e and legs[1].expiry_i > e and legs[1].qty > 0 > legs[0].qty
+
+
+def test_debit_events_fire(mkt):
+    b = Book(100_000, 100_000, slip=0.0)
+    e = mkt.nearest_expiry("SPY", 300, 45)
+    p = b.open(mkt, "SPY", 300, "long_put", build("long_put", mkt, "SPY", 300, e, delta=0.30))
+    run = clock.Run(b, 300, 340, 300)
+    kinds = set()
+    for _ in range(35):
+        kinds |= {ev.kind for ev in clock.step(mkt, run)}
+        if not p.is_open:
+            break
+    assert kinds & {"dtarget", "dstop", "dte21", "expiry"}
+
+
+def test_long_vol_bot_only_buys_cheap_vol(mkt):
+    out = bot.play(mkt, 260, 420, 100_000, style="long")
+    assert out["equity"] and all(t["credit"] < 0 for t in out["trades"])
+
+
+def test_new_achievements():
+    me = {"ret": 0.1, "max_dd": 0.05, "sharpe": 1.0}
+    bo = {"ret": 0.0, "max_dd": 0.1, "sharpe": 0.0}
+    s = scoring.score(me, bo, 0.0, None, "normal", True,
+                      {"trades": 6, "best_debit_mult": 3.2, "debit_closed": 6, "rival": "long"})
+    assert {"convexity", "tail", "vol_buyer", "beat_longvol"} <= set(s["achievements"])

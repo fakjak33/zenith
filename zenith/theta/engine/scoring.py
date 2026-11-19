@@ -17,6 +17,10 @@ ACHIEVEMENTS = {
     "occurrences": ("NUMBER OF OCCURRENCES", "Close 20 or more trades in one run"),
     "theta": ("THETA MACHINE", "Average theta of 0.1% of net liq per day or more"),
     "green": ("IN THE GREEN", "Finish with a positive return"),
+    "convexity": ("CONVEXITY", "Close a bought-premium trade worth 3x what you paid"),
+    "tail": ("TAIL CATCHER", "Finish a crisis challenge in profit"),
+    "vol_buyer": ("VOL BUYER", "Close 5 or more bought-premium (debit) trades in one run"),
+    "beat_longvol": ("LONG-VOL SLAYER", "Beat the long-vol bot"),
 }
 
 
@@ -71,6 +75,14 @@ def score(player: dict, bot: dict, spy_ret: float, adherence: float | None,
         got.append("theta")
     if player["ret"] > 0:
         got.append("green")
+    if flags.get("best_debit_mult", 0.0) >= 3.0:
+        got.append("convexity")
+    if crisis and player["ret"] > 0:
+        got.append("tail")
+    if flags.get("debit_closed", 0) >= 5:
+        got.append("vol_buyer")
+    if flags.get("rival") == "long" and player["ret"] > bot["ret"]:
+        got.append("beat_longvol")
     return {"xp": int(round(xp)), "achievements": got, "mult": mult}
 
 

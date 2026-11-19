@@ -25,7 +25,7 @@ from . import DISCLAIMER, load
 from .coach import Vault, adherence, on_events, pretrade
 from .engine import analytics, bot, clock, scenario, scoring
 from .engine.book import Book
-from .engine.strategies import TEMPLATES, Leg, build, default_width
+from .engine.strategies import LONG_TEMPLATES, TEMPLATES, Leg, build, default_width
 from .market import Market, round_strike
 
 SEV_COLOR = {"alert": THEME.coral, "warn": THEME.amber, "info": THEME.cyan, "good": THEME.teal}
@@ -48,8 +48,15 @@ happens). Close, roll out for a credit, roll the untested side, or sell calls ag
 
 **Scoring.** You're measured against **buy-and-hold SPY** and **THE BOT**: a mechanical tastytrade
 trader (SPY 16-delta strangle, ~45 DTE, closed at 50% or 21 DTE, ~30% of net liq in buying power)
-playing the same tape. XP rewards return, beating the bot and the tape, small drawdowns and
-following the management calls. Difficulty multiplies XP.
+playing the same tape — or, if you pick it in the lobby, the **long-vol bot** (buys a SPY 25-delta
+strangle when IV rank is under 30%, 3% of net liq in premium, sells at +100% or 21 DTE). XP rewards
+return, beating the bot and the tape, small drawdowns and following the management calls.
+Difficulty multiplies XP.
+
+**Buying options.** Switch the ticket to BUY OPTIONS for long calls/puts, straddles, strangles,
+debit spreads, butterflies, put backspreads and calendars. Buying power for a debit trade is the
+premium paid. The coach flags +100% (consider taking it) and −50% of the debit (decay is winning).
+Bought premium earns CONVEXITY (a trade worth 3x what you paid), TAIL CATCHER and VOL BUYER.
 
 **Prices.** Underlying prices are **real** daily closes (2005-today). Option prices are **modeled**:
 a realized-vol forecast times the index volatility premium (SPY uses VIX itself), an earnings
@@ -244,7 +251,8 @@ def _start(m: Market, store, player, sc: dict, mode: str, run_dict: dict | None 
         book = Book(sc["cash"], sc["cash"], slip=diff["slip"])
         run = clock.Run(book, sc["start_i"], sc["end_i"], sc["start_i"])
         clock.snapshot(m, run)
-    b = bot.play(m, sc["start_i"], sc["end_i"], sc["cash"], slip=diff["slip"])
+    sc.setdefault("rival", _ss().get("th_rival", "short"))
+    b = bot.play(m, sc["start_i"], sc["end_i"], sc["cash"], slip=diff["slip"], style=sc["rival"])
     spy = m.data["SPY"]["close"][sc["start_i"]: sc["end_i"] + 1]
     _ss().update({"th_sc": sc, "th_run": run, "th_mode": mode, "th_bot": b["equity"],
                   "th_spy": list(spy / spy[0] * sc["cash"]), "th_nudges": [],
@@ -272,10 +280,11 @@ def _lobby(m: Market, store, player) -> None:
             f'<div style="display:flex; gap:1.4rem; align-items:center;">{art.orbits(190, seed=7)}<div>'
             f'<div class="z-lbl">options-portfolio speedrun</div>'
             f'<div style="font-size:1.6rem; font-weight:300; letter-spacing:0.14em; line-height:1.25; margin:0.4rem 0;">'
-            f'SELL PREMIUM.<br>MANAGE THE BOOK.<br>BEAT THE BOT.</div>'
+            f'SELL PREMIUM. OR BUY IT.<br>MANAGE THE BOOK.<br>BEAT THE BOT.</div>'
             f'<div style="font-size:0.76rem; color:{THEME.muted}; line-height:1.55; max-width:30rem;">'
-            f'Real price history, modeled options, tastytrade mechanics. Click a name, press SELL, '
-            f'advance to the next event — and race a mechanical 45-DTE / 16-delta bot on the same tape.</div>'
+            f'Real price history, modeled options, tastytrade mechanics. Sell premium or buy options, '
+            f'advance to the next event — and race a mechanical bot on the same tape: the 45-DTE / 16-delta '
+            f'premium seller, or the long-vol buyer.</div>'
             f'</div></div>', unsafe_allow_html=True)
     with side:
         with uk.panel("QUICK RUN", THEME.teal, "one click"):
@@ -285,6 +294,9 @@ def _lobby(m: Market, store, player) -> None:
                               label_visibility="collapsed")
             diff = st.radio("Difficulty", list(scenario.DIFFICULTY), horizontal=True, key="th_diff",
                             label_visibility="collapsed")
+            st.radio("Rival", list(bot.BOTS), horizontal=True, key="th_rival",
+                     format_func=lambda k: {"short": "premium-seller bot", "long": "long-vol bot"}[k],
+                     help=" · ".join(bot.BOTS.values()))
             if st.button("▶ START RUN", key="th_go_quick", type="primary", use_container_width=True):
                 seed = int(time.time() * 1000) % 2_147_483_647
                 _start(m, store, player, scenario.random_scenario(m, seed, scenario.LENGTHS[length], diff),
@@ -381,7 +393,11 @@ def _after_advance(m: Market, store, run: clock.Run, events: list, save: bool) -
 SHORT = {"short_strangle": "STRANGLE", "short_straddle": "STRADDLE", "iron_condor": "IRON CONDOR",
          "iron_fly": "IRON FLY", "jade_lizard": "JADE LIZARD", "short_put": "SHORT PUT",
          "put_credit_spread": "PUT SPREAD", "call_credit_spread": "CALL SPREAD",
-         "covered_call": "COVERED CALL", "put_bwb": "PUT BWB"}
+         "covered_call": "COVERED CALL", "put_bwb": "PUT BWB",
+         "long_call": "LONG CALL", "long_put": "LONG PUT", "long_straddle": "LONG STRADDLE",
+         "long_strangle": "LONG STRANGLE", "call_debit_spread": "CALL DEBIT SPREAD",
+         "put_debit_spread": "PUT DEBIT SPREAD", "long_butterfly": "BUTTERFLY",
+         "put_backspread": "PUT BACKSPREAD", "long_calendar": "CALENDAR"}
 _BY_SHORT = {v: k for k, v in SHORT.items()}
 FILTERS = ["ETF", "STOCK", "IVR ≥ 30", "IVR ≥ 50", "EARNINGS ≤ 30D", "NO EARNINGS"]
 
@@ -580,8 +596,13 @@ def _ticket(m: Market, store, run: clock.Run) -> None:
     ivr = row.get("ivr", float("nan"))
     with uk.panel(f"TICKET · {_label(t)}", THEME.amber,
                   f"{S:,.2f} · IV {row.get('iv', 0) * 100:.0f} · IVR {ivr * 100:.0f}" if ivr == ivr else f"{S:,.2f}"):
-        pick = st.pills("Strategy", list(SHORT.values()), default="STRANGLE", key="th_tpl_pill",
-                        label_visibility="collapsed") or "STRANGLE"
+        side = st.segmented_control("side", ["SELL PREMIUM", "BUY OPTIONS"], default="SELL PREMIUM",
+                                    key="th_side", label_visibility="collapsed") or "SELL PREMIUM"
+        buying = side == "BUY OPTIONS"
+        names = [SHORT[k] for k in SHORT if (k in LONG_TEMPLATES) == buying]
+        dflt = "LONG STRADDLE" if buying else "STRANGLE"
+        pick = st.pills("Strategy", names, default=dflt, key=f"th_tpl_pill_{int(buying)}",
+                        label_visibility="collapsed") or dflt
         tpl = _BY_SHORT[pick]
         spec = TEMPLATES[tpl]
         exps = m.expiry_choices(t, i, 120)
@@ -589,7 +610,7 @@ def _ticket(m: Market, store, run: clock.Run) -> None:
             st.info("No listed expirations in range.")
             return
         c1, c2 = st.columns([1.3, 1])
-        dte_pick = c1.segmented_control("DTE", ["30", "45", "60"], default="45", key="th_dte",
+        dte_pick = c1.segmented_control("DTE", ["7", "14", "30", "45", "60", "90"], default="45", key="th_dte",
                                         label_visibility="collapsed") or "45"
         n = int(c2.number_input("Contracts", 1, 100, 1, key="th_n", label_visibility="collapsed"))
         e = min(exps, key=lambda x: abs(m.days_between(i, x) - int(dte_pick)))
@@ -598,12 +619,20 @@ def _ticket(m: Market, store, run: clock.Run) -> None:
             e = t1.selectbox("Expiration", exps, index=exps.index(e), key=f"th_exp_{dte_pick}",
                              format_func=lambda x: f"{m.days_between(i, x)} DTE"
                              + ("" if (_ss().get("th_sc") or {}).get("hide") else f" · {m.dates[x]:%b %d}"))
-            dlt = t2.slider("Short delta", 0.05, 0.50, float(spec["delta"]), 0.01, key=f"th_dlt_{tpl}",
-                            disabled=spec["delta"] >= 0.5)
+            dlt = t2.slider("Long delta" if spec.get("debit") else "Short delta", 0.05, 0.50, float(spec["delta"]),
+                            0.01, key=f"th_dlt_{tpl}", disabled=spec["delta"] >= 0.5 and tpl != "long_call"
+                            and tpl != "long_put" and tpl not in ("call_debit_spread", "put_debit_spread"))
             w = t3.number_input("Wing $", min_value=0.5, value=float(default_width(S)), step=0.5,
                                 key=f"th_w_{tpl}_{t}", disabled=not spec["wing"])
         flat = run.book.flat_iv
-        legs = build(tpl, m, t, i, e, n, dlt, w if spec["wing"] else None, flat)
+        back = None
+        if spec.get("calendar"):
+            later = [x for x in exps if m.days_between(e, x) >= 21]
+            back = min(later, key=lambda x: abs(m.days_between(e, x) - 30)) if later else None
+            if back is None:
+                st.info("No later expiry for the calendar's long leg — pick a nearer front month.")
+                return
+        legs = build(tpl, m, t, i, e, n, dlt, w if spec["wing"] else None, flat, back)
         pv = run.book.preview(m, t, i, legs)
         a = analytics.analyse(m, t, i, legs, -pv["credit"], flat)
         nlv = run.book.nlv(m, i)
@@ -645,7 +674,7 @@ def _book(m: Market, store, run: clock.Run) -> None:
     with uk.panel(f"BOOK · {len(opens)} OPEN", THEME.teal, f"{len(b.positions) - len(opens)} closed"):
         if not opens:
             st.markdown(f'<div style="font-size:0.74rem; color:{THEME.muted};">No positions. Click a screener row, '
-                        f'pick a strategy, press SELL.</div>', unsafe_allow_html=True)
+                        f'pick a strategy, press SELL or BUY.</div>', unsafe_allow_html=True)
         for p in opens:
             pnl = b.position_pnl(m, p, i)
             dte = m.days_between(i, p.expiry_i()) if p.option_legs() else None
@@ -807,7 +836,11 @@ def _finish(m: Market, store) -> None:
     flags = {"trades": len(run.book.positions),
              "closed": sum(1 for p in run.book.positions if not p.is_open),
              "max_bp": max_bp, "wheel": any("wheel" in p.flags for p in run.book.positions),
-             "theta_nlv": float(np.mean(thetas)) if thetas else 0.0}
+             "theta_nlv": float(np.mean(thetas)) if thetas else 0.0,
+             "debit_closed": sum(1 for p in run.book.positions if not p.is_open and p.credit < 0),
+             "best_debit_mult": max([(p.pnl - p.credit) / -p.credit for p in run.book.positions
+                                     if not p.is_open and p.credit < 0] or [0.0]),
+             "rival": sc.get("rival", "short")}
     sc_ = scoring.score(me, bo, spy_ret, adh, sc["difficulty"], bool(ch and ch.get("crisis")), flags)
     deb = {"me": me, "bot": bo, "spy_ret": spy_ret, "adherence": adh, "adh_rows": rows,
            "score": sc_, "challenge": ch, "max_bp": max_bp}
