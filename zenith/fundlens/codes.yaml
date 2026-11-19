@@ -1,0 +1,22 @@
+# Verified Morningstar code -> label maps.
+# FundLens NEVER guesses a label. A numeric code that is not listed here is
+# shown as "Code <n> (unmapped)" and reported in the Data Quality log.
+#
+# Strategic Beta Group: Advisor Workstation exports some groups as a numeric ID
+# instead of text (Dividend, Commodity and Fixed Income arrive as text).
+# Verified 2026-10-22 two ways:
+#   1. Morningstar's own per-group factor exports ("BETA - <GROUP>.xls", 2026-06-29):
+#      every code appears on exactly one group's sheet (~440 ETFs).
+#   2. User confirmation in Advisor Workstation: IJJ=Value(12), AUSF=Multifactor(8),
+#      ABLD=Fundamentals(5), COWZ=Other(9), ONEV=Risk-Oriented(11).
+sb_group:
+  5: "Fundamentals"
+  6: "Growth"
+  7: "Momentum"
+  8: "Multifactor"
+  9: "Other"
+  10: "Quality"
+  11: "Risk-Oriented"
+  12: "Value"
+index_weighting: {}
+index_selection: {}

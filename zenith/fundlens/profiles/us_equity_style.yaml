@@ -1,0 +1,77 @@
+id: us_equity_style
+name: "US Equity - Style Box (Value / Growth / Blend)"
+description: >
+  Balanced, long-horizon comparison for style-box equity sleeves (e.g. Mid-Cap Value).
+  Rewards strong risk-adjusted returns, downside resilience, consistency and low cost;
+  a light Portfolio Fit pillar prefers beta near 1.0 and a high R-squared.
+
+# Weight of each trailing horizon when blending one metric (renormalised over the
+# horizons a fund actually has).
+horizon_weights: {3y: 0.20, 5y: 0.30, 10y: 0.30, 15y: 0.20}
+
+# Pillar weights (any scale - they are normalised) and metric weights within each pillar.
+pillars:
+  returns:        {label: "Returns",               weight: 25, metrics: {nav_ret: 1}}
+  risk_adjusted:  {label: "Risk-Adjusted",         weight: 25, metrics: {sharpe: 1, sortino: 1, capture_spread: 1, alpha: 0.5, info_ratio: 0.5}}
+  downside:       {label: "Downside & Risk",       weight: 20, metrics: {down_capture: 1, std_dev: 1, bear_market_pct: 1, worst_year_5y: 1, worst_3m_eligible: 0.5}}
+  consistency:    {label: "Consistency",           weight: 10, metrics: {batting_avg: 1, top_half_pct: 1}}
+  cost:           {label: "Cost & Implementation", weight: 15, metrics: {net_er: 2, aum: 1, avg_daily_vol: 0.5, abs_prem_disc: 0.5}}
+  fit:            {label: "Portfolio Fit",         weight: 5,  metrics: {beta: 1, r_squared: 1}}
+  # Morningstar Medalist Rating inputs (pasted grids). Optional: funds without them - e.g. index funds,
+  # which have no active-manager data - are not shrunk for the gap; ignored entirely when absent.
+  stewardship:
+    label: "People & Parent"
+    weight: 10
+    optional: true
+    metrics: {med_mgr_ir_rk: 1, med_success_rk: 1, med_mgr_exp_rk: 0.5, med_brand_retention_rk: 0.5,
+              med_brand_tenure_rk: 0.5, med_parent_success: 0.5, med_obsolete: 0.5, med_fee_rank: 0.5,
+              med_pas_te_rk: 0.5, med_ap_ir_rk: 0.5}
+
+# Direction overrides for this sleeve. target = closest to `target` is best.
+overrides:
+  beta:      {direction: target, target: 1.0}
+  r_squared: {direction: higher}
+  te_ratio:  {direction: lower}
+  corr_est:  {direction: higher}
+
+# How Morningstar computed alpha/beta/R2/capture/IR in the export:
+#   standard_index : one common index per category (Advisor Workstation default) -> comparable, scored
+#   prospectus     : each fund's own benchmark -> scored only if >= 80% share one benchmark
+relative_metrics_basis: standard_index
+
+# Recency-bias control (e.g. a big momentum year lifting momentum funds in every category):
+#   off      - standard trailing 3/5/10/15Y returns
+#   balanced - Returns pillar blends standard and ex-latest-year returns 50/50, and a
+#              'Recent Surge' penalty is scored in Consistency
+#   strict   - Returns pillar uses ex-latest-year returns only; surge penalty weight 2
+recency:
+  mode: balanced
+  surge_flag: 35              # percentile-point gap flagged as 'Recent surge' in the workbook
+  theme_gap: 5                # Theme Scan: group median 1Y return this many pts above the comparison...
+  theme_skew: 15              # ...with median recency skew this high = 'Hot year' theme
+
+scoring:
+  min_funds_per_metric: 5     # skip a metric column if fewer funds have data
+  shrinkage_k: 1.0            # Adjusted = 50 + (Raw-50) * coverage^k
+  breadth_threshold: 60       # pillar score counted as a strength at/above this
+  stress_year: 2020           # worst-3M is only scored for funds with a full calendar-year return for this year
+  calendar_years: 10          # look-back for consistency and calendar heatmap
+  low_evidence_coverage: 0.25 # below this coverage the tier reads 'Low evidence'
+
+screens:
+  min_aum_mm: null
+  max_net_er: null
+  min_history_years: null
+  exclude_leveraged: true
+  exclude_objectives: []
+
+lenses:
+  - {field: objective,       label: "Objective"}
+  - {field: sb_group,        label: "Strategic Beta Group"}
+  - {field: index_selection, label: "Index Selection", explode: true}
+  - {field: index_weighting, label: "Index Weighting", explode: true}
+  - {field: strategic_beta,  label: "Strategic Beta (Y/N)"}
+  - {field: category,        label: "Morningstar Category", min_groups: 2}
+
+# Metrics shown (not necessarily scored) on Master Ranking after the pillar block.
+display_metrics: [net_er, aum, yield_12m, star_rating, history_years]

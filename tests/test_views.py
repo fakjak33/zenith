@@ -481,7 +481,7 @@ def test_nav_registry_covers_every_page():
             "NIGHT & DAY", "HOLDINGS", "MOMENTUM", "ETF MOMENTUM", "TREND FOLLOWING", "CLEAN BETA",
             "IDEAS", "REGIMES", "INDEX", "EPHEMERIS", "OPTIONS VAULT", "VOL SCREENER", "VOL SURFACE",
             "STRATEGY INDICES", "THETA RUN", "LAB", "PORTFOLIO", "OPTIONS LAB", "ETF LAB", "ACCUMULATION", "LIBRARY", "LEARN",
-            "ARCHIVE", "SOURCES"} == labels
+            "ARCHIVE", "SOURCES", "FUNDLENS"} == labels
     slugs = [f.slug for f in nav.FEATURES]
     assert len(slugs) == len(set(slugs)) and "home" not in slugs
     assert set(f.group for f in nav.FEATURES) <= set(nav.GROUPS)

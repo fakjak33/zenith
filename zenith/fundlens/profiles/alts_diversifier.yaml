@@ -1,0 +1,19 @@
+id: alts_diversifier
+name: "Alternatives - Diversifier (e.g. Systematic Trend)"
+description: >
+  For diversifying alternatives. Low beta and low R-squared to equities are rewarded
+  (Diversification pillar), with heavy emphasis on downside behaviour and risk-adjusted return.
+  Benchmark alpha / information ratio are ignored.
+extends: us_equity_style
+pillars:
+  returns:        {weight: 10}
+  risk_adjusted:  {weight: 25, metrics: {sharpe: 1, sortino: 1, capture_spread: 1}}
+  downside:       {weight: 25}
+  consistency:    {weight: 0}
+  cost:           {weight: 10}
+  fit:            {label: "Diversification", weight: 30, metrics: {beta: 1, r_squared: 1}}
+overrides:
+  beta:      {direction: target, target: 0.0}   # |beta| near zero = diversifying
+  r_squared: {direction: lower}
+  corr_est:  {direction: lower}
+  te_ratio:  {direction: none}

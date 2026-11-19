@@ -1,0 +1,354 @@
+# FundLens metric dictionary
+# ---------------------------------------------------------------------------
+# Every column/row label found in an input file is normalised (lower-case,
+# whitespace collapsed) and matched against `patterns` below (full-match regex).
+#   {H}  -> a horizon token: ytd | 1 mo | 3 mo | 6 mo | 12 mo | 3 yr | 5 yr | 10 yr | 15 yr | since incep
+#           normalised to ytd, 1m, 3m, 6m, 12m, 3y, 5y, 10y, 15y, si  (canonical column = <id>_<h>)
+#   {F}  -> "(qtr-end)" / "(mo-end)" suffix; recorded as the returns basis
+#   {Y}  -> a 4-digit calendar year (canonical column = <id>_<year>)
+#
+# kind:
+#   id             fund identifier (name / ticker)
+#   text           descriptive text (objective, benchmark, ...) - never coloured
+#   date           date (Excel serials are converted)
+#   directional    numeric with a good/bad direction - coloured green=good / red=bad
+#   characteristic numeric with no inherent good/bad (beta, P/B, ...) - neutral blue scale
+#                  (a profile may override the direction, e.g. beta target 1.0)
+#
+# direction: higher | lower | none      (profiles may override, incl. target)
+# format:    pct (number already in %), ratio, int, money_mm, score, text, date, num
+#
+# Unmapped labels are kept in "Original Data" and listed in the Data Quality log.
+# To map a new Morningstar data set, add entries here (the Claude Code skill
+# `/fund-compare` can propose them for you to approve).
+# ---------------------------------------------------------------------------
+
+metrics:
+  # ---- identity / descriptive ------------------------------------------------
+  - {id: name, label: Fund, kind: id, format: text, patterns: ["name", "fund name", "fund"]}
+  - {id: ticker, label: Ticker, kind: id, format: text, patterns: ["ticker", "symbol", "ticker symbol"]}
+  - {id: vehicle, label: Type, kind: text, format: text, patterns: ["type", "fund type"]}
+  - {id: category, label: Morningstar Category, kind: text, format: text, patterns: ["morningstar category"]}
+  - {id: objective, label: Objective, kind: text, format: text, patterns: ["fund objective", "objective"]}
+  - {id: prospectus_benchmark, label: Prospectus Benchmark, kind: text, format: text, patterns: ["prospectus benchmark", "primary prospectus benchmark"]}
+  - {id: equity_style_box, label: Equity Style Box, kind: text, format: text, patterns: ["equity style box"]}
+  - {id: fi_style_box, label: Fixed-Inc Style Box, kind: text, format: text, patterns: ["fixed-inc style box", "fixed income style box"]}
+  - {id: currency, label: Currency, kind: text, format: text, patterns: ["currency"]}
+  - {id: exchange, label: Exchange, kind: text, format: text, patterns: ["exchange"]}
+  - {id: strategic_beta, label: Strategic Beta, kind: text, format: text, patterns: ["strategic beta"]}
+  - {id: sb_group, label: Strategic Beta Group, kind: text, format: text, patterns: ["strategic beta group"]}
+  - {id: index_selection, label: Index Selection, kind: text, format: text, patterns: ["index selection"]}
+  - {id: index_weighting, label: Index Weighting, kind: text, format: text, patterns: ["index weighting"]}
+  - {id: fee_level, label: Morningstar Fee Level, kind: text, format: text, patterns: ["morningstar fee level"]}
+  - {id: leveraged, label: Leveraged Fund, kind: text, format: text, patterns: ["leveraged fund"]}
+  - {id: best_fit_index, label: Best Fit Index, kind: text, format: text, patterns: ["best fit index"]}
+  - {id: medalist_rating, label: Medalist Rating, kind: text, format: text, patterns: ["morningstar medalist rating", "medalist rating"]}
+
+  # ---- dates -----------------------------------------------------------------
+  - {id: risk_score_date, label: Portfolio Risk Score Date, kind: date, format: date, patterns: ["portfolio risk score date"]}
+  - {id: portfolio_date, label: Portfolio Date, kind: date, format: date, patterns: ["portfolio date"]}
+  - {id: ret_date, label: Return Date, kind: date, format: date, patterns: ["ret date {F}", "return date {F}", "ret date"]}
+  - {id: best_3m_date, label: Best 3M Date, kind: date, format: date, patterns: ["best 3 mo as of date"]}
+  - {id: worst_3m_date, label: Worst 3M Date, kind: date, format: date, patterns: ["worst 3 mo as of date"]}
+  - {id: inception_date, label: Inception Date, kind: date, format: date, patterns: ["inception date", "fund incept date"]}
+
+  # ---- basics / cost / implementation -------------------------------------------
+  - {id: risk_score, label: Portfolio Risk Score, kind: characteristic, direction: none, format: int, patterns: ["portfolio risk score"],
+     description: "Morningstar portfolio risk score (higher = more equity-like risk)."}
+  - {id: star_rating, label: Morningstar Rating, kind: directional, direction: higher, format: int, patterns: ["morningstar rating", "morningstar rating overall"],
+     description: "Morningstar star rating (1-5)."}
+  - {id: aum, label: Total Assets ($MM), kind: directional, direction: higher, format: money_mm, patterns: ["total assets \\$mm", "total assets \\(m\\)", "fund size \\$mm"],
+     description: "Fund assets. Larger funds have lower closure risk and better liquidity. Scored by rank, so a log transform is unnecessary."}
+  - {id: aum_cat_rank, label: Net Assets % Rank Cat, kind: directional, direction: lower, format: int, patterns: ["net assets \\$mm \\(% rank in category\\)"],
+     description: "Percentile rank of net assets within the Morningstar category (1 = largest)."}
+  - {id: nav, label: NAV, kind: characteristic, direction: none, format: num, patterns: ["nav close", "nav \\(\\$\\)", "nav"]}
+  - {id: price, label: Market Price, kind: characteristic, direction: none, format: num, patterns: ["market price close", "market price \\(\\$\\)"]}
+  - {id: avg_daily_vol, label: Avg Daily Volume, kind: directional, direction: higher, format: int, patterns: ["average daily volume", "avg daily vol \\(3mo\\)"],
+     description: "ETF trading liquidity (shares/day)."}
+  - {id: prem_disc_12m, label: Prem/Disc 12M Avg, kind: characteristic, direction: none, format: ratio, patterns: ["prem/disc 12 mo average", "premium/discount 12mo avg"],
+     description: "Average ETF premium(+)/discount(-) to NAV; scored via its absolute value."}
+  - {id: prem_disc_now, label: Current Prem/Disc, kind: characteristic, direction: none, format: ratio, patterns: ["current premium/discount \\(%\\)"]}
+  - {id: turnover, label: Turnover %, kind: directional, direction: lower, format: int, patterns: ["turnover ratio", "turnover ratio %"],
+     description: "Annual portfolio turnover; lower is more tax/trading efficient."}
+  - {id: net_er, label: Net Expense Ratio, kind: directional, direction: lower, format: ratio, patterns: ["prospectus net expense ratio", "net exp ratio \\(%\\)", "net expense ratio"],
+     description: "Prospectus net expense ratio (%)."}
+  - {id: gross_er, label: Gross Expense Ratio, kind: directional, direction: lower, format: ratio, patterns: ["prospectus gross expense ratio", "gross exp ratio \\(%\\)", "gross expense ratio"]}
+  - {id: yield_12m, label: Yield 12M, kind: directional, direction: higher, format: ratio, patterns: ["yield 12 mo", "ttm yield", "12 mo yield"],
+     description: "Trailing 12-month yield. Displayed; not scored by default (avoids rewarding value traps)."}
+  - {id: index_te, label: Index Tracking Error, kind: directional, direction: lower, format: ratio, patterns: ["tracking error"],
+     description: "How closely an index fund tracks its own index (lower = tighter)."}
+  - {id: manager_tenure, label: Manager Tenure (Yrs), kind: directional, direction: higher, format: ratio, patterns: ["manager tenure average"]}
+
+  # ---- trailing returns -----------------------------------------------------------
+  - {id: mkt_ret, label: Mkt Return, kind: directional, direction: higher, format: pct, horizons: true,
+     patterns: ["mkt tot return {H} {F}", "market return {H} {F}"],
+     description: "Market-price total return (annualised beyond 1 yr). Display only - NAV returns are scored."}
+  - {id: nav_ret, label: Return, kind: directional, direction: higher, format: pct, horizons: true,
+     patterns: ["nav tot return {H} {F}", "tot ret {H} {F}", "total return {H} {F}", "nav return {H} {F}"],
+     description: "NAV total return, annualised for 3/5/10/15 yr. Consistent across ETFs and mutual funds."}
+  - {id: nav_rank_cat, label: "% Rank Cat", kind: directional, direction: lower, format: int, horizons: true,
+     patterns: ["nav % rank cat {H} {F}", "% rank cat {H} {F}", "tot ret % rank cat {H} {F}"],
+     description: "Morningstar percentile rank vs the full category (1 = best)."}
+
+  # ---- calendar-year returns ------------------------------------------------------
+  - {id: mkt_annual, label: Mkt Annual Return, kind: directional, direction: higher, format: pct, years: true,
+     patterns: ["mkt annl return {Y}"]}
+  - {id: nav_annual, label: Annual Return, kind: directional, direction: higher, format: pct, years: true,
+     patterns: ["nav annl return {Y}", "annual return {Y}", "tot ret annl {Y}", "total return annual {Y}"],
+     description: "Calendar-year NAV total return."}
+
+  # ---- risk analysis (Morningstar computes MPT stats vs. the category's standard index) ---
+  - {id: sharpe, label: Sharpe, kind: directional, direction: higher, format: ratio, horizons: true,
+     patterns: ["sharpe ratio {H}"], description: "Excess return per unit of total volatility."}
+  - {id: sortino, label: Sortino, kind: directional, direction: higher, format: ratio, horizons: true,
+     patterns: ["sortino ratio {H}"], description: "Excess return per unit of downside volatility."}
+  - {id: alpha, label: Alpha, kind: directional, direction: higher, format: ratio, horizons: true, benchmark_relative: true,
+     patterns: ["alpha {H}"], description: "Risk-adjusted excess return vs the index used by Morningstar."}
+  - {id: beta, label: Beta, kind: characteristic, direction: none, format: ratio, horizons: true, benchmark_relative: true,
+     patterns: ["beta {H}"], description: "Sensitivity to the index. Good/bad depends on the sleeve - set in the profile."}
+  - {id: r_squared, label: R-Squared, kind: characteristic, direction: none, format: ratio, horizons: true, benchmark_relative: true,
+     patterns: ["r-squared {H}"], description: "% of return variation explained by the index (sqrt(R2) = correlation)."}
+  - {id: best_fit_alpha, label: Best Fit Alpha, kind: directional, direction: higher, format: ratio, patterns: ["best fit alpha"]}
+  - {id: best_fit_beta, label: Best Fit Beta, kind: characteristic, direction: none, format: ratio, patterns: ["best fit beta"]}
+  - {id: best_fit_r2, label: Best Fit R-Squared, kind: characteristic, direction: none, format: ratio, patterns: ["best fit r-squared"]}
+  - {id: geo_mean, label: Geometric Mean, kind: directional, direction: higher, format: pct, horizons: true, patterns: ["geometric mean {H}"]}
+  - {id: arith_mean, label: Arith Monthly Mean, kind: directional, direction: higher, format: ratio, horizons: true, patterns: ["arithmetic monthly mean {H}"]}
+  - {id: std_dev, label: Std Dev, kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["standard deviation {H}"], description: "Annualised volatility of returns."}
+  - {id: skew, label: Skewness, kind: directional, direction: higher, format: ratio, horizons: true, patterns: ["skewness {H}"],
+     description: "Return asymmetry; more negative = fatter left tail."}
+  - {id: kurtosis, label: Kurtosis, kind: directional, direction: lower, format: ratio, horizons: true, patterns: ["kurtosis {H}"],
+     description: "Tail heaviness; higher = more extreme months."}
+  - {id: best_3m, label: Best 3M (Incep), kind: directional, direction: higher, format: pct, patterns: ["best 3 mo ret inception"]}
+  - {id: worst_3m, label: Worst 3M (Incep), kind: directional, direction: higher, format: pct, patterns: ["worst 3 mo ret inception"],
+     description: "Worst rolling 3-month return since inception (less negative = better). Only comparable between funds that existed through the same crises."}
+  - {id: bear_market_pct, label: Bear Market %Rank, kind: directional, direction: lower, format: int, patterns: ["bear market % {F}", "bear market %", "bear market percentile rank", "bear mkt % rank"],
+     description: "Morningstar bear-market percentile rank in category (1 = held up best)."}
+  - {id: treynor, label: Treynor, kind: directional, direction: higher, format: ratio, horizons: true, benchmark_relative: true, patterns: ["treynor ratio {H}"]}
+  - {id: te_ratio, label: Tracking Error, kind: characteristic, direction: none, format: ratio, horizons: true, benchmark_relative: true,
+     patterns: ["tracking error ratio {H}"], description: "Volatility of returns relative to the index."}
+  - {id: info_ratio, label: Info Ratio, kind: directional, direction: higher, format: ratio, horizons: true, benchmark_relative: true,
+     patterns: ["information ratio {H}"], description: "Excess return vs index per unit of tracking error."}
+  - {id: up_capture, label: Up Capture, kind: directional, direction: higher, format: ratio, horizons: true, benchmark_relative: true,
+     patterns: ["upside capture ratio {H}"], description: "% of index gains captured in up months."}
+  - {id: down_capture, label: Down Capture, kind: directional, direction: lower, format: ratio, horizons: true, benchmark_relative: true,
+     patterns: ["downside capture ratio {H}"], description: "% of index losses captured in down months (lower = better protection)."}
+  - {id: batting_avg, label: Batting Avg, kind: directional, direction: higher, format: ratio, horizons: true, benchmark_relative: true,
+     patterns: ["batting average ratio {H}", "batting average {H}"], description: "% of months the fund beat the index."}
+
+  # Morningstar category percentile ranks of risk stats (1 = best for "good" stats)
+  - {id: sharpe_rank_cat, label: Sharpe %Rank Cat, kind: directional, direction: lower, format: int, horizons: true, patterns: ["sharpe ratio {H} \\(% rank category\\)"]}
+  - {id: alpha_rank_cat, label: Alpha %Rank Cat, kind: directional, direction: lower, format: int, horizons: true, patterns: ["alpha {H} \\(% rank category\\)"]}
+  - {id: beta_rank_cat, label: Beta %Rank Cat, kind: characteristic, direction: none, format: int, horizons: true, patterns: ["beta {H} \\(% rank category\\)"]}
+  - {id: r2_rank_cat, label: R2 %Rank Cat, kind: characteristic, direction: none, format: int, horizons: true, patterns: ["r-squared {H} \\(% rank category\\)"]}
+  - {id: std_rank_cat, label: StdDev %Rank Cat, kind: characteristic, direction: none, format: int, horizons: true, patterns: ["standard deviation {H} \\(% rank category\\)"]}
+  - {id: sortino_rank_cat, label: Sortino %Rank Cat, kind: directional, direction: lower, format: int, horizons: true, patterns: ["sortino ratio {H} \\(% rank category\\)"]}
+  - {id: upcap_rank_cat, label: UpCap %Rank Cat, kind: directional, direction: lower, format: int, horizons: true, patterns: ["upside capture ratio {H} \\(% rank category\\)"]}
+  - {id: downcap_rank_cat, label: DownCap %Rank Cat, kind: characteristic, direction: none, format: int, horizons: true, patterns: ["downside capture ratio {H} \\(% rank category\\)"],
+     description: "Morningstar ranks downside capture ascending; direction ambiguous across categories, so shown neutral."}
+  - {id: ir_rank_cat, label: IR %Rank Cat, kind: directional, direction: lower, format: int, horizons: true, patterns: ["information ratio {H} \\(% rank category\\)"]}
+
+  # ---- derived by the engine (never read from files) ------------------------------
+  - {id: capture_spread, label: Capture Spread, kind: directional, direction: higher, format: ratio, horizons: true, derived: true, benchmark_relative: true,
+     description: "Upside capture minus downside capture. Rewards funds that participate in rallies and sidestep declines."}
+  - {id: abs_prem_disc, label: "|Prem/Disc| 12M", kind: directional, direction: lower, format: ratio, derived: true,
+     description: "Absolute 12-month average premium/discount (ETF pricing efficiency)."}
+  - {id: worst_year_5y, label: Worst Year (5Y), kind: directional, direction: higher, format: pct, derived: true,
+     description: "Worst calendar-year NAV return over the last 5 complete years (requires all 5)."}
+  - {id: worst_3m_eligible, label: Worst 3M (Crisis-Tested), kind: directional, direction: higher, format: pct, derived: true,
+     description: "Worst 3-month return since inception, scored only for funds that existed through the profile's stress year (default 2020); otherwise blank."}
+  - {id: top_half_pct, label: "% Yrs Top Half", kind: directional, direction: higher, format: pct, derived: true,
+     description: "Share of the last 10 calendar years (min 3) in which the fund beat the median fund in this comparison."}
+  - {id: history_years, label: History (Yrs), kind: directional, direction: higher, format: int, derived: true,
+     description: "Longest trailing-return horizon available (15/10/5/3, else count of calendar years)."}
+  - {id: corr_est, label: Corr Est (sqrt R2), kind: characteristic, direction: none, format: ratio, horizons: true, derived: true, benchmark_relative: true,
+     description: "Correlation estimate with Morningstar's index = sqrt(R-squared/100)."}
+
+  # ---- recency diagnostics (derived) -------------------------------------------------
+  - {id: nav_ret_xr, label: Return ex-Latest-Yr, kind: directional, direction: higher, format: pct, horizons: true, derived: true,
+     description: "Trailing return with the most recent 12 months stripped out, e.g. 3Y = annualised return of the 2 years before the latest year. Same end date as the trailing returns, so the calculation is exact."}
+  - {id: recency_skew, label: Recency Skew, kind: characteristic, direction: none, format: score, derived: true,
+     description: "1-year peer percentile minus ex-latest-year (3Y/5Y) peer percentile, in percentile points. Large positive = standing driven by one strong recent year (e.g. a momentum run); negative = recent slump vs its history."}
+  - {id: recency_surge, label: Recent Surge Penalty, kind: directional, direction: lower, format: score, derived: true,
+     description: "Positive part of Recency Skew. Scored (lower = better) when the profile's recency mode is balanced or strict, so funds whose rank leans on the latest year are tempered."}
+  - {id: momentum_tilt, label: Momentum Strategy, kind: text, format: text, derived: true,
+     description: "'Yes' when Morningstar's strategic-beta group is Momentum or the index selection / fund name mentions momentum."}
+
+  # ===================================================================================
+  # Copy-paste (Advisor Workstation grid) and mutual-fund data points
+  # ===================================================================================
+  - {id: price_now, label: Price, kind: characteristic, direction: none, format: num, patterns: ["price"]}
+  - {id: price_mo, label: Price (Month-end), kind: characteristic, direction: none, format: num, patterns: ["price {F}"]}
+  - {id: share_class, label: Share Class Type, kind: text, format: text, patterns: ["share class type"]}
+  - {id: manager_name, label: Manager, kind: text, format: text, patterns: ["manager name"]}
+  - {id: manager_tenure_longest, label: Manager Tenure (Longest), kind: directional, direction: higher, format: ratio,
+     patterns: ["manager tenure", "manager tenure \\(longest\\)", "manager tenure longest"]}
+  - {id: annual_net_er, label: Net Expense (Annual Rpt), kind: directional, direction: lower, format: ratio,
+     patterns: ["annual report net expense ratio"],
+     description: "Annual-report net expense ratio. Used for scoring when the prospectus net expense ratio is absent."}
+  - {id: ms_page_date, label: Morningstar Page, kind: date, format: date, patterns: ["morningstar page"]}
+  - {id: mir_date, label: Managed Investment Report, kind: date, format: date, patterns: ["managed investment report"]}
+  - {id: medalist_end_date, label: Medalist Inputs As Of, kind: date, format: date, patterns: ["end date"]}
+  - {id: nav_rank_obj, label: "% Rank Obj", kind: directional, direction: lower, format: int, horizons: true,
+     patterns: ["% rank obj {H} {F}"], description: "Morningstar percentile rank within the fund objective (1 = best)."}
+  - {id: investor_ret, label: Investor Return, kind: directional, direction: higher, format: pct, horizons: true,
+     patterns: ["inv ret {H} {F}", "investor return {H} {F}"],
+     description: "Dollar-weighted (investor) return - what the average shareholder actually earned."}
+
+  # ---- sector exposure (% of equity) - characteristics, shown vs the benchmark -------------
+  - {id: sec_cyclical, label: Cyclical %, kind: characteristic, direction: none, format: ratio, patterns: ["cyclical"]}
+  - {id: sec_sensitive, label: Sensitive %, kind: characteristic, direction: none, format: ratio, patterns: ["sensitive"]}
+  - {id: sec_defensive, label: Defensive %, kind: characteristic, direction: none, format: ratio, patterns: ["defensive"]}
+  - {id: sec_basic_materials, label: Basic Materials %, kind: characteristic, direction: none, format: ratio, patterns: ["basic materials"]}
+  - {id: sec_consumer_cyclical, label: Consumer Cyclical %, kind: characteristic, direction: none, format: ratio, patterns: ["consumer cyclical"]}
+  - {id: sec_financial, label: Financial Services %, kind: characteristic, direction: none, format: ratio, patterns: ["financial services"]}
+  - {id: sec_real_estate, label: Real Estate %, kind: characteristic, direction: none, format: ratio, patterns: ["real estate"]}
+  - {id: sec_communication, label: Communication Svcs %, kind: characteristic, direction: none, format: ratio, patterns: ["communication services"]}
+  - {id: sec_energy, label: Energy %, kind: characteristic, direction: none, format: ratio, patterns: ["energy"]}
+  - {id: sec_industrials, label: Industrials %, kind: characteristic, direction: none, format: ratio, patterns: ["industrials"]}
+  - {id: sec_technology, label: Technology %, kind: characteristic, direction: none, format: ratio, patterns: ["technology"]}
+  - {id: sec_consumer_defensive, label: Consumer Defensive %, kind: characteristic, direction: none, format: ratio, patterns: ["consumer defensive"]}
+  - {id: sec_healthcare, label: Healthcare %, kind: characteristic, direction: none, format: ratio, patterns: ["healthcare"]}
+  - {id: sec_utilities, label: Utilities %, kind: characteristic, direction: none, format: ratio, patterns: ["utilities"]}
+
+  # ---- equity portfolio statistics -------------------------------------------------------
+  - {id: style_consistency, label: Style Consistency, kind: text, format: text, patterns: ["equity style consistency"]}
+  - {id: avg_mkt_cap, label: Geo Avg Cap ($mil), kind: characteristic, direction: none, format: money_mm, patterns: ["geo avg cap \\(\\$mil\\)"]}
+  - {id: pe, label: P/E, kind: characteristic, direction: none, format: ratio, patterns: ["p/e ratio"]}
+  - {id: pb, label: P/B, kind: characteristic, direction: none, format: ratio, patterns: ["p/b ratio"]}
+  - {id: pc, label: P/C, kind: characteristic, direction: none, format: ratio, patterns: ["p/c ratio"]}
+  - {id: ps, label: P/S, kind: characteristic, direction: none, format: ratio, patterns: ["p/s ratio"]}
+  - {id: net_margin, label: Net Margin %, kind: characteristic, direction: none, format: ratio, patterns: ["net margin % ttm"]}
+  - {id: roe, label: ROE %, kind: characteristic, direction: none, format: ratio, patterns: ["roe % ttm"]}
+  - {id: roa, label: ROA %, kind: characteristic, direction: none, format: ratio, patterns: ["roa % ttm"]}
+  - {id: debt_cap, label: Debt % Cap, kind: characteristic, direction: none, format: ratio, patterns: ["debt % total cap ttm"]}
+  - {id: eps_growth_3y, label: Earnings Growth 3Y, kind: characteristic, direction: none, format: ratio, patterns: ["earnings growth 3 yr"]}
+  - {id: hist_earnings, label: Historical Earnings %, kind: characteristic, direction: none, format: ratio, patterns: ["historical earnings %"]}
+  - {id: sbox_lv, label: "% Large Value", kind: characteristic, direction: none, format: int, patterns: ["% large value"]}
+  - {id: sbox_lb, label: "% Large Blend", kind: characteristic, direction: none, format: int, patterns: ["% large blend"]}
+  - {id: sbox_lg, label: "% Large Growth", kind: characteristic, direction: none, format: int, patterns: ["% large growth"]}
+  - {id: sbox_mv, label: "% Mid Value", kind: characteristic, direction: none, format: int, patterns: ["% mid value"]}
+  - {id: sbox_mb, label: "% Mid Blend", kind: characteristic, direction: none, format: int, patterns: ["% mid blend"]}
+  - {id: sbox_mg, label: "% Mid Growth", kind: characteristic, direction: none, format: int, patterns: ["% mid growth"]}
+  - {id: sbox_sv, label: "% Small Value", kind: characteristic, direction: none, format: int, patterns: ["% small value"]}
+  - {id: sbox_sb, label: "% Small Blend", kind: characteristic, direction: none, format: int, patterns: ["% small blend"]}
+  - {id: sbox_sg, label: "% Small Growth", kind: characteristic, direction: none, format: int, patterns: ["% small growth"]}
+  - {id: last_box_change, label: Last Style Box Change, kind: date, format: date, patterns: ["last style box change"]}
+  - {id: last_box, label: Last Style Box, kind: text, format: text, patterns: ["last style box"]}
+
+  # ---- Morningstar Medalist Rating inputs (quantitative pillar data points) -------------
+  # "Ranked" = Morningstar percentile rank of the data point within the category, 0 = best
+  # (verified on the 2026-10 Large Value/Blend paste: higher manager IR -> lower rank).
+  - {id: med_mgr_exp, label: Mgr Successful Experience, kind: directional, direction: higher, format: ratio,
+     patterns: ["fund manager successful experience - active people pillar"]}
+  - {id: med_mgr_exp_rk, label: Mgr Experience (rank), kind: directional, direction: lower, format: ratio,
+     patterns: ["fund manager successful experience - ranked - active people pillar"],
+     description: "People pillar - manager successful experience, category percentile (0 = best)."}
+  - {id: med_mgr_ir, label: Manager IR, kind: directional, direction: higher, format: ratio, horizons: true,
+     patterns: ["manager information ratio {H} - active people pillar"]}
+  - {id: med_mgr_ir_rk, label: Manager IR (rank), kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["manager information ratio {H} - ranked - active people pillar"],
+     description: "People pillar - manager information ratio across their whole record, category percentile (0 = best)."}
+  - {id: med_brand_ir, label: Brand IR, kind: directional, direction: higher, format: ratio, horizons: true,
+     patterns: ["average brand information ratio {H} - active people pillar"]}
+  - {id: med_brand_ir_rk, label: Brand IR (rank), kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["average brand information ratio {H} - ranked - active people pillar"]}
+  - {id: med_brand_retention, label: Brand Retention 5Y, kind: directional, direction: higher, format: ratio,
+     patterns: ["average brand retention ratio 5 yr - active people pillar"]}
+  - {id: med_parent_retention, label: Brand Retention 5Y (Parent), kind: directional, direction: higher, format: ratio,
+     patterns: ["average brand retention ratio 5 yr - parent pillar"]}
+  - {id: med_brand_retention_rk, label: Brand Retention (rank), kind: directional, direction: lower, format: ratio,
+     patterns: ["average brand retention ratio 5 yr - ranked - active people pillar"],
+     description: "People pillar - fund company manager retention, category percentile (0 = best)."}
+  - {id: med_brand_tenure, label: Brand Longest Tenure, kind: directional, direction: higher, format: ratio,
+     patterns: ["average brand longest manager tenure - active people pillar"]}
+  - {id: med_parent_tenure, label: Brand Longest Tenure (Parent), kind: directional, direction: higher, format: ratio,
+     patterns: ["average brand longest manager tenure - parent pillar"]}
+  - {id: med_brand_tenure_rk, label: Brand Tenure (rank), kind: directional, direction: lower, format: ratio,
+     patterns: ["average brand longest manager tenure - ranked - active people pillar"]}
+  - {id: med_parent_tenure_rk, label: Brand Tenure (Parent rank), kind: directional, direction: lower, format: ratio,
+     patterns: ["average brand longest manager tenure - ranked - parent pillar"],
+     description: "Parent pillar - firm-wide manager tenure, percentile versus the parent peer group (0 = best)."}
+  - {id: med_mgr_ownership, label: Max Manager Ownership, kind: directional, direction: higher, format: int,
+     patterns: ["max manager ownership - active people pillar"],
+     description: "Highest manager ownership band (Morningstar 1-7 scale; higher = more of the manager's own money invested)."}
+  - {id: med_proc_ir, label: Process IR, kind: directional, direction: higher, format: ratio, horizons: true,
+     patterns: ["information ratio {H} - active process pillar"]}
+  - {id: med_proc_ir_rk, label: Process IR (rank), kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["information ratio {H} - ranked - active process pillar"]}
+  - {id: med_success, label: Risk-Adj Success, kind: directional, direction: higher, format: ratio, horizons: true,
+     patterns: ["brand / asset class risk adjusted success ratio {H} - active process pillar"]}
+  - {id: med_success_rk, label: Risk-Adj Success (rank), kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["brand / asset class risk adjusted success ratio {H} - ranked - active process pillar"],
+     description: "Process pillar - share of the firm's funds in this asset class that survived and beat peers risk-adjusted, category percentile (0 = best)."}
+  - {id: med_style_drift_rk, label: Size/Style Drift (rank), kind: characteristic, direction: none, format: ratio,
+     patterns: ["size/style drift {H} - ranked - active process pillar"]}
+  - {id: med_wr2_rk, label: Weighted R2 (rank), kind: characteristic, direction: none, format: ratio,
+     patterns: ["weighted r-squared - ranked - active process pillar"]}
+  - {id: med_ap_ir, label: Active vs Passive IR, kind: directional, direction: higher, format: ratio, horizons: true,
+     patterns: ["active vs\\. passive information ratio {H} - passive process pillar", "average active vs\\. passive information ratio {H} - passive process pillar"]}
+  - {id: med_ap_ir_rk, label: Active vs Passive IR (rank), kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["active vs\\. passive information ratio {H} - ranked - passive process pillar", "average active vs\\. passive information ratio {H} - ranked - passive process pillar"]}
+  - {id: med_pas_te, label: Passive Tracking Error, kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["tracking error {H} - passive process pillar"]}
+  - {id: med_pas_te_rk, label: Passive TE (rank), kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["tracking error {H} - ranked - passive process pillar"]}
+  - {id: med_pas_r2, label: Passive R2, kind: characteristic, direction: none, format: ratio, horizons: true,
+     patterns: ["r-squared {H} - passive process pillar"]}
+  - {id: med_pas_r2_rk, label: Passive R2 (rank), kind: characteristic, direction: none, format: ratio, horizons: true,
+     patterns: ["r-squared {H} - ranked - passive process pillar"]}
+  - {id: med_avg_cap, label: Avg Market Cap (Medalist), kind: characteristic, direction: none, format: num,
+     patterns: ["average market cap - passive process pillar"]}
+  - {id: med_avg_cap_rk, label: Avg Market Cap (rank), kind: characteristic, direction: none, format: ratio,
+     patterns: ["average market cap - ranked - passive process pillar"]}
+  - {id: med_sector_dist, label: Sector Distance from Index, kind: characteristic, direction: none, format: ratio,
+     patterns: ["equity sector euclidean distance from index - passive process pillar"]}
+  - {id: med_sector_dist_rk, label: Sector Distance (rank), kind: characteristic, direction: none, format: ratio,
+     patterns: ["equity sector euclidean distance from index - ranked - passive process pillar"]}
+  - {id: med_size_exp, label: Size Factor Exposure, kind: characteristic, direction: none, format: ratio,
+     patterns: ["size factor exposure - passive process pillar"]}
+  - {id: med_size_exp_rk, label: Size Exposure (rank), kind: characteristic, direction: none, format: ratio,
+     patterns: ["size factor exposure - ranked - passive process pillar"]}
+  - {id: med_vg_exp, label: Value/Growth Exposure, kind: characteristic, direction: none, format: ratio,
+     patterns: ["value/growth factor exposure - passive process pillar"]}
+  - {id: med_vg_exp_rk, label: Value/Growth Exposure (rank), kind: characteristic, direction: none, format: ratio,
+     patterns: ["value/growth factor exposure - ranked - passive process pillar"]}
+  - {id: med_top10, label: "% in Top 10 Holdings", kind: characteristic, direction: none, format: ratio,
+     patterns: ["% of assets in top 10 holdings - passive process pillar"]}
+  - {id: med_n_hold, label: Equity Holdings, kind: characteristic, direction: none, format: int,
+     patterns: ["number of equity holdings - passive process pillar"]}
+  - {id: med_n_hold_rk, label: Equity Holdings (rank), kind: characteristic, direction: none, format: ratio,
+     patterns: ["number of equity holdings - ranked - passive process pillar"]}
+  - {id: med_n_hold_rel, label: Holdings vs Cat Avg, kind: characteristic, direction: none, format: ratio,
+     patterns: ["number of equity holdings / category average - passive process pillar"]}
+  - {id: med_turnover, label: Turnover (Medalist), kind: directional, direction: lower, format: ratio,
+     patterns: ["turnover ratio - passive process pillar"]}
+  - {id: med_std, label: Std Dev (Medalist), kind: directional, direction: lower, format: ratio, horizons: true,
+     patterns: ["standard deviation {H} - passive process pillar"]}
+  - {id: med_std_rk, label: Std Dev (rank), kind: characteristic, direction: none, format: ratio, horizons: true,
+     patterns: ["standard deviation {H} - ranked - passive process pillar"]}
+  - {id: med_duration, label: Eff Duration, kind: characteristic, direction: none, format: ratio, patterns: ["surveyed effective duration - passive process pillar"]}
+  - {id: med_duration_rk, label: Eff Duration (rank), kind: characteristic, direction: none, format: ratio, patterns: ["surveyed effective duration - ranked - passive process pillar"]}
+  - {id: med_credit, label: Avg Credit Rating, kind: text, format: text, patterns: ["surveyed average credit rating - passive process pillar"]}
+  - {id: med_credit_rk, label: Avg Credit (rank), kind: characteristic, direction: none, format: ratio, patterns: ["surveyed average credit rating - ranked - passive process pillar"]}
+  - {id: med_ytm, label: Yield to Maturity, kind: characteristic, direction: none, format: ratio, patterns: ["surveyed yield to maturity - passive process pillar"]}
+  - {id: med_ytm_rk, label: YTM (rank), kind: characteristic, direction: none, format: ratio, patterns: ["surveyed yield to maturity - ranked - passive process pillar"]}
+  - {id: med_n_bonds, label: Bond Holdings, kind: characteristic, direction: none, format: int, patterns: ["number of bond holdings - passive process pillar"]}
+  - {id: med_n_bonds_rel, label: Bond Holdings vs Cat Avg, kind: characteristic, direction: none, format: ratio, patterns: ["number of bond holdings / category average - passive process pillar"]}
+  - {id: med_fee_rank, label: Brand Fee Rank, kind: directional, direction: lower, format: ratio,
+     patterns: ["brand active/passive fee rank - parent pillar"],
+     description: "Parent pillar - the firm average fee percentile versus peers (0 = cheapest)."}
+  - {id: med_parent_success, label: Brand Risk-Adj Success, kind: directional, direction: higher, format: ratio, horizons: true,
+     patterns: ["brand risk-adjusted success ratio {H} - parent pillar"],
+     description: "Parent pillar - share of all the firm's funds that survived and beat peers risk-adjusted."}
+  - {id: med_obsolete, label: Brand Obsolete Rate 5Y, kind: directional, direction: lower, format: ratio,
+     patterns: ["average brand obsolete rate 5 yr - parent pillar"],
+     description: "Parent pillar - share of the firm's funds merged or liquidated in 5 years (lower = better stewardship)."}
+  - {id: med_fee, label: Annual Fee (Price), kind: directional, direction: lower, format: ratio, patterns: ["annual fee - price score"]}
+  - {id: med_fee_rk, label: Annual Fee (rank), kind: directional, direction: lower, format: ratio, patterns: ["annual fee - ranked price score"]}
+
+  # ---- derived from the portfolio data ------------------------------------------------
+  - {id: sector_tilt, label: Sector Overweights, kind: text, format: text, derived: true,
+     description: "Sectors held 5+ percentage points above the benchmark row in the paste (e.g. Technology)."}
+  - {id: sector_under, label: Sector Underweights, kind: text, format: text, derived: true,
+     description: "Sectors held 5+ percentage points below the benchmark row (e.g. Technology for most value funds)."}
