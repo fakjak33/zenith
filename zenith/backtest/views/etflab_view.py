@@ -45,9 +45,20 @@ _FINDINGS = [
 ]
 
 
-@st.cache_data(ttl=3600, show_spinner="loading prices…")
+@st.cache_data(ttl=3600, show_spinner=False)
 def _panel(tickers: tuple, start: str) -> pd.DataFrame:
     return get_panel(list(tickers), start=start, field="close")
+
+
+@st.cache_data(ttl=3600, show_spinner=False, max_entries=24)
+def _design(tickers: tuple, start: str, spec, cfg):
+    """Rebalance schedule + backtest, cached on the design (every widget change used to redo both)."""
+    panel = _panel(tickers, start)
+    mkt = panel["SPY"] if "SPY" in panel else panel.iloc[:, 0]
+    dts = pf.rebalance_dates(panel.index, spec.rebalance)
+    ws = screens.build_weight_schedule(spec, panel, dts, mkt)
+    res = pf.run_portfolio(panel, ws, cfg) if not (ws.abs().sum(axis=1) == 0).all() else None
+    return dts, ws, res
 
 
 def _builder():
@@ -124,18 +135,29 @@ def render() -> None:
             st.caption("Pick some holdings.")
             return
         need |= set(bench) | {"SPY"}
+        key = tuple(sorted(need))
+        import time as _t
+        t0 = _t.perf_counter()
         try:
-            panel = _panel(tuple(sorted(need)), start)
+            with st.status(f"loading {len(key)} price histories…", expanded=False) as stt:
+                panel = _panel(key, start)
+                t1 = _t.perf_counter()
+                stt.update(label=f"building {spec.rebalance.lower()} rebalances and running the backtest…")
+                dts, ws, res = _design(key, start, spec, cfg)
+                t2 = _t.perf_counter()
+                src = panel.attrs.get("from_store", 0)
+                stt.update(label=f"{panel.shape[1]} prices in {t1 - t0:.1f}s ({src} from the EPHEMERIS store) · "
+                                 f"design in {t2 - t1:.1f}s", state="complete")
         except Exception as exc:  # noqa: BLE001
             C.banner(T.coral, "NO DATA", str(exc))
             return
+        if panel.attrs.get("errors"):
+            st.caption(f"skipped {len(panel.attrs['errors'])} tickers with no data: "
+                       + ", ".join(list(panel.attrs["errors"])[:12]))
         mkt = panel["SPY"] if "SPY" in panel else panel.iloc[:, 0]
-        dts = pf.rebalance_dates(panel.index, spec.rebalance)
-        ws = screens.build_weight_schedule(spec, panel, dts, mkt)
-        if (ws.abs().sum(axis=1) == 0).all():
+        if res is None:
             C.banner(T.amber, "EMPTY", "this design selects nothing in the window — widen it or relax the screen")
             return
-        res = pf.run_portfolio(panel, ws, cfg)
         r = res.returns
         bret = {b: panel[b].pct_change() for b in bench if b in panel}
         b0 = next(iter(bret.values()), mkt.pct_change())

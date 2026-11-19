@@ -77,11 +77,12 @@ def run_portfolio(panel: pd.DataFrame, weight_schedule: pd.DataFrame,
     cols = list(panel.columns)
     idx = panel.index
     px = panel.to_numpy(dtype=float)
-    rets = np.array(panel.pct_change().to_numpy(dtype=float), copy=True)
+    rets = np.array(panel.pct_change(fill_method=None).to_numpy(dtype=float), copy=True)
     rets[~np.isfinite(rets)] = 0.0
 
     sched = weight_schedule.reindex(columns=cols).fillna(0.0)
-    rebal = {ts for ts in sched.index if ts in set(idx)}
+    sched = sched[sched.index.isin(idx)]
+    targets = {idx.get_loc(ts): row for ts, row in zip(sched.index, sched.to_numpy(dtype=float))}
 
     cost_rate = (cfg.cost_bps + cfg.slippage_bps) / 10_000.0
     er_daily = cfg.expense_ratio_annual / TRADING_DAYS
@@ -89,13 +90,14 @@ def run_portfolio(panel: pd.DataFrame, weight_schedule: pd.DataFrame,
 
     n = len(cols)
     w = np.zeros(n)                     # incoming weights for the current day
-    net_list, turn_list, cost_cum, drag_cum, wsnap = [], [], [], [], []
+    net_list, turn_list, cost_cum, drag_cum = [], [], [], []
+    wsnap = np.empty((len(idx), n))
     cum_cost = 0.0
     cum_drag = 0.0
 
     for i in range(len(idx)):
         r = np.nan_to_num(rets[i])
-        wsnap.append(w.copy())          # weights active during this day
+        wsnap[i] = w                    # weights active during this day
 
         # 1) earn the day's return on incoming weights
         r_p = float(np.dot(w, r))
@@ -109,8 +111,8 @@ def run_portfolio(panel: pd.DataFrame, weight_schedule: pd.DataFrame,
         # 3) rebalance at end of day (effective next bar); charge cost today
         cost_today = 0.0
         turn_today = 0.0
-        if idx[i] in rebal:
-            target = sched.loc[idx[i]].to_numpy(dtype=float)
+        if i in targets:
+            target = targets[i]
             valid = np.isfinite(px[i])          # only hold names with a price today
             target = np.where(valid, target, 0.0)
             turn_today = float(np.abs(target - w).sum())

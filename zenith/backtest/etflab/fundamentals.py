@@ -67,6 +67,22 @@ def _save_cache(df: pd.DataFrame) -> None:
         pass
 
 
+_MEMO: dict = {}
+
+
+def _mtime() -> float:
+    return _CACHE.stat().st_mtime if _CACHE.exists() else 0.0
+
+
+def _cached_frame() -> pd.DataFrame:
+    """The snapshot cache, read from disk only when the file changed (it was re-read on every
+    rebalance date before)."""
+    m = _mtime()
+    if _MEMO.get("mtime") != m or "df" not in _MEMO:
+        _MEMO["df"], _MEMO["mtime"] = _load_cache(), m
+    return _MEMO["df"]
+
+
 def _fetch_one(ticker: str) -> dict:
     """Best-effort single-ticker snapshot via yfinance fast_info + info."""
     import yfinance as yf
@@ -109,7 +125,7 @@ def snapshot(tickers, max_age_days: int = 30, fields=None) -> pd.DataFrame:
     """Return a snapshot DataFrame (tickers x fields), served from cache when
     fresh enough, otherwise fetched (slow, rate-limited) and cached."""
     tickers = [t.upper() for t in tickers]
-    cache = _load_cache()
+    cache = _cached_frame()
     now = time.time()
     fresh_cut = now - max_age_days * 86400
     out = {}
@@ -119,13 +135,16 @@ def snapshot(tickers, max_age_days: int = 30, fields=None) -> pd.DataFrame:
             out[t] = cache.loc[t].to_dict()
         else:
             to_fetch.append(t)
-    for t in to_fetch:
-        rec = _fetch_one(t)
-        rec["fetched_at"] = now
-        out[t] = rec
-        cache.loc[t] = rec
     if to_fetch:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=6) as ex:     # .info is rate-limited; keep it modest
+            recs = list(ex.map(_fetch_one, to_fetch))
+        for t, rec in zip(to_fetch, recs):
+            rec["fetched_at"] = now
+            out[t] = rec
+            cache.loc[t] = rec
         _save_cache(cache)
+        _MEMO["df"], _MEMO["mtime"] = cache, _mtime()
     df = pd.DataFrame(out).T
     cols = list(fields) if fields else list(_FIELDS)
     keep = [c for c in cols + ["fetched_at"] if c in df.columns] or cols
