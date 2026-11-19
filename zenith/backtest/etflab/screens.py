@@ -36,7 +36,7 @@ _PRICE_RANK = {
     "beta": lambda p, a, m, lb, sk: factors.beta(p, a, m, lb),
     "low_beta": lambda p, a, m, lb, sk: factors.low_beta(p, a, m, lb),
     "max_drawdown": lambda p, a, m, lb, sk: factors.max_drawdown(p, a, lb),
-    "dividend_growth": lambda p, a, m, lb, sk: factors.dividend_growth(list(p.columns)),
+    "dividend_growth": lambda p, a, m, lb, sk: factors.dividend_growth(list(p.columns), asof=a),
 }
 
 # Class-B (fundamental snapshot) rankers: name -> (snapshot field, sign).
@@ -115,11 +115,12 @@ def spec_is_lookahead(spec: ETFSpec) -> bool:
 
 
 def _valid_at(panel: pd.DataFrame, asof, tickers) -> list[str]:
-    sub = panel.loc[:asof]
-    if sub.empty:
+    pos = len(panel.index) if asof is None else int(panel.index.searchsorted(pd.Timestamp(asof), side="right"))
+    if pos == 0:
         return []
-    last = sub.iloc[-1]
-    return [t for t in tickers if t in panel.columns and np.isfinite(last.get(t, np.nan))]
+    last = panel.iloc[pos - 1]
+    ok = set(last.index[np.isfinite(last.to_numpy(dtype=float))])
+    return [t for t in tickers if t in ok]
 
 
 # --- filtering --------------------------------------------------------------

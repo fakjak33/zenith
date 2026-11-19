@@ -66,16 +66,22 @@ def low_volatility(panel, asof=None, lookback: int = 126) -> pd.Series:
 
 def beta(panel: pd.DataFrame, asof=None, market_close: pd.Series | None = None,
          lookback: int = 252) -> pd.Series:
-    """Beta of each name vs the market over the trailing window."""
+    """Beta of each name vs the market over the trailing window (pairwise-complete, vectorized)."""
     sub = _upto(panel, asof).iloc[-(lookback + 1):]
     if market_close is None or len(sub) < 5:
         return pd.Series(np.nan, index=panel.columns)
-    mkt = market_close.reindex(sub.index).pct_change()
-    var = mkt.var()
-    if not np.isfinite(var) or var < 1e-18:
-        return pd.Series(np.nan, index=panel.columns)
-    aret = sub.pct_change()
-    return aret.apply(lambda c: c.cov(mkt) / var)
+    mkt = market_close.reindex(sub.index).pct_change().to_numpy(float)
+    A = sub.pct_change().to_numpy(float)
+    ok = np.isfinite(A) & np.isfinite(mkt)[:, None]
+    n = ok.sum(axis=0).astype(float)
+    M = np.where(ok, mkt[:, None], 0.0)
+    X = np.where(ok, A, 0.0)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        mx, mm = X.sum(0) / n, M.sum(0) / n
+        cov = (np.where(ok, (X - mx) * (M - mm), 0.0)).sum(0) / (n - 1)
+        var = (np.where(ok, (M - mm) ** 2, 0.0)).sum(0) / (n - 1)
+        out = np.where((n >= 5) & (var > 1e-18), cov / var, np.nan)
+    return pd.Series(out, index=panel.columns)
 
 
 def low_beta(panel, asof=None, market_close=None, lookback: int = 252) -> pd.Series:
@@ -91,27 +97,67 @@ def max_drawdown(panel: pd.DataFrame, asof=None, lookback: int = 252) -> pd.Seri
     return dd.min()
 
 
-def dividend_growth(tickers, years: int = 5) -> pd.Series:
-    """Annualised dividend growth over ``years`` (uses yfinance dividend history).
+_DIV_MEMO: dict[str, pd.Series] = {}
 
-    Best-effort and slow (per-ticker); returns NaN where unavailable. Dividend
-    *history* is genuinely point-in-time, unlike fundamental snapshots.
-    """
-    import yfinance as yf
-    out = {}
-    for t in tickers:
+
+def _dividends(tickers) -> dict[str, pd.Series]:
+    """Dividend histories, fetched once per process (threaded) and cached on disk for 30 days."""
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    from ..config import DATA_CACHE
+    path = DATA_CACHE / "_dividends.parquet"
+    if not _DIV_MEMO and path.exists() and time.time() - path.stat().st_mtime < 30 * 86400:
         try:
-            div = yf.Ticker(t).dividends
-            if div is None or div.empty:
-                out[t] = np.nan
-                continue
-            ann = div.groupby(div.index.year).sum()
-            ann = ann[ann.index >= ann.index.max() - years]
-            if len(ann) < 2 or ann.iloc[0] <= 0:
-                out[t] = np.nan
-                continue
-            n = len(ann) - 1
-            out[t] = (ann.iloc[-1] / ann.iloc[0]) ** (1.0 / n) - 1.0
-        except Exception:
+            df = pd.read_parquet(path)
+            for t, g in df.groupby("ticker"):
+                _DIV_MEMO[t] = pd.Series(g["amount"].to_numpy(), index=pd.to_datetime(g["date"]))
+        except Exception:  # noqa: BLE001
+            pass
+    need = [t for t in tickers if t not in _DIV_MEMO]
+    if need:
+        import yfinance as yf
+
+        def one(t):
+            try:
+                d = yf.Ticker(t).dividends
+                d.index = pd.to_datetime(d.index).tz_localize(None)
+                return t, d.astype(float)
+            except Exception:  # noqa: BLE001
+                return t, pd.Series(dtype=float)
+
+        with ThreadPoolExecutor(max_workers=8) as ex:
+            for t, d in ex.map(one, need):
+                _DIV_MEMO[t] = d
+        try:
+            rows = [pd.DataFrame({"ticker": t, "date": d.index, "amount": d.to_numpy()})
+                    for t, d in _DIV_MEMO.items() if len(d)]
+            if rows:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                pd.concat(rows).to_parquet(path)
+        except Exception:  # noqa: BLE001
+            pass
+    return {t: _DIV_MEMO.get(t, pd.Series(dtype=float)) for t in tickers}
+
+
+def dividend_growth(tickers, years: int = 5, asof=None) -> pd.Series:
+    """Annualised dividend growth over the ``years`` complete calendar years before ``asof``.
+
+    Point-in-time: only dividends paid before ``asof`` count (the old version used the latest
+    years at every rebalance, i.e. look-ahead). Histories are fetched once and reused.
+    """
+    end_year = (pd.Timestamp(asof).year - 1) if asof is not None else None
+    out = {}
+    for t, div in _dividends(list(tickers)).items():
+        if div is None or div.empty:
             out[t] = np.nan
+            continue
+        ann = div.groupby(div.index.year).sum()
+        ey = end_year if end_year is not None else int(ann.index.max())
+        ann = ann[(ann.index <= ey) & (ann.index >= ey - years)]
+        if len(ann) < 2 or ann.iloc[0] <= 0 or ann.index.max() < ey:
+            out[t] = np.nan
+            continue
+        n = len(ann) - 1
+        out[t] = (ann.iloc[-1] / ann.iloc[0]) ** (1.0 / n) - 1.0
     return pd.Series(out)
