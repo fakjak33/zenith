@@ -89,7 +89,9 @@ def render() -> None:
         {"label": "CAGR", "value": f"{ps['CAGR'] * 100:.1f}%"},
     ]), unsafe_allow_html=True)
 
-    tabs = st.tabs(["EQUITY", "CORRELATION", "RISK", "WEIGHTS & IDM", "STATS"])
+    tabs = st.tabs(["EQUITY", "CORRELATION", "RISK", "WEIGHTS & IDM", "STATS", "SENSITIVITY"])
+    with tabs[5]:
+        _sensitivity(df, method, window, periods)
     with tabs[0]:
         wa, wb = C.window_pick(port.index, "pf_win")
         if (wa, wb) != (port.index[0], port.index[-1]):
@@ -151,3 +153,29 @@ def render() -> None:
         if c2.button("remove", key=f"pf_del_{rec['hash']}_{nm}"):
             library.delete(store, nm)
             st.rerun()
+
+
+def vol_target_returns(r: pd.Series, target: float, lookback: int = 63, cap: float = 3.0) -> pd.Series:
+    """Scale a return stream to ``target`` annual vol using trailing vol known the day before."""
+    if not target:
+        return r
+    vol = r.rolling(lookback, min_periods=20).std().shift(1) * np.sqrt(252)
+    lev = (target / vol).clip(upper=cap).fillna(1.0)
+    return r * lev
+
+
+def _sensitivity(df: pd.DataFrame, method: str, window: int, periods: int) -> None:
+    from .sensitivity_panel import Knob, panel
+    knobs = [Knob("window", "lookback (bars)", window, 21, 756, integer=True, log=True),
+             Knob("method", "weights", method, choices=["equal", "inverse_vol"]),
+             Knob("vol_target", "portfolio vol target (0 = off)", 0.0, 0.0, 0.30)]
+
+    def run(vals):
+        out = combine(df, vals.get("method", method), int(vals.get("window", window)))
+        r = vol_target_returns(out["returns"], float(vals.get("vol_target", 0.0)))
+        return metrics.summary(r, periods=periods)
+
+    panel(knobs, run, "pf_sens", ["Sharpe", "CAGR", "MaxDD", "Calmar", "Vol"],
+          state=f"{list(df.columns)}|{len(df)}",
+          note="Sweeps how the book is combined. The portfolio vol target scales the whole book to a target "
+               "annual vol using the trailing 63-bar vol (capped at 3x).")

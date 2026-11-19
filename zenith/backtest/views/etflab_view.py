@@ -173,7 +173,9 @@ def render() -> None:
             {"label": "COSTS PAID", "value": f"{res.stats['TotalCost%']:.2f}%", "sub": "trading + fees"},
         ]), unsafe_allow_html=True)
 
-        tabs = st.tabs(["BACKTEST", "HOLDINGS", "COMPARE", "OVERLAP", "FUND ECONOMICS", "STATS"])
+        tabs = st.tabs(["BACKTEST", "HOLDINGS", "COMPARE", "OVERLAP", "FUND ECONOMICS", "STATS", "SENSITIVITY"])
+        with tabs[6]:
+            _sensitivity(spec, cfg, panel, mkt)
         with tabs[5]:
             ks = ["CAGR", "Vol", "Sharpe", "Sortino", "MaxDD", "Calmar", "Skew", "HitRate"]
             full = metrics.summary(r, periods=252)
@@ -278,3 +280,43 @@ def render() -> None:
                  "sub": f"net {drag['net_return_annual'] * 100:.1f}%/yr"},
             ]), unsafe_allow_html=True)
             st.dataframe(edf.map(lambda v: f"${v:,.0f}"), use_container_width=True)
+
+
+def etf_knobs(spec) -> list:
+    from ..etflab import weighting
+    from .sensitivity_panel import Knob
+    sel = spec.selection
+    ks = []
+    if sel.rank_factor or sel.short_rank_factor:
+        ks += [Knob("top_n", "top N", sel.top_n or 10, 1, 50, integer=True),
+               Knob("rank_lookback", "rank lookback (bars)", sel.rank_lookback, 21, 504, integer=True, log=True),
+               Knob("rank_skip", "skip recent bars", sel.rank_skip, 0, 63, integer=True)]
+        if spec.direction == "long_short":
+            ks.append(Knob("bottom_n", "bottom N (shorts)", sel.bottom_n or sel.top_n or 5, 1, 50, integer=True))
+    ks += [Knob("max_weight", "max weight per name", spec.max_weight, 0.02, 1.0),
+           Knob("rebalance", "rebalance", spec.rebalance,
+                choices=["Weekly", "Monthly", "Quarterly", "Biannual", "Annual"]),
+           Knob("weighting", "weighting", spec.weighting,
+                choices=[m for m in weighting.METHODS if m not in weighting.SNAPSHOT_METHODS])]
+    return ks
+
+
+def _sensitivity(spec, cfg, panel, mkt) -> None:
+    from dataclasses import replace as _rep
+
+    from .sensitivity_panel import panel as sens_panel
+
+    def run(vals, cost_mult=1.0):
+        sel_kw = {k: int(v) for k, v in vals.items() if k in ("top_n", "rank_lookback", "rank_skip", "bottom_n")}
+        spec_kw = {k: v for k, v in vals.items() if k in ("max_weight", "rebalance", "weighting")}
+        sp = _rep(spec, selection=_rep(spec.selection, **sel_kw), **spec_kw)
+        c = _rep(cfg, cost_bps=cfg.cost_bps * cost_mult, slippage_bps=cfg.slippage_bps * cost_mult,
+                 max_weight=sp.max_weight)
+        ws = screens.build_weight_schedule(sp, panel, pf.rebalance_dates(panel.index, sp.rebalance), mkt)
+        return pf.run_portfolio(panel, ws, c).stats
+
+    sens_panel(etf_knobs(spec), run, "ef_sens", ["Sharpe", "CAGR", "MaxDD", "Calmar", "AnnVol%", "AvgTurnover",
+                                                  "TotalCost%"],
+               state=f"{spec}|{cfg}|{panel.shape}", supports_costs=True,
+               note="Each cell rebuilds the whole rebalance schedule — big universes take a few seconds per cell, "
+                    "so start with a small grid.")
