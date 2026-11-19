@@ -148,7 +148,9 @@ def render() -> None:
                 dgain = float(W(bench["DCA"]).iloc[-1] - W(bench["DCA"]).iloc[0]) - added
                 st.caption(f"window · added \\${added:,.0f} · market gain \\${gain:,.0f} (DCA \\${dgain:,.0f}) · "
                            f"price {W(close).iloc[-1] / W(close).iloc[0] - 1:+.1%}")
-        tabs = st.tabs(["EQUITY", "SIGNALS", "DRAWDOWN", "STATS", "REGRESSION"])
+        tabs = st.tabs(["EQUITY", "SIGNALS", "DRAWDOWN", "STATS", "REGRESSION", "SENSITIVITY"])
+        with tabs[5]:
+            _sensitivity(close, buy, sell, cfg, ctx, buy_cls)
         with tabs[0]:
             fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.62, 0.38], vertical_spacing=0.04)
             inv_w = W(res.invested)
@@ -233,3 +235,38 @@ def render() -> None:
             if logfit:
                 fig.update_yaxes(type="log")
             up.show(fig, 400, "regression channel", key="ac_reg")
+
+
+def _sensitivity(close, buy, sell, cfg, ctx, buy_cls) -> None:
+    from dataclasses import replace as _rep
+
+    from .sensitivity_panel import Knob, panel
+    ks = []
+    for n, (d, lo, hi, step) in buy_cls.params.items():
+        if lo == 0 and hi == 1 and step == 1:
+            continue                                     # on/off switches aren't a gradient
+        cur = buy.values.get(n, d)
+        ks.append(Knob(f"buy:{n}", f"buy · {n}", cur, lo, hi, integer=isinstance(d, int) and isinstance(step, int)))
+    if cfg.deploy_mode == "pct_cash":
+        ks.append(Knob("deploy_fraction", "deploy % of cash", cfg.deploy_fraction, 0.05, 1.0))
+    else:
+        ks.append(Knob("deploy_dollar", "$ per signal", cfg.deploy_dollar, 100.0, max(cfg.deploy_dollar * 5, 1000.0)))
+    ks += [Knob("min_signal_gap", "min bars between buys", cfg.min_signal_gap, 0, 52, integer=True),
+           Knob("cadence", "contribution cadence", cfg.cadence, choices=["Daily", "Weekly", "Monthly"])]
+    if sell is not None:
+        ks.append(Knob("sell_fraction", "trim fraction", cfg.sell_fraction, 0.05, 1.0))
+
+    def run(vals):
+        bkw = {k[4:]: v for k, v in vals.items() if k.startswith("buy:")}
+        b = type(buy)(**{**buy.values, **bkw}) if bkw else buy
+        c = _rep(cfg, **{k: v for k, v in vals.items() if not k.startswith("buy:")})
+        res = run_accumulation(close, b, sell, c, ctx)
+        dca = benchmarks(close, c)["DCA"]
+        out = dict(res.stats)
+        out["Edge vs DCA $"] = float(res.equity.iloc[-1] - dca.iloc[-1])
+        return out
+
+    panel(ks, run, "ac_sens", ["Edge vs DCA $", "FinalEquity", "ReturnOnContributed%", "MaxDD%", "AnnVol%"],
+          state=f"{buy.label}|{cfg}|{len(close)}|{close.index[-1]}",
+          note="'Edge vs DCA $' is final equity minus plain DCA with the same contributions: positive cells are "
+               "where the rule beat simply investing on schedule.")

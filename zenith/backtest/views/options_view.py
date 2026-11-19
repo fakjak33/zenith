@@ -232,35 +232,50 @@ def render() -> None:
                                       "color": T.coral}]), unsafe_allow_html=True)
 
 
+def option_knobs(strat: E.OptionStrategy) -> list:
+    """Every sweepable setting of an options strategy."""
+    from .sensitivity_panel import Knob
+    ks = []
+    for i, L in enumerate(strat.legs):
+        side = "short" if L.side < 0 else "long"
+        if L.rule == "delta":
+            ks.append(Knob(f"leg{i}", f"{side} {L.kind} Δ (leg {i + 1})", L.value, 0.02, 0.50))
+        elif L.rule == "pct":
+            ks.append(Knob(f"leg{i}", f"{side} {L.kind} strike % (leg {i + 1})", L.value, 0.70, 1.30))
+    ks += [Knob("dte", "DTE", strat.dte, 5, 120, integer=True),
+           Knob("take_profit", "take profit %", strat.take_profit, 0.0, 0.9),
+           Knob("stop_mult", "stop x credit", strat.stop_mult, 0.0, 5.0),
+           Knob("min_vix", "min VIX", strat.min_vix, 0.0, 40.0),
+           Knob("spread_pct", "half-spread %", strat.spread_pct, 0.0, 0.15)]
+    return ks
+
+
+def apply_option_knobs(strat: E.OptionStrategy, vals: dict) -> E.OptionStrategy:
+    legs = list(strat.legs)
+    kw = {}
+    for k, v in vals.items():
+        if k.startswith("leg"):
+            i = int(k[3:])
+            legs[i] = replace(legs[i], value=float(v))
+        elif k == "dte":
+            kw["dte"] = int(v)
+        else:
+            kw[k] = float(v)
+    return replace(strat, legs=legs, **kw)
+
+
 def _sensitivity(und: str, start: int, strat: E.OptionStrategy, cut: int) -> None:
-    di = [i for i, L in enumerate(strat.legs) if L.rule == "delta"]
-    if not di:
-        st.caption("Sensitivity sweeps the short-leg delta and DTE; pick a delta-based template.")
-        return
-    deltas = [0.10, 0.16, 0.20, 0.25, 0.30, 0.40]
-    dtes = [14, 30, 45, 60, 90]
-    key = f"opsens|{json.dumps(asdict(strat), sort_keys=True, default=str)}|{und}|{start}"
-    if st.button(f"RUN DELTA × DTE GRID · {len(deltas) * len(dtes)} backtests", key="op_srun", type="primary"):
-        grid = pd.DataFrame(index=dtes, columns=deltas, dtype=float)
-        prog = C.progress_bar("pricing grid")
-        n = 0
-        for d in dtes:
-            for de in deltas:
-                legs = [replace(L, value=de) if i == di[0] else L for i, L in enumerate(strat.legs)]
-                rr = _run(und, start, replace(strat, legs=legs, dte=d, roll="dte")).returns.iloc[:cut]
-                grid.loc[d, de] = metrics.sharpe(rr, 252)
-                n += 1
-                prog(n / grid.size)
-        C.memo()[key] = grid
-    grid = C.memo().get(key)
-    if grid is None:
-        st.caption("Sweeps the first delta leg against days-to-expiry (rolling-DTE cycle), in-sample only.")
-        return
-    z = grid.to_numpy(float)
-    fig = go.Figure(go.Heatmap(z=z, x=[f"{d:.2f}Δ" for d in grid.columns], y=[f"{d}d" for d in grid.index],
-                               colorscale=up.DIVERGING, zmid=0, text=np.round(z, 2), texttemplate="%{text}",
-                               xgap=1, ygap=1, colorbar=dict(thickness=10)))
-    fig.update_xaxes(showspikes=False)
-    fig.update_yaxes(showspikes=False)
-    fig.update_layout(hovermode="closest")
-    up.show(fig, 360, "in-sample sharpe · delta × days to expiry", key="op_grid")
+    from .sensitivity_panel import panel
+
+    def run(vals, cost_mult=1.0):
+        s2 = apply_option_knobs(strat, vals)
+        if cost_mult != 1.0:
+            s2 = replace(s2, spread_pct=s2.spread_pct * cost_mult)
+        r = _run(und, start, s2).returns.iloc[:cut]
+        return metrics.summary(r, periods=252)
+
+    panel(option_knobs(strat), run, "op_sens", ["Sharpe", "CAGR", "MaxDD", "Calmar", "Sortino", "Vol", "Skew"],
+          state=json.dumps(asdict(strat), sort_keys=True, default=str) + f"|{und}|{start}|{cut}",
+          supports_costs=True,
+          note="In-sample only (the locked slice is excluded). Every cell re-prices the whole history; with "
+               "'rolling DTE' the DTE knob sets the exact tenor, with '3rd Friday' it picks the nearest cycle.")

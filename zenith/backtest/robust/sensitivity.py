@@ -12,16 +12,82 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from ..spec import StrategySpec, run_spec
+from dataclasses import replace
+
+from ..spec import FILTERS, StrategySpec, run_spec
 from .runner import pmap
 
 METRICS = ("Sharpe", "CAGR", "MaxDD", "Calmar", "Sortino", "Turnover")
 
+# Spec-level knobs beyond the rule's own parameters: (default, lo, hi, step), label.
+# Names are "s:<field>" (a StrategySpec field) or "f:<filter>:<param>" (an enabled filter's parameter).
+SPEC_KNOBS = {
+    "s:target_vol": ((0.20, 0.05, 0.60, 0.01), "target vol"),
+    "s:fixed_pct": ((1.0, 0.05, 3.0, 0.05), "notional % (fixed)"),
+    "s:risk_pct": ((0.01, 0.001, 0.20, 0.001), "risk % per trade"),
+    "s:atr_stop_mult": ((3.0, 0.5, 10.0, 0.5), "stop x ATR"),
+    "s:atr_tp_mult": ((6.0, 0.5, 20.0, 0.5), "target x ATR"),
+    "s:buffer": ((0.10, 0.0, 0.5, 0.05), "no-trade buffer"),
+    "s:max_leverage": ((2.0, 0.5, 10.0, 0.5), "max leverage"),
+}
+
+
+def knob_label(name: str) -> str:
+    if name in SPEC_KNOBS:
+        return SPEC_KNOBS[name][1]
+    if name.startswith("f:"):
+        _, fk, pn = name.split(":")
+        return f"{FILTERS[fk]['label'].lower()} · {pn}"
+    return name
+
+
+def knob_choices(spec: StrategySpec) -> list[str]:
+    """Every sweepable knob for this spec: rule params, then the parameters of enabled filters,
+    then the sizing/exit knobs that the chosen sizing mode and exits actually use."""
+    out = list(spec.strategy().__class__.params)
+    for f in spec.filters:
+        if f.get("on", True):
+            out += [f"f:{f['key']}:{pn}" for pn in FILTERS[f["key"]]["params"]]
+    mode = spec.sizing_mode
+    out += {"vol_target": ["s:target_vol"], "fixed_pct": ["s:fixed_pct"],
+            "fixed_risk": ["s:risk_pct"]}.get(mode, [])
+    if spec.use_atr_stop or mode == "fixed_risk":
+        out.append("s:atr_stop_mult")
+    if spec.use_atr_tp:
+        out.append("s:atr_tp_mult")
+    out += ["s:buffer"]
+    if spec.max_leverage:
+        out.append("s:max_leverage")
+    return out
+
+
+def knob_spec(spec: StrategySpec, name: str) -> tuple:
+    """(default, lo, hi, step) and current value for a knob."""
+    if name in SPEC_KNOBS:
+        t = SPEC_KNOBS[name][0]
+        return t, getattr(spec, name[2:])
+    if name.startswith("f:"):
+        _, fk, pn = name.split(":")
+        t = FILTERS[fk]["params"][pn]
+        cur = next((f.get("params", {}).get(pn, t[0]) for f in spec.filters if f["key"] == fk), t[0])
+        return t, cur
+    t = spec.strategy().__class__.params[name]
+    return t, spec.params.get(name, t[0])
+
+
+def set_knob(spec: StrategySpec, name: str, value) -> StrategySpec:
+    if name in SPEC_KNOBS:
+        return replace(spec, **{name[2:]: type(SPEC_KNOBS[name][0][0])(value)})
+    if name.startswith("f:"):
+        _, fk, pn = name.split(":")
+        fl = [({**f, "params": {**f.get("params", {}), pn: value}} if f["key"] == fk else f) for f in spec.filters]
+        return spec.with_filters(fl)
+    return spec.with_params(**{name: value})
+
 
 def default_values(spec: StrategySpec, param: str, n: int = 9) -> list:
-    """Geometric spread around the current value, bounded by the rule's limits."""
-    default, lo, hi, step = spec.strategy().__class__.params[param]
-    cur = spec.params.get(param, default)
+    """Geometric spread around the current value, bounded by the knob's limits."""
+    (default, lo, hi, step), cur = knob_spec(spec, param)
     a, b = max(lo, cur / 4), min(hi, cur * 4)
     if b <= a:
         a, b = lo, hi
@@ -39,10 +105,9 @@ def sweep(spec: StrategySpec, ohlcv: pd.DataFrame, px: str, xs: list, py: str | 
 
     def one(c):
         x, y = c
-        kw = {px: x}
+        s = set_knob(spec, px, x)
         if py:
-            kw[py] = y
-        s = spec.with_params(**kw)
+            s = set_knob(s, py, y)
         try:
             st = run_spec(s, ohlcv, aux, cost_mult=cost_mult).stats
         except Exception:  # noqa: BLE001 — an invalid combo is a hole, not a crash
