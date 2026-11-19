@@ -9,6 +9,8 @@ Events (each fires once per position, re-armed by a roll):
   earnings    the underlying reports tomorrow
   target      P&L >= 50% of the opening credit
   stop        loss >= 2x the opening credit
+  dtarget     a debit (bought) position is up 100% on what was paid
+  dstop       a debit position has lost 50% of what was paid
   bp          buying power in use above the allocation guideline
   end         the scenario is over
 """
@@ -22,6 +24,8 @@ from .book import Book
 
 TARGET = 0.50
 STOP = 2.0
+DEBIT_TARGET = 1.0       # bought premium: the position has doubled
+DEBIT_STOP = 0.5         # bought premium: half the debit is gone
 DTE_EXIT = 21
 BP_GUIDE = 0.50                     # tastylive: 25-50% of net liq in short premium
 
@@ -82,6 +86,14 @@ def detect(m: Market, run: Run) -> list[Event]:
         if nr is not None and nr == i + 1 and f"earn{nr}" not in p.flags:
             p.flags.append(f"earn{nr}")
             out.append(Event(i, "earnings", f"{p.ticker} reports tomorrow (#{p.id} is exposed)", p.id))
+        if p.credit < 0 and p.option_legs():                      # bought premium (debit)
+            pnl, debit = b.position_pnl(m, p, i), -p.credit
+            if pnl >= DEBIT_TARGET * debit and "dtarget" not in p.flags:
+                p.flags.append("dtarget")
+                out.append(Event(i, "dtarget", f"#{p.id} {p.ticker} is up {pnl / debit:.0%} on the debit", p.id))
+            if pnl <= -DEBIT_STOP * debit and "dstop" not in p.flags:
+                p.flags.append("dstop")
+                out.append(Event(i, "dstop", f"#{p.id} {p.ticker} has lost {-pnl / debit:.0%} of the debit", p.id))
         if p.credit > 0 and p.option_legs():
             pnl = b.position_pnl(m, p, i)
             if pnl >= TARGET * p.credit and "target" not in p.flags:

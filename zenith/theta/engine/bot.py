@@ -21,6 +21,11 @@ from .strategies import build
 
 TICKER = "SPY"
 DTE, DELTA, BP_SHARE = 45, 0.16, 0.30
+# The long-vol rival: SPY 25-delta strangle bought at ~45 DTE only when IV rank is below 30%,
+# 3% of net liq in premium per trade, sold at +100% or at 21 DTE.
+LV_DELTA, LV_IVR, LV_PREMIUM = 0.25, 0.30, 0.03
+BOTS = {"short": "THE BOT · sells a 16Δ SPY strangle at 45 DTE, 50% / 21 DTE (tastytrade)",
+        "long": "LONG-VOL BOT · buys a 25Δ SPY strangle when IV rank < 30%, +100% / 21 DTE"}
 
 
 def _expiry(m: Market, i: int, mode: str) -> int | None:
@@ -33,8 +38,10 @@ def _expiry(m: Market, i: int, mode: str) -> int | None:
 
 def play(m: Market, start_i: int, end_i: int, cash: float, slip: float = 1.0,
          flat_iv: bool = False, expiry_mode: str = "listed", contracts: int | None = None,
-         stop: float | None = None) -> dict:
+         stop: float | None = None, style: str = "short") -> dict:
     """Run the bot; returns {equity: [[i, nlv]], trades: [...], book: Book}."""
+    if style == "long":
+        return play_long(m, start_i, end_i, cash, slip, flat_iv)
     book = Book(cash, cash, slip=slip, flat_iv=flat_iv)
     run = clock.Run(book, start_i, end_i, start_i)
     trades = []
@@ -65,6 +72,48 @@ def play(m: Market, start_i: int, end_i: int, cash: float, slip: float = 1.0,
                     n = max(1, math.floor(BP_SHARE * book.nlv(m, i) / max(per, 1.0)))
                 legs = build("short_strangle", m, TICKER, i, e, n, DELTA, flat=flat_iv)
                 pos = book.open(m, TICKER, i, "short_strangle", legs, DELTA)
+        if run.done:
+            break
+        clock.step(m, run)
+    return {"equity": run.equity, "trades": trades, "book": book}
+
+
+def _ivr(m: Market, i: int) -> float:
+    try:
+        return float(m.data[TICKER]["iv_rank"][i])
+    except Exception:  # noqa: BLE001
+        return float("nan")
+
+
+def play_long(m: Market, start_i: int, end_i: int, cash: float, slip: float = 1.0,
+              flat_iv: bool = False) -> dict:
+    """The long-vol rival: buys cheap strangles and waits for a move."""
+    book = Book(cash, cash, slip=slip, flat_iv=flat_iv)
+    run = clock.Run(book, start_i, end_i, start_i)
+    trades = []
+    pos = None
+    clock.snapshot(m, run)
+    while True:
+        i = run.i
+        if pos is not None and pos.is_open:
+            pnl = book.position_pnl(m, pos, i)
+            debit = -pos.credit
+            if pnl >= debit or m.days_between(i, pos.expiry_i()) <= 21:
+                book.close(m, pos, i, "bot rule")
+                trades.append({"open_i": pos.opened_i, "close_i": i, "credit": pos.credit, "pnl": pos.pnl})
+                pos = None
+        if pos is not None and not pos.is_open:
+            trades.append({"open_i": pos.opened_i, "close_i": pos.closed_i, "credit": pos.credit, "pnl": pos.pnl})
+            pos = None
+        ivr = _ivr(m, i)
+        if pos is None and i < end_i and m.live(TICKER, i) and ivr == ivr and ivr < LV_IVR:
+            e = m.nearest_expiry(TICKER, i, DTE)
+            if e is not None and e <= end_i + 60:
+                one = build("long_strangle", m, TICKER, i, e, 1, LV_DELTA, flat=flat_iv)
+                cost = -book.preview(m, TICKER, i, one)["credit"]
+                n = max(1, math.floor(LV_PREMIUM * book.nlv(m, i) / max(cost, 1.0)))
+                legs = build("long_strangle", m, TICKER, i, e, n, LV_DELTA, flat=flat_iv)
+                pos = book.open(m, TICKER, i, "long_strangle", legs, LV_DELTA)
         if run.done:
             break
         clock.step(m, run)

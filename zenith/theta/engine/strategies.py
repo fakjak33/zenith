@@ -33,7 +33,28 @@ TEMPLATES = {
                      "vault": "covered-call", "delta": 0.30, "wing": 0},
     "put_bwb": {"name": "Put broken-wing butterfly", "risk": "defined", "outlook": "bullish",
                 "vault": "broken-wing-butterfly", "delta": 0.30, "wing": 1},
+    # ---- buying options: long vol / debit (premium paid is the whole risk)
+    "long_call": {"name": "Long call", "risk": "defined", "outlook": "bullish", "vault": "long-call",
+                  "delta": 0.50, "wing": 0, "debit": True},
+    "long_put": {"name": "Long put", "risk": "defined", "outlook": "bearish", "vault": "long-put",
+                 "delta": 0.50, "wing": 0, "debit": True},
+    "long_straddle": {"name": "Long straddle", "risk": "defined", "outlook": "neutral", "vault": "long-straddle",
+                      "delta": 0.50, "wing": 0, "debit": True},
+    "long_strangle": {"name": "Long strangle", "risk": "defined", "outlook": "neutral", "vault": "long-strangle",
+                      "delta": 0.25, "wing": 0, "debit": True},
+    "call_debit_spread": {"name": "Call debit spread", "risk": "defined", "outlook": "bullish",
+                          "vault": "debit-spread", "delta": 0.50, "wing": 1, "debit": True},
+    "put_debit_spread": {"name": "Put debit spread", "risk": "defined", "outlook": "bearish",
+                         "vault": "debit-spread", "delta": 0.50, "wing": 1, "debit": True},
+    "long_butterfly": {"name": "Long call butterfly", "risk": "defined", "outlook": "neutral",
+                       "vault": "butterfly", "delta": 0.50, "wing": 1, "debit": True},
+    "put_backspread": {"name": "Put backspread (1x2)", "risk": "defined", "outlook": "bearish",
+                       "vault": "ratio-spread", "delta": 0.40, "wing": 1, "debit": True},
+    "long_calendar": {"name": "Long call calendar", "risk": "defined", "outlook": "neutral", "vault": "calendar",
+                      "delta": 0.50, "wing": 0, "debit": True, "calendar": True},
 }
+LONG_TEMPLATES = [k for k, v in TEMPLATES.items() if v.get("debit")]
+SHORT_TEMPLATES = [k for k, v in TEMPLATES.items() if not v.get("debit")]
 
 
 @dataclass
@@ -61,8 +82,10 @@ def default_width(S: float) -> float:
 
 
 def build(template: str, m: Market, t: str, i: int, expiry_i: int, contracts: int = 1,
-          delta: float | None = None, width: float | None = None, flat: bool = False) -> list[Leg]:
-    """Legs for a template (open_px left at 0; the order fills them)."""
+          delta: float | None = None, width: float | None = None, flat: bool = False,
+          back_expiry_i: int | None = None) -> list[Leg]:
+    """Legs for a template (open_px left at 0; the order fills them). ``back_expiry_i`` is the
+    long leg's expiry for calendars."""
     spec = TEMPLATES[template]
     d = spec["delta"] if delta is None else float(delta)
     S = m.spot(t, i)
@@ -99,4 +122,28 @@ def build(template: str, m: Market, t: str, i: int, expiry_i: int, contracts: in
     if template == "put_bwb":
         k = kp(d)
         return [P(k + w, 1), P(k, -2), P(k - 2 * w, 1)]
+    if template == "long_call":
+        return [C(kc(d), 1)]
+    if template == "long_put":
+        return [P(kp(d), 1)]
+    if template in ("long_straddle", "long_strangle"):
+        return [P(kp(d), 1), C(kc(d), 1)]
+    if template == "call_debit_spread":
+        c = kc(d)
+        return [C(c, 1), C(c + w, -1)]
+    if template == "put_debit_spread":
+        p = kp(d)
+        return [P(p, 1), P(p - w, -1)]
+    if template == "long_butterfly":
+        return [C(atm - w, 1), C(atm, -2), C(atm + w, 1)]
+    if template == "put_backspread":
+        p = kp(d)
+        return [P(p, -1), P(p - w, 2)]
+    if template == "long_calendar":
+        back = back_expiry_i
+        if back is None:                     # the listed expiry ~30 days after the front month
+            back = m.nearest_expiry(t, i, m.days_between(i, expiry_i) + 30)
+            if back is None or back <= expiry_i:
+                raise ValueError("no later expiry for the calendar's long leg")
+        return [C(atm, -1), Leg("call", n, atm, back)]
     raise KeyError(template)

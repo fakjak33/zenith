@@ -101,6 +101,16 @@ def pretrade(v: Vault, row: dict, template: str, preview: dict, dte: int, nlv: f
     out: list[Nudge | None] = []
     selling = preview["credit"] > 0
     ivr = row.get("ivr")
+    if not selling and ivr is not None and ivr == ivr:
+        if ivr >= 0.5:
+            out.append(v.nudge("warn", f"IV rank {ivr:.0%}: you are buying expensive options",
+                               f"card:{card}.avoid.0", "Long options need a move bigger than the implied one."))
+        elif ivr < 0.25:
+            out.append(v.nudge("good", f"IV rank {ivr:.0%}: options are cheap here", f"card:{card}.when.iv",
+                               "Low implied vol is when buying premium has the best odds."))
+        if dte < 21:
+            out.append(v.nudge("warn", f"{dte} DTE: fast decay", f"card:{card}.setup.dte",
+                               "Short-dated long options lose value quickly if the move doesn't come."))
     if selling and ivr is not None and ivr == ivr:
         if ivr < 0.25:
             out.append(v.nudge("warn", f"IV rank {ivr:.0%}: thin premium", f"card:{card}.avoid.0"))
@@ -110,7 +120,7 @@ def pretrade(v: Vault, row: dict, template: str, preview: dict, dte: int, nlv: f
     if earn_in_expiry and row.get("kind") == "stock":
         out.append(v.nudge("warn", "Earnings before expiry", "edge:earnings-iv-crush",
                            "This trade holds through a report."))
-    if dte < 25 or dte > 70:
+    if selling and (dte < 25 or dte > 70):
         out.append(v.nudge("info", f"{dte} DTE is off the 45-DTE default", f"card:{card}.setup.dte"))
     if nlv > 0:
         share = preview["bpr"] / nlv
@@ -136,6 +146,8 @@ EVENT_REFS = {
     "dte21": ("warn", "21 DTE: close or roll", "tree:managing-winners.w4"),
     "target": ("good", "Profit target hit", "tree:managing-winners.w2"),
     "stop": ("alert", "Loss at 2x the credit", "tree:taking-losses.l2"),
+    "dtarget": ("good", "Long option doubled", "tree:managing-winners.w2"),
+    "dstop": ("alert", "Half the debit is gone", "tree:taking-losses.l2"),
     "earnings": ("warn", "Report tomorrow", "edge:earnings-iv-crush"),
     "bp": ("alert", "Buying power over the guideline", "alloc"),
     "expiry": ("info", "Expiration", "tree:expiration-assignment.e3"),
@@ -169,7 +181,7 @@ def on_events(v: Vault, events: list[dict]) -> list[Nudge]:
 
 def adherence(log: list[dict]) -> tuple[float | None, list[dict]]:
     """Share of management calls (21 DTE, profit target) acted on within FOLLOW_DAYS."""
-    calls = [e for e in log if e["kind"] in ("dte21", "target") and e.get("pid")]
+    calls = [e for e in log if e["kind"] in ("dte21", "target", "dtarget") and e.get("pid")]
     acts = [e for e in log if e["kind"] in ("close", "roll", "expire")]
     rows = []
     for c in calls:
