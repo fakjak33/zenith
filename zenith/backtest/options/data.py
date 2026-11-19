@@ -50,8 +50,27 @@ def load(underlying: str, start_year: int = 2007) -> dict:
     S = S[S.index >= start]
     # ETFs come dividend-adjusted from Yahoo, so their own yield is already in the price path
     q = dividend_yield(_px("^GSPC"), _px("^SP500TR")) if s_t == "^GSPC" else None
+    ohlc = get_prices(s_t, start=None)[["open", "high", "low", "close"]]
+    ohlc = ohlc[ohlc.index >= start]
+    iv1d, iv1d_src = one_day_vol(term)
     return {"S": S, "stock_tr": tr, "term": term, "skew": skew, "rf": rf, "vol_scale": scale, "q": q,
-            "settle": s_t, "vol_source": own or ("VIX" if s_t in ("^GSPC", "SPY") else "VIX × realised-vol ratio")}
+            "settle": s_t, "vol_source": own or ("VIX" if s_t in ("^GSPC", "SPY") else "VIX × realised-vol ratio"),
+            "ohlc": ohlc, "iv1d": iv1d, "iv1d_src": iv1d_src}
+
+
+def one_day_vol(term: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
+    """Cboe VIX1D (from May 2022), extended back with VIX9D × the median VIX1D/VIX9D ratio on
+    their overlap. Returns (series, source label per date)."""
+    v1 = cboe_csv("VIX1D")
+    v9 = term["VIX9D"].dropna() if "VIX9D" in term else pd.Series(dtype=float)
+    if v1.empty and v9.empty:
+        return pd.Series(dtype=float), pd.Series(dtype=object)
+    ov = pd.concat([v1, v9], axis=1, keys=["a", "b"]).dropna()
+    ratio = float((ov["a"] / ov["b"]).median()) if len(ov) > 20 else 1.0
+    fill = v9 * ratio
+    out = fill.combine_first(v1) if v1.empty else v1.combine_first(fill)
+    src = pd.Series(np.where(out.index.isin(v1.index), "VIX1D", f"VIX9D x {ratio:.2f}"), index=out.index)
+    return out.sort_index(), src
 
 
 def published(name: str) -> pd.Series:
