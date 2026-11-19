@@ -245631,6 +245631,31 @@
       }
     },
     {
+      "ticker": "DLB",
+      "name": "Dolby Laboratories",
+      "report_date": "2026-11-17",
+      "reaction_day": "2026-11-18",
+      "entry_date": "2026-11-11",
+      "pre_exit_date": "2026-11-17",
+      "through_exit_date": "2026-11-18",
+      "cap_tier": "mid",
+      "mktcap": 5509598700.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.090319,
+        "spy_ret": -0.036022,
+        "excess": -0.054296
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.122023,
+        "spy_ret": -0.03897,
+        "excess": -0.083053
+      }
+    },
+    {
       "ticker": "HD",
       "name": "Home Depot, Inc. (The)",
       "report_date": "2026-11-17",
@@ -245653,6 +245678,31 @@
         "ret": -0.03416,
         "spy_ret": -0.023309,
         "excess": -0.01085
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA Corporation",
+      "report_date": "2026-11-17",
+      "reaction_day": "2026-11-18",
+      "entry_date": "2026-11-11",
+      "pre_exit_date": "2026-11-17",
+      "through_exit_date": "2026-11-18",
+      "cap_tier": "large",
+      "mktcap": 3746585900000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.105163,
+        "spy_ret": -0.036022,
+        "excess": -0.069141
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.131065,
+        "spy_ret": -0.03897,
+        "excess": -0.092095
       }
     },
     {
@@ -245679,9 +245729,109 @@
         "spy_ret": -0.023309,
         "excess": 0.093821
       }
+    },
+    {
+      "ticker": "BLSH",
+      "name": "Bullish",
+      "report_date": "2026-11-18",
+      "reaction_day": "2026-11-18",
+      "entry_date": "2026-11-11",
+      "pre_exit_date": "2026-11-17",
+      "through_exit_date": "2026-11-18",
+      "cap_tier": "small",
+      "mktcap": 3076286460.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.181045,
+        "spy_ret": -0.036022,
+        "excess": -0.145023
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.134722,
+        "spy_ret": -0.03897,
+        "excess": -0.095751
+      }
+    },
+    {
+      "ticker": "LOW",
+      "name": "Lowe's Companies, Inc.",
+      "report_date": "2026-11-18",
+      "reaction_day": "2026-11-18",
+      "entry_date": "2026-11-11",
+      "pre_exit_date": "2026-11-17",
+      "through_exit_date": "2026-11-18",
+      "cap_tier": "large",
+      "mktcap": 123689968000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.0481,
+        "spy_ret": -0.036022,
+        "excess": -0.012078
+      },
+      "through": {
+        "evaluated": true,
+        "ret": -0.038083,
+        "spy_ret": -0.03897,
+        "excess": 0.000887
+      }
+    },
+    {
+      "ticker": "TGT",
+      "name": "Target Corporation",
+      "report_date": "2026-11-18",
+      "reaction_day": "2026-11-18",
+      "entry_date": "2026-11-11",
+      "pre_exit_date": "2026-11-17",
+      "through_exit_date": "2026-11-18",
+      "cap_tier": "large",
+      "mktcap": 72473960000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.019484,
+        "spy_ret": -0.036022,
+        "excess": 0.016538
+      },
+      "through": {
+        "evaluated": true,
+        "ret": 0.019852,
+        "spy_ret": -0.03897,
+        "excess": 0.058823
+      }
+    },
+    {
+      "ticker": "TJX",
+      "name": "TJX Companies, Inc. (The)",
+      "report_date": "2026-11-18",
+      "reaction_day": "2026-11-18",
+      "entry_date": "2026-11-11",
+      "pre_exit_date": "2026-11-17",
+      "through_exit_date": "2026-11-18",
+      "cap_tier": "large",
+      "mktcap": 142831632000.0,
+      "backfilled": false,
+      "gate": null,
+      "pre": {
+        "evaluated": true,
+        "ret": -0.04494,
+        "spy_ret": -0.036022,
+        "excess": -0.008918
+      },
+      "through": {
+        "evaluated": true,
+        "ret": 0.031921,
+        "spy_ret": -0.03897,
+        "excess": 0.070891
+      }
     }
   ],
-  "as_of": "2026-11-18",
+  "as_of": "2026-11-19",
   "disclaimer": "PEAD signals are auto-generated from free/best-effort data (Nasdaq earnings calendar consensus snapshots, yfinance, Vanguard VONE holdings). Revenue surprise is a time-series proxy, not analyst consensus. Backfilled picks use current Russell 1000 membership (survivorship bias). Drift has attenuated in large caps since ~2006 (Martineau 2021); short-side drift is weaker and borrow costs are not modeled. Announcement premium (Frazzini & Lamont 2007; Savor & Wilson 2016) is tracked from ~2024 only. Decision-support, not investment advice.",
   "survivorship_note": "Backfilled announcements use CURRENT Russell 1000 membership; delisted names are absent. Sample starts with PEAD's archive (~mid-2024) - decades shorter than the published evidence."
 }
