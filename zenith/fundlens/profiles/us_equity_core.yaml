@@ -1,0 +1,13 @@
+id: us_equity_core
+name: "US Equity - Core / Beta Sleeve"
+description: >
+  For core sleeves where market beta is wanted (e.g. Large Blend). Heavier cost weight,
+  beta target 1.0, high R-squared and low tracking error are rewarded.
+extends: us_equity_style
+pillars:
+  returns:        {weight: 20}
+  risk_adjusted:  {weight: 20}
+  downside:       {weight: 15}
+  consistency:    {weight: 10}
+  cost:           {weight: 25}
+  fit:            {weight: 10, metrics: {beta: 1, r_squared: 1, te_ratio: 1}}
