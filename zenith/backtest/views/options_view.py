@@ -172,7 +172,13 @@ def render() -> None:
                      "overstates how comfortable this is — look at the drawdown and the worst months")
 
         tabs = st.tabs(["EQUITY", "EXPOSURE", "MONTHLY", "DISTRIBUTION", "SENSITIVITY", "TRADES", "CALIBRATION",
-                        "OUT-OF-SAMPLE"])
+                        "OUT-OF-SAMPLE", "STATS"])
+        with tabs[8]:
+            keys = [k for k in s if k in bs]
+            st.dataframe(pd.DataFrame({"strategy": [C.fmt(k, s[k]) for k in keys],
+                                       f"{und} total return": [C.fmt(k, bs[k]) for k in keys]}, index=keys),
+                         use_container_width=True)
+            C.diversify_panel(r, tr, p, und, "op_div")
         with tabs[0]:
             b = tr * (r.std() / tr.std()) if tr.std() > 0 else tr
             up.show(C.equity_fig(r, b, shade_from=locked if show_all else None), 440,

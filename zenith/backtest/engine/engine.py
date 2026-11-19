@@ -76,12 +76,15 @@ def run_single(
     periods = bt.trading_days or bars_per_year(close.index)
 
     # forecast -> position in units per the selected sizing mode
-    position = position_from_forecast(
-        forecast, close, capital=bt.capital,
-        target_vol=bt.target_vol, vol_span=bt.vol_lookback,
-        sizing_mode=bt.sizing_mode, fixed_pct=bt.fixed_pct,
-        fixed_dollar=bt.fixed_dollar, periods=periods,
-    )
+    stop_dist = None
+    if bt.sizing_mode == "fixed_risk":
+        from ..risk.atr import atr
+        stop_dist = bt.stop_mult * atr(ohlcv.reindex(forecast.index), bt.atr_period)
+    size_kw = dict(capital=bt.capital, target_vol=bt.target_vol, vol_span=bt.vol_lookback,
+                   sizing_mode=bt.sizing_mode, fixed_pct=bt.fixed_pct, fixed_dollar=bt.fixed_dollar,
+                   periods=periods, risk_pct=bt.risk_pct, stop_distance=stop_dist,
+                   scale_by_forecast=bt.scale_by_forecast, max_leverage=bt.max_leverage)
+    position = position_from_forecast(forecast, close, **size_kw)
 
     # direction filter: long-only / short-only
     if bt.direction == "long":
@@ -96,9 +99,7 @@ def run_single(
 
     # Carver buffering and whole-contract rounding (futures)
     if bt.buffer > 0 or bt.multiplier:
-        f10 = position_from_forecast(forecast * 0 + 10.0, close, capital=bt.capital, target_vol=bt.target_vol,
-                                     vol_span=bt.vol_lookback, sizing_mode=bt.sizing_mode, fixed_pct=bt.fixed_pct,
-                                     fixed_dollar=bt.fixed_dollar, periods=periods).abs()
+        f10 = position_from_forecast(forecast * 0 + 10.0, close, **size_kw).abs()
         position = buffer_and_round(position, f10 * bt.buffer, bt.multiplier)
 
     # ATR stop/take-profit overlay

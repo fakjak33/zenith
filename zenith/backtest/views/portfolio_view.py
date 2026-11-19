@@ -135,6 +135,12 @@ def render() -> None:
         tbl = pd.DataFrame({"PORTFOLIO": [C.fmt(k, ps[k]) for k in keys],
                             **{n: [C.fmt(k, comp[n][k]) for k in keys] for n in comp}}, index=keys)
         st.dataframe(tbl, use_container_width=True)
+        bt = st.text_input("compare against", "SPY", key="pf_divb").strip().upper() or "SPY"
+        try:
+            ub = C._market(bt)["close"].pct_change().reindex(port.index)
+            C.diversify_panel(port, ub, periods, bt, "pf_div")
+        except Exception as exc:  # noqa: BLE001
+            st.caption(f"couldn't load {bt}: {exc}")
     st.markdown(section("SAVED STRATEGIES", 0), unsafe_allow_html=True)
     for nm, rec in list(store.items()):
         c1, c2 = st.columns([5, 1])

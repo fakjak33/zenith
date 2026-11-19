@@ -151,7 +151,14 @@ def render() -> None:
             {"label": "COSTS PAID", "value": f"{res.stats['TotalCost%']:.2f}%", "sub": "trading + fees"},
         ]), unsafe_allow_html=True)
 
-        tabs = st.tabs(["BACKTEST", "HOLDINGS", "COMPARE", "OVERLAP", "FUND ECONOMICS"])
+        tabs = st.tabs(["BACKTEST", "HOLDINGS", "COMPARE", "OVERLAP", "FUND ECONOMICS", "STATS"])
+        with tabs[5]:
+            ks = ["CAGR", "Vol", "Sharpe", "Sortino", "MaxDD", "Calmar", "Skew", "HitRate"]
+            full = metrics.summary(r, periods=252)
+            st.dataframe(pd.DataFrame({spec.name: [C.fmt(k, full.get(k)) for k in ks],
+                                       (bench[0] if bench else "SPY"): [C.fmt(k, bs.get(k)) for k in ks]}, index=ks),
+                         use_container_width=True)
+            C.diversify_panel(r, b0.reindex(r.index), 252, bench[0] if bench else "SPY", "ef_div")
         with tabs[0]:
             b = b0.reindex(r.index).fillna(0)
             up.show(C.equity_fig(r, b * (r.std() / b.std()) if b.std() > 0 else b), 440,
