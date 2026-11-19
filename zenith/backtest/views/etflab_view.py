@@ -161,9 +161,13 @@ def render() -> None:
             C.diversify_panel(r, b0.reindex(r.index), 252, bench[0] if bench else "SPY", "ef_div")
         with tabs[0]:
             b = b0.reindex(r.index).fillna(0)
-            up.show(C.equity_fig(r, b * (r.std() / b.std()) if b.std() > 0 else b), 440,
-                    f"{spec.name} vs {bench[0] if bench else 'SPY'} (vol-matched) · log", key="ef_eq")
-            up.show(C.monthly_fig(r), max(260, 22 * len(set(r.index.year)) + 60), "monthly returns %", key="ef_mon")
+            wa, wb = C.window_pick(r.index, "ef_win")
+            rw, bw = C.clip(r, wa, wb), C.clip(b, wa, wb)
+            if (wa, wb) != (r.index[0], r.index[-1]):
+                C.window_kpis(rw, bw, 252, bench[0] if bench else "SPY")
+            up.show(C.equity_fig(rw, bw * (rw.std() / bw.std()) if bw.std() > 0 else bw), 440,
+                    f"{spec.name} vs {bench[0] if bench else 'SPY'} (vol-matched)", key="ef_eq")
+            up.show(C.monthly_fig(rw), max(260, 22 * len(set(rw.index.year)) + 60), "monthly returns %", key="ef_mon")
         with tabs[1]:
             latest = ws.iloc[-1]
             latest = latest[latest != 0].sort_values(key=abs, ascending=False)

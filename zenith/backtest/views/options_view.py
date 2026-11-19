@@ -181,8 +181,12 @@ def render() -> None:
             C.diversify_panel(r, tr, p, und, "op_div")
         with tabs[0]:
             b = tr * (r.std() / tr.std()) if tr.std() > 0 else tr
-            up.show(C.equity_fig(r, b, shade_from=locked if show_all else None), 440,
-                    f"strategy vs {und} (vol-matched) · log", key="op_eq")
+            wa, wb = C.window_pick(r.index, "op_win")
+            rw, bw = C.clip(r, wa, wb), C.clip(b, wa, wb)
+            if (wa, wb) != (r.index[0], r.index[-1]):
+                C.window_kpis(rw, C.clip(tr, wa, wb), p, und)
+            up.show(C.equity_fig(rw, bw, shade_from=locked if show_all and locked is not None and locked <= wb
+                                 else None), 440, f"strategy vs {und} (vol-matched)", key="op_eq")
         with tabs[1]:
             ex = res.exposure.iloc[:end]
             fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05)

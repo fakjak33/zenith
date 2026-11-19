@@ -55,11 +55,72 @@ def label(title: str) -> str:
             f'margin:0.6rem 0 -0.2rem 0;">{html.escape(title)}</div>')
 
 
-def show(fig: go.Figure, height: int = 360, title: str = "", key: str | None = None) -> None:
-    """Render a themed figure; a failing chart degrades to a caption, never the page."""
+def _is_time_axis(fig: go.Figure) -> bool:
+    for tr in fig.data:
+        x = getattr(tr, "x", None)
+        if x is None or len(x) == 0:
+            continue
+        v = x[0]
+        if hasattr(v, "year") or (isinstance(v, str) and len(v) >= 8 and v[:4].isdigit() and v[4] == "-"):
+            return True
+        try:
+            import numpy as np
+            if np.issubdtype(np.asarray(x).dtype, np.datetime64):
+                return True
+        except Exception:  # noqa: BLE001
+            pass
+    return False
+
+
+def _main_y_positive(fig: go.Figure) -> bool:
+    """True when every trace on the primary y axis is strictly positive (log scale is meaningful)."""
+    import numpy as np
+    seen = False
+    for tr in fig.data:
+        if getattr(tr, "type", "") not in ("scatter", "scattergl", "bar", "candlestick", "ohlc"):
+            continue
+        if (getattr(tr, "yaxis", None) or "y") != "y":
+            continue
+        y = getattr(tr, "y", None)
+        if y is None or len(y) == 0:
+            continue
+        try:
+            arr = np.asarray(y, dtype=float)
+        except (TypeError, ValueError):
+            return False
+        arr = arr[np.isfinite(arr)]
+        if arr.size and arr.min() <= 0:
+            return False
+        seen = seen or arr.size > 0
+    return seen
+
+
+def add_scale_toggle(fig: go.Figure) -> go.Figure:
+    """LIN / LOG buttons for the primary y axis — client-side, so switching never reruns the page."""
+    cur = fig.layout.yaxis.type or "linear"
+    btn = dict(bgcolor=T.raised, bordercolor=T.line, borderwidth=1, font=dict(size=9, color=T.muted),
+               active=1 if cur == "log" else 0, pad=dict(l=2, r=2, t=0, b=0))
+    fig.update_layout(updatemenus=[dict(
+        type="buttons", direction="left", showactive=True, x=1.0, xanchor="right", y=1.02, yanchor="bottom",
+        buttons=[dict(label="LIN", method="relayout", args=[{"yaxis.type": "linear", "yaxis.autorange": True}]),
+                 dict(label="LOG", method="relayout", args=[{"yaxis.type": "log", "yaxis.autorange": True}])],
+        **btn)])
+    return fig
+
+
+def show(fig: go.Figure, height: int = 360, title: str = "", key: str | None = None,
+         scale_toggle: bool | None = None) -> None:
+    """Render a themed figure; a failing chart degrades to a caption, never the page.
+
+    Time-series charts whose main series is positive get a LIN/LOG toggle automatically
+    (``scale_toggle`` forces it on or off).
+    """
     try:
         if title:
             st.markdown(label(title), unsafe_allow_html=True)
+        want = scale_toggle if scale_toggle is not None else (_is_time_axis(fig) and _main_y_positive(fig))
+        if want and not fig.layout.updatemenus:
+            add_scale_toggle(fig)
         st.plotly_chart(style(fig, height), use_container_width=True, theme=None,
                         config=CONFIG, key=key)
     except Exception as exc:  # noqa: BLE001
