@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-11-19",
+  "as_of": "2026-11-20",
   "themes": {
     "dollar": {
       "signal_score": 62.7,
       "composite_z": 1.012,
-      "real_yield_z": 1.863,
+      "real_yield_z": 1.854,
       "context": "The dollar's trade-weighted level and its trend versus real US yield differentials are the quantitative core of this theme. The Triffin dilemma argument — that the dollar's reserve-currency role structurally requires persistent US current-account deficits, which are themselves eventually destabilizing — is a real and long-standing academic thesis, but BIS and NBER research has also documented meaningful nuance and counter-evidence: reserve currency status has proven durable across many predicted 'dollar crisis' episodes, and simplified Triffin narratives often understate the dollar's network-effect advantages (deep capital markets, rule of law, no close substitute) and the difference between a SLOW multi-decade reserve-diversification trend and an acute depreciation event. This score reflects only the market-based trend, not a judgment on which narrative is correct."
     },
     "fiscal": {
-      "signal_score": 73.2,
+      "signal_score": 73.0,
       "components": {
-        "DGS30": 1.806,
+        "DGS30": 1.765,
         "THREEFYTP10": 2.159,
         "GFDEBTN": 1.596
       },
@@ -20,11 +20,11 @@
       "intervention_risk": "Low",
       "usdjpy_z": 1.595,
       "usdjpy_pct_move_3m": 0.0012,
-      "us_real_yield_z": 1.863,
+      "us_real_yield_z": 1.854,
       "note": "Intervention-risk tier is a PROXY based on the magnitude/speed of the USD/JPY move alone (large, fast one-directional moves have historically preceded MOF/BOJ intervention) — it is not a probability of intervention. Japan-side real yield data is not freely available, so only the US side of the rate differential is shown; this is an acknowledged, one-sided gap, not a claim the JP side doesn't matter."
     },
     "ai": {
-      "semis_relative_strength_3m": -0.136,
+      "semis_relative_strength_3m": -0.1216,
       "note": "Market-based context only (semiconductor sector vs SPY relative strength) — this repo does not have a free source for hyperscaler capex, GPU shipment, or data-center construction data, so those go through the evidence board below rather than being fabricated as a quantitative reading.",
       "evidence": [
         {
@@ -82,15 +82,6 @@
           "category": "Fact"
         },
         {
-          "title": "Insurance for AI Hyperscaler Debt, et al.",
-          "source": "Econbrowser",
-          "link": "https://econbrowser.com/archives/2026/10/insurance-for-ai-hyperscaler-debt-et-al",
-          "published": "Tue, 20 Oct 2026 15:44:55 +0000",
-          "archive_date": "2026-10-21",
-          "summary": "From FT yesterday: These are the large players in the AI boom; consider smaller players also involved in the AI boom. From the Economist: Credit markets are coming for CoreWeave. The price of a five-year bond issued by the “neocloud”, which rents out data-centre capacity for artificial-intelligence models, has fallen b…",
-          "category": "Interpretation"
-        },
-        {
           "title": "The Perverse Effects of the AI Investment Boom",
           "source": "Project Syndicate (Economics)",
           "link": "https://www.project-syndicate.org/commentary/ai-debt-financed-spending-crowding-out-development-investment-by-paola-subacchi-2026-11?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
@@ -116,11 +107,20 @@
           "archive_date": "2026-11-11",
           "summary": "My Two-for-Tuesday morning reads: • I’m Not Convinced The AI Bubble Exists: The AI bubble is a speculative concept that the AI industry is extremely over-valued. If true, the value of most companies involved in AI (several of whom are worth well over a trillion dollars) will collapse, devastating the entire economy. I …",
           "category": "Speculation"
+        },
+        {
+          "title": "The Changing Shape of the U.S. AI Capex Boom",
+          "source": "The Overshoot (Matthew Klein)",
+          "link": "https://theovershoot.co/p/the-changing-shape-of-the-us-ai-capex",
+          "published": "Tue, 03 Nov 2026 08:51:58 GMT",
+          "archive_date": "2026-11-03",
+          "summary": "The labs are becoming hyperscalers, imports are continuing to surge, and investment further up the supply chain is rising in response to the tight supply of GPUs and memory.",
+          "category": "Interpretation"
         }
       ]
     },
     "crypto": {
-      "btc_trend_3m": -0.2107,
+      "btc_trend_3m": -0.2392,
       "note": "Market reaction context (BTC price trend) only — regulatory developments themselves are tracked through the evidence board, not scored.",
       "evidence": []
     },
@@ -181,6 +181,15 @@
           "category": "Interpretation"
         },
         {
+          "title": "China Ratchets Up Its Weaponization of Trade",
+          "source": "Project Syndicate (Economics)",
+          "link": "https://www.project-syndicate.org/commentary/china-export-control-regime-threatens-to-upend-global-trade-by-brahma-chellaney-2026-11?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+          "published": "Thu, 19 Nov 2026 11:48:08 GMT",
+          "archive_date": "2026-11-20",
+          "summary": "Just as the US has been leveraging its large market and technological leadership for geopolitical ends, China is now using its dominance in critical minerals, industrial inputs, and specialized manufacturing machinery to coerce and punish other countries. The consequences, both economic and geopolitical, are far-reachi…",
+          "category": "Fact"
+        },
+        {
           "title": "4%+ One-Day Drops",
           "source": "Bespoke Investment Group",
           "link": "https://www.bespokepremium.com/think-big-blog/4-one-day-drops/",
@@ -224,15 +233,6 @@
           "archive_date": "2026-10-26",
           "summary": "arXiv:2610.32614v1 Announce Type: new Abstract: Insurance tariffs must reconcile risk-based pricing, portfolio coverage, and anti-discrimination requirements. We introduce a framework in which tariffs are constructed through classification, aggregation of benchmark risk prices within classes, and balanced transfers, an…",
           "category": "Interpretation"
-        },
-        {
-          "title": "FTAV’s further reading",
-          "source": "FT Alphaville",
-          "link": "https://www.ft.com/content/d55dbb16-b0ec-4f49-9d44-b30c62efa79f",
-          "published": "Mon, 16 Nov 2026 06:30:01 GMT",
-          "archive_date": "2026-11-16",
-          "summary": "GPU securitisations; ghost newspapers; Nvidia; critical minerals; Anthropic; stats; loose lips; salt; DEI; Gonzo",
-          "category": "Fact"
         }
       ],
       "framework_note": "Every item below is EVIDENCE (an observable fact or a source's reported claim), not a conclusion. Where an item implies a strategic motive (for example, characterizations of US interest in Greenland as partly resource-driven), treat that as one HYPOTHESIS among several plausible explanations (which can include, and are not limited to, security policy, territorial claims context, or Arctic shipping-route strategy) — this board deliberately does not pick a winner among competing explanations for a geopolitical development; it surfaces the sourced claims so the reader can weigh them."
