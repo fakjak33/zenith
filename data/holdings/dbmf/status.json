@@ -1,35 +1,21 @@
 {
-  "date": "2026-11-20",
-  "ran_at": "2026-11-20T09:29:55Z",
+  "date": "2026-11-21",
+  "ran_at": "2026-11-21T09:00:31Z",
   "action": "auto",
   "fund": "dbmf",
-  "state": "updated",
+  "state": "unavailable",
   "as_of": "2026-11-19",
   "n_snapshots": 95,
   "n_positions": 11,
-  "gaps": [
-    "2026-10-21"
-  ],
-  "error": "",
+  "gaps": [],
+  "error": "no rows parsed",
   "segments": [
     {
       "segment": "fetch(dbmf)",
-      "ok": true,
-      "n": 19,
+      "ok": false,
+      "n": 0,
       "via": "direct",
       "error": ""
-    },
-    {
-      "segment": "validate(dbmf)",
-      "ok": true,
-      "n": 11,
-      "warnings": []
-    },
-    {
-      "segment": "publish(dbmf)",
-      "ok": true,
-      "as_of": "2026-11-19",
-      "n": 11
     }
   ]
 }
