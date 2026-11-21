@@ -1,19 +1,19 @@
 {
-  "as_of": "2026-11-20",
+  "as_of": "2026-11-21",
   "analogs": [
     {
       "month": "2026-05-31",
-      "distance": 0.316,
+      "distance": 0.338,
       "n_shared_dimensions": 8,
       "forward": {
         "3": 0.0166,
-        "6": -0.0489,
+        "6": -0.0835,
         "12": null
       }
     },
     {
       "month": "2026-04-30",
-      "distance": 0.335,
+      "distance": 0.349,
       "n_shared_dimensions": 8,
       "forward": {
         "3": 0.0422,
@@ -23,7 +23,7 @@
     },
     {
       "month": "2026-02-28",
-      "distance": 0.454,
+      "distance": 0.456,
       "n_shared_dimensions": 8,
       "forward": {
         "3": 0.1058,
@@ -33,52 +33,52 @@
     },
     {
       "month": "2025-11-30",
-      "distance": 0.477,
+      "distance": 0.479,
       "n_shared_dimensions": 8,
       "forward": {
         "3": 0.0068,
         "6": 0.1133,
-        "12": 0.0588
+        "12": 0.0203
       }
     },
     {
-      "month": "2025-12-31",
-      "distance": 0.483,
+      "month": "2024-10-31",
+      "distance": 0.487,
       "n_shared_dimensions": 8,
       "forward": {
-        "3": -0.0437,
-        "6": 0.1009,
-        "12": null
+        "3": 0.0619,
+        "6": -0.0186,
+        "12": 0.214
       }
     }
   ],
   "distributions": {
     "3": {
       "n": 5,
-      "median": 0.0166,
-      "q25": 0.0068,
-      "q75": 0.0422,
-      "win_rate": 0.8,
+      "median": 0.0422,
+      "q25": 0.0166,
+      "q75": 0.0619,
+      "win_rate": 1.0,
       "best": 0.1058,
-      "worst": -0.0437
+      "worst": 0.0068
     },
     "6": {
       "n": 5,
-      "median": 0.1009,
-      "q25": 0.0569,
+      "median": 0.0569,
+      "q25": -0.0186,
       "q75": 0.1133,
-      "win_rate": 0.8,
+      "win_rate": 0.6,
       "best": 0.1241,
-      "worst": -0.0489
+      "worst": -0.0835
     },
     "12": {
-      "n": 1,
-      "median": 0.0588,
-      "q25": 0.0588,
-      "q75": 0.0588,
+      "n": 2,
+      "median": 0.1172,
+      "q25": 0.0687,
+      "q75": 0.1656,
       "win_rate": 1.0,
-      "best": 0.0588,
-      "worst": 0.0588
+      "best": 0.214,
+      "worst": 0.0203
     }
   },
   "note": "5 nearest historical months by 8-dimension macro similarity; forward SPY returns are historical outcomes, NOT a forecast."
