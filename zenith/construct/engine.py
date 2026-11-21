@@ -12,6 +12,8 @@ Every function here backs one chapter of the guide or the sandbox:
 - rebalancing: none / calendar / threshold bands, with costs and turnover
 - leverage: Kelly growth curve and the odds of ever seeing a given drawdown
 - crisis behaviour: correlations in the worst months vs all months
+- drawdown budgets: crisis replay, historical max DD and option-implied tails as stress lenses;
+  ETL / ETG from the smile (Breeden-Litzenberger) or from history; max-ETG/ETL weights fitted to a budget
 """
 
 from __future__ import annotations
@@ -347,3 +349,284 @@ def trend_sleeve(px: pd.DataFrame, lookback: int = 252, target_vol: float = 0.10
     pos = (sig * (target_vol / vol)).clip(-3, 3)
     pos = pos.resample("ME").last().reindex(px.index, method="ffill").shift(1)
     return (pos * r).mean(axis=1, skipna=True).fillna(0.0)
+
+
+# ======================================================= drawdown budgets & tails
+# Chapters 09-10 and the sandbox DRAWDOWN BUDGET tab. Start from the drawdown the holder can live
+# with, check the portfolio against it through three lenses (crisis replay, historical max
+# drawdown, option-implied tail), then spend the budget where the upside tail is largest relative
+# to the downside tail (ETG / ETL). Tails are measured against cash: option forwards already carry
+# the cash rate, and the historical scenarios treat cash as a zero-return asset.
+
+CRISES = {
+    "2000-02 dot-com": ("2000-03-24", "2002-10-09"),
+    "2008-09 GFC": ("2007-10-09", "2009-03-09"),
+    "2020 COVID": ("2020-02-19", "2020-03-23"),
+    "2022 rate shock": ("2022-01-03", "2022-10-12"),
+}
+
+
+def napkin_equity_weight(budget: float, eq_loss: float, def_ret: float = 0.0) -> float:
+    """Equity weight whose crash loss just fills the budget, the rest in a defensive asset:
+    -budget = w*(-eq_loss) + (1-w)*def_ret  =>  w = (budget + def_ret) / (eq_loss + def_ret).
+    The 60/40 rule: 30% budget, 50% equity crash, flat bonds -> 60%."""
+    den = eq_loss + def_ret
+    if den <= 0:
+        return 1.0
+    return float(np.clip((budget + def_ret) / den, 0.0, 1.0))
+
+
+def _ncdf(x):
+    from scipy.special import ndtr
+    return ndtr(x)
+
+
+def _nppf(p):
+    from scipy.special import ndtri
+    return ndtri(p)
+
+
+def bs_delta_strike(sigma: float, T: float, delta: float, F: float = 1.0) -> float:
+    """Strike with Black (forward) delta ``delta`` (negative for puts). Put: N(d1)-1 = delta;
+    call: N(d1) = delta; d1 = (ln F/K + s^2/2)/s with s = sigma*sqrt(T)  =>  ln K/F = s^2/2 - d1*s."""
+    d1 = float(_nppf(1 + delta if delta < 0 else delta))
+    s = sigma * np.sqrt(T)
+    return float(F * np.exp(0.5 * s * s - d1 * s))
+
+
+def _black_call(F, K, sigma, T):
+    s = np.maximum(sigma * np.sqrt(T), 1e-12)
+    d1 = (np.log(F / K) + 0.5 * s * s) / s
+    return F * _ncdf(d1) - K * _ncdf(d1 - s)
+
+
+def rn_density(ivs, deltas, T: float, n: int = 1601) -> tuple[np.ndarray, np.ndarray]:
+    """Risk-neutral distribution of R = S_T/F - 1 from a few delta-bucket IVs (Breeden &
+    Litzenberger 1978). Each bucket sits at its own strike; IV is interpolated linearly in
+    log-moneyness and held flat beyond the outer buckets; call prices are differenced twice.
+    Negative density from an uneven smile is clipped and the rest renormalised.
+    Returns (R grid, probability per grid point)."""
+    ivs, deltas = np.asarray(ivs, float), np.asarray(deltas, float)
+    ok = np.isfinite(ivs) & (ivs > 0)
+    ivs, deltas = ivs[ok], deltas[ok]
+    if len(ivs) < 3:
+        raise ValueError("need at least three finite delta-bucket IVs")
+    k = np.array([0.0 if d == 0.5 else np.log(bs_delta_strike(v, T, d)) for v, d in zip(ivs, deltas)])
+    o = np.argsort(k)
+    k, ivs = k[o], ivs[o]
+    width = 6 * float(ivs.max()) * np.sqrt(T) + 0.05
+    kg = np.linspace(-width, width, n)
+    K = np.exp(kg)
+    C = _black_call(1.0, K, np.interp(kg, k, ivs), T)
+    pdf = np.clip(np.gradient(np.gradient(C, K), K), 0, None)
+    p = pdf * np.gradient(K)
+    p = p / p.sum()
+    m = float((K * p).sum())                                    # E[S_T/F] must be 1: undo clipping bias
+    return K / m - 1.0, p
+
+
+def tail_measures(x, p=None, q: float = 0.10) -> dict:
+    """Expected tail loss / gain at level q, ETG/|ETL| and skewness of scenarios x with
+    probabilities p (equal if None). ETL = mean of the worst q, ETG = mean of the best q."""
+    x = np.asarray(x, float)
+    p = np.full(len(x), 1.0) if p is None else np.asarray(p, float)
+    ok = np.isfinite(x) & np.isfinite(p)
+    x, p = x[ok], p[ok]
+    if len(x) < 2 or p.sum() <= 0:
+        return {"etl": np.nan, "etg": np.nan, "ratio": np.nan, "skew": np.nan, "mean": np.nan, "vol": np.nan}
+    p = p / p.sum()
+    o = np.argsort(x)
+    x, p = x[o], p[o]
+
+    def tail(xs, ps):
+        take = np.clip(q - (np.cumsum(ps) - ps), 0, ps)        # partial weight on the boundary point
+        return float((xs * take).sum() / take.sum())
+
+    etl, etg = tail(x, p), tail(x[::-1], p[::-1])
+    mu = float((x * p).sum())
+    sd = float(np.sqrt(((x - mu) ** 2 * p).sum()))
+    return {"etl": etl, "etg": etg, "ratio": etg / -etl if etl < 0 else np.nan,
+            "skew": float(((x - mu) ** 3 * p).sum() / sd ** 3) if sd > 0 else 0.0, "mean": mu, "vol": sd}
+
+
+def clean_smile(ivs, deltas, max_step: float = 1.35) -> tuple[list[float], int]:
+    """Drop illiquid wing quotes. Walking out from ATM on each side, a bucket whose IV is more than
+    ``max_step`` times the next bucket in is treated as a bad print, and so is everything beyond it
+    (e.g. an EEM 10-delta call at 73% next to a 27% 15-delta). Returns (ivs, number dropped)."""
+    ivs = [float(v) if v is not None and np.isfinite(v) and v > 0 else np.nan for v in ivs]
+    deltas = [float(d) for d in deltas]
+    dropped = 0
+    for side in (-1, 1):
+        idx = sorted([i for i, d in enumerate(deltas) if d != 0.5 and np.sign(d) == side],
+                     key=lambda i: abs(deltas[i]), reverse=True)          # 35 -> 25 -> 15 -> 10 (inner to outer)
+        inner = ivs[deltas.index(0.5)] if 0.5 in deltas else np.nan
+        bad = False
+        for i in idx:
+            if bad or (np.isfinite(inner) and np.isfinite(ivs[i]) and ivs[i] > max_step * inner):
+                bad = True
+                dropped += int(np.isfinite(ivs[i]))
+                ivs[i] = np.nan
+            elif np.isfinite(ivs[i]):
+                inner = ivs[i]
+    return ivs, dropped
+
+
+def implied_tails(ivs, deltas, T: float, q: float = 0.10) -> dict:
+    """Option-implied tails at one tenor: where the 10-delta put and call strikes sit, plus the
+    risk-neutral ETL / ETG / ratio / skew. Bad wing prints are dropped first (``clean_smile``).
+    {} if the smile is unusable."""
+    deltas = [float(d) for d in deltas]
+    ivs, dropped = clean_smile(ivs, deltas)
+    try:
+        x, p = rn_density(ivs, deltas, T)
+    except ValueError:
+        return {}
+    out = tail_measures(x, p, q)
+    out["dropped"] = dropped
+    for nm, d in (("put10", -0.10), ("call10", 0.10)):
+        v = ivs[deltas.index(d)] if d in deltas else np.nan
+        out[f"{nm}_iv"] = v
+        out[f"{nm}_dist"] = bs_delta_strike(v, T, d) - 1 if np.isfinite(v) and v > 0 else np.nan
+    return out
+
+
+def horizon_returns(R: pd.DataFrame, horizon: int = 63, step: int = 5) -> pd.DataFrame:
+    """Overlapping ``horizon``-day compound returns sampled every ``step`` days: a joint scenario
+    set that keeps the real co-movement between assets."""
+    lv = np.log1p(R.fillna(0.0)).cumsum()
+    return np.expm1(lv.shift(-horizon) - lv).iloc[::step].dropna()
+
+
+def crisis_returns(px: pd.DataFrame, windows: dict | None = None) -> pd.DataFrame:
+    """Point-to-point return of each asset over each crisis window (equity peak -> trough); rows
+    are crises, NaN where the window is outside the price history. A buy-and-hold portfolio's
+    return over a window is exactly sum(w_i * r_i)."""
+    windows = CRISES if windows is None else windows
+    px = px.sort_index()
+    rows = {}
+    for nm, (a, b) in windows.items():
+        a, b = pd.Timestamp(a), pd.Timestamp(b)
+        row = {}
+        for c in px.columns:
+            s = px[c].dropna()
+            ok = len(s) and s.index[0] <= a + pd.Timedelta(days=5) and s.index[-1] >= b
+            row[c] = float(s.loc[:b].iloc[-1] / s.loc[:a].iloc[-1] - 1) if ok and len(s.loc[:a]) else np.nan
+        rows[nm] = row
+    return pd.DataFrame(rows).T.reindex(columns=px.columns)
+
+
+def max_drawdown(r) -> float:
+    eq = np.cumprod(1 + np.nan_to_num(np.asarray(r, float)))
+    return float((eq / np.maximum.accumulate(eq) - 1).min()) if len(eq) else np.nan
+
+
+def stress_lenses(w, R: pd.DataFrame | None = None, crisis: pd.DataFrame | None = None,
+                  implied_etl=None, crisis_sign=None, rule: str = "quarterly") -> dict:
+    """Portfolio loss (as a positive number) under three lenses; cash is 1 - sum(w).
+
+    crisis  - worst sum(w_i * r_i) across the crisis windows that every held asset covers
+    history - max drawdown of the rebalanced mix (cash held at its weight) over the sample
+    implied - option-implied ETL summed across assets (comonotonic, so an upper bound); an asset
+              that GAINED on average in the crises gets no charge and no credit (conservative)
+    worst / binding - the largest of the three: the budget has to survive all of them."""
+    w = np.asarray(w, float)
+    held = w > 1e-9
+    out = {"crisis": np.nan, "crisis_name": "", "history": np.nan, "implied": np.nan}
+    if crisis is not None and len(crisis):
+        c = crisis.loc[:, held].dropna(how="any")
+        if len(c):
+            pl = c.to_numpy() @ w[held]
+            i = int(np.argmin(pl))
+            out["crisis"], out["crisis_name"] = float(max(-pl[i], 0.0)), str(c.index[i])
+    if R is not None and len(R) > 20 and w.sum() > 0:
+        out["history"] = float(-max_drawdown(run_mix(R, w / w.sum(), rule)["returns"].to_numpy() * w.sum())) \
+            if R.shape[1] == len(w) else np.nan
+    if implied_etl is not None:
+        e = np.nan_to_num(np.asarray(implied_etl, float))
+        if crisis_sign is not None:
+            e = np.where(np.nan_to_num(np.asarray(crisis_sign, float)) > 0, 0.0, e)
+        out["implied"] = float(-(w * np.minimum(e, 0)).sum())
+    vals = {k: out[k] for k in ("crisis", "history", "implied") if np.isfinite(out[k])}
+    out["binding"] = max(vals, key=vals.get) if vals else ""
+    out["worst"] = max(vals.values()) if vals else np.nan
+    return out
+
+
+def headroom(budget: float, worst: float) -> dict:
+    """Budget minus the binding stressed loss. Losses scale ~linearly with exposure, so the risk
+    you could run is budget / worst times today's (>1 = room to add, <1 = take risk off)."""
+    if not np.isfinite(worst) or worst <= 0:
+        return {"headroom": np.nan, "scale": np.nan}
+    return {"headroom": budget - worst, "scale": budget / worst}
+
+
+def portfolio_tails(w, H: pd.DataFrame, q: float = 0.10) -> dict:
+    """ETL / ETG / ratio / skew of the portfolio across joint horizon scenarios H."""
+    return tail_measures(H.to_numpy() @ np.asarray(w, float), None, q)
+
+
+def max_convexity(H: pd.DataFrame, q: float = 0.10, max_w: float = 1.0, w0=None) -> np.ndarray:
+    """Long-only, fully invested weights maximising ETG/ETL across joint scenarios H. The ratio is
+    scale-free (cash changes the size of the bet, not its shape), so the drawdown budget is
+    applied afterwards by ``fit_to_budget``. Several starts guard against the ratio's flat spots."""
+    from scipy.optimize import minimize
+    X = H.to_numpy()
+    n = X.shape[1]
+    max_w = max(float(max_w), 1.0 / n + 1e-9)
+
+    def neg(w):
+        t = tail_measures(X @ w, None, q)
+        return -t["ratio"] if np.isfinite(t["ratio"]) else 1e3 - t["etg"]
+
+    starts = [np.full(n, 1 / n)] + ([np.asarray(w0, float)] if w0 is not None else [])
+    starts += [np.minimum(np.eye(n)[i] * 0.5 + 0.5 / n, max_w) for i in range(n)]
+    best, best_v = starts[0], neg(starts[0])
+    for s in starts:
+        s = s / s.sum()
+        res = minimize(neg, s, method="SLSQP", bounds=[(0.0, max_w)] * n,
+                       constraints=[{"type": "eq", "fun": lambda w: w.sum() - 1.0}],
+                       options={"maxiter": 200, "ftol": 1e-9, "eps": 1e-4})
+        x = np.clip(res.x, 0, None)
+        x = x / x.sum() if x.sum() > 0 else s
+        if np.any(x > max_w + 1e-6):
+            continue
+        v = neg(x)
+        if v < best_v:
+            best, best_v = x, v
+    return best
+
+
+def fit_to_budget(w, budget: float, lens_fn, tol: float = 1e-4) -> tuple[float, dict]:
+    """Largest exposure s in (0, 1] (the rest in cash) whose binding stressed loss <= budget.
+    ``lens_fn(weights) -> stress_lenses dict``. Bisection: losses rise with exposure."""
+    w = np.asarray(w, float) / np.sum(w)
+    full = lens_fn(w)
+    if not np.isfinite(full["worst"]) or full["worst"] <= budget:
+        return 1.0, full
+    lo, hi = 0.0, 1.0
+    while hi - lo > tol:
+        mid = 0.5 * (lo + hi)
+        lo, hi = (mid, hi) if lens_fn(w * mid)["worst"] <= budget else (lo, mid)
+    return lo, lens_fn(w * lo)
+
+
+def implied_tail_breach(px: pd.Series, vol: pd.Series, horizon: int = 63, q: float = 0.10) -> pd.DataFrame:
+    """How often the realised move went past the market's own priced tail. Each day, the
+    lognormal q-quantile of the next ``horizon`` trading days is set from an implied-vol index
+    quoted in % (VIX3M for SPX); records it, the realised forward return and whether it broke
+    through. VIX3M already sits above ATM vol (it includes the skew), so this is a mid-smile tail."""
+    vol = vol.dropna() / 100.0
+    fwd = px.dropna().shift(-horizon) / px.dropna() - 1
+    df = pd.concat({"vol": vol, "fwd": fwd}, axis=1).dropna()
+    s = df["vol"] * np.sqrt(horizon / TRADING_DAYS)
+    df["tail"] = np.exp(float(_nppf(q)) * s - 0.5 * s * s) - 1
+    df["breach"] = df["fwd"] < df["tail"]
+    df["excess"] = (df["fwd"] - df["tail"]).where(df["breach"])
+    return df
+
+
+def skew_zscore(s: pd.Series, window: int = 3 * TRADING_DAYS, min_periods: int = TRADING_DAYS) -> pd.Series:
+    """Where a skew measure sits against its own trailing window, in standard deviations."""
+    s = s.dropna()
+    roll = s.rolling(window, min_periods=min_periods)
+    return (s - roll.mean()) / roll.std()

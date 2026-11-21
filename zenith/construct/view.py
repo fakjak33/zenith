@@ -1,6 +1,6 @@
 """PORTFOLIO / CONSTRUCT — a guided, interactive course in portfolio construction.
 
-GUIDE walks through eight research-backed ideas, each with the equation, sliders and a live
+GUIDE walks through ten research-backed ideas, each with the equation, sliders and a live
 chart on real (free) data. SANDBOX lets you build a portfolio of ETFs, stocks or saved LAB
 strategies and see every idea applied to it. SOURCES lists the research behind each chapter.
 """
@@ -24,7 +24,9 @@ from . import engine as K
 
 DEFAULT = ["SPY", "EFA", "TLT", "IEF", "GLD", "DBC", "VNQ"]
 CHAPTERS = ["01 DIVERSIFY", "02 VOL DRAG", "03 SHANNON'S DEMON", "04 SHOULD I ADD IT?", "05 WEIGHTING",
-            "06 REBALANCING", "07 LEVERAGE", "08 CRISES"]
+            "06 REBALANCING", "07 LEVERAGE", "08 CRISES", "09 DRAWDOWN BUDGET", "10 TAILS & CONVEXITY"]
+TAIL_UNIVERSE = ["SPY", "QQQ", "IWM", "EFA", "EEM", "TLT", "IEF", "HYG", "LQD", "GLD", "SLV", "USO", "VNQ"]
+SURF_DELTAS = [-0.10, -0.15, -0.25, -0.35, 0.50, 0.35, 0.25, 0.15, 0.10]
 
 _FINDINGS = [
     {"stat": "Across 14 optimisation models and 7 datasets, none beat equal weighting consistently out of "
@@ -36,6 +38,9 @@ _FINDINGS = [
              "½(Σwσ² − σ²ₚ): the diversification return.", "cite": "Booth & Fama (1992); Fernholz & Shay (1982)"},
     {"stat": "Correlations between equity markets rise in bear markets — diversification is weakest when it "
              "is needed most.", "cite": "Longin & Solnik (2001)"},
+    {"stat": "Start from the loss the holder can sit through: a 30% drawdown budget over a 50% equity crash is "
+             "the 60/40. Then spend that budget where upside tails beat downside tails.",
+     "cite": "Maymin & Maymin, Flirting with Models"},
 ]
 
 
@@ -60,6 +65,55 @@ def _ticker_input(label: str, default: list[str], key: str) -> list[str]:
     raw = st.text_input(label, ", ".join(default), key=key, help="Comma-separated Yahoo tickers.")
     out = [t.strip().upper() for t in raw.split(",") if t.strip()]
     return list(dict.fromkeys(out))[:15] or default
+
+
+def _weights_input(label: str, tickers: list[str], key: str) -> np.ndarray:
+    """Comma-separated % weights in ticker order; blank or unusable -> equal weight. Weights may sum
+    to less than 100% (the rest is cash) and are scaled down if they sum to more."""
+    raw = st.text_input(label, "", key=key, help="e.g. 60, 40 — blank = equal weight; under 100 leaves cash.")
+    try:
+        w = np.array([float(x) for x in raw.split(",") if x.strip()]) / 100
+    except ValueError:
+        w = np.array([])
+    if len(w) != len(tickers) or (w < 0).any() or w.sum() <= 0:
+        return np.full(len(tickers), 1 / len(tickers))
+    return w / max(w.sum(), 1.0)
+
+
+@st.cache_data(ttl=900, show_spinner=False)
+def _surfaces() -> dict:
+    from ..volscreen import load
+    return load("surfaces", {}) or {}
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def _cboe(name: str) -> pd.Series:
+    from ..stratidx.fetch import cboe_csv
+    return cboe_csv(name)
+
+
+@st.cache_data(ttl=3600, show_spinner=False, max_entries=16)
+def _surf_hist(ticker: str) -> pd.DataFrame:
+    try:
+        from ..volscreen.surface_view import _surf_hist as sh
+        return sh(ticker)
+    except Exception:  # noqa: BLE001
+        return pd.DataFrame()
+
+
+def _implied(tickers: list[str], tenor: int) -> dict:
+    """{ticker: implied_tails dict} from the VOL SCREENER delta surface at one tenor."""
+    d = _surfaces()
+    if not d or tenor not in d.get("tenors", []):
+        return {}
+    i, out = d["tenors"].index(tenor), {}
+    for t in tickers:
+        g = (d.get("surf", {}).get(t) or {}).get("delta")
+        if g and i < len(g):
+            r = K.implied_tails(g[i], SURF_DELTAS, tenor / 365)
+            if r:
+                out[t] = r
+    return out
 
 
 def _formula(tex: str, note: str = "") -> None:
@@ -511,6 +565,295 @@ def ch_crises() -> None:
                "years — test it in BACKTEST › OPTIONS LAB (long-vol templates, PPUT calibration).")
 
 
+def _lens_kpis(L: dict, budget: float) -> list[dict]:
+    hr = K.headroom(budget, L["worst"])
+    room = np.isfinite(hr["scale"]) and hr["scale"] >= 1
+    nm = {"crisis": f"CRISIS REPLAY · {L.get('crisis_name') or '—'}", "history": "HISTORICAL MAX DD",
+          "implied": "OPTION-IMPLIED TAIL"}
+    out = [{"label": nm[k], "value": _pct(-L[k]) if np.isfinite(L[k]) else "—",
+            "color": T.coral if L["binding"] == k else T.text,
+            "sub": "binding" if L["binding"] == k else ""} for k in ("crisis", "history", "implied")]
+    out += [{"label": "BUDGET", "value": _pct(-budget)},
+            {"label": "HEADROOM", "value": _pct(hr["headroom"]), "color": T.teal if room else T.coral,
+             "sub": ("room to add risk" if room else "take risk off") if np.isfinite(hr["scale"]) else ""},
+            {"label": "RISK YOU CAN RUN", "value": f"{hr['scale']:.2f}x" if np.isfinite(hr["scale"]) else "—",
+             "sub": "of today's exposure"}]
+    return out
+
+
+def ch_budget() -> None:
+    st.markdown(section("09 · DRAWDOWN BUDGET — size the risk to the loss you can sit through", 8),
+                unsafe_allow_html=True)
+    st.markdown("Most investors care about long-run compounding, and the biggest threat to it is bailing out "
+                "at the bottom. So start from the **drawdown budget**: the peak-to-trough loss the holder can "
+                "live through without selling. The classic 60/40 is this idea on a napkin: if equities can "
+                "fall 50% and bonds hold flat, 60% in equities loses 30%. Everything else is designed around "
+                "that number.")
+    _formula(r"\text{DD}_p\;\approx\;\sum_i w_i\,L_i^{\text{crisis}}\qquad\Rightarrow\qquad "
+             r"w_{eq}=\frac{B+r_d}{L_{eq}+r_d}",
+             "B = drawdown budget, L_eq = the equity crash loss, r_d = what the defensive sleeve returned in that "
+             "same crash (positive = it cushioned). Losses must come from the SAME episode: that is what "
+             "keeps the correlation honest.")
+    c1, c2, c3 = st.columns(3)
+    B = c1.slider("drawdown budget (tolerance)", 0.05, 0.60, 0.30, 0.01, key="cn_b_B")
+    Le = c2.slider("equity crash loss", 0.20, 0.70, 0.50, 0.01, key="cn_b_L",
+                   help="SPY: −55% in 2007-09, −34% in 2020, −25% in 2022")
+    rd = c3.slider("defensive sleeve return in that crash", -0.25, 0.20, 0.0, 0.01, key="cn_b_rd",
+                   help="Treasuries: about +15–25% in 2008 (TLT +26%, IEF +16%), but −17% (AGG) / −31% (TLT) in 2022")
+    w = K.napkin_equity_weight(B, Le, rd)
+    dd = w * -Le + (1 - w) * rd
+    st.markdown(uk.kpis([
+        {"label": "EQUITY WEIGHT", "value": _pct(w, 0)},
+        {"label": "DEFENSIVE WEIGHT", "value": _pct(1 - w, 0)},
+        {"label": "CRASH LOSS", "value": _pct(dd), "color": T.coral},
+        {"label": "RULE-OF-THUMB VOL", "value": _pct(B / 2.75), "sub": "max DD ≈ 2.5–3× annual vol"},
+    ]), unsafe_allow_html=True)
+    a, b = st.columns([1.4, 1])
+    with a:
+        bb = np.linspace(0.05, 0.60, 56)
+        fig = go.Figure()
+        for r_, col, nm in ((0.15, T.teal, "cushion +15% (2008 Treasuries)"), (0.0, T.faint, "cushion flat"),
+                            (-0.17, T.coral, "cushion −17% (2022 bonds)")):
+            fig.add_trace(go.Scatter(x=bb, y=[K.napkin_equity_weight(x, Le, r_) for x in bb], name=nm,
+                                     line=dict(color=col, width=1.4, dash="dot")))
+        fig.add_trace(go.Scatter(x=bb, y=[K.napkin_equity_weight(x, Le, rd) for x in bb], name="your inputs",
+                                 line=dict(color=T.text, width=2.4)))
+        fig.add_trace(go.Scatter(x=[B], y=[w], mode="markers", marker=dict(size=12, color=T.amber), name="you"))
+        fig.update_xaxes(tickformat=".0%", title_text="drawdown budget")
+        fig.update_yaxes(tickformat=".0%", title_text="equity weight", range=[0, 1.02])
+        up.show(fig, 340, f"equity weight that fits the budget (equity crash −{Le:.0%})", key="cn_b_curve",
+                scale_toggle=False)
+    with b:
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=["equity", "defensive", "portfolio"], y=[w * -Le, (1 - w) * rd, dd],
+                             marker_color=[T.coral, T.teal if rd >= 0 else T.coral, T.violet],
+                             text=[_pct(v) for v in (w * -Le, (1 - w) * rd, dd)], textposition="outside"))
+        fig.add_hline(y=-B, line=dict(color=T.amber, dash="dash"), annotation_text="budget",
+                      annotation_font=dict(size=9, color=T.amber))
+        fig.update_yaxes(tickformat=".0%", title_text="contribution to crash loss")
+        fig.update_layout(hovermode="closest", showlegend=False)
+        up.show(fig, 340, "where the drawdown comes from", key="cn_b_bar", scale_toggle=False)
+    st.caption("2022 is the lesson: the budget broke because the cushion failed (bonds fell with stocks), not "
+               "because equities crashed hard. A budget is only as good as the stress you assume for the "
+               "'safe' side.")
+
+    st.markdown("**Your portfolio vs your tolerance.** Three lenses, and the budget has to survive the worst:")
+    st.markdown("- **Crisis replay**: the buy-and-hold loss over each real crisis window (equity peak to trough), "
+                "with each asset's actual return in that same window.\n"
+                "- **Historical max drawdown**: the worst peak-to-trough loss of the rebalanced mix over the "
+                "whole sample.\n"
+                "- **Option-implied tail**: the market's 90-day expected tail loss (worst 10%) from each asset's "
+                "options, summed across assets (an upper bound). Assets that gained in past crises get no "
+                "charge and no credit. This is the forward-looking lens, but it covers only one quarter and "
+                "is thin when VIX is low (chapter 10).")
+    c1, c2 = st.columns([1.3, 1])
+    with c1:
+        tk = _ticker_input("holdings", ["SPY", "IEF", "TLT", "GLD", "DBC"], "cn_b_tk")
+    with c2:
+        wmap = dict(zip(tk, _weights_input("weights %", tk, "cn_b_w")))
+    px = _prices(tuple(sorted(set(tk))), "1995-01-01")
+    tk = [t for t in tk if t in px]
+    if not tk:
+        st.caption("couldn't load those tickers")
+        return
+    wts = np.array([wmap[t] for t in tk])
+    R = px[tk].pct_change().dropna()
+    cr = K.crisis_returns(px[tk])
+    imp = _implied(tk, 90)
+    etl = [imp.get(t, {}).get("etl", np.nan) for t in tk]
+    sign = cr.mean().reindex(tk).to_numpy()
+    L = K.stress_lenses(wts, R, cr, etl, sign)
+    st.markdown(uk.kpis(_lens_kpis(L, B)), unsafe_allow_html=True)
+    a, b = st.columns([1.2, 1])
+    with a:
+        tab = cr.copy()
+        tab["PORTFOLIO"] = [float(np.dot(r.to_numpy(), wts)) if r.notna().all() else np.nan for _, r in cr.iterrows()]
+        st.dataframe(tab.style.format("{:+.1%}", na_rep="—"), use_container_width=True)
+        st.caption(f"Each cell: point-to-point return over the window. Weights {', '.join(f'{t} {x:.0%}' for t, x in zip(tk, wts))}"
+                   + (f", cash {1 - wts.sum():.0%}" if wts.sum() < 0.999 else "") + ". A dash means the asset "
+                   "didn't trade yet; that crisis is then left out of the replay.")
+    with b:
+        rows = []
+        for t in tk:
+            s = K.stats(R[t])
+            rows.append({"asset": t, "vol": s.get("Vol"), "max DD": s.get("MaxDD"),
+                         "DD / vol": -s.get("MaxDD", np.nan) / s.get("Vol", np.nan) if s.get("Vol") else np.nan,
+                         "90d implied ETL": imp.get(t, {}).get("etl", np.nan)})
+        st.dataframe(pd.DataFrame(rows).set_index("asset").style.format(
+            {"vol": "{:.1%}", "max DD": "{:.1%}", "DD / vol": "{:.1f}x", "90d implied ETL": "{:+.1%}"}, na_rep="—"),
+            use_container_width=True)
+        st.caption("DD / vol is the rule-of-thumb multiple, measured. Equity-like assets cluster at 2.5–3x over "
+                   "long samples; it grows with the length of history.")
+    st.caption("Headroom ≥ 0: there is risk budget left to spend (more equity, less cash, or the leverage of "
+               "chapter 07). Below 0: take risk off, or swap in sleeves that actually paid in crises (chapter 08). "
+               "The SANDBOX › DRAWDOWN BUDGET tab solves the weights for you.")
+
+
+def ch_tails() -> None:
+    st.markdown(section("10 · TAILS & CONVEXITY — what the options market prices, and how far to trust it", 9),
+                unsafe_allow_html=True)
+    st.markdown("After the budget, the next question is **where** to spend it. For every asset, compared with "
+                "cash, look at the size of the upside tail against the downside tail. **ETL** is the expected "
+                "loss in the worst 10% of outcomes and **ETG** is the expected gain in the best 10%. "
+                "**ETG / ETL** above 1 means the asset's upside tail is bigger than its downside: it adds "
+                "convexity. The forward-looking version reads both tails from the options market: 10-delta puts "
+                "and calls at a 2–3 month tenor.")
+    _formula(r"\text{ETL}_q=\mathbb{E}[R\mid R\le Q_q]\qquad \text{ETG}_q=\mathbb{E}[R\mid R\ge Q_{1-q}]"
+             r"\qquad \text{convexity}=\frac{\text{ETG}_q}{|\text{ETL}_q|}",
+             "Implied: the risk-neutral distribution recovered from the volatility smile (Breeden-Litzenberger). "
+             "Historical: overlapping returns of the same length. Implied tails sit around the forward, so they "
+             "are relative to cash. Historical tails are raw returns and include each asset's past drift.")
+    st.markdown("**Three things to keep straight when reading skew:**\n"
+                "1. **An IV ratio isn't a downside ratio.** A 2-month SPY 10Δ put at ~30% IV and a 10Δ call at "
+                "~14% sit about **−14% and +8%** from the forward. In price terms the downside tail is ~1.7× the "
+                "upside, not 2×, and both tails have about the same risk-neutral probability.\n"
+                "2. **Risk-neutral isn't real-world.** Equity put skew has been there almost every day since "
+                "1987. Part of it is real crash risk and part is an insurance premium. The equity risk premium "
+                "is what pays you for holding that tail, so poor standalone equity convexity isn't a reason to "
+                "own none. It's a reason to pair equity with sleeves whose tails point the other way.\n"
+                "3. **Convexity belongs to the portfolio.** An asset with bad skew can still raise the "
+                "portfolio's ETG/ETL if its losses come when the others gain. That's why the sandbox optimises "
+                "the mix rather than ranking assets one by one.")
+    c1, c2 = st.columns([2.2, 1])
+    with c1:
+        tk = _ticker_input("assets (need options in VOL SCREENER for the implied side)", TAIL_UNIVERSE, "cn_t_tk")
+    tenor = c2.radio("tenor (days)", [60, 90], horizontal=True, key="cn_t_ten")
+    imp = _implied(tk, tenor)
+    px = _prices(tuple(sorted(set(tk))), "1995-01-01")
+    have = [t for t in tk if t in px]
+    R = px[have].pct_change() if have else pd.DataFrame()
+    H = {t: K.horizon_returns(R[[t]].dropna(), tenor * 252 // 365, 5)[t] for t in have}
+    cr = K.crisis_returns(px[have]) if have else pd.DataFrame()
+    rows = []
+    for t in tk:
+        i, h = imp.get(t, {}), K.tail_measures(H[t].to_numpy(), None, 0.10) if t in H and len(H[t]) > 50 else {}
+        rows.append({"asset": t, "put 10Δ IV": i.get("put10_iv", np.nan), "call 10Δ IV": i.get("call10_iv", np.nan),
+                     "IV ratio": i.get("put10_iv", np.nan) / i.get("call10_iv", np.nan) if i else np.nan,
+                     "put strike": i.get("put10_dist", np.nan), "call strike": i.get("call10_dist", np.nan),
+                     "distance ratio": -i["put10_dist"] / i["call10_dist"] if i and i.get("call10_dist") else np.nan,
+                     "implied ETL": i.get("etl", np.nan), "implied ETG": i.get("etg", np.nan),
+                     "implied ETG/ETL": i.get("ratio", np.nan),
+                     "hist ETL": h.get("etl", np.nan), "hist ETG": h.get("etg", np.nan),
+                     "hist ETG/ETL": h.get("ratio", np.nan),
+                     "worst crisis": float(cr[t].min()) if t in cr and cr[t].notna().any() else np.nan,
+                     "wing prints dropped": i.get("dropped", np.nan)})
+    df = pd.DataFrame(rows).set_index("asset")
+    if df[["implied ETL", "hist ETL"]].isna().all().all():
+        st.caption("no implied surface or price history for these tickers")
+        return
+    pct = {c: "{:+.1%}" for c in ("put strike", "call strike", "implied ETL", "implied ETG", "hist ETL", "hist ETG",
+                                  "worst crisis")}
+    st.dataframe(df.style.format({**pct, "put 10Δ IV": "{:.1%}", "call 10Δ IV": "{:.1%}", "IV ratio": "{:.2f}",
+                                  "distance ratio": "{:.2f}", "implied ETG/ETL": "{:.2f}", "hist ETG/ETL": "{:.2f}",
+                                  "wing prints dropped": "{:.0f}"},
+                                 na_rep="—"), use_container_width=True)
+    asof = _surfaces().get("as_of", "")
+    st.caption(f"Implied side: VOL SCREENER delta surface{' as of ' + asof if asof else ''} at {tenor} days, "
+               "flat wings beyond 10Δ. A wing quote more than 1.35× the next one in is treated as an illiquid "
+               "print and dropped, along with anything further out (a dash in the strike columns). Historical side: every overlapping window of the same length since the asset "
+               "started trading. Worst crisis: the lowest point-to-point return across the chapter 09 windows.")
+    a, b = st.columns(2)
+    with a:
+        fig = go.Figure()
+        top = float(np.nanmax(np.abs(df[["implied ETL", "implied ETG", "hist ETL", "hist ETG"]].to_numpy()))) * 1.1
+        fig.add_trace(go.Scatter(x=[0, top], y=[0, top], line=dict(color=T.faint, dash="dot"), name="ETG = ETL"))
+        for j, (t, r) in enumerate(df.iterrows()):
+            col = T.cat[j % len(T.cat)]
+            if np.isfinite(r["implied ETL"]) and np.isfinite(r["hist ETL"]):
+                fig.add_trace(go.Scatter(x=[-r["hist ETL"], -r["implied ETL"]], y=[r["hist ETG"], r["implied ETG"]],
+                                         mode="lines", line=dict(color=col, width=0.8), showlegend=False,
+                                         hoverinfo="skip"))
+            fig.add_trace(go.Scatter(x=[-r["implied ETL"]], y=[r["implied ETG"]], mode="markers+text", text=[t],
+                                     textposition="top center", marker=dict(size=10, color=col), showlegend=False,
+                                     hovertemplate=f"{t} implied<br>ETL %{{x:.1%}}<br>ETG %{{y:.1%}}<extra></extra>"))
+            fig.add_trace(go.Scatter(x=[-r["hist ETL"]], y=[r["hist ETG"]], mode="markers",
+                                     marker=dict(size=8, color="rgba(0,0,0,0)", line=dict(color=col, width=1.4)),
+                                     showlegend=False,
+                                     hovertemplate=f"{t} historical<br>ETL %{{x:.1%}}<br>ETG %{{y:.1%}}<extra></extra>"))
+        fig.update_xaxes(tickformat=".0%", title_text="expected tail LOSS (worst 10%)", range=[0, top])
+        fig.update_yaxes(tickformat=".0%", title_text="expected tail GAIN (best 10%)", range=[0, top])
+        fig.update_layout(hovermode="closest")
+        up.show(fig, 400, "above the line = upside tail bigger · filled implied, hollow historical", key="cn_t_sc",
+                scale_toggle=False)
+    with b:
+        d2 = df.dropna(subset=["implied ETG/ETL"]).sort_values("implied ETG/ETL")
+        fig = go.Figure()
+        fig.add_trace(go.Bar(y=d2.index, x=d2["implied ETG/ETL"], orientation="h", name="implied",
+                             marker_color=T.violet))
+        fig.add_trace(go.Bar(y=d2.index, x=d2["hist ETG/ETL"], orientation="h", name="historical",
+                             marker_color=up.fill(T.amber, 0.6)))
+        fig.add_vline(x=1, line=dict(color=T.faint, dash="dot"))
+        fig.update_layout(barmode="group", hovermode="y unified")
+        fig.update_xaxes(title_text="ETG / ETL")
+        up.show(fig, 400, "convexity: implied vs historical", key="cn_t_ratio")
+
+    st.markdown("**How far to trust the implied tail.** On average, implied tails are *too fat*: puts carry a "
+                "volatility risk premium, so most of the time the priced tail is conservative. But the market "
+                "prices what it fears *now*. In calm regimes the priced tail is thin, and shocks come from there "
+                "(Feb 2018, Feb 2020). This test checks it on SPX: each day, the 63-day 10% tail implied by "
+                "**VIX3M**, against what SPX actually did over the next 63 trading days.")
+    spx = _prices(("^GSPC",), "2009-01-01")
+    v3 = _cboe("VIX3M")
+    if "^GSPC" in spx and not v3.empty:
+        bt = K.implied_tail_breach(spx["^GSPC"], v3, 63, 0.10)
+        if len(bt) > 252:
+            terc = pd.qcut(bt["vol"], 3, labels=["low VIX3M", "mid", "high VIX3M"])
+            br = bt.groupby(terc, observed=True)["breach"].mean()
+            st.markdown(uk.kpis([
+                {"label": "BREACH RATE", "value": _pct(bt["breach"].mean()), "sub": "priced: 10%"},
+                *[{"label": f"{k.upper()} REGIME", "value": _pct(v),
+                   "color": T.coral if v > 0.10 else T.teal} for k, v in br.items()],
+                {"label": "WORST OVERSHOOT", "value": _pct(bt["excess"].min()), "color": T.coral,
+                 "sub": f"{bt['excess'].idxmin():%Y-%m-%d}" if bt["excess"].notna().any() else ""},
+            ]), unsafe_allow_html=True)
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(x=bt.index, y=bt["tail"], name="implied 10% tail (63d)",
+                                     line=dict(color=T.amber, width=1.2)))
+            fig.add_trace(go.Scatter(x=bt.index, y=bt["fwd"], name="realised next 63d",
+                                     line=dict(color=T.faint, width=0.9)))
+            b_ = bt[bt["breach"]]
+            fig.add_trace(go.Scatter(x=b_.index, y=b_["fwd"], mode="markers", name="breach",
+                                     marker=dict(size=3, color=T.coral)))
+            fig.add_hline(y=0, line=dict(color=T.line))
+            fig.update_yaxes(tickformat=".0%")
+            up.show(fig, 340, "SPX: priced tail vs what happened (dated at the start of each 63-day window)",
+                    key="cn_t_breach")
+            st.caption("Mid-smile, lognormal reading of VIX3M (it already includes some skew). Breaches cluster: "
+                       "a single episode creates dozens of overlapping breach days. That's why chapter 09 lets the "
+                       "budget bind on the WORST of implied, historical and crisis-replay losses.")
+    else:
+        st.caption("SPX or VIX3M history unavailable right now")
+
+    st.markdown("**Skew against its own history (diagnostic, not a rule).** Comparing today's skew with its own "
+                "past says whether tail fear is unusually high or low. The evidence that this predicts returns "
+                "is mixed. For single stocks, steep put skew has predicted underperformance (Xing, Zhang & Zhao "
+                "2010). For indices, a steep skew often means the market is already hedged, and Cboe SKEW's "
+                "forecasting power for SPX has been weak.")
+    sk = _cboe("SKEW")
+    if not sk.empty:
+        z = K.skew_zscore(sk)
+        fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.6, 0.4], vertical_spacing=0.04)
+        fig.add_trace(go.Scatter(x=sk.index, y=sk, name="Cboe SKEW", line=dict(color=T.violet, width=1)), 1, 1)
+        fig.add_trace(go.Scatter(x=z.index, y=z, name="z vs trailing 3y", line=dict(color=T.amber, width=1),
+                                 fill="tozeroy", fillcolor=up.fill(T.amber, 0.12)), 2, 1)
+        for y_ in (-2, 2):
+            fig.add_hline(y=y_, line=dict(color=T.faint, dash="dot", width=1), row=2, col=1)
+        fig.update_yaxes(title_text="z", row=2, col=1)
+        up.show(fig, 380, f"SPX tail pricing · SKEW {sk.iloc[-1]:.0f}, z {z.iloc[-1]:+.1f}", key="cn_t_skew")
+    pick = st.selectbox("10Δ put / call IV ratio history for", tk, key="cn_t_pick")
+    hs = _surf_hist(pick)
+    if not hs.empty and "tenor" in hs:
+        hs = hs[hs["tenor"] == tenor].sort_values("date")
+    if len(hs) >= 60:
+        ratio = (hs["d0"] / hs["d8"]).set_axis(hs["date"])
+        zr = K.skew_zscore(ratio, window=252, min_periods=60)
+        fig = go.Figure(go.Scatter(x=ratio.index, y=ratio, line=dict(color=T.violet, width=1.2), name=pick))
+        up.show(fig, 260, f"{pick} {tenor}d 10Δ put/call IV · z {zr.iloc[-1]:+.1f}", key="cn_t_ph")
+    else:
+        st.caption(f"{pick}: per-ticker surface history only started 2026-10-29 ({len(hs)} day{'s' if len(hs) != 1 else ''} at {tenor}d). The "
+                   "z-score appears once 60 trading days have built up; until then use the SPX SKEW series above.")
+
+
 # ============================================================== sandbox ======
 def _library_returns() -> dict:
     try:
@@ -527,6 +870,88 @@ def _library_returns() -> dict:
         return out
     except Exception:  # noqa: BLE001
         return {}
+
+
+@st.cache_data(ttl=3600, show_spinner="searching for the most convex mix…", max_entries=16)
+def _convex_cached(H: pd.DataFrame, max_w: float, w0: np.ndarray) -> np.ndarray:
+    return K.max_convexity(H, 0.10, max_w, w0)
+
+
+def _sandbox_budget(tk, picks, lib, R: pd.DataFrame, w: np.ndarray, rule: str) -> None:
+    st.caption("Start from the loss you can sit through, check today's mix against it through three lenses "
+               "(chapter 09), then find the long-only mix with the best upside-to-downside tail (ETG/ETL over "
+               "63-day windows, chapter 10). Last, scale it into the budget with cash.")
+    c1, c2 = st.columns(2)
+    B = c1.slider("drawdown budget", 0.05, 0.60, 0.25, 0.01, key="cn_x_B")
+    mx = c2.slider("max weight per component", 0.2, 1.0, 0.5, 0.05, key="cn_x_mx")
+    full = _prices(tuple(sorted(set(t for t in tk if t in R))), "1995-01-01")
+    pxs = {c: full[c] for c in R.columns if c in full}
+    for p in picks:
+        if p in R:
+            pxs[p] = (1 + lib[p].fillna(0)).cumprod()
+    px = pd.DataFrame(pxs).reindex(columns=R.columns)
+    cr = K.crisis_returns(px)
+    imp = _implied(list(R.columns), 90)
+    etl = [imp.get(c, {}).get("etl", np.nan) for c in R.columns]
+    sign = cr.mean().reindex(R.columns).to_numpy()
+
+    def lens(ww):
+        return K.stress_lenses(ww, R, cr, etl, sign, rule)
+
+    now = lens(w)
+    st.markdown("**Today's mix**")
+    st.markdown(uk.kpis(_lens_kpis(now, B)), unsafe_allow_html=True)
+    H = K.horizon_returns(R, 63, 5)
+    if len(H) < 60:
+        st.caption("need more overlapping history for the tail optimiser")
+        return
+    wc = _convex_cached(H, mx, w)
+    s, Lc = K.fit_to_budget(wc, B, lens)
+    wp = wc * s
+    tn, tp = K.portfolio_tails(w, H), K.portfolio_tails(wp, H)
+    st.markdown("**Most convex mix, sized to the budget**")
+    st.markdown(uk.kpis([
+        {"label": "ETG/ETL TODAY", "value": f"{tn['ratio']:.2f}" if np.isfinite(tn["ratio"]) else "—"},
+        {"label": "ETG/ETL PROPOSED", "value": f"{tp['ratio']:.2f}" if np.isfinite(tp["ratio"]) else "—",
+         "color": T.teal},
+        {"label": "63D SKEW", "value": f"{tn['skew']:+.2f} → {tp['skew']:+.2f}"},
+        {"label": "INVESTED", "value": _pct(s, 0), "sub": f"cash {_pct(1 - s, 0)}"},
+        {"label": "BINDING LOSS", "value": _pct(-Lc["worst"]) if np.isfinite(Lc["worst"]) else "—",
+         "sub": Lc["binding"], "color": T.coral},
+    ]), unsafe_allow_html=True)
+    a, b = st.columns(2)
+    with a:
+        names = list(R.columns) + ["CASH"]
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=names, y=np.r_[w, max(1 - w.sum(), 0)] * 100, name="today",
+                             marker_color=up.fill(T.amber, 0.6)))
+        fig.add_trace(go.Bar(x=names, y=np.r_[wp, 1 - s] * 100, name="proposed", marker_color=T.teal))
+        fig.update_layout(barmode="group", hovermode="x unified")
+        fig.update_yaxes(title_text="% of capital")
+        up.show(fig, 340, "weights: today vs most convex within budget", key="cn_x_bw")
+    with b:
+        ks = ["crisis", "history", "implied"]
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=ks, y=[-now[k] for k in ks], name="today", marker_color=up.fill(T.amber, 0.6)))
+        fig.add_trace(go.Bar(x=ks, y=[-Lc[k] for k in ks], name="proposed", marker_color=T.teal))
+        fig.add_hline(y=-B, line=dict(color=T.coral, dash="dash"), annotation_text="budget",
+                      annotation_font=dict(size=9, color=T.coral))
+        fig.update_layout(barmode="group", hovermode="x unified")
+        fig.update_yaxes(tickformat=".0%", title_text="stressed loss")
+        up.show(fig, 340, "the three lenses vs the budget", key="cn_x_bl")
+    rn = K.run_mix(R, w / w.sum(), rule)["returns"] * w.sum()
+    rp = K.run_mix(R, wc, rule)["returns"] * s
+    fig = go.Figure()
+    for r_, nm, col in ((rn, "today", T.amber), (rp, "proposed", T.teal)):
+        e = (1 + r_).cumprod()
+        fig.add_trace(go.Scatter(x=e.index, y=e, name=f"{nm} · CAGR {_pct(K.stats(r_).get('CAGR'))} · "
+                                 f"max DD {_pct(K.stats(r_).get('MaxDD'))}", line=dict(color=col, width=1.8)))
+    fig.update_yaxes(type="log", title_text="growth of 1")
+    up.show(fig, 320, "today vs proposed (cash at 0%)", key="cn_x_beq")
+    st.caption("In-sample: weights are fitted to the same history they're shown on, and ETG/ETL estimates are "
+               "noisy (chapter 05). Treat the proposal as a direction (more of what paid in tails, less of what "
+               "hurt), not as exact weights. LAB strategies carry no implied tail. Cash is modelled at 0%, so "
+               "the proposed CAGR is understated by the T-bill yield on the cash share.")
 
 
 def sandbox() -> None:
@@ -572,7 +997,10 @@ def sandbox() -> None:
             {"label": "REBALANCE BONUS", "value": _pct(s["CAGR"] - bh["CAGR"], 2), "sub": f"theory {prem * 100:.2f}%/yr"},
             {"label": "TURNOVER", "value": f"{out['turnover_per_year'] * 100:.0f}%/yr"},
         ]), unsafe_allow_html=True)
-        tabs = st.tabs(["EQUITY", "WEIGHTS & RISK", "FRONTIER", "CORRELATION", "ADD A CANDIDATE?"])
+        tabs = st.tabs(["EQUITY", "WEIGHTS & RISK", "FRONTIER", "CORRELATION", "ADD A CANDIDATE?",
+                        "DRAWDOWN BUDGET"])
+        with tabs[5]:
+            _sandbox_budget(tk, picks, lib, R, w, rule)
         with tabs[0]:
             fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.7, 0.3], vertical_spacing=0.03)
             eq = (1 + r).cumprod()
@@ -676,6 +1104,7 @@ def render() -> None:
     ch = st.segmented_control("chapter", CHAPTERS, default=CHAPTERS[0], key="cn_ch",
                               label_visibility="collapsed") or CHAPTERS[0]
     {CHAPTERS[0]: ch_diversify, CHAPTERS[1]: ch_drag, CHAPTERS[2]: ch_shannon, CHAPTERS[3]: ch_add,
-     CHAPTERS[4]: ch_weighting, CHAPTERS[5]: ch_rebalance, CHAPTERS[6]: ch_leverage, CHAPTERS[7]: ch_crises}[ch]()
+     CHAPTERS[4]: ch_weighting, CHAPTERS[5]: ch_rebalance, CHAPTERS[6]: ch_leverage, CHAPTERS[7]: ch_crises,
+     CHAPTERS[8]: ch_budget, CHAPTERS[9]: ch_tails}[ch]()
     i = CHAPTERS.index(ch)
     st.caption(f"chapter {i + 1} of {len(CHAPTERS)} · next: {CHAPTERS[i + 1] if i + 1 < len(CHAPTERS) else 'try the SANDBOX'}")
