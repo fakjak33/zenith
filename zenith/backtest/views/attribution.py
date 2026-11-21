@@ -63,6 +63,23 @@ def _pick_benchmark(spec: StrategySpec) -> str:
 
 
 # ================================================================ ATTRIBUTION
+def causal_labels(bench_ret: pd.Series, periods: int, vix: pd.Series | None = None) -> pd.DataFrame:
+    """Same dimensions as ``attrib.core.regime_labels`` but every label is known on its own day."""
+    from ..regime import detect
+    px = (1 + bench_ret.fillna(0)).cumprod()
+    df = pd.DataFrame({"close": px})
+    n_trend = max(10, int(round(periods * 200 / 252)))
+    w = max(5, int(round(periods * 63 / 252)))
+    out = pd.DataFrame({"trend": detect("trend", df, length=n_trend),
+                        "volatility": detect("vol", df, length=w),
+                        "drawdown": detect("drawdown", df).map({"in drawdown": "drawdown >10%",
+                                                                 "near highs": "near highs"})}, index=px.index)
+    if vix is not None and len(vix):
+        v = vix.reindex(px.index.union(vix.index)).ffill().reindex(px.index)
+        out["VIX"] = pd.cut(v, [0, 15, 20, 30, 1e9], labels=["<15", "15–20", "20–30", "30+"], right=False).astype(object)
+    return out
+
+
 def step(spec: StrategySpec, ins: pd.DataFrame, res, aux: dict) -> None:
     st.markdown(section("ATTRIBUTION — where did the returns come from?", 2), unsafe_allow_html=True)
     key = _pick_benchmark(spec)
@@ -146,12 +163,24 @@ def step(spec: StrategySpec, ins: pd.DataFrame, res, aux: dict) -> None:
         fig.update_layout(hovermode="closest")
         up.show(fig, 420, "monthly returns vs benchmark", key="bt_at_sc")
     with tabs[2]:
-        labels = A.regime_labels(reg_b, p, aux.get("vix") if spec.src == "Market" else None)
-        if spec.src == "Market" and "VIX" not in labels:
-            try:
-                labels = A.regime_labels(reg_b, p, C._market("^VIX")["close"])
-            except Exception:  # noqa: BLE001
-                pass
+        mode = st.radio("labels", ["causal (known at the time)", "ex-post (hindsight)"], horizontal=True,
+                        key="bt_at_regmode",
+                        help="Causal labels use only data available on each day (expanding thresholds), so a "
+                             "difference between regimes is something you could have traded on. Ex-post labels "
+                             "split volatility into terciles of the WHOLE sample — fine for describing where P&L "
+                             "came from, but they peek at the future.")
+        vix_s = None
+        if spec.src == "Market":
+            vix_s = aux.get("vix")
+            if vix_s is None:
+                try:
+                    vix_s = C._market("^VIX")["close"]
+                except Exception:  # noqa: BLE001
+                    vix_s = None
+        if mode.startswith("causal"):
+            labels = causal_labels(reg_b, p, vix_s)
+        else:
+            labels = A.regime_labels(reg_b, p, vix_s)
         tbl = A.by_regime(r, labels, p)
         if tbl.empty:
             st.caption("Not enough history to split by regime.")
@@ -167,14 +196,17 @@ def step(spec: StrategySpec, ins: pd.DataFrame, res, aux: dict) -> None:
             fig.update_annotations(font=dict(size=10, color=T.muted))
             fig.update_yaxes(title_text="Sharpe", col=1)
             fig.update_layout(hovermode="closest")
-            up.show(fig, 340, "sharpe by regime (ex-post labels)", key="bt_at_reg")
+            up.show(fig, 340, f"sharpe by regime ({mode.split(' (')[0]} labels)", key="bt_at_reg")
             show = tbl.copy()
             for k in ("time", "ann_return", "share_of_pnl"):
                 show[k] = show[k].map(lambda v: C.fmt("CAGR", v))
             show["sharpe"] = show["sharpe"].map(lambda v: C.fmt("x", v))
             st.dataframe(show, use_container_width=True, hide_index=True)
-            st.caption("Regimes come from the benchmark's own trend, volatility and drawdown (and VIX). They describe "
-                       "where the P&L was made; they are labelled after the fact, so they are not a trading signal.")
+            st.caption("Regimes come from the benchmark's own trend, volatility and drawdown (and VIX). "
+                       + ("Causal labels: each day's label used only what was known that day (BUILD › REGIMES "
+                          "has more detectors)." if mode.startswith("causal") else
+                          "Ex-post labels are set with hindsight: they describe where the P&L was made, they are "
+                          "not a trading signal."))
     with tabs[3]:
         lt = A.legs(r, res.position, p)
         fig = go.Figure(go.Bar(x=lt["leg"], y=lt["ann_contrib"] * 100,

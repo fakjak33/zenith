@@ -90,7 +90,10 @@ def apply_filters(fc: pd.Series, ohlcv: pd.DataFrame, filters: list[dict],
 TICKER_SYNTH = ("bootstrap", "shuffle", "gbm_fit", "regime_fit")
 # Fields added after specs were first saved; omitted from the hash at these values.
 _LATE_DEFAULTS = {"fixed_pct": 1.0, "risk_pct": 0.01, "scale_by_forecast": True, "max_leverage": 0.0,
-                  "seed": 42, "synth_base": "SPY"}
+                  "seed": 42, "synth_base": "SPY", "ref_ticker": "SPY"}
+
+# Aux series a rule can ask for (Strategy.needs) → the frame column it is joined as.
+AUX_COLUMNS = ("ref_close", "vix", "vix3m")
 
 SIZING_MODES = {
     "fixed_pct": "fixed notional %",
@@ -127,6 +130,7 @@ class StrategySpec:
     max_leverage: float = 0.0           # |notional| / capital cap (0 = none)
     seed: int = 42                      # synthetic data seed
     synth_base: str = "SPY"             # ticker the bootstrap / fitted synthetic kinds learn from
+    ref_ticker: str = "SPY"             # reference ticker for cross-asset indicators (ref_close)
     notes: str = ""                     # hypothesis / goal — not part of the hash
 
     # ---- serialisation
@@ -165,6 +169,8 @@ class StrategySpec:
             d.pop("synth_base", None)
         elif self.name not in TICKER_SYNTH:
             d.pop("synth_base", None)
+        if "ref_close" not in self.needs():
+            d.pop("ref_ticker", None)
         for k, v in _LATE_DEFAULTS.items():
             if k in d and d[k] == v:
                 d.pop(k)
@@ -210,12 +216,33 @@ class StrategySpec:
     def strategy(self):
         return REGISTRY[self.rule](**scale_params_for_tf(self.params, self.tf))
 
+    def needs(self) -> tuple:
+        """Extra frame columns the rule reads (see AUX_COLUMNS)."""
+        cls = REGISTRY.get(self.rule)
+        return tuple(getattr(cls, "needs", ()) or ())
+
+
+def with_aux(ohlcv: pd.DataFrame, aux: dict | None, needs: tuple) -> pd.DataFrame:
+    """OHLCV plus the aux columns a rule needs, aligned causally (last value known at each bar)."""
+    if not needs:
+        return ohlcv
+    aux = aux or {}
+    out = ohlcv.copy()
+    for col in needs:
+        s = aux.get(col)
+        if s is None or len(s) == 0:
+            continue
+        s = s.sort_index()
+        s = s[~s.index.duplicated(keep="last")]
+        out[col] = s.reindex(s.index.union(out.index)).ffill().reindex(out.index)
+    return out
+
 
 def run_spec(spec: StrategySpec, ohlcv: pd.DataFrame, aux: dict | None = None, n_trials: int = 1,
              cost_mult: float = 1.0, whole_contracts: bool = True) -> BacktestResult:
     """Forecast → filters → sizing/buffer/contracts/exits/costs → result."""
     strat = spec.strategy()
-    fc = apply_filters(strat.forecast(ohlcv), ohlcv, spec.filters, aux)
+    fc = apply_filters(strat.forecast(with_aux(ohlcv, aux, spec.needs())), ohlcv, spec.filters, aux)
     return run_single(fc, ohlcv, bt=spec.bt(cost_mult, whole_contracts), risk=spec.risk(), n_trials=n_trials,
                       label=strat.describe())
 
