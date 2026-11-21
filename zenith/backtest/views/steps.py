@@ -27,6 +27,7 @@ from ..robust.shuffle import SYNTH_KINDS, noise_curve, permutation_test, synthet
 from ..robust.walkforward import walk_forward
 from ..spec import StrategySpec, run_spec, split_holdout
 from . import common as C
+from . import validate_panel as VP
 
 LOWER_BETTER = {"MaxDD": False, "Turnover": False}   # MaxDD is negative: higher (closer to 0) is better
 
@@ -113,6 +114,7 @@ def sensitivity(spec: StrategySpec, ins: pd.DataFrame, aux: dict) -> None:
     from .sensitivity_panel import render_results
     pl = render_results(df, df2, metric, knob_label(px), knob_label(py) if py else None, hib, cur_x, "bt_s",
                         log_x=not px.startswith("s:"), cur_y=cur_y)
+    VP.grid_extras(df, metric, knob_label(px), knob_label(py) if py else None)
     if not pl:
         return
     pick = pl["plateau"]
@@ -124,14 +126,16 @@ def sensitivity(spec: StrategySpec, ins: pd.DataFrame, aux: dict) -> None:
         C.queue(**upd)
 
 # =================================================================== ROBUSTNESS
-ROBUST = ["PERMUTATION", "NOISE", "SYNTHETIC", "WALK-FORWARD", "MONTE CARLO", "OTHER INSTRUMENTS"]
+ROBUST = ["PERMUTATION", "NOISE", "SYNTHETIC", "WALK-FORWARD", "MONTE CARLO", "OVERFITTING", "CHALLENGE", "STRESS",
+          "OTHER INSTRUMENTS"]
 
 
 def robustness(spec: StrategySpec, ins: pd.DataFrame, aux: dict, base) -> None:
     sub = st.segmented_control("test", ROBUST, default="PERMUTATION", key="bt_rsub",
                                label_visibility="collapsed") or "PERMUTATION"
     {"PERMUTATION": _perm, "NOISE": _noise, "SYNTHETIC": _synth, "WALK-FORWARD": _wf,
-     "MONTE CARLO": _mc, "OTHER INSTRUMENTS": _others}[sub](spec, ins, aux, base)
+     "MONTE CARLO": _mc, "OVERFITTING": VP.overfit, "CHALLENGE": VP.challenge, "STRESS": VP.stress,
+     "OTHER INSTRUMENTS": _others}[sub](spec, ins, aux, base)
 
 
 def _perm(spec, ins, aux, base):
@@ -281,6 +285,7 @@ def _mc(spec, ins, aux, base):
         {"label": "MAX DD · WORST 5%", "value": f"{boot['MaxDD'].quantile(.05) * 100:.0f}%", "color": T.coral,
          "sub": f"actual {base.stats['MaxDD'] * 100:.0f}%"},
     ]), unsafe_allow_html=True)
+    VP.mc_extras(spec, ins, base)
 
 
 def _others(spec, ins, aux, base):
