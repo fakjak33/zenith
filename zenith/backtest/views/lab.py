@@ -26,7 +26,7 @@ from ..engine import metrics
 from ..engine.trades import extract_trades
 from ..spec import StrategySpec, run_spec, split_holdout
 from . import common as C
-from . import attribution, explorer, steps
+from . import attribution, compose_panel, explorer, steps
 from . import regime_panel as RP
 from .. import glossary as G
 from .attribution import GOALS
@@ -104,12 +104,17 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
         C.window_kpis(rw, bw, p, "b&h")
     names = ["EQUITY", "PRICE & TRADES", "ROLLING", "MONTHLY", "DISTRIBUTION", "COSTS", "STATS", "TRADES",
              "SIZING", "REGIMES"] + (["SEEDS"] if spec.src == "Synthetic" else [])
-    tabs = st.tabs(names + (["CONTRACTS"] if fut else []))
+    extra = ["BLEND"] if spec.mode == "blend" else []
+    tabs = st.tabs(names + extra + (["CONTRACTS"] if fut else []))
+    if extra:
+        with tabs[len(names)]:
+            compose_panel.blend_tab(spec, ins, C.load_aux(spec))
     with tabs[8]:
         C.sizing_panel(spec, ins, res)
     with tabs[9]:
         RP.section_header()
         RP.regimes_tab(spec, ins, res, b, rb_cfg)
+        compose_panel.luck_test(spec, ins, C.load_aux(spec))
     if spec.src == "Synthetic":
         with tabs[10]:
             C.seeds_panel(spec)

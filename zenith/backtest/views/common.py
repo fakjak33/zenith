@@ -225,13 +225,24 @@ def builder() -> StrategySpec:
     st.markdown(section("02 · SIGNAL", 1, help="Pick what decides long / short. CLASSIC RULES are the curated "
                         "Carver-style strategies; the INDICATOR LIBRARY turns any of ~75 indicators into a rule. "
                         "Hover the ? on every control for what it does."), unsafe_allow_html=True)
-    rule, ref = signal_picker()
-    cls = REGISTRY[rule]
-    params, cols = {}, st.columns(2)
-    for i, (pname, spec_t) in enumerate(cls.params.items()):
-        with cols[i % 2]:
-            params[pname] = _num(pname, spec_t, param_key(rule, pname), help=G.param_help(cls, pname) or None)
-    guide(cls)
+    from . import builder_ui as BU
+    smode = st.segmented_control("mode", list(BU.MODES), format_func=lambda m: BU.MODES[m], key="bt_mode",
+                                 default="single", help=BU.MODE_HELP) or "single"
+    blend, conds, ref = [], {}, "SPY"
+    rule = st.session_state.get("bt_rule", "ema")
+    params = {}
+    if smode == "single":
+        rule, ref = signal_picker()
+        cls = REGISTRY[rule]
+        params = BU.rule_params_ui("bt", rule)
+        guide(cls)
+    elif smode == "blend":
+        blend = BU.blend_ui()
+    else:
+        conds = BU.conditions_ui()
+    if smode != "single" and any("ref_close" in (getattr(REGISTRY.get(p["rule"]), "needs", ()) or ())
+                                  for p in blend):
+        ref = st.text_input("reference ticker", "SPY", key="bt_ref").strip().upper() or "SPY"
 
     st.markdown(section("03 · FILTERS", 5, help="Gates that can only remove exposure. Each one you add is "
                         "another trial; the FILTERS step tests whether it earns its place."),
@@ -246,6 +257,10 @@ def builder() -> StrategySpec:
                 with fc[j]:
                     fp[pn] = _num(pn, pt, f"bt_fp_{fkey}_{pn}")
             filters.append({"key": fkey, "on": True, "params": fp})
+
+    st.markdown(section("03b · REGIME RULES", 3, help="Make the strategy regime-aware: filter, size or switch "
+                        "by market regime. Off by default."), unsafe_allow_html=True)
+    regime = BU.regime_rule_ui(src, rule if smode == "single" else None)
 
     st.markdown(section("04 · SIZING & EXITS", 2, help="How big each position is. Pick ONE mode: only its "
                         "own controls are used, and the sentence under it says exactly what you are building."),
@@ -322,6 +337,7 @@ def builder() -> StrategySpec:
                         use_atr_stop=stop, use_atr_tp=tp, atr_stop_mult=stop_k, atr_tp_mult=tp_k,
                         cost_bps=cost, slippage_bps=slip, holdout=int(hold), capital=float(capital),
                         buffer=float(buffer), contract_fee=float(fee), ref_ticker=ref,
+                        mode=smode, blend=blend, conditions=conds, regime=regime,
                         notes=st.session_state.get("bt_notes", ""))
 
 
@@ -498,6 +514,13 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
         w["bt_synth"] = spec.name
     for k, v in spec.params.items():
         w[param_key(spec.rule, k)] = v
+    from . import builder_ui as BU
+    w["bt_mode"] = spec.mode
+    if spec.mode == "blend":
+        w.update(BU.blend_to_widgets(spec.blend))
+    if spec.mode == "conditions":
+        w.update(BU.conds_to_widgets(spec.conditions))
+    w.update(BU.regime_to_widgets(spec.regime, spec.rule))
     on = {f["key"]: f for f in spec.filters if f.get("on", True)}
     for fkey in FILTERS:
         w[f"bt_f_{fkey}"] = fkey in on

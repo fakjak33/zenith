@@ -144,8 +144,12 @@ def _perm(spec, ins, aux, base):
     grid = None
     if mode.startswith("re-opt"):
         params = _rule_params(spec)
-        p = st.selectbox("parameter tuned", params, key="bt_pp")
-        grid = (p, _values_editor(spec, p, "bt_ppv", 6))
+        if params:
+            p = st.selectbox("parameter tuned", params, key="bt_pp")
+            grid = (p, _values_editor(spec, p, "bt_ppv", 6))
+        else:
+            st.caption("BLEND / CONDITIONS strategies have no single rule parameter to re-tune: running with "
+                       "fixed parameters.")
     runs = n * (len(grid[1]) if grid else 1)
     key = f"perm|{spec.hash()}|{n}|{grid}"
     if st.button(f"RUN · {runs} backtests", type="primary", key="bt_prun"):
@@ -216,6 +220,10 @@ def _synth(spec, ins, aux, base):
 def _wf(spec, ins, aux, base):
     st.markdown(section("WALK-FORWARD — re-tune on the past, trade the next slice", 3), unsafe_allow_html=True)
     params = _rule_params(spec)
+    if not params:
+        C.banner(T.amber, "SINGLE RULE ONLY", "re-tuning works on one rule's parameters. BLEND and CONDITIONS "
+                 "strategies have none to tune here — use SENSITIVITY on their sizing/filter knobs instead.")
+        return
     c1, c2 = st.columns(2)
     p = c1.selectbox("parameter to re-tune", params, key="bt_wp")
     folds = c2.slider("folds", 3, 8, 5, key="bt_wf")
