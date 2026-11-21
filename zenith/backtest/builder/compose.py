@@ -152,6 +152,9 @@ def needs_of(spec) -> tuple:
                     ref = r.get(side) or {}
                     if ref.get("src") == "ind":
                         cols |= set(CATALOG[ref["key"]].needs)
+    elif mode == "ml":
+        from ..ml.strategy import needs as ml_needs
+        cols |= ml_needs(getattr(spec, "ml", {}))
     reg = getattr(spec, "regime", {}) or {}
     if reg.get("on"):
         from ..regime import DETECTORS

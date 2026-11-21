@@ -538,7 +538,7 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
     for k, v in spec.params.items():
         w[param_key(spec.rule, k)] = v
     from . import builder_ui as BU
-    w["bt_mode"] = spec.mode
+    w["bt_mode"] = spec.mode if spec.mode in ("single", "blend", "conditions") else "single"   # ML specs live in ML LAB
     if spec.mode == "blend":
         w.update(BU.blend_to_widgets(spec.blend))
     if spec.mode == "conditions":
