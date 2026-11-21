@@ -71,6 +71,11 @@ def render() -> None:
             C.banner(T.coral, "BAD FILE", str(exc))
 
     led = C.ledger()
+    if store:
+        with st.expander("DECAY MONITOR — is a saved strategy still working?"):
+            pick = st.selectbox("strategy", list(store), key="lib_dc_pick")
+            from . import decay_panel
+            decay_panel.render(library.spec_of(store[pick]), "lib_dc")
     st.markdown(section("RESEARCH LEDGER — trials and reveals", 3), unsafe_allow_html=True)
     tr = [{"data + holdout": fam, "trials": len(h), "revealed": "yes" if fam in led["reveals"] else "—"}
           for fam, h in led["trials"].items()]
