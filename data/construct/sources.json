@@ -46,6 +46,24 @@
     {"chapter": "08 CRISES", "cite": "Hurst, B., Ooi, Y. H. & Pedersen, L. (2017). A Century of Evidence on Trend-Following Investing. Journal of Portfolio Management 44(1); Moskowitz, Ooi & Pedersen (2012). Time Series Momentum. JFE 104(2).",
      "use": "Trend following has historically done well in the worst equity drawdowns ('crisis alpha').", "strength": "strong"},
     {"chapter": "08 CRISES", "cite": "Israelov, R. (2017). Pathetic Protection: The Elusive Benefits of Protective Puts. Journal of Alternative Investments 21(2).",
-     "use": "Long-vol / put protection is expensive to carry; size it as insurance, not as an alpha source (see OPTIONS LAB · PPUT calibration).", "strength": "moderate"}
+     "use": "Long-vol / put protection is expensive to carry; size it as insurance, not as an alpha source (see OPTIONS LAB · PPUT calibration).", "strength": "moderate"},
+    {"chapter": "09 DRAWDOWN BUDGET", "cite": "Maymin, P. & Maymin, A. — 'Compounding Through Risk, Not Return', Flirting with Models podcast (Corey Hoffstein).",
+     "use": "Practitioner framing: start from the client's drawdown budget, design everything around it, and allocate forward-looking risk (10-delta tails, 2-3 month tenor) to maximise expected tail gain over expected tail loss.", "strength": "practitioner"},
+    {"chapter": "09 DRAWDOWN BUDGET", "cite": "Magdon-Ismail, M., Atiya, A., Pratap, A. & Abu-Mostafa, Y. (2004). On the Maximum Drawdown of a Brownian Motion. Journal of Applied Probability 41(1).",
+     "use": "Expected maximum drawdown grows with volatility and horizon: the basis for the 'max DD ≈ 2.5-3× vol' rule of thumb over long samples.", "strength": "strong (mathematical)"},
+    {"chapter": "09 DRAWDOWN BUDGET", "cite": "Chekhlov, A., Uryasev, S. & Zabarankin, M. (2005). Drawdown Measure in Portfolio Optimization. International Journal of Theoretical and Applied Finance 8(1).",
+     "use": "Portfolios can be optimised with drawdown (CDaR) as the binding risk constraint instead of variance.", "strength": "strong"},
+    {"chapter": "09 DRAWDOWN BUDGET", "cite": "Grossman, S. & Zhou, Z. (1993). Optimal Investment Strategies for Controlling Drawdowns. Mathematical Finance 3(3).",
+     "use": "With a hard drawdown floor, optimal risky exposure is proportional to the distance from the floor: headroom drives how much risk to run.", "strength": "strong (mathematical)"},
+    {"chapter": "10 TAILS & CONVEXITY", "cite": "Rockafellar, R. T. & Uryasev, S. (2000). Optimization of Conditional Value-at-Risk. Journal of Risk 2(3).",
+     "use": "Expected tail loss (CVaR) is coherent and optimisable from scenarios; ETG is its mirror for the upside tail.", "strength": "strong"},
+    {"chapter": "10 TAILS & CONVEXITY", "cite": "Breeden, D. & Litzenberger, R. (1978). Prices of State-Contingent Claims Implicit in Option Prices. Journal of Business 51(4).",
+     "use": "The risk-neutral density is the second strike-derivative of call prices: how implied ETL/ETG are read off the smile.", "strength": "foundational"},
+    {"chapter": "10 TAILS & CONVEXITY", "cite": "Bakshi, G., Kapadia, N. & Madan, D. (2003). Stock Return Characteristics, Skew Laws, and the Differential Pricing of Individual Equity Options. Review of Financial Studies 16(1).",
+     "use": "Index risk-neutral skew is strongly negative and steeper than for single stocks; skew reflects both tail risk and risk aversion.", "strength": "strong"},
+    {"chapter": "10 TAILS & CONVEXITY", "cite": "Bollerslev, T. & Todorov, V. (2011). Tails, Fears, and Risk Premia. Journal of Finance 66(6).",
+     "use": "Much of the equity and variance risk premia is compensation for left-tail jump risk: risk-neutral tails are fatter than real-world tails on average.", "strength": "strong"},
+    {"chapter": "10 TAILS & CONVEXITY", "cite": "Xing, Y., Zhang, X. & Zhao, R. (2010). What Does the Individual Option Volatility Smirk Tell Us About Future Equity Returns? Journal of Financial and Quantitative Analysis 45(3).",
+     "use": "Steep single-stock put smirks predict underperformance: evidence for skew as a cross-sectional signal; index-level evidence is weaker.", "strength": "strong (single stocks)"}
   ]
 }
