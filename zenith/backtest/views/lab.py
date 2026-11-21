@@ -31,7 +31,7 @@ from . import regime_panel as RP
 from .. import glossary as G
 from .attribution import GOALS
 
-STEPS = ["DEFINE", "EXPLORE", "BUILD", "SENSITIVITY", "ROBUSTNESS", "FILTERS", "ATTRIBUTION", "OUT-OF-SAMPLE"]
+STEPS = ["DEFINE", "EXPLORE", "BUILD", "SENSITIVITY", "ROBUSTNESS", "FILTERS", "ATTRIBUTION", "OUT-OF-SAMPLE", "DECAY"]
 
 _FINDINGS = [
     {"stat": "Fit as little as possible; judge a rule by how it behaves across a whole range of "
@@ -279,6 +279,10 @@ def render() -> None:
     with right:
         if step == "DEFINE":
             step_define(spec)
+            return
+        if step == "DECAY":
+            from . import decay_panel
+            decay_panel.render(spec, "bt_dc")
             return
         try:
             full = C.load(spec)
