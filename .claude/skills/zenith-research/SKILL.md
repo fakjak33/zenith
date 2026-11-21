@@ -1,6 +1,6 @@
 ---
 name: zenith-research
-description: Ingest a research paper or article (URL or PDF) and incorporate it into Zenith's CAS monitor — summarize it, classify which model family it informs, log a registry note, and draft a signal-module scaffold + integration plan for review. Use when the user shares new research/insight they want reflected in Zenith or CAS mode.
+description: Ingest a research paper or article (URL or PDF) and incorporate it into Zenith's CAS monitor — summarize it, classify which model family it informs, log a registry note, and draft a signal-module scaffold + integration plan for review. Use when the user shares new research/insight they want reflected in Zenith or CAS mode. If the goal is a NEW standalone monitored feature/tab built from research (like PRETOM/FMOM/PEAD), use zenith-feature instead.
 ---
 
 # Zenith research intake
