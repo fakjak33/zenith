@@ -130,6 +130,17 @@ def _num(label, spec_tuple, key, help=None):
 
 LIBS = ["CLASSIC RULES", "INDICATOR LIBRARY"]
 
+# one-way (commission bps, slippage bps, note)
+COST_PRESETS = {
+    "custom": (1.0, 1.5, ""),
+    "liquid ETF · retail": (0.0, 2.0, "Zero commission, ~1-2 bp half-spread + impact on SPY/QQQ-class ETFs."),
+    "single stocks · retail": (0.0, 5.0, "Zero commission, wider spreads on mid caps."),
+    "futures · institutional": (0.5, 1.0, "Exchange + broker fees and one tick of slippage on liquid futures."),
+    "crypto · taker": (4.1, 2.0, "Hyperliquid-style taker fee 4.1 bp (MemLabs) plus slippage."),
+    "crypto · maker": (1.2, 0.0, "Maker fee 1.2 bp, no slippage — assumes your limit orders always fill."),
+    "small caps / illiquid": (5.0, 20.0, "Wide spreads and market impact."),
+}
+
 
 def classic_keys() -> list[str]:
     return [k for k, c in REGISTRY.items() if not c.cross_sectional and not k.startswith("i_")]
@@ -322,7 +333,19 @@ def builder() -> StrategySpec:
     stop_k = c1.number_input("stop x ATR", 0.5, 10.0, 3.0, 0.5, key="bt_stopk", disabled=not stop)
     tp_k = c2.number_input("target x ATR", 0.5, 20.0, 6.0, 0.5, key="bt_tpk", disabled=not tp)
 
-    st.markdown(section("05 · COSTS & HOLDOUT", 4), unsafe_allow_html=True)
+    st.markdown(section("05 · COSTS & HOLDOUT", 4, help="Costs are charged on every change in position: "
+                        "commission + slippage, in basis points (1 bp = 0.01%) of the notional traded, on the way in "
+                        "AND the way out. MemLabs shows a 52% win-rate edge surviving maker fees and dying at taker "
+                        "fees — always look at the COSTS tab."), unsafe_allow_html=True)
+    preset = st.selectbox("cost preset", list(COST_PRESETS), key="bt_costp",
+                          help="Typical one-way costs. Pick one to fill the boxes below, or edit them freely.")
+    if preset != "custom" and st.session_state.get("_bt_costp_last") != preset:
+        st.session_state["_bt_costp_last"] = preset
+        st.session_state["bt_cost"], st.session_state["bt_slip"] = COST_PRESETS[preset][:2]
+    elif preset == "custom":
+        st.session_state["_bt_costp_last"] = preset
+    if preset != "custom":
+        st.caption(COST_PRESETS[preset][2])
     c1, c2 = st.columns(2)
     cost = c1.number_input("commission bps", 0.0, 50.0, 1.0, 0.5, key="bt_cost")
     slip = c2.number_input("slippage bps", 0.0, 50.0, 1.5, 0.5, key="bt_slip")
