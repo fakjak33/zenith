@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import streamlit as st
 
+from ...config import THEME as T
 from .. import glossary as G
 from ..builder import OPS, REGIME_USES, SLOT_LABEL, SLOTS, TEMPLATES, sentence
 from ..indicators import CATALOG
@@ -129,7 +130,7 @@ def conditions_ui() -> dict:
             if rows:
                 conds[slot] = {"join": join, "rows": rows}
     lines = sentence(conds)
-    st.markdown("<div style='font-size:0.78rem;border-left:2px solid #2ec4b6;padding-left:0.5rem'>"
+    st.markdown(f"<div style='font-size:0.78rem;border-left:2px solid {T.teal};padding-left:0.5rem'>"
                 + ("<br>".join(C.esc(x) for x in lines) if lines else "No entry rule yet: the strategy stays flat.")
                 + "</div>", unsafe_allow_html=True)
     return conds
