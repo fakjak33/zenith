@@ -91,7 +91,7 @@ TICKER_SYNTH = ("bootstrap", "shuffle", "gbm_fit", "regime_fit")
 # Fields added after specs were first saved; omitted from the hash at these values.
 _LATE_DEFAULTS = {"fixed_pct": 1.0, "risk_pct": 0.01, "scale_by_forecast": True, "max_leverage": 0.0,
                   "seed": 42, "synth_base": "SPY", "ref_ticker": "SPY",
-                  "mode": "single", "blend": [], "conditions": {}, "regime": {}}
+                  "mode": "single", "blend": [], "conditions": {}, "regime": {}, "ml": {}}
 
 # Aux series a rule can ask for (Strategy.needs) → the frame column it is joined as.
 AUX_COLUMNS = ("ref_close", "vix", "vix3m")
@@ -136,6 +136,7 @@ class StrategySpec:
     blend: list = field(default_factory=list)        # [{"rule", "params", "weight"}]
     conditions: dict = field(default_factory=dict)   # {slot: {"join", "rows": [{"a", "op", "b"}]}}
     regime: dict = field(default_factory=dict)       # {"on", "det", "params", "min_bars", "use", "allow", "scale", "switch"}
+    ml: dict = field(default_factory=dict)           # ML LAB model config (mode "ml"; see ml/strategy.py)
     notes: str = ""                     # hypothesis / goal — not part of the hash
 
     # ---- serialisation
@@ -180,6 +181,8 @@ class StrategySpec:
             d.pop("blend", None)
         if self.mode != "conditions":
             d.pop("conditions", None)
+        if self.mode != "ml":
+            d.pop("ml", None)
         if self.mode != "single":
             d.pop("rule", None)
             d.pop("params", None)
@@ -234,6 +237,9 @@ class StrategySpec:
         if self.mode == "conditions":
             from .builder import ConditionStrategy
             return ConditionStrategy(self.conditions, self.tf)
+        if self.mode == "ml":
+            from .ml.strategy import MLStrategy
+            return MLStrategy(self.ml, self.tf)
         return REGISTRY[self.rule](**scale_params_for_tf(self.params, self.tf))
 
     def needs(self) -> tuple:
