@@ -15,12 +15,14 @@ from ... import ui_charts as uc
 from ... import ui_plotly as up
 from ...config import THEME as T
 from ...ui_theme import section
+from .. import glossary as G
 from .. import ledger as lg
 from ..config import FUTURES, caps, is_local
 from ..data.providers import TIMEFRAMES, get_prices, resample_ohlcv
 from ..data.synthetic import KIND_HELP, TICKER_KINDS, from_ticker, generate
 from ..engine import diversify as dv
 from ..engine import metrics
+from ..indicators import CATALOG, FAMILIES
 from ..rules import REGISTRY
 from ..spec import FILTERS, SIZING_MODES, StrategySpec
 
@@ -56,12 +58,30 @@ def load(spec: StrategySpec, name: str | None = None, seed: int | None = None) -
 def load_aux(spec: StrategySpec) -> dict:
     """Side series that filters need (VIX), loaded only when a filter uses them."""
     aux = {}
-    if spec.src == "Market" and any(f["key"] == "vix" and f.get("on") for f in spec.filters):
+    needs = spec.needs()
+    if spec.src != "Market":
+        return aux
+    if any(f["key"] == "vix" and f.get("on") for f in spec.filters) or "vix" in needs:
         try:
             aux["vix"] = _market("^VIX")["close"]
         except Exception:  # noqa: BLE001
             aux["vix"] = None
+    if "vix3m" in needs:
+        try:
+            aux["vix3m"] = _market("^VIX3M")["close"]
+        except Exception:  # noqa: BLE001
+            aux["vix3m"] = None
+    if "ref_close" in needs:
+        try:
+            aux["ref_close"] = _market(spec.ref_ticker)["close"]
+        except Exception:  # noqa: BLE001
+            aux["ref_close"] = None
     return aux
+
+
+def missing_aux(spec: StrategySpec, aux: dict) -> list[str]:
+    """Aux columns the rule needs but could not get (synthetic data or a failed download)."""
+    return [c for c in spec.needs() if aux.get(c) is None]
 
 
 # ---------------------------------------------------------------- saved ----
@@ -108,6 +128,71 @@ def _num(label, spec_tuple, key, help=None):
                                  format="%.2f", help=help))
 
 
+LIBS = ["CLASSIC RULES", "INDICATOR LIBRARY"]
+
+
+def classic_keys() -> list[str]:
+    return [k for k, c in REGISTRY.items() if not c.cross_sectional and not k.startswith("i_")]
+
+
+def rule_label(k: str) -> str:
+    c = REGISTRY[k]
+    ind = getattr(c, "indicator", None)
+    return f"{c.label}  ·  {FAMILIES[ind.family].split(' ')[0]}" if ind else c.label
+
+
+def signal_picker(prefix: str = "bt") -> tuple[str, str]:
+    """Library / family / rule pickers. Returns (rule key, reference ticker)."""
+    cur = st.session_state.get(f"{prefix}_rule", "ema")
+    if f"{prefix}_lib" not in st.session_state:
+        st.session_state[f"{prefix}_lib"] = LIBS[1] if str(cur).startswith("i_") else LIBS[0]
+    lib = st.radio("library", LIBS, horizontal=True, key=f"{prefix}_lib", label_visibility="collapsed")
+    if lib == LIBS[1]:
+        fams = ["all", *FAMILIES]
+        fam = st.selectbox("family", fams, key=f"{prefix}_fam", format_func=lambda f: "ALL FAMILIES" if f == "all"
+                           else FAMILIES[f], help="Indicator families. The rule box below is searchable: type to "
+                                                  "filter.")
+        keys = [f"i_{i.key}" for i in CATALOG.values() if fam == "all" or i.family == fam]
+    else:
+        keys = classic_keys()
+    if st.session_state.get(f"{prefix}_rule") not in keys:
+        st.session_state[f"{prefix}_rule"] = "ema" if "ema" in keys else keys[0]
+    rule = st.selectbox("rule", keys, format_func=rule_label, key=f"{prefix}_rule",
+                        help="Type to search. The GUIDE below explains the selected rule in plain words.")
+    cls = REGISTRY[rule]
+    if cls.plain:
+        st.caption(cls.plain)
+    ref = "SPY"
+    if "ref_close" in (cls.needs or ()):
+        ref = st.text_input("reference ticker", "SPY", key=f"{prefix}_ref",
+                            help="The other asset this cross-asset indicator compares against or lags "
+                                 "(market data only).").strip().upper() or "SPY"
+    if "vix" in (cls.needs or ()):
+        st.caption("Reads Cboe VIX (and VIX3M): market data only — flat on synthetic data.")
+    return rule, ref
+
+
+def guide(cls) -> None:
+    """Plain-English guide for the selected rule (all explainer fields)."""
+    e = cls.explain()
+    with st.expander(f"GUIDE · {e['label']}"):
+        if e.get("plain"):
+            st.markdown(f"**What it is.** {e['plain']}")
+        if e.get("analogy"):
+            st.markdown(f"**{'Signal' if e.get('signal') else 'Analogy'}.** {e['analogy']}")
+        steps = [x for x in e.get("how_it_works") or [] if x]
+        if steps:
+            st.markdown("**How it works.**\n" + "\n".join(f"{i}. {x}" for i, x in enumerate(steps, 1)))
+        if e.get("works_when") and not e.get("signal"):
+            st.markdown(f"**Works when.** {e['works_when']}")
+        if e.get("fails_when"):
+            st.markdown(f"**Fails when.** {e['fails_when']}")
+        if e.get("evidence"):
+            st.markdown(f"**Evidence.** {e['evidence']}")
+        if e.get("video"):
+            st.caption(f"Related video: {e['video']}")
+
+
 def builder() -> StrategySpec:
     """Left-hand block builder → StrategySpec."""
     st.markdown(section("01 · UNIVERSE", 0), unsafe_allow_html=True)
@@ -137,17 +222,16 @@ def builder() -> StrategySpec:
     tf = c1.selectbox("bars", list(TIMEFRAMES), key="bt_tf")
     start_year = c2.number_input("from", 1990, 2024, 2005, key="bt_start")
 
-    st.markdown(section("02 · SIGNAL", 1), unsafe_allow_html=True)
-    keys = [k for k, c in REGISTRY.items() if not c.cross_sectional]
-    rule = st.selectbox("rule", keys, index=keys.index("ema") if "ema" in keys else 0,
-                        format_func=lambda k: REGISTRY[k].label, key="bt_rule")
+    st.markdown(section("02 · SIGNAL", 1, help="Pick what decides long / short. CLASSIC RULES are the curated "
+                        "Carver-style strategies; the INDICATOR LIBRARY turns any of ~75 indicators into a rule. "
+                        "Hover the ? on every control for what it does."), unsafe_allow_html=True)
+    rule, ref = signal_picker()
     cls = REGISTRY[rule]
-    if cls.plain:
-        st.caption(cls.plain)
     params, cols = {}, st.columns(2)
     for i, (pname, spec_t) in enumerate(cls.params.items()):
         with cols[i % 2]:
-            params[pname] = _num(pname, spec_t, param_key(rule, pname))
+            params[pname] = _num(pname, spec_t, param_key(rule, pname), help=G.param_help(cls, pname) or None)
+    guide(cls)
 
     st.markdown(section("03 · FILTERS", 5, help="Gates that can only remove exposure. Each one you add is "
                         "another trial; the FILTERS step tests whether it earns its place."),
@@ -237,7 +321,7 @@ def builder() -> StrategySpec:
                         max_leverage=lev, seed=seed, synth_base=base,
                         use_atr_stop=stop, use_atr_tp=tp, atr_stop_mult=stop_k, atr_tp_mult=tp_k,
                         cost_bps=cost, slippage_bps=slip, holdout=int(hold), capital=float(capital),
-                        buffer=float(buffer), contract_fee=float(fee),
+                        buffer=float(buffer), contract_fee=float(fee), ref_ticker=ref,
                         notes=st.session_state.get("bt_notes", ""))
 
 
@@ -403,7 +487,8 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
          "bt_cap": int(spec.capital), "bt_buf": int(round(spec.buffer * 100)), "bt_stop": spec.use_atr_stop,
          "bt_tp": spec.use_atr_tp, "bt_stopk": float(spec.atr_stop_mult), "bt_tpk": float(spec.atr_tp_mult),
          "bt_cost": float(spec.cost_bps), "bt_slip": float(spec.slippage_bps), "bt_fee": float(spec.contract_fee),
-         "bt_hold": int(spec.holdout), "bt_notes": spec.notes}
+         "bt_hold": int(spec.holdout), "bt_notes": spec.notes,
+         "bt_lib": LIBS[1] if spec.rule.startswith("i_") else LIBS[0], "bt_fam": "all", "bt_ref": spec.ref_ticker}
     if spec.src == "Market":
         if spec.name in QUICK:
             w["bt_quick"] = spec.name
