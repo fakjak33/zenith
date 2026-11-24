@@ -226,7 +226,7 @@ def builder() -> StrategySpec:
     stop_k_now = float(st.session_state.get("bt_stopk", 3.0))
     if mode == "fixed_pct":
         c1, c2 = st.columns([1.4, 1])
-        fpct = c1.slider("notional % of capital", 1, 300, 100, 1, key="bt_fpct",
+        fpct = c1.number_input("notional % of capital", 0.1, 5000.0, 100.0, 5.0, key="bt_fpct",
                          help="Market value of the position as a share of capital. 100% = fully invested, "
                               "no leverage; above 100% is leverage.") / 100
         scale = c2.toggle("scale by signal", False, key="bt_scale",
@@ -238,7 +238,7 @@ def builder() -> StrategySpec:
                    "and a wild market get the same dollars.")
     elif mode == "fixed_risk":
         c1, c2 = st.columns([1.4, 1])
-        risk = c1.slider("risk % of capital per trade", 0.1, 20.0, 1.0, 0.1, key="bt_risk",
+        risk = c1.number_input("risk % of capital per trade", 0.01, 100.0, 1.0, 0.1, key="bt_risk",
                          help="What you lose if the ATR stop is hit. 0.5-2% is the classic range; 10% "
                               "means a handful of straight stop-outs roughly halves the account.") / 100
         scale = c2.toggle("scale by signal", False, key="bt_scale",
@@ -251,7 +251,7 @@ def builder() -> StrategySpec:
             st.caption(f":orange[{risk * 100:.0f}% per trade is very aggressive: losing streaks of 5-10 trades "
                        "are normal for trend rules.]")
     else:
-        tvol = st.slider("target vol %", 5, 60, 20, key="bt_tvol",
+        tvol = st.number_input("target vol %", 0.5, 200.0, 20.0, 0.5, key="bt_tvol",
                          help="The annualised volatility this one position should run at. Carver: 10-25% for "
                               "a single strategy; above about half your Sharpe (as a %) is beyond half-Kelly.") / 100
         zone = ("conservative" if tvol < 0.10 else "typical (Carver uses ~20%)" if tvol <= 0.25
@@ -263,12 +263,13 @@ def builder() -> StrategySpec:
     direction = c1.selectbox("direction", ["both", "long", "short"], key="bt_dir",
                              help="both = follow the forecast either way · long = ignore short signals (go flat) · "
                                   "short = ignore long signals.")
-    lev = float(c2.number_input("max leverage x", 0.0, 20.0, 0.0, 0.5, key="bt_lev",
+    lev = float(c2.number_input("max leverage x", 0.0, 100.0, 0.0, 0.5, key="bt_lev",
                                 help="Caps notional / capital. 0 = no cap. 1 = never borrow."))
     c1, c2 = st.columns(2)
-    capital = c1.number_input("capital $", 10_000, 100_000_000, 1_000_000, 50_000, key="bt_cap",
-                              help="Matters for futures: small accounts can't hold fractional contracts.")
-    buffer = c2.slider("no-trade buffer %", 0, 30, 10 if fut else 0, 5, key="bt_buf",
+    capital = c1.number_input("capital $", 1_000, 10_000_000_000, 1_000_000, 10_000, key="bt_cap",
+                              help="Account size. Matters for futures: small accounts can't hold fractional "
+                                   "contracts.")
+    buffer = c2.number_input("no-trade buffer %", 0.0, 100.0, 10.0 if fut else 0.0, 1.0, key="bt_buf",
                        help="Carver's buffer: only trade when the ideal position moves more than this share of an "
                             "average position away from what you hold. Cuts turnover and costs.") / 100
     c1, c2 = st.columns(2)
@@ -278,18 +279,25 @@ def builder() -> StrategySpec:
                      help="Exit when price moves k × ATR(14) against the position from its best level (a trailing "
                           "stop). Always on under fixed-risk sizing, which is sized from it.")
     tp = c2.toggle("ATR target", key="bt_tp", help="Exit when price moves k × ATR(14) in your favour from entry.")
-    stop_k = c1.number_input("stop x ATR", 0.5, 10.0, 3.0, 0.5, key="bt_stopk", disabled=not stop)
-    tp_k = c2.number_input("target x ATR", 0.5, 20.0, 6.0, 0.5, key="bt_tpk", disabled=not tp)
+    stop_k = c1.number_input("stop x ATR", 0.1, 50.0, 3.0, 0.25, key="bt_stopk",
+                             disabled=not (stop or mode == "fixed_risk"),
+                             help="Stop distance in ATRs from the best price since entry.")
+    tp_k = c2.number_input("target x ATR", 0.1, 100.0, 6.0, 0.25, key="bt_tpk", disabled=not tp,
+                           help="Target distance in ATRs from the entry price.")
+    atr_n = int(st.number_input("ATR period (bars)", 2, 500, 14, 1, key="bt_atrn",
+                                help="Lookback of the average true range used by the stop, the target and "
+                                     "fixed-risk sizing. 14 is Wilder's original.")) \
+        if (stop or tp or mode == "fixed_risk") else 14
 
     st.markdown(section("05 · COSTS & HOLDOUT", 4, help="Trading costs are charged on every change in position. "
                         "The holdout keeps the most recent years unseen until the final, logged reveal."),
                 unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    cost = c1.number_input("commission bps", 0.0, 50.0, 1.0, 0.5, key="bt_cost",
+    cost = c1.number_input("commission bps", 0.0, 500.0, 1.0, 0.5, key="bt_cost",
                            help="Charged on traded notional. 1 bp = 0.01%: $1 per $10,000 traded.")
-    slip = c2.number_input("slippage bps", 0.0, 50.0, 1.5, 0.5, key="bt_slip",
+    slip = c2.number_input("slippage bps", 0.0, 500.0, 1.5, 0.5, key="bt_slip",
                            help="Half the bid-ask spread plus market impact, per side. Liquid ETFs ≈ 1–2 bps.")
-    fee = st.number_input("$ per contract per side", 0.0, 20.0, 2.5, 0.25, key="bt_fee",
+    fee = st.number_input("$ per contract per side", 0.0, 100.0, 2.5, 0.25, key="bt_fee",
                           help="Broker + exchange fee per futures contract, each way.") if fut else 2.5
     lock = lock_input("bt")
     return StrategySpec(src=src, name=name, tf=tf, start_year=start_date.year, rule=rule, params=params,
@@ -297,6 +305,7 @@ def builder() -> StrategySpec:
                         fixed_pct=float(fpct), risk_pct=float(risk), scale_by_forecast=bool(scale),
                         max_leverage=lev, seed=seed, synth_base=base,
                         use_atr_stop=stop, use_atr_tp=tp, atr_stop_mult=stop_k, atr_tp_mult=tp_k,
+                        atr_period=atr_n,
                         cost_bps=cost, slippage_bps=slip, holdout=0, lock_years=float(lock),
                         start_date=_iso_start(start_date), end_date=_iso_end(end_date),
                         capital=float(capital), buffer=float(buffer), contract_fee=float(fee),
@@ -393,14 +402,18 @@ def bench(close: pd.Series, strat: pd.Series, on: bool | None = None) -> pd.Seri
     return match_vol(close.pct_change(), strat, on)
 
 
-def lock_band(fig: go.Figure, a, b, rows: int = 1) -> None:
-    """Grey band over the locked out-of-sample span (no data drawn there until it is revealed)."""
+def lock_band(fig: go.Figure, a, b, x0=None, rows: int = 2) -> None:
+    """Grey band over the locked out-of-sample span (no data drawn there until it is revealed).
+    ``x0``: first date on the chart, so the x axis can be pinned to [x0, b] (Plotly ignores shapes when
+    autoranging); the label goes on the top panel only."""
     if a is None or b is None or pd.Timestamp(b) <= pd.Timestamp(a):
         return
-    fig.add_vrect(x0=a, x1=b, fillcolor=up.fill(T.faint, 0.16), line_width=0,
-                  annotation_text="LOCKED · not in stats · reveal in OUT-OF-SAMPLE", annotation_position="top left",
-                  annotation_font=dict(size=9, color=T.faint))
-    fig.update_xaxes(range=[None, pd.Timestamp(b)])
+    for row in range(1, rows + 1):
+        kw = dict(annotation_text="LOCKED · not in stats · reveal in OUT-OF-SAMPLE", annotation_position="top left",
+                  annotation_font=dict(size=9, color=T.faint)) if row == 1 else {}
+        fig.add_vrect(x0=a, x1=b, fillcolor=up.fill(T.faint, 0.16), line_width=0, row=row, col=1, **kw)
+    if x0 is not None:
+        fig.update_xaxes(range=[pd.Timestamp(x0), pd.Timestamp(b)])
 
 
 def equity_fig(r: pd.Series, b: pd.Series, gross: pd.Series | None = None,
@@ -424,7 +437,7 @@ def equity_fig(r: pd.Series, b: pd.Series, gross: pd.Series | None = None,
                       annotation_text="OUT-OF-SAMPLE", annotation_position="top left",
                       annotation_font=dict(size=9, color=T.violet))
     if locked_to is not None and len(r):
-        lock_band(fig, r.index[-1], locked_to)
+        lock_band(fig, r.index[-1], locked_to, x0=r.index[0])
     fig.update_yaxes(type="log", title_text="growth of 1", row=1, col=1)
     fig.update_yaxes(tickformat=".0%", title_text="drawdown", row=2, col=1)
     return fig
@@ -439,7 +452,7 @@ def price_fig(ohlcv: pd.DataFrame, res, strat, trades: pd.DataFrame,
     if locked_px is not None and len(locked_px):
         fig.add_trace(go.Scatter(x=locked_px.index, y=locked_px, name="close (locked span)",
                                  line=dict(color=T.faint, width=1)), 1, 1)
-        lock_band(fig, locked_px.index[0], locked_px.index[-1])
+        lock_band(fig, locked_px.index[0], locked_px.index[-1], x0=close.index[0] if len(close) else None)
     for i, (lbl, s) in enumerate(strat.indicator_lines(ohlcv).items()):
         fig.add_trace(go.Scatter(x=s.index, y=s, name=lbl, line=dict(color=T.cat[(i + 1) % len(T.cat)], width=1)),
                       1, 1)
@@ -515,11 +528,12 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
     end = spec.end_ts()
     w = {"bt_src": spec.src, "bt_tf": spec.tf, "bt_start": spec.start_ts().date(),
          "bt_end": end.date() if end is not None else _dt.date.today(), "bt_rule": spec.rule,
-         "bt_size": spec.sizing_mode, "bt_tvol": int(round(spec.target_vol * 100)), "bt_dir": spec.direction,
-         "bt_fpct": int(round(spec.fixed_pct * 100)), "bt_risk": float(round(spec.risk_pct * 100, 1)),
+         "bt_size": spec.sizing_mode, "bt_tvol": float(round(spec.target_vol * 100, 6)),
+         "bt_dir": spec.direction, "bt_atrn": int(spec.atr_period),
+         "bt_fpct": float(round(spec.fixed_pct * 100, 6)), "bt_risk": float(round(spec.risk_pct * 100, 6)),
          "bt_scale": bool(spec.scale_by_forecast), "bt_lev": float(spec.max_leverage),
          "bt_seed": int(spec.seed), "bt_base": spec.synth_base,
-         "bt_cap": int(spec.capital), "bt_buf": int(round(spec.buffer * 100)), "bt_stop": spec.use_atr_stop,
+         "bt_cap": int(spec.capital), "bt_buf": float(round(spec.buffer * 100, 6)), "bt_stop": spec.use_atr_stop,
          "bt_tp": spec.use_atr_tp, "bt_stopk": float(spec.atr_stop_mult), "bt_tpk": float(spec.atr_tp_mult),
          "bt_cost": float(spec.cost_bps), "bt_slip": float(spec.slippage_bps), "bt_fee": float(spec.contract_fee),
          "bt_lock": float(spec.lock_years if spec.lock_years > 0 else (2.0 if spec.holdout else 0.0)),

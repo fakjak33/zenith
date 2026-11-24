@@ -83,7 +83,7 @@ def test_hash_stable_for_old_specs():
     # a spec saved before the new fields existed keeps its hash
     old = {k: v for k, v in StrategySpec().to_dict().items()
            if k not in ("fixed_pct", "risk_pct", "scale_by_forecast", "max_leverage", "seed", "synth_base",
-                         "start_date", "end_date", "lock_years")}
+                         "start_date", "end_date", "lock_years", "atr_period")}
     import hashlib
     import json
     old.pop("notes")
