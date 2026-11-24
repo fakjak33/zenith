@@ -62,6 +62,18 @@ SIZING = {
     "premium": "premium budget: spend this % of equity on each trade's net debit",
     "risk": "max-loss budget: size so the worst case at expiry loses this % of equity",
     "notional": "notional: control this % of equity in underlying notional per trade",
+    "contracts": "fixed contracts: open this many contracts every time",
+    "premium_usd": "$ premium: spend this many dollars on each entry's net debit (credit trades: $ max loss)",
+    "risk_usd": "$ max loss: size so the worst case at expiry loses this many dollars",
+    "notional_usd": "$ notional: control this many dollars of underlying per entry",
+}
+USD_SIZING = ("contracts", "premium_usd", "risk_usd", "notional_usd")
+
+ENTRY = {
+    "when_flat": "every day a position slot is free",
+    "weekly": "once a week, on the chosen weekday (next trading day if it's a holiday)",
+    "monthly": "once a month, on the Nth trading day",
+    "every_n": "every N trading days",
 }
 
 
@@ -84,6 +96,21 @@ class OptionStrategy:
     max_hold: int = 0            # close after this many calendar days (0 = no limit)
     delta_exit: float = 0.0      # close when |net delta| per unit exceeds this (0 = off)
     filters: dict = field(default_factory=dict)   # entry gates, see FILTER_KEYS
+    # ---- position management (the defaults reproduce the original one-position-at-a-time engine)
+    entry: str = "when_flat"     # see ENTRY
+    entry_weekday: int = 0       # weekly: 0 = Mon … 4 = Fri
+    entry_day: int = 1           # monthly: open on the Nth trading day of the month
+    entry_every: int = 5         # every_n: open every N trading days
+    max_open: int = 1            # positions allowed open at once (ladders when > 1)
+    roll_dte: int = 0            # close at this many days to the front expiry and reopen the same day (0 = off)
+    roll_ignores_filters: bool = True   # a roll reopens even when the entry filters say no
+    # ---- account (capital 0 = equity normalised to 1, the original returns-only mode)
+    capital: float = 0.0         # $ in the options sleeve
+    contracts: str = "fractional"   # "whole": round each entry down to whole contracts of `multiplier` units
+    multiplier: float = 100.0    # underlying units per contract
+    size_usd: float = 0.0        # $ budget for the *_usd sizing modes
+    size_contracts: int = 0      # "contracts" sizing: contracts per entry
+    cash_check: bool = True      # with capital > 0: never spend more cash on debits than the sleeve has free
 
 
 FILTER_KEYS = {
@@ -264,6 +291,9 @@ class OptionResult:
     costs: pd.Series
     label: str = "MODELED"
     gate: pd.Series | None = None  # True where the entry filters allowed a new position
+    positions: pd.Series | None = None    # positions open at each close
+    contracts: pd.Series | None = None    # contracts open at each close (units / multiplier)
+    skipped: dict = field(default_factory=dict)   # entries not taken, by reason
 
 
 # ------------------------------------------------------------- strikes ----
@@ -392,6 +422,15 @@ def _trade_ok(f: dict, net_pct: float, delta: float, cw: float | None) -> bool:
 def _units(strat: OptionStrategy, V: float, s: float, legs: list[dict], book: float) -> float:
     """Underlying units per contract-unit for a new position under the strategy's sizing."""
     mode, b = strat.sizing, strat.size_pct
+    if mode == "contracts":
+        return max(int(strat.size_contracts), 0) * strat.multiplier
+    if mode in USD_SIZING:
+        usd = max(float(strat.size_usd), 0.0)
+        if mode == "premium_usd" and book > 1e-9:
+            return usd / book
+        if mode in ("premium_usd", "risk_usd"):
+            return usd / max_loss_per_unit(legs, book, s, strat.stock)
+        return usd / s
     if mode == "premium" and book > 1e-9:
         return b * V / book
     if mode in ("risk", "premium"):
@@ -399,6 +438,29 @@ def _units(strat: OptionStrategy, V: float, s: float, legs: list[dict], book: fl
     if mode == "notional" and b > 0:
         return b * V / s
     return V / s                                           # collateral
+
+
+def entry_schedule(strat: OptionStrategy, idx: pd.DatetimeIndex) -> np.ndarray:
+    """Days on which the schedule allows a NEW position (slots and filters are checked separately)."""
+    n = len(idx)
+    if strat.entry == "weekly":
+        wd = np.asarray(idx.weekday)
+        wk = np.asarray(idx.to_period("W-SUN").astype(str))
+        out = np.zeros(n, bool)
+        done = None
+        for i in range(n):
+            if wk[i] != done and wd[i] >= int(strat.entry_weekday):
+                out[i], done = True, wk[i]
+        return out
+    if strat.entry == "monthly":
+        ym = pd.Series(idx.year * 100 + idx.month, index=idx)
+        k = ym.groupby(ym).cumcount().to_numpy() + 1
+        last = ym.groupby(ym).transform("size").to_numpy()
+        want = np.minimum(max(int(strat.entry_day), 1), last)       # short months: the last trading day
+        return k == want
+    if strat.entry == "every_n":
+        return (np.arange(n) % max(int(strat.entry_every), 1)) == 0
+    return np.ones(n, bool)
 
 
 # ------------------------------------------------------------- simulator ----
@@ -422,13 +484,15 @@ def simulate(strat: OptionStrategy, S: pd.Series, term: pd.DataFrame, skew: pd.S
     gate_np = gate.to_numpy()
     filt = dict(strat.filters or {})
 
-    V = 1.0
-    open_legs: list[dict] = []
-    units = 0.0
-    entry_book = 0.0
-    opened_at = None
+    sched = entry_schedule(strat, idx)
+    whole = strat.contracts == "whole"
+    mult = float(strat.multiplier) if strat.multiplier > 0 else 1.0
+    V = float(strat.capital) if strat.capital > 0 else 1.0
+    positions: list[dict] = []     # {"legs", "units", "entry_book", "prev", "opened", "trade"}
+    stock_units = 0.0              # units the stock leg is sized on (the last positions', kept while flat)
     eq, rets, cost_s, net_delta, net_vega, trades = [], [], [], [], [], []
-    prev_val = 0.0
+    n_open, n_ctr = [], []
+    skipped: dict[str, int] = {}
     tv = term.to_numpy(float)
     Sv, skv, rfv, qv, scv = (S.to_numpy(float), skew.to_numpy(float), rf.to_numpy(float), q.to_numpy(float),
                              scale.to_numpy(float))
@@ -456,19 +520,50 @@ def simulate(strat: OptionStrategy, S: pd.Series, term: pd.DataFrame, skew: pd.S
             tot += max(strat.spread_pct * v, strat.min_spread_bps / 1e4 * s) * L["leg"].qty
         return tot
 
+    def skip(why):
+        skipped[why] = skipped.get(why, 0) + 1
+
+    def price_new(i, t, s):
+        """Legs + net book for a position opened at today's close, or None."""
+        exp0 = expiry_for(t, strat.dte)
+        if exp0 is None:
+            return None
+        T0 = (exp0 - t).days / 365.0
+        atm0 = atm_vol(tv[i], T0) * scv[i] * strat.atm_ratio
+        if not np.isfinite(atm0):
+            return None
+        legs, book, prior = [], 0.0, []
+        for leg in strat.legs:
+            exp = exp0 if not leg.dte else expiry_for(t, leg.dte)
+            if exp is None:
+                return None
+            T = max((exp - t).days, 1) / 365.0
+            atm = atm_vol(tv[i], T) * scv[i] * strat.atm_ratio
+            fwd_s = s * np.exp(-qv[i] * T)              # dividend-adjusted spot
+            K = _strike(leg, fwd_s if leg.rule in ("delta", "premium") else s, T, atm, rfv[i], skv[i], prior)
+            sig = float(smile(atm, s, K, T, skv[i]))
+            v = float(price(leg.kind == "call", fwd_s, K, T, sig, rfv[i]))
+            legs.append({"leg": leg, "K": K, "expiry": exp, "sig0": sig, "v0": v})
+            prior.append(K)
+            book += leg.side * leg.qty * v
+        return legs, book, exp0, atm0
+
     for i, t in enumerate(idx):
         day_cost = 0.0
         pnl = 0.0
         s = Sv[i]
-        # 1) mark existing legs and manage
-        if open_legs:
-            vals = leg_values(i, open_legs)
-            book = float(sum(L["leg"].side * L["leg"].qty * v for L, v in zip(open_legs, vals)))
-            pnl += units * (book - prev_val)
-            prev_val = book
-            front = min(L["expiry"] for L in open_legs)
-            gain = book - entry_book                        # P&L per unit since open
-            basis = abs(entry_book)                         # credit received or debit paid
+        rolls = 0
+        # 1) mark existing positions and manage each one
+        keep = []
+        for P in positions:
+            legs = P["legs"]
+            vals = leg_values(i, legs)
+            book = float(sum(L["leg"].side * L["leg"].qty * v for L, v in zip(legs, vals)))
+            pnl += P["units"] * (book - P["prev"])
+            P["prev"] = book
+            front = min(L["expiry"] for L in legs)
+            gain = book - P["entry_book"]                   # P&L per unit since open
+            basis = abs(P["entry_book"])                    # credit received or debit paid
             reason = None
             if front <= t:
                 reason = "expiry"
@@ -476,73 +571,99 @@ def simulate(strat: OptionStrategy, S: pd.Series, term: pd.DataFrame, skew: pd.S
                 reason = "take profit"
             elif strat.stop_mult > 0 and basis > 0 and -gain >= strat.stop_mult * basis:
                 reason = "stop"
+            elif strat.roll_dte > 0 and (front - t).days <= strat.roll_dte:
+                reason = "roll"
             elif strat.exit_dte > 0 and (front - t).days <= strat.exit_dte:
                 reason = "time exit"
-            elif strat.max_hold > 0 and opened_at is not None and (t - opened_at).days >= strat.max_hold:
+            elif strat.max_hold > 0 and (t - P["opened"]).days >= strat.max_hold:
                 reason = "max hold"
             elif strat.delta_exit > 0:
                 d = 0.0
-                for L in open_legs:
+                for L in legs:
                     T = max((L["expiry"] - t).days, 0) / 365.0
                     g = greeks(L["leg"].kind == "call", s, L["K"], T, L["sig0"], rfv[i])
                     d += float(g["delta"]) * L["leg"].side * L["leg"].qty
                 if abs(d + strat.stock) > strat.delta_exit:
                     reason = "delta exit"
             if reason:
-                day_cost += half_spread(vals, open_legs, s, alive_only=True, t=t) * units
-                trades[-1].update({"close": t.date(), "reason": reason, "days": (t - opened_at).days,
-                                   "pnl_per_unit_%": round(gain / Sv[i] * 100, 3),
-                                   "pnl_%_equity": round(units * gain / max(V, 1e-12) * 100, 3)})
-                open_legs, prev_val = [], 0.0
+                exit_cost = half_spread(vals, legs, s, alive_only=True, t=t) * P["units"]
+                day_cost += exit_cost
+                rolls += reason == "roll"
+                tr = P["trade"]
+                tr.update({"close": t.date(), "reason": reason, "days": (t - P["opened"]).days,
+                           "pnl_per_unit_%": round(gain / Sv[i] * 100, 3),
+                           "pnl_%_equity": round(P["units"] * gain / max(V, 1e-12) * 100, 3),
+                           "pnl_%_premium": round(gain / basis * 100, 1) if basis > 1e-12 else None})
+                if strat.capital > 0:
+                    tr.update({"exit_value_$": round(book * P["units"], 2),
+                               "pnl_$": round(P["units"] * gain - exit_cost - tr.get("_entry_cost", 0.0), 2)})
+            else:
+                keep.append(P)
+        positions = keep
         # 2) stock leg and collateral interest (on yesterday's equity)
         if i > 0:
-            if units and strat.stock:
-                pnl += strat.stock * stock_ret.iloc[i] * units * Sv[i - 1]
+            if stock_units and strat.stock:
+                pnl += strat.stock * stock_ret.iloc[i] * stock_units * Sv[i - 1]
             cash_rate = rfv[i - 1] / 252.0
-            stock_notional = strat.stock * units * Sv[i - 1] if (units and strat.stock) else 0.0
+            stock_notional = strat.stock * stock_units * Sv[i - 1] if (stock_units and strat.stock) else 0.0
             pnl += cash_rate * (V - stock_notional)
-        # 3) open a new cycle
-        if not open_legs and gate_np[i] and i < len(idx) - 2:
-            exp0 = expiry_for(t, strat.dte)
-            if exp0 is not None:
-                T0 = (exp0 - t).days / 365.0
-                atm0 = atm_vol(tv[i], T0) * scv[i] * strat.atm_ratio
-                if np.isfinite(atm0):
-                    legs, book, prior = [], 0.0, []
-                    for leg in strat.legs:
-                        exp = exp0 if not leg.dte else expiry_for(t, leg.dte)
-                        if exp is None:
-                            break
-                        T = max((exp - t).days, 1) / 365.0
-                        atm = atm_vol(tv[i], T) * scv[i] * strat.atm_ratio
-                        fwd_s = s * np.exp(-qv[i] * T)              # dividend-adjusted spot
-                        K = _strike(leg, fwd_s if leg.rule in ("delta", "premium") else s, T, atm, rfv[i], skv[i],
-                                    prior)
-                        sig = float(smile(atm, s, K, T, skv[i]))
-                        v = float(price(leg.kind == "call", fwd_s, K, T, sig, rfv[i]))
-                        legs.append({"leg": leg, "K": K, "expiry": exp, "sig0": sig, "v0": v})
-                        prior.append(K)
-                        book += leg.side * leg.qty * v
-                    else:
-                        net_pct = -book / s * 100
-                        d0 = strat.stock + sum(
-                            float(greeks(L["leg"].kind == "call", s, L["K"], (L["expiry"] - t).days / 365.0,
-                                         L["sig0"], rfv[i])["delta"]) * L["leg"].side * L["leg"].qty for L in legs)
-                        w = _width(legs)
-                        cw = (-book / w) if (w > 0 and book < 0) else None
-                        if _trade_ok(filt, net_pct, d0, cw):
-                            V_now = V + pnl - day_cost
-                            units = _units(strat, V_now, s, legs, book)
-                            open_legs, prev_val, entry_book, opened_at = legs, book, book, t
-                            day_cost += half_spread([L["v0"] for L in legs], legs, s) * units
-                            trades.append({"open": t.date(), "expiry": exp0.date(), "spot": round(s, 2),
-                                           "strikes": " / ".join(
-                                               f"{L['leg'].side * L['leg'].qty:+g}{L['leg'].kind[0].upper()}"
-                                               f"{L['K']:.0f}" + (f"@{(L['expiry'] - t).days}d" if L['leg'].dte else "")
-                                               for L in legs),
-                                           "net_credit_%": round(net_pct, 3), "delta": round(d0, 3),
-                                           "atm_iv": round(atm0 * 100, 1),
-                                           "size_x_notional": round(units * s / max(V_now, 1e-12), 3)})
+        # 3) open new positions: the scheduled entry (filters apply) plus one replacement per roll
+        if i < len(idx) - 2:
+            want = ([bool(gate_np[i])] if sched[i] else []) + \
+                   [bool(gate_np[i]) or strat.roll_ignores_filters] * rolls
+            for ok in want:
+                if not ok:
+                    continue
+                if len(positions) >= max(int(strat.max_open), 1):
+                    skip("max positions open")
+                    break
+                got = price_new(i, t, s)
+                if got is None:
+                    break
+                legs, book, exp0, atm0 = got
+                net_pct = -book / s * 100
+                d0 = strat.stock + sum(
+                    float(greeks(L["leg"].kind == "call", s, L["K"], (L["expiry"] - t).days / 365.0,
+                                 L["sig0"], rfv[i])["delta"]) * L["leg"].side * L["leg"].qty for L in legs)
+                w = _width(legs)
+                cw = (-book / w) if (w > 0 and book < 0) else None
+                if not _trade_ok(filt, net_pct, d0, cw):
+                    skip("trade-level filter")
+                    continue
+                V_now = V + pnl - day_cost
+                units = _units(strat, V_now, s, legs, book)
+                if strat.capital > 0 and strat.cash_check and book > 0:
+                    held = sum(max(P["prev"], 0.0) * P["units"] for P in positions)
+                    free = V_now - held
+                    unit_cost = book + half_spread([L["v0"] for L in legs], legs, s)
+                    if units * unit_cost > free:
+                        units = max(free, 0.0) / unit_cost
+                        if units <= 0:
+                            skip("not enough cash")
+                            continue
+                if whole:
+                    units = float(np.floor(units / mult + 1e-9) * mult)
+                    if units <= 0:
+                        skip("under one contract")
+                        continue
+                entry_cost = half_spread([L["v0"] for L in legs], legs, s) * units
+                day_cost += entry_cost
+                tr = {"open": t.date(), "expiry": exp0.date(), "spot": round(s, 2),
+                      "strikes": " / ".join(
+                          f"{L['leg'].side * L['leg'].qty:+g}{L['leg'].kind[0].upper()}"
+                          f"{L['K']:.0f}" + (f"@{(L['expiry'] - t).days}d" if L['leg'].dte else "")
+                          for L in legs),
+                      "net_credit_%": round(net_pct, 3), "delta": round(d0, 3),
+                      "atm_iv": round(atm0 * 100, 1),
+                      "size_x_notional": round(units * s / max(V_now, 1e-12), 3)}
+                if strat.capital > 0:
+                    tr.update({"contracts": round(units / mult, 2), "premium_$": round(book * units, 2),
+                               "_entry_cost": entry_cost})
+                trades.append(tr)
+                positions.append({"legs": legs, "units": units, "entry_book": book, "prev": book, "opened": t,
+                                  "trade": tr})
+        if positions:
+            stock_units = sum(P["units"] for P in positions)
         # 4) book the day
         V_new = V + pnl - day_cost
         rets.append(V_new / V - 1.0 if V > 0 else 0.0)
@@ -550,21 +671,27 @@ def simulate(strat: OptionStrategy, S: pd.Series, term: pd.DataFrame, skew: pd.S
         eq.append(V)
         cost_s.append(day_cost / (V_new + day_cost) if V_new + day_cost > 0 else 0.0)
         # exposures per $ of equity
-        d = strat.stock * units * s / V if units else 0.0
+        d = strat.stock * stock_units * s / V if stock_units else 0.0
         vg = 0.0
-        if open_legs:
-            for L in open_legs:
+        for P in positions:
+            for L in P["legs"]:
                 T = max((L["expiry"] - t).days, 0) / 365.0
                 g = greeks(L["leg"].kind == "call", s * np.exp(-qv[i] * T), L["K"], T, L["sig0"], rfv[i])
-                d += float(g["delta"]) * L["leg"].side * L["leg"].qty * units * s / V
-                vg += float(g["vega"]) * L["leg"].side * L["leg"].qty * units / V
+                d += float(g["delta"]) * L["leg"].side * L["leg"].qty * P["units"] * s / V
+                vg += float(g["vega"]) * L["leg"].side * L["leg"].qty * P["units"] / V
         net_delta.append(d)
         net_vega.append(vg)
+        n_open.append(len(positions))
+        n_ctr.append(sum(P["units"] for P in positions) / mult)
 
+    for tr in trades:
+        tr.pop("_entry_cost", None)
     r = pd.Series(rets, index=idx)
     return OptionResult(returns=r, equity=pd.Series(eq, index=idx), trades=pd.DataFrame(trades),
                         exposure=pd.DataFrame({"delta": net_delta, "vega_per_volpt": net_vega}, index=idx),
-                        costs=pd.Series(cost_s, index=idx), label=f"{strat.name} · MODELED", gate=gate)
+                        costs=pd.Series(cost_s, index=idx), label=f"{strat.name} · MODELED", gate=gate,
+                        positions=pd.Series(n_open, index=idx), contracts=pd.Series(n_ctr, index=idx),
+                        skipped=skipped)
 
 
 # ------------------------------------------------------------------ 0DTE ----
@@ -599,7 +726,8 @@ def simulate_0dte(strat: OptionStrategy, ohlc: pd.DataFrame, iv1d: pd.Series, sk
             tot += L["leg"].side * L["leg"].qty * float(price(L["leg"].kind == "call", s, L["K"], T, sig, r))
         return tot
 
-    V = 1.0
+    V = float(strat.capital) if strat.capital > 0 else 1.0
+    mult = float(strat.multiplier) if strat.multiplier > 0 else 1.0
     eq, rets, costs, trades = [], [], [], []
     for i, t in enumerate(idx):
         pnl, cost = 0.0, 0.0
@@ -623,6 +751,8 @@ def simulate_0dte(strat: OptionStrategy, ohlc: pd.DataFrame, iv1d: pd.Series, sk
                 for L in legs:
                     L["expiry"] = t
                 units = _units(strat, V, s0, legs, b0)
+                if strat.contracts == "whole":
+                    units = float(np.floor(units / mult + 1e-9) * mult)
                 spread = lambda vals: sum(max(strat.spread_pct * v, strat.min_spread_bps / 1e4 * s0) * L["leg"].qty  # noqa: E731
                                           for v, L in zip(vals, legs))
                 cost += spread([L["v0"] for L in legs]) * units
@@ -733,3 +863,28 @@ def calibration_tier(cal: dict) -> tuple[str, str]:
     if cal["corr"] > 0.75 and cal["tracking_error"] < 0.08:
         return "B", "model tracks the index's shape; levels drift — treat absolute returns as approximate"
     return "C", "model and index diverge — use for relative comparisons only"
+
+
+# --------------------------------------------------------------- account ----
+def account_equity(sleeve: pd.Series, holdings: dict, amounts: dict, cash: float,
+                   rf: pd.Series | None = None) -> pd.DataFrame:
+    """Dollar account = buy-and-hold holdings + the options sleeve + idle cash earning the T-bill rate.
+
+    ``sleeve``: the options sleeve's $ equity (``OptionResult.equity`` with ``capital`` set).
+    ``holdings``: ticker → total-return price series; ``amounts``: ticker → $ invested on day one."""
+    idx = sleeve.index
+    cols = {}
+    for t, px in (holdings or {}).items():
+        p = px.reindex(idx).ffill().bfill()
+        if p.notna().any() and float(p.iloc[0]) > 0:
+            cols[t] = float(amounts.get(t, 0.0)) * p / float(p.iloc[0])
+    hold = pd.DataFrame(cols, index=idx) if cols else pd.DataFrame(index=idx)
+    daily = (rf.reindex(idx).ffill().fillna(0.0) / 252.0).shift(1).fillna(0.0) if rf is not None \
+        else pd.Series(0.0, index=idx)
+    cash_s = float(cash) * (1 + daily).cumprod()
+    out = pd.DataFrame({"holdings": hold.sum(axis=1) if cols else 0.0, "options": sleeve, "cash": cash_s},
+                       index=idx)
+    out["total"] = out[["holdings", "options", "cash"]].sum(axis=1)
+    for t in hold:
+        out[f"h:{t}"] = hold[t]
+    return out
