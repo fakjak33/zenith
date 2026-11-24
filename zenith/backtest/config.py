@@ -31,7 +31,9 @@ SCALAR_WARMUP = 64              # bars before the expanding forecast scalar is t
 # day-based strategy parameters when the candle frequency changes.
 TIMEFRAME_DAYS = {"Daily": 1, "Weekly": 5, "Monthly": 21}
 TIME_SCALED_PARAMS = {"fast", "slow", "lookback", "smooth", "skip",
-                      "entry_lb", "exit_lb", "atr_period"}
+                      "entry_lb", "exit_lb", "atr_period",
+                      # indicator-library windows (lags, calendar counts and levels are NOT time-scaled)
+                      "length", "horizon", "tenkan", "kijun", "senkou", "outer", "beta_len", "z_len"}
 
 
 # --- Compute caps -----------------------------------------------------------

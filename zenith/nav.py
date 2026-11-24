@@ -77,6 +77,8 @@ FEATURES: tuple[Feature, ...] = (
     Feature("BACKTEST", "OPTIONS LAB", "backtest-options", "zenith.backtest.views.options_view",
             "OPTIONS LAB — systematic option strategies on calibrated synthetic chains", 4,
             icon=":material/functions:"),
+    Feature("BACKTEST", "ML LAB", "backtest-ml", "zenith.backtest.views.ml_view",
+            "ML LAB — machine-learning signals, validated walk-forward", 2, icon=":material/neurology:"),
     Feature("BACKTEST", "PORTFOLIO", "backtest-portfolio", "zenith.backtest.views.portfolio_view",
             "PORTFOLIO — combine saved strategies into one vol-targeted book", 0, icon=":material/stacks:"),
     Feature("BACKTEST", "ETF LAB", "backtest-etf", "zenith.backtest.views.etflab_view",
