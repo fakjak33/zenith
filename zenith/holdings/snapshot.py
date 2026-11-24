@@ -34,12 +34,14 @@ def _parse_value_date(raw: str) -> date | None:
 
 
 def build(fund: str, rows: list[dict], meta: dict,
-          previous: dict | None = None, live: bool = True) -> dict:
+          previous: dict | None = None, live: bool = True, today: date | None = None) -> dict:
     """Assemble a validated snapshot from parsed rows.
 
     ``meta`` carries source provenance from the adapter: ``value_date``,
     ``url``, ``kind``, ``via``, ``html_bytes``, ``retrieved_at``.
     ``live`` is False for Wayback replays, which are legitimately old.
+    ``today`` is the reference date for the staleness / future-date checks (default: the real today;
+    tests pin it so a saved fixture doesn't start failing once it ages).
     """
     errors: list[str] = []
     warnings: list[str] = []
@@ -48,7 +50,7 @@ def build(fund: str, rows: list[dict], meta: dict,
     if as_of is None:
         errors.append(f"unparseable value_date {meta.get('value_date')!r}")
     else:
-        today = date.today()
+        today = today or date.today()
         if as_of > today:
             errors.append(f"value_date {as_of} is in the future")
         elif live and (today - as_of).days > MAX_STALE_DAYS:
