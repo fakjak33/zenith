@@ -93,7 +93,7 @@ def render() -> None:
     with tabs[5]:
         _sensitivity(df, method, window, periods)
     with tabs[0]:
-        wa, wb = C.window_pick(port.index, "pf_win")
+        wa, wb = C.window_pick(port.index, "pf_win", vm=False)
         if (wa, wb) != (port.index[0], port.index[-1]):
             C.window_kpis(C.clip(port, wa, wb), None, periods)
         fig = go.Figure()

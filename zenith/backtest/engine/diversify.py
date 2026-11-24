@@ -68,7 +68,7 @@ def rolling_corr(s: pd.Series, u: pd.Series, window: int) -> pd.Series:
     return df["s"].rolling(window, min_periods=max(10, window // 2)).corr(df["u"])
 
 
-def analyse(s: pd.Series, u: pd.Series, periods: int) -> dict:
+def analyse(s: pd.Series, u: pd.Series, periods: int, vol_match: bool = True) -> dict:
     """Headline diversification numbers. ``periods`` = bars per year."""
     df = _align(s, u)
     if len(df) < 20:
@@ -92,7 +92,7 @@ def analyse(s: pd.Series, u: pd.Series, periods: int) -> dict:
 
     alpha = float((a.mean() - beta * b.mean()) * periods) if np.isfinite(beta) else float("nan")
     hurdle = rho * sr_u
-    fr = blend_frontier(a, b, periods)
+    fr = blend_frontier(a, b, periods, vol_match=vol_match)
     best = fr.loc[fr["Sharpe"].idxmax()]
     return {
         "ok": True, "n": len(df), "corr": rho, "beta": beta,

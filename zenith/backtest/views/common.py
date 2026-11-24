@@ -151,12 +151,17 @@ def lock_input(prefix: str, default: float = 2.0) -> float:
 
 def builder() -> StrategySpec:
     """Left-hand block builder → StrategySpec."""
-    st.markdown(section("01 · UNIVERSE", 0), unsafe_allow_html=True)
+    st.markdown(section("01 · UNIVERSE", 0, help="What the rule trades. Market = real Yahoo prices; Synthetic = "
+                        "generated price paths with a known answer, to check a rule does what you think."),
+                unsafe_allow_html=True)
     src = st.radio("source", ["Market", "Synthetic"], horizontal=True, key="bt_src",
                    label_visibility="collapsed")
     if src == "Market":
-        pick = st.selectbox("instrument", QUICK + ["custom…"], key="bt_quick")
-        name = st.text_input("ticker", "AAPL", key="bt_custom").strip().upper() if pick == "custom…" else pick
+        pick = st.selectbox("instrument", QUICK + ["custom…"], key="bt_quick",
+                            help="ETFs, indices (^GSPC), futures (=F, sized in whole contracts) or crypto. "
+                                 "'custom…' takes any Yahoo ticker.")
+        name = st.text_input("ticker", "AAPL", key="bt_custom",
+                             help="Any Yahoo Finance symbol, e.g. AAPL, VTI, ^NDX, CL=F.").strip().upper()             if pick == "custom…" else pick
     else:
         name = st.selectbox("synthetic market", SYNTH, key="bt_synth",
                             help="Known-answer worlds: a trend rule should win on 'trending' and fail on 'gbm'. "
@@ -178,17 +183,22 @@ def builder() -> StrategySpec:
                       help="Bar size the rule runs on. Weekly/monthly bars are built from daily data.")
     start_date, end_date = date_range("bt", _dt.date(2005, 1, 1))
 
-    st.markdown(section("02 · SIGNAL", 1), unsafe_allow_html=True)
+    st.markdown(section("02 · SIGNAL", 1, help="The rule turns prices into a forecast between −20 and +20 "
+                        "(+10 = a normal long). Sizing below turns the forecast into a position."),
+                unsafe_allow_html=True)
     keys = [k for k, c in REGISTRY.items() if not c.cross_sectional]
     rule = st.selectbox("rule", keys, index=keys.index("ema") if "ema" in keys else 0,
-                        format_func=lambda k: REGISTRY[k].label, key="bt_rule")
+                        format_func=lambda k: REGISTRY[k].label, key="bt_rule",
+                        help="The trading rule. Its plain-English description appears below.")
     cls = REGISTRY[rule]
     if cls.plain:
         st.caption(cls.plain)
     params, cols = {}, st.columns(2)
     for i, (pname, spec_t) in enumerate(cls.params.items()):
         with cols[i % 2]:
-            params[pname] = _num(pname, spec_t, param_key(rule, pname))
+            params[pname] = _num(pname, spec_t, param_key(rule, pname),
+                                 help=f"Allowed {spec_t[1]:g}–{spec_t[2]:g}, default {spec_t[0]:g}. Lengths are in "
+                                      "trading days and are rescaled automatically for weekly / monthly bars.")
 
     st.markdown(section("03 · FILTERS", 5, help="Gates that can only remove exposure. Each one you add is "
                         "another trial; the FILTERS step tests whether it earns its place."),
@@ -208,7 +218,10 @@ def builder() -> StrategySpec:
                         "own controls are used, and the sentence under it says exactly what you are building."),
                 unsafe_allow_html=True)
     mode = st.radio("sizing", list(SIZING_MODES), horizontal=True, key="bt_size",
-                    format_func=lambda m: SIZING_MODES[m])
+                    format_func=lambda m: SIZING_MODES[m],
+                    help="fixed notional % = dollars in the trade · fixed risk = dollars lost if the ATR stop hits · "
+                         "vol target = how much the position swings per year. The SIZING tab in BUILD works an "
+                         "example by hand.")
     fpct, risk, tvol, scale = 1.0, 0.01, 0.20, True
     stop_k_now = float(st.session_state.get("bt_stopk", 3.0))
     if mode == "fixed_pct":
@@ -247,7 +260,9 @@ def builder() -> StrategySpec:
                    f"signal the position swings about **{tvol * 100:.0f}% of capital a year**: {zone}. "
                    "Calmer market, bigger position. The SIZING tab in BUILD works today's numbers by hand.")
     c1, c2 = st.columns(2)
-    direction = c1.selectbox("direction", ["both", "long", "short"], key="bt_dir")
+    direction = c1.selectbox("direction", ["both", "long", "short"], key="bt_dir",
+                             help="both = follow the forecast either way · long = ignore short signals (go flat) · "
+                                  "short = ignore long signals.")
     lev = float(c2.number_input("max leverage x", 0.0, 20.0, 0.0, 0.5, key="bt_lev",
                                 help="Caps notional / capital. 0 = no cap. 1 = never borrow."))
     c1, c2 = st.columns(2)
@@ -259,16 +274,23 @@ def builder() -> StrategySpec:
     c1, c2 = st.columns(2)
     if mode == "fixed_risk":
         st.session_state["bt_stop"] = True
-    stop = c1.toggle("ATR stop", key="bt_stop", disabled=mode == "fixed_risk")
-    tp = c2.toggle("ATR target", key="bt_tp")
+    stop = c1.toggle("ATR stop", key="bt_stop", disabled=mode == "fixed_risk",
+                     help="Exit when price moves k × ATR(14) against the position from its best level (a trailing "
+                          "stop). Always on under fixed-risk sizing, which is sized from it.")
+    tp = c2.toggle("ATR target", key="bt_tp", help="Exit when price moves k × ATR(14) in your favour from entry.")
     stop_k = c1.number_input("stop x ATR", 0.5, 10.0, 3.0, 0.5, key="bt_stopk", disabled=not stop)
     tp_k = c2.number_input("target x ATR", 0.5, 20.0, 6.0, 0.5, key="bt_tpk", disabled=not tp)
 
-    st.markdown(section("05 · COSTS & HOLDOUT", 4), unsafe_allow_html=True)
+    st.markdown(section("05 · COSTS & HOLDOUT", 4, help="Trading costs are charged on every change in position. "
+                        "The holdout keeps the most recent years unseen until the final, logged reveal."),
+                unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    cost = c1.number_input("commission bps", 0.0, 50.0, 1.0, 0.5, key="bt_cost")
-    slip = c2.number_input("slippage bps", 0.0, 50.0, 1.5, 0.5, key="bt_slip")
-    fee = st.number_input("$ per contract per side", 0.0, 20.0, 2.5, 0.25, key="bt_fee") if fut else 2.5
+    cost = c1.number_input("commission bps", 0.0, 50.0, 1.0, 0.5, key="bt_cost",
+                           help="Charged on traded notional. 1 bp = 0.01%: $1 per $10,000 traded.")
+    slip = c2.number_input("slippage bps", 0.0, 50.0, 1.5, 0.5, key="bt_slip",
+                           help="Half the bid-ask spread plus market impact, per side. Liquid ETFs ≈ 1–2 bps.")
+    fee = st.number_input("$ per contract per side", 0.0, 20.0, 2.5, 0.25, key="bt_fee",
+                          help="Broker + exchange fee per futures contract, each way.") if fut else 2.5
     lock = lock_input("bt")
     return StrategySpec(src=src, name=name, tf=tf, start_year=start_date.year, rule=rule, params=params,
                         filters=filters, sizing_mode=mode, target_vol=tvol, direction=direction,
@@ -327,12 +349,48 @@ def progress_bar(label: str):
     return lambda f: bar.progress(min(1.0, f), text=f"{label} · {f * 100:.0f}%")
 
 
+# ------------------------------------------------------------ vol match ----
+VM_KEY = "zen_volmatch"
+VM_HELP = ("ON: the benchmark's daily returns are scaled so its volatility equals the strategy's over the period "
+           "shown — a like-for-like test of skill at the same risk (Sharpe is unchanged; CAGR, drawdown and the "
+           "equity line change). OFF: the plain, unscaled underlying, i.e. what simply holding it returned. "
+           "The setting is shared by every lab.")
+
+
+def vol_match_on() -> bool:
+    """Shared across labs (a plain session key, not part of any spec, so flipping it is never a new trial)."""
+    return bool(st.session_state.get(VM_KEY, True))
+
+
+def vol_match_toggle(key: str, where=None) -> bool:
+    k = f"{key}_vm"
+    if k not in st.session_state:
+        st.session_state[k] = vol_match_on()
+
+    def _keep():
+        st.session_state[VM_KEY] = bool(st.session_state[k])
+
+    (where or st).toggle("vol-matched", key=k, on_change=_keep, help=VM_HELP)
+    return vol_match_on()
+
+
+def match_vol(b: pd.Series, r: pd.Series, on: bool | None = None) -> pd.Series:
+    """``b`` scaled to ``r``'s realised vol when vol-matching is on (else returned as-is)."""
+    on = vol_match_on() if on is None else on
+    b = b.reindex(r.index).fillna(0.0)
+    sv, bv = r.std(), b.std()
+    return b * (sv / bv) if on and bv > 1e-12 and sv > 1e-12 else b
+
+
+def bench_label(base: str = "buy & hold", on: bool | None = None) -> str:
+    on = vol_match_on() if on is None else on
+    return f"{base} (vol-matched)" if on else base
+
+
 # -------------------------------------------------------------- charts ----
-def bench(close: pd.Series, strat: pd.Series) -> pd.Series:
-    """Buy-and-hold of the same instrument, scaled to the strategy's realised vol."""
-    bh = close.pct_change().reindex(strat.index).fillna(0.0)
-    sv, bv = strat.std(), bh.std()
-    return bh * (sv / bv) if bv > 1e-12 and sv > 1e-12 else bh
+def bench(close: pd.Series, strat: pd.Series, on: bool | None = None) -> pd.Series:
+    """Buy-and-hold of the same instrument, scaled to the strategy's realised vol when vol-match is on."""
+    return match_vol(close.pct_change(), strat, on)
 
 
 def lock_band(fig: go.Figure, a, b, rows: int = 1) -> None:
@@ -347,13 +405,13 @@ def lock_band(fig: go.Figure, a, b, rows: int = 1) -> None:
 
 def equity_fig(r: pd.Series, b: pd.Series, gross: pd.Series | None = None,
                shade_from: pd.Timestamp | None = None, locked_to: pd.Timestamp | None = None,
-               bench_label: str = "buy & hold (vol-matched)") -> go.Figure:
+               b_label: str | None = None) -> go.Figure:
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.72, 0.28], vertical_spacing=0.03)
     eq, beq = (1 + r).cumprod(), (1 + b).cumprod()
     if gross is not None:
         geq = (1 + gross).cumprod()
         fig.add_trace(go.Scatter(x=geq.index, y=geq, name="gross of costs", line=dict(color=T.faint, width=1)), 1, 1)
-    fig.add_trace(go.Scatter(x=beq.index, y=beq, name=bench_label,
+    fig.add_trace(go.Scatter(x=beq.index, y=beq, name=b_label or bench_label(),
                              line=dict(color=T.amber, width=1.2)), 1, 1)
     fig.add_trace(go.Scatter(x=eq.index, y=eq, name="strategy", line=dict(color=T.teal, width=1.8)), 1, 1)
     dd, bdd = metrics.drawdown_series(r), metrics.drawdown_series(b)
@@ -407,7 +465,7 @@ def rolling_sharpe_fig(r: pd.Series, b: pd.Series, periods: int) -> go.Figure:
     bs = b.rolling(w).mean() / b.rolling(w).std() * np.sqrt(periods)
     fig = go.Figure()
     fig.add_hline(y=0, line=dict(color=T.line, width=1))
-    fig.add_trace(go.Scatter(x=bs.index, y=bs, name="buy & hold", line=dict(color=T.amber, width=1)))
+    fig.add_trace(go.Scatter(x=bs.index, y=bs, name=bench_label(), line=dict(color=T.amber, width=1)))
     fig.add_trace(go.Scatter(x=rs.index, y=rs, name="strategy", line=dict(color=T.teal, width=1.6)))
     return fig
 
@@ -439,7 +497,7 @@ def monthly_fig(r: pd.Series) -> go.Figure:
 
 def dist_fig(r: pd.Series, b: pd.Series) -> go.Figure:
     fig = go.Figure()
-    for s, name, col in ((b, "buy & hold", T.amber), (r, "strategy", T.teal)):
+    for s, name, col in ((b, bench_label(), T.amber), (r, "strategy", T.teal)):
         x = s[s != 0] * 100
         fig.add_trace(go.Histogram(x=x, name=name, nbinsx=80, marker_color=up.fill(col, 0.55),
                                    marker_line=dict(width=0)))
@@ -487,7 +545,8 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
 def diversify_panel(s_ret: pd.Series, u_ret: pd.Series, periods: int, u_label: str, key: str) -> None:
     """Correlation to the underlying, crisis behaviour, the add-to-portfolio test and the blend frontier."""
     from ... import ui_kit as uk
-    d = dv.analyse(s_ret, u_ret, periods)
+    vm = vol_match_on()
+    d = dv.analyse(s_ret, u_ret, periods, vol_match=vm)
     st.markdown(section(f"DIVERSIFICATION vs {u_label}", 3,
                         help="Would this strategy improve a portfolio that already holds the underlying? "
                              "Low or negative correlation, especially in the worst months, is what you want."),
@@ -508,7 +567,8 @@ def diversify_panel(s_ret: pd.Series, u_ret: pd.Series, periods: int, u_label: s
          "sub": f"SR {d['sharpe_s']:.2f} vs hurdle ρ·SR {d['hurdle']:.2f}",
          "color": T.teal if d["adds"] else T.coral},
         {"label": "ALPHA vs UNDERLYING", "value": f"{d['alpha'] * 100:+.1f}%/yr", "sub": "μ − β·μ_u"},
-        {"label": "BEST BLEND", "value": f"{d['best_w'] * 100:.0f}% strat", "sub": f"of risk · Sharpe {d['best_sharpe']:.2f}"},
+        {"label": "BEST BLEND", "value": f"{d['best_w'] * 100:.0f}% strat",
+         "sub": f"of {'risk' if vm else 'capital'} · Sharpe {d['best_sharpe']:.2f}"},
     ]), unsafe_allow_html=True)
     st.caption("**Add-to-portfolio rule:** a small allocation to the strategy raises the portfolio Sharpe exactly "
                f"when its Sharpe beats correlation x the portfolio's Sharpe ({d['corr']:+.2f} x "
@@ -522,7 +582,8 @@ def diversify_panel(s_ret: pd.Series, u_ret: pd.Series, periods: int, u_label: s
         fig.add_trace(go.Scatter(x=fr["w"] * 100, y=fr["MaxDD"], name="max drawdown",
                                  line=dict(color=T.coral, width=1.4, dash="dot")), secondary_y=True)
         fig.add_vline(x=d["best_w"] * 100, line=dict(color=T.faint, width=1, dash="dash"))
-        fig.update_xaxes(title_text=f"% of risk in strategy (rest in {u_label}), vol-matched")
+        fig.update_xaxes(title_text=(f"% of risk in strategy (rest in {u_label}), vol-matched" if vm
+                                     else f"% of capital in strategy (rest in {u_label}), not vol-matched"))
         fig.update_yaxes(title_text="Sharpe", secondary_y=False)
         fig.update_yaxes(title_text="max DD", tickformat=".0%", secondary_y=True, showgrid=False)
         fig.update_layout(hovermode="x unified")
@@ -690,11 +751,14 @@ def seeds_panel(spec: StrategySpec, key: str = "bt_seeds") -> None:
 WINDOWS = ["ALL", "1ST HALF", "2ND HALF", "LAST 10Y", "LAST 5Y", "LAST 3Y", "LAST 1Y", "CUSTOM"]
 
 
-def window_pick(index: pd.DatetimeIndex, key: str) -> tuple[pd.Timestamp, pd.Timestamp]:
+def window_pick(index: pd.DatetimeIndex, key: str, vm: bool = True) -> tuple[pd.Timestamp, pd.Timestamp]:
     """Zoom window for every time-series chart below it. Charts re-slice and rebase to the window
-    start, so the y axis always fits the period you picked (Plotly's own box-zoom can't refit y)."""
+    start, so the y axis always fits the period you picked (Plotly's own box-zoom can't refit y).
+    ``vm`` also shows the shared vol-matched toggle in the same row."""
     lo, hi = pd.Timestamp(index[0]), pd.Timestamp(index[-1])
-    c1, c2 = st.columns([3, 2])
+    c1, c2, c3 = st.columns([3, 2, 1])
+    if vm:
+        vol_match_toggle(key, c3)
     pick = c1.segmented_control("window", WINDOWS, default="ALL", key=f"{key}_w",
                                 label_visibility="collapsed") or "ALL"
     if pick == "1ST HALF":

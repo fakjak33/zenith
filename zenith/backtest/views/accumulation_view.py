@@ -142,7 +142,7 @@ def render() -> None:
             C.banner(T.amber, "DCA WINS", "the rule ended behind simply investing every contribution on schedule — "
                      "the usual result for dip-buying; check whether it bought you a smaller drawdown instead")
 
-        wa, wb = C.window_pick(close.index, "ac_win")
+        wa, wb = C.window_pick(close.index, "ac_win", vm=False)
         W = lambda x: C.clip(x, wa, wb)  # noqa: E731
         if (wa, wb) != (close.index[0], close.index[-1]):
             e0, e1 = W(res.equity), W(res.invested)

@@ -72,17 +72,18 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
     s = res.stats
     years = len(r) / p
     edge = s["Sharpe"] - bstats["Sharpe"]
+    vm = " (vol-matched)" if C.vol_match_on() else ""
     st.markdown(uk.kpis([
         {"label": "SHARPE", "value": f"{s['Sharpe']:.2f}", "sub": f"b&h {bstats['Sharpe']:.2f} · Δ {edge:+.2f}",
          "color": T.teal if edge > 0 else T.coral},
         {"label": "DEFLATED SR", "value": f"{s['DSR'] * 100:.0f}%", "sub": "P(real) after trials",
          "color": T.teal if s["DSR"] > 0.9 else T.amber if s["DSR"] > 0.5 else T.coral},
-        {"label": "CAGR", "value": f"{s['CAGR'] * 100:.1f}%", "sub": f"b&h {bstats['CAGR'] * 100:.1f}% (vol-matched)"},
+        {"label": "CAGR", "value": f"{s['CAGR'] * 100:.1f}%", "sub": f"b&h {bstats['CAGR'] * 100:.1f}%{vm}"},
         {"label": "VOL", "value": f"{s['Vol'] * 100:.1f}%",
          "sub": (f"target {spec.target_vol * 100:.0f}%" if spec.sizing_mode == "vol_target"
                  else f"{spec.fixed_pct * 100:.0f}% notional" if spec.sizing_mode == "fixed_pct"
                  else f"{spec.risk_pct * 100:.1f}% risk/trade")},
-        {"label": "MAX DD", "value": f"{s['MaxDD'] * 100:.1f}%", "sub": f"b&h {bstats['MaxDD'] * 100:.1f}%",
+        {"label": "MAX DD", "value": f"{s['MaxDD'] * 100:.1f}%", "sub": f"b&h {bstats['MaxDD'] * 100:.1f}%{vm}",
          "color": T.coral},
         {"label": "CALMAR", "value": f"{s['Calmar']:.2f}", "sub": f"b&h {bstats['Calmar']:.2f}"},
         {"label": "TRADES / YR", "value": f"{len(trades) / max(years, 1e-9):.1f}", "sub": f"{len(trades)} total"},
@@ -150,7 +151,7 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
     with tabs[6]:
         keys = list(s.keys())
         tbl = pd.DataFrame({"strategy": [C.fmt(k, s[k]) for k in keys],
-                            "buy & hold (vol-matched)": [C.fmt(k, bstats[k]) if k in bstats else "—" for k in keys]},
+                            C.bench_label(): [C.fmt(k, bstats[k]) if k in bstats else "—" for k in keys]},
                            index=keys)
         st.dataframe(tbl, use_container_width=True)
         st.caption("DSR deflates the Sharpe by the trial count shown in the rail above. PSR/DSR are the "
@@ -206,11 +207,12 @@ def step_oos(spec: StrategySpec, full: pd.DataFrame, locked, aux: dict, n_trials
          "sub": f"IS {sis['MaxDD'] * 100:.1f}%"},
         {"label": "OOS CAGR", "value": f"{soos['CAGR'] * 100:.1f}%", "sub": f"IS {sis['CAGR'] * 100:.1f}%"},
     ]), unsafe_allow_html=True)
+    C.vol_match_toggle("bt_oos")
     up.show(C.equity_fig(r, b, shade_from=locked), 460, "full history · shaded = out-of-sample", key="bt_oos_eq")
     keys = ["CAGR", "Vol", "Sharpe", "Sortino", "MaxDD", "Calmar", "HitRate", "Skew", "PSR"]
     st.dataframe(pd.DataFrame({"in-sample": [C.fmt(k, sis[k]) for k in keys],
                                "out-of-sample": [C.fmt(k, soos[k]) for k in keys],
-                               "b&h out-of-sample": [C.fmt(k, bo[k]) for k in keys]}, index=keys),
+                               C.bench_label("b&h out-of-sample"): [C.fmt(k, bo[k]) for k in keys]}, index=keys),
                  use_container_width=True)
     st.caption("Expect the out-of-sample Sharpe to be lower — roughly half is common for a fairly-tuned rule. "
                "A collapse to zero or below says the in-sample result was mostly the tuning.")
