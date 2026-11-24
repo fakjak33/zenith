@@ -20,7 +20,7 @@ from ...config import THEME as T
 from ...ui_theme import section
 from .. import ledger as lg
 from ..monitor.decay import cone, cusum, dd_breaker, month_ranks, rolling_alpha, verdict
-from ..spec import StrategySpec, run_spec, split_holdout
+from ..spec import StrategySpec, run_spec
 from . import common as C
 
 CHECKLIST = [
@@ -44,7 +44,7 @@ def render(spec: StrategySpec, key: str = "dc") -> None:
     except Exception as exc:  # noqa: BLE001
         C.banner(T.coral, "NO DATA", str(exc))
         return
-    ins, locked = split_holdout(full, spec.holdout)
+    ins, locked = spec.split(full)
     aux = C.load_aux(spec)
     rev = lg.revealed(C.ledger(), spec.family()) if locked is not None else None
     live_mode = bool(rev) and rev["hash"] == spec.hash()

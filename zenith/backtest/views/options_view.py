@@ -9,6 +9,7 @@ result. Same guard rails as LAB: costs on, locked holdout, one logged reveal.
 
 from __future__ import annotations
 
+import datetime as _dt
 import json
 from dataclasses import asdict, replace
 
@@ -27,6 +28,7 @@ from ..attrib import core as A
 from ..engine import metrics
 from ..options import data as D
 from ..options import engine as E
+from ..spec import lock_date
 from . import common as C
 
 _FINDINGS = [
@@ -124,7 +126,8 @@ def _strat_from_ui() -> tuple:
     und = st.selectbox("underlying", list(D.UNDERLYINGS), key="op_und",
                        help="SPX uses the full VIX term structure and is the calibrated case. Others use their own Cboe "
                             "vol index where one exists, else VIX scaled by realised vol.")
-    start = st.number_input("from", 1990 if und == "SPX" else 2005, 2024, 2007, key="op_start")
+    a, b = C.date_range("op", _dt.date(2007, 1, 1), _dt.date(1990, 1, 1) if und == "SPX" else _dt.date(2005, 1, 1))
+    start, end = a.isoformat(), C._iso_end(b)
 
     st.markdown(section("02 · STRATEGY", 1, help="Filter the catalogue, pick a starting template, then edit any "
                         "leg. Long-vol (debit) and short-vol (credit) strategies are both here."),
@@ -226,26 +229,29 @@ def _strat_from_ui() -> tuple:
     ratio = c2.slider("ATM / VIX ratio", 0.70, 1.00, E.ATM_RATIO, 0.01, key="op_ratio",
                       help=f"Calibrated {E.ATM_RATIO} on Cboe PUT. Changing it changes every price — keep the "
                            "calibrated value unless you are stress-testing the model.")
-    hold = st.slider("locked out-of-sample %", 0, 50, 30, 5, key="op_hold")
+    hold = C.lock_input("op")
     strat = replace(base, legs=legs, stock=stock, dte=dte, roll=roll, take_profit=tp, stop_mult=sl, min_vix=0.0,
                     spread_pct=spread, atm_ratio=ratio, sizing=sizing, size_pct=size_pct, exit_dte=exit_dte,
                     max_hold=max_hold, delta_exit=dexit, filters=filters)
-    return und, int(start), strat, int(hold), extra
+    return und, (start, end), strat, float(hold), extra
 
 
 @st.cache_data(ttl=6 * 3600, show_spinner=False)
-def _inputs(und: str, start: int) -> dict:
+def _inputs(und: str, start) -> dict:
+    """``start``: (start ISO, end ISO or '') — or a bare year (calibration)."""
+    if isinstance(start, (tuple, list)):
+        return D.load(und, start[0], start[1] or None)
     return D.load(und, start)
 
 
-def _run(und: str, start: int, strat: E.OptionStrategy, extra: dict | None = None) -> E.OptionResult:
+def _run(und: str, start, strat: E.OptionStrategy, extra: dict | None = None) -> E.OptionResult:
     ex = extra or {}
     return _run_cached(und, start, json.dumps(asdict(strat), sort_keys=True, default=str),
                        bool(ex.get("actual", True)), float(ex.get("iv_scale", 1.0)))
 
 
 @st.cache_data(ttl=6 * 3600, show_spinner=False, max_entries=64)
-def _run_cached(und: str, start: int, strat_json: str, actual: bool = True, iv_scale: float = 1.0) -> E.OptionResult:
+def _run_cached(und: str, start, strat_json: str, actual: bool = True, iv_scale: float = 1.0) -> E.OptionResult:
     d = json.loads(strat_json)
     d["legs"] = [E.Leg(**L) for L in d["legs"]]
     strat = E.OptionStrategy(**d)
@@ -283,9 +289,9 @@ def render() -> None:
             C.banner(T.coral, "NO DATA", f"{und}: {exc}")
             return
         idx = res.returns.index
-        cut = int(len(idx) * (1 - hold / 100)) if hold else len(idx)
-        locked = idx[cut] if hold else None
-        family = f"Options:{und}:{start}:{hold}"
+        locked = lock_date(idx, 0, hold)
+        cut = int(idx.searchsorted(locked)) if locked is not None else len(idx)
+        family = f"Options:{und}:{start[0]}:{start[1]}:L{hold:g}"
         h = json.dumps(asdict(strat), sort_keys=True, default=str)
         import hashlib
         sh = hashlib.sha1(h.encode()).hexdigest()[:12]
@@ -350,12 +356,15 @@ def render() -> None:
             C.diversify_panel(r, tr, p, und, "op_div")
         with tabs[0]:
             b = tr * (r.std() / tr.std()) if tr.std() > 0 else tr
-            wa, wb = C.window_pick(r.index, "op_win")
+            hidden = locked is not None and not show_all
+            wa, wb = C.window_pick(idx if hidden else r.index, "op_win")
             rw, bw = C.clip(r, wa, wb), C.clip(b, wa, wb)
-            if (wa, wb) != (r.index[0], r.index[-1]):
+            if (wa, wb) != (idx[0] if hidden else r.index[0], idx[-1] if hidden else r.index[-1]):
                 C.window_kpis(rw, C.clip(tr, wa, wb), p, und)
             up.show(C.equity_fig(rw, bw, shade_from=locked if show_all and locked is not None and locked <= wb
-                                 else None), 440, f"strategy vs {und} (vol-matched)", key="op_eq")
+                                 else None, locked_to=wb if hidden and len(rw) and wb > rw.index[-1] else None),
+                    440, f"strategy vs {und} (vol-matched)" + (" · grey = locked out-of-sample" if hidden else ""),
+                    key="op_eq")
         with tabs[1]:
             ex = res.exposure.iloc[:end]
             fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05)
@@ -396,7 +405,7 @@ def render() -> None:
                 ]), unsafe_allow_html=True)
         with tabs[7]:
             if locked is None:
-                C.banner(T.coral, "NO HOLDOUT", "set a locked out-of-sample % to keep an honest test")
+                C.banner(T.coral, "NO HOLDOUT", "set 'lock last N years' in 06 · COSTS & HOLDOUT to keep an honest test")
             elif not rev:
                 st.checkbox("I'm done tuning this options strategy", key="op_sure")
                 if st.button("REVEAL OUT-OF-SAMPLE · ONCE", type="primary", key="op_reveal",

@@ -8,6 +8,8 @@ look-ahead are flagged loudly — fundamental factors are a *current* snapshot.
 
 from __future__ import annotations
 
+import datetime as _dt
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -46,12 +48,15 @@ _FINDINGS = [
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
-def _panel(tickers: tuple, start: str) -> pd.DataFrame:
-    return get_panel(list(tickers), start=start, field="close")
+def _panel(tickers: tuple, start) -> pd.DataFrame:
+    """``start``: ISO start, or (start ISO, end ISO or '')."""
+    a, b = (start if isinstance(start, (tuple, list)) else (start, ""))
+    df = get_panel(list(tickers), start=a, field="close")
+    return df[df.index <= pd.Timestamp(b)] if b else df
 
 
 @st.cache_data(ttl=3600, show_spinner=False, max_entries=24)
-def _design(tickers: tuple, start: str, spec, cfg):
+def _design(tickers: tuple, start, spec, cfg):
     """Rebalance schedule + backtest, cached on the design (every widget change used to redo both)."""
     panel = _panel(tickers, start)
     mkt = panel["SPY"] if "SPY" in panel else panel.iloc[:, 0]
@@ -113,9 +118,11 @@ def _builder():
                              expense_ratio_annual=er, borrow_bps=borrow, max_weight=spec.max_weight,
                              direction=spec.direction)
     st.markdown(section("03 · WINDOW & BENCHMARKS", 2), unsafe_allow_html=True)
-    start = st.number_input("from", 2000, 2024, 2012, key="ef_start")
-    bench = st.multiselect("benchmarks", BENCH, default=["SPY"], key="ef_bench")
-    return spec, cfg, f"{int(start)}-01-01", bench
+    a, b = C.date_range("ef", _dt.date(2012, 1, 1), _dt.date(1995, 1, 1))
+    bench = st.multiselect("benchmarks", BENCH, default=["SPY"], key="ef_bench",
+                           help="Compared on every chart and table. The first one is used for the equity chart, "
+                                "alpha/beta and the diversification test.")
+    return spec, cfg, (a.isoformat(), C._iso_end(b)), bench
 
 
 def render() -> None:

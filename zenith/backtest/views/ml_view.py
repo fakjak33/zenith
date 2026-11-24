@@ -12,6 +12,8 @@ strategy for LIBRARY / PORTFOLIO / LAB.
 
 from __future__ import annotations
 
+import datetime as _dt
+
 import hashlib
 import json
 
@@ -32,7 +34,7 @@ from ..indicators import CATALOG, FAMILIES
 from ..ml.core import (CV_SCHEMES, MAPPINGS, MODELS, TARGETS, build_features, calibration, coefficients,
                        fwd_return, hac_table, make_target, perm_importance, scorecard, to_position, walk_forward)
 from ..ml.strategy import DEFAULT
-from ..spec import StrategySpec, run_spec, split_holdout, with_aux
+from ..spec import StrategySpec, run_spec, with_aux
 from . import common as C
 
 _FINDINGS = [
@@ -58,12 +60,11 @@ def _controls() -> tuple[StrategySpec, dict, dict]:
         name = st.selectbox("synthetic market", ["mean_reverting", "trending", "regime", "gbm", "fat_tailed"],
                             key="ml_synth", help="Known answers: models should find something on "
                                                  "'mean_reverting' and nothing on 'gbm' (a random walk).")
-    c1, c2 = st.columns(2)
-    tf = c1.selectbox("bars", list(TIMEFRAMES), key="ml_tf")
-    start = c2.number_input("from", 1990, 2024, 2005, key="ml_start")
-    hold = st.slider("locked out-of-sample %", 0, 50, 30, 5, key="ml_hold",
-                     help="Kept hidden, like LAB: everything here uses the in-sample part only. Save the model "
-                          "and reveal it once in LAB › OUT-OF-SAMPLE.")
+    tf = st.selectbox("bars", list(TIMEFRAMES), key="ml_tf")
+    start_d, end_d = C.date_range("ml", _dt.date(2005, 1, 1))
+    hold = C.lock_input("ml")
+    st.caption("The locked years stay hidden, like LAB: everything here uses the in-sample part only. Save the "
+               "model and reveal it once in LAB › OUT-OF-SAMPLE.")
 
     st.markdown(section("02 · FEATURES", 1, help="What the model sees at each bar. MemLabs: predict returns, not "
                         "prices; use few lags; another asset's lags can beat the asset's own."),
@@ -124,7 +125,8 @@ def _controls() -> tuple[StrategySpec, dict, dict]:
     long_only = st.toggle("long only", key="ml_lo_only")
     cost = float(st.number_input("cost bps per side", 0.0, 50.0, 2.5, 0.5, key="ml_cost"))
 
-    spec = StrategySpec(src=src, name=name, tf=tf, start_year=int(start), holdout=int(hold), ref_ticker=ref,
+    spec = StrategySpec(src=src, name=name, tf=tf, start_year=start_d.year, holdout=0, lock_years=float(hold),
+                        start_date=C._iso_start(start_d), end_date=C._iso_end(end_d), ref_ticker=ref,
                         cost_bps=cost, slippage_bps=0.0)
     feats = {"indicators": inds, "lags": lags, "memory": memory, "calendar": bool(cal), "ref_lags": ref_lags}
     cfg = {"features": feats, "target": target, "h": h, "k": k, "model": model, "C": Cc, "retrain": 126,
@@ -137,7 +139,7 @@ def _controls() -> tuple[StrategySpec, dict, dict]:
 
 def _frame(spec: StrategySpec) -> tuple[pd.DataFrame, pd.DataFrame]:
     full = C.load(spec)
-    ins, _ = split_holdout(full, spec.holdout)
+    ins, _ = spec.split(full)
     aux = C.load_aux(spec)
     return ins, with_aux(ins, aux, spec.needs())
 
