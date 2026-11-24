@@ -25,13 +25,13 @@ from .rules import REGISTRY
 # data up to and including t (the engine then trades at t+1). Gates never add
 # exposure; they only remove it, so a filter can be judged by what it takes away.
 FILTERS: dict[str, dict] = {
-    "trend": {"label": "Trend filter", "params": {"length": (200, 20, 400, 10)},
+    "trend": {"label": "Trend filter", "params": {"length": (200, 2, 2000, 10)},
               "help": "Longs only above the N-day average, shorts only below it."},
-    "volregime": {"label": "Vol regime", "params": {"lookback": (252, 60, 1000, 10), "max_pct": (80, 10, 100, 5)},
+    "volregime": {"label": "Vol regime", "params": {"lookback": (252, 20, 5000, 10), "max_pct": (80, 1, 100, 5)},
                   "help": "Stand aside when 20-day realised vol is above this percentile of its own past."},
-    "momconfirm": {"label": "Momentum confirm", "params": {"lookback": (252, 20, 500, 10)},
+    "momconfirm": {"label": "Momentum confirm", "params": {"lookback": (252, 2, 2000, 10)},
                    "help": "Only trade in the direction of the trailing N-day return."},
-    "vix": {"label": "VIX cap", "params": {"max_level": (30, 12, 80, 1)},
+    "vix": {"label": "VIX cap", "params": {"max_level": (30, 5, 150, 1)},
             "help": "No new longs while VIX closes above this level (market data only)."},
 }
 
@@ -92,7 +92,8 @@ TICKER_SYNTH = ("bootstrap", "shuffle", "gbm_fit", "regime_fit")
 _LATE_DEFAULTS = {"fixed_pct": 1.0, "risk_pct": 0.01, "scale_by_forecast": True, "max_leverage": 0.0,
                   "seed": 42, "synth_base": "SPY", "ref_ticker": "SPY",
                   "mode": "single", "blend": [], "conditions": {}, "regime": {}, "ml": {},
-                  "start_date": "", "end_date": "", "lock_years": 0.0}
+                  "start_date": "", "end_date": "", "lock_years": 0.0,
+                  "atr_period": 14}
 
 # Aux series a rule can ask for (Strategy.needs) → the frame column it is joined as.
 AUX_COLUMNS = ("ref_close", "vix", "vix3m")
@@ -141,6 +142,7 @@ class StrategySpec:
     start_date: str = ""                # ISO date; "" = 1 Jan of start_year
     end_date: str = ""                  # ISO date; "" = latest bar
     lock_years: float = 0.0             # lock the last N years (from the end date); overrides holdout %
+    atr_period: int = 14                # ATR lookback for stops, targets and fixed-risk sizing
     notes: str = ""                     # hypothesis / goal — not part of the hash
 
     # ---- serialisation
@@ -242,14 +244,14 @@ class StrategySpec:
                               fixed_pct=self.fixed_pct, risk_pct=self.risk_pct, stop_mult=self.atr_stop_mult,
                               scale_by_forecast=self.scale_by_forecast, max_leverage=self.max_leverage,
                               cost_bps=self.cost_bps * cost_mult, slippage_bps=self.slippage_bps * cost_mult,
-                              capital=self.capital, buffer=self.buffer,
+                              capital=self.capital, buffer=self.buffer, atr_period=int(self.atr_period),
                               multiplier=float(fut[1]) if fut else None,
                               fee_per_contract=self.contract_fee * cost_mult if fut else 0.0)
 
     def risk(self) -> RiskConfig:
         # fixed-risk sizing only means something if the stop it is sized from is live
         stop_on = self.use_atr_stop or self.sizing_mode == "fixed_risk"
-        return RiskConfig(use_atr_stop=stop_on, use_atr_tp=self.use_atr_tp,
+        return RiskConfig(use_atr_stop=stop_on, use_atr_tp=self.use_atr_tp, atr_period=int(self.atr_period),
                           atr_stop_mult=self.atr_stop_mult, atr_tp_mult=self.atr_tp_mult)
 
     def strategy(self):

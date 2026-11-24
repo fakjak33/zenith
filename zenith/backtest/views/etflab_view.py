@@ -66,23 +66,43 @@ def _design(tickers: tuple, start, spec, cfg):
     return dts, ws, res
 
 
+def _tickers(raw: str) -> list:
+    out = []
+    for t in raw.split(","):
+        try:
+            if t.strip():
+                out.append(clean_ticker(t))
+        except ValueError:
+            pass
+    return out
+
+
 def _builder():
     st.markdown(section("01 · FUND DESIGN", 0), unsafe_allow_html=True)
-    how = st.radio("start from", ["Preset", "Build your own"], horizontal=True, key="ef_src")
+    how = st.radio("start from", ["Preset", "Build your own"], horizontal=True, key="ef_src",
+                   help="Preset: a ready-made example fund. Build your own: choose holdings or a screen, weighting "
+                        "and rebalancing yourself.")
     if how == "Preset":
         names = [p.name for p in presets.PRESETS if p.enabled]
-        spec = presets.by_name(st.selectbox("example fund", names, key="ef_preset"))
+        spec = presets.by_name(st.selectbox("example fund", names, key="ef_preset",
+                                            help="Each preset's description appears below it."))
         st.caption(spec.notes)
     else:
-        sel_mode = st.radio("holdings", ["Basket", "Screen & rank"], horizontal=True, key="ef_mode")
-        weighting = WEIGHTS[st.selectbox("weighting", list(WEIGHTS), key="ef_w")]
+        sel_mode = st.radio("holdings", ["Basket", "Screen & rank"], horizontal=True, key="ef_mode",
+                            help="Basket: you pick the tickers. Screen & rank: rank a universe by a factor each "
+                                 "rebalance and hold the top (and/or bottom) N.")
+        weighting = WEIGHTS[st.selectbox("weighting", list(WEIGHTS), key="ef_w",
+                                         help="How capital is split across holdings at each rebalance. "
+                                              "'snapshot' weightings use today's fundamentals (look-ahead).")]
         c1, c2 = st.columns(2)
-        max_w = c1.slider("max weight", 0.05, 1.0, 1.0, 0.05, key="ef_maxw")
+        max_w = c1.number_input("max weight", 0.01, 1.0, 1.0, 0.01, key="ef_maxw",
+                                help="Cap on any one holding (0.10 = 10%); the excess is spread over the rest.")
         rebal = c2.selectbox("rebalance", ["Weekly", "Monthly", "Quarterly", "Biannual", "Annual"], index=1,
-                             key="ef_rebal")
+                             key="ef_rebal", help="How often weights are reset to target.")
         manual, direction = None, "long"
         if sel_mode == "Basket":
-            grp = st.selectbox("pick from", UNIVERSES[:4], key="ef_grp")
+            grp = st.selectbox("pick from", UNIVERSES, key="ef_grp",
+                               help="Universe to choose from; add any other ticker in the box below.")
             opts = screens.resolve_universe(grp)
             picks = st.multiselect("holdings", opts, default=opts[:4], key="ef_picks")
             for raw in st.text_input("add tickers (comma-separated)", "", key="ef_add").split(","):
@@ -96,30 +116,47 @@ def _builder():
                 manual = {t: st.number_input(f"{t} weight", 0.0, 100.0, 1.0, 0.5, key=f"ef_mw_{t}") for t in picks}
             sel = screens.SelectionSpec(explicit=picks)
         else:
-            uni = st.selectbox("universe", UNIVERSES, key="ef_uni")
-            rf = RANK[st.selectbox("rank by", list(RANK), key="ef_rf")]
+            uni = st.selectbox("universe", UNIVERSES, key="ef_uni", help="The pool the screen ranks.")
+            rf = RANK[st.selectbox("rank by", list(RANK), key="ef_rf",
+                                   help="Factor used to rank the universe at each rebalance.")]
             c1, c2 = st.columns(2)
-            lb = int(c1.number_input("lookback (days)", 21, 1000, 252, 21, key="ef_lb"))
-            top = int(c2.number_input("# longs", 1, 100, 10, 1, key="ef_top"))
-            direction = st.radio("direction", ["long", "short", "long_short"], horizontal=True, key="ef_dir")
-            bottom = int(st.number_input("# shorts", 1, 100, 10, 1, key="ef_bot")) if direction != "long" else None
-            sel = screens.SelectionSpec(universe=uni, rank_factor=rf, rank_lookback=lb, top_n=top, bottom_n=bottom)
+            lb = int(c1.number_input("lookback (days)", 5, 5000, 252, 1, key="ef_lb",
+                                     help="Trading days the ranking factor is measured over (252 ≈ 1 year)."))
+            top = int(c2.number_input("# longs", 1, 500, 10, 1, key="ef_top", help="Top-ranked names held long."))
+            skip = int(st.number_input("skip most recent days", 0, 252, 0, 1, key="ef_skip",
+                                       help="Leave out the latest N days of the lookback (e.g. 21 for the classic "
+                                            "12-1 momentum, which skips the last month)."))
+            direction = st.radio("direction", ["long", "short", "long_short"], horizontal=True, key="ef_dir",
+                                 help="long = hold the top N · short = short the bottom N · long_short = both.")
+            bottom = int(st.number_input("# shorts", 1, 500, 10, 1, key="ef_bot",
+                                         help="Bottom-ranked names held short.")) if direction != "long" else None
+            sel = screens.SelectionSpec(universe=uni, rank_factor=rf, rank_lookback=lb, top_n=top, bottom_n=bottom,
+                                        rank_skip=skip)
         spec = screens.ETFSpec(name="Custom fund", selection=sel, weighting=weighting, rebalance=rebal,
                                direction=direction, manual_weights=manual, max_weight=max_w)
 
     st.markdown(section("02 · COSTS & FEES", 1), unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    cost = c1.number_input("commission bps", 0.0, 50.0, 1.0, 0.5, key="ef_cost")
-    slip = c2.number_input("slippage bps", 0.0, 50.0, 1.0, 0.5, key="ef_slip")
-    er = st.number_input("expense ratio %/yr", 0.0, 3.0, 0.40, 0.05, key="ef_er") / 100
-    borrow = st.number_input("short borrow bps/yr", 0.0, 1000.0, 50.0, 10.0, key="ef_borrow") \
+    cost = c1.number_input("commission bps", 0.0, 500.0, 1.0, 0.5, key="ef_cost",
+                           help="Charged on traded value at each rebalance. 1 bp = 0.01%.")
+    slip = c2.number_input("slippage bps", 0.0, 500.0, 1.0, 0.5, key="ef_slip",
+                           help="Half-spread + impact per trade, in bps of traded value.")
+    er = st.number_input("expense ratio %/yr", 0.0, 10.0, 0.40, 0.05, key="ef_er",
+                         help="The fund's annual fee, deducted daily.") / 100
+    borrow = st.number_input("short borrow bps/yr", 0.0, 5000.0, 50.0, 10.0, key="ef_borrow",
+                             help="Annual cost of borrowing the shorted names.") \
         if spec.direction != "long" else 0.0
-    cfg = pf.PortfolioConfig(capital=1_000_000.0, rebalance=spec.rebalance, cost_bps=cost, slippage_bps=slip,
+    capital = float(st.number_input("capital $", 1_000.0, 1e11, 1_000_000.0, 10_000.0, key="ef_cap",
+                                    help="Starting fund size."))
+    cfg = pf.PortfolioConfig(capital=capital, rebalance=spec.rebalance, cost_bps=cost, slippage_bps=slip,
                              expense_ratio_annual=er, borrow_bps=borrow, max_weight=spec.max_weight,
                              direction=spec.direction)
     st.markdown(section("03 · WINDOW & BENCHMARKS", 2), unsafe_allow_html=True)
     a, b = C.date_range("ef", _dt.date(2012, 1, 1), _dt.date(1995, 1, 1))
-    bench = st.multiselect("benchmarks", BENCH, default=["SPY"], key="ef_bench",
+    extra_b = _tickers(st.text_input("extra benchmark tickers", "", key="ef_bench_x",
+                                     help="Comma-separated, any Yahoo ticker, e.g. VTI, ACWI."))
+    bench = st.multiselect("benchmarks", list(dict.fromkeys(BENCH + extra_b)), default=["SPY"] + extra_b,
+                           key="ef_bench",
                            help="Compared on every chart and table. The first one is used for the equity chart, "
                                 "alpha/beta and the diversification test.")
     return spec, cfg, (a.isoformat(), C._iso_end(b)), bench

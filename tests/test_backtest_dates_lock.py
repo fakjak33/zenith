@@ -51,3 +51,10 @@ def test_start_end_ts():
     assert s.start_ts() == pd.Timestamp("2011-03-04") and s.end_ts() == pd.Timestamp("2015-01-01")
     assert StrategySpec(start_year=2010).start_ts() == pd.Timestamp("2010-01-01")
     assert StrategySpec().end_ts() is None
+
+
+def test_atr_period_late_default_and_plumbing():
+    assert StrategySpec().hash() == StrategySpec(atr_period=14).hash()
+    s = StrategySpec(atr_period=30, use_atr_stop=True)
+    assert s.hash() != StrategySpec(use_atr_stop=True).hash()
+    assert s.bt().atr_period == 30 and s.risk().atr_period == 30

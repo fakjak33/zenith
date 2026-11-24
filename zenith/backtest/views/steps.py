@@ -43,9 +43,9 @@ def _rule_params(spec: StrategySpec) -> list[str]:
 
 
 # knob → (widget key, multiplier) so "use plateau centre" can write the value back to the builder
-_KNOB_WIDGET = {"s:target_vol": ("bt_tvol", 100, int), "s:fixed_pct": ("bt_fpct", 100, int),
+_KNOB_WIDGET = {"s:target_vol": ("bt_tvol", 100, float), "s:fixed_pct": ("bt_fpct", 100, float),
                 "s:risk_pct": ("bt_risk", 100, float), "s:atr_stop_mult": ("bt_stopk", 1, float),
-                "s:atr_tp_mult": ("bt_tpk", 1, float), "s:buffer": ("bt_buf", 100, int),
+                "s:atr_tp_mult": ("bt_tpk", 1, float), "s:buffer": ("bt_buf", 100, float),
                 "s:max_leverage": ("bt_lev", 1, float)}
 
 
