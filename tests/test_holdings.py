@@ -181,6 +181,10 @@ def test_exposure_summary_excludes_collateral(fixture_html):
 
 # --- snapshot validation -----------------------------------------------------
 
+# the fixture page's value date; snapshot checks are run "as of" that day so the test doesn't age
+FIXTURE_DAY = date(2026, 8, 7)
+
+
 def _meta(parsed: dict | None = None, **overrides):
     """Adapter meta for a full-size page.
 
@@ -196,7 +200,7 @@ def _meta(parsed: dict | None = None, **overrides):
 
 def test_snapshot_builds_and_validates(fixture_html):
     rows, m = imgp.parse(fixture_html)
-    snap = snapshot.build("dbmf", rows, _meta(m))
+    snap = snapshot.build("dbmf", rows, _meta(m), today=FIXTURE_DAY)
     assert snapshot.is_ok(snap), snap["quality"]["errors"]
     assert snap["as_of"] == "2026-08-07"
     assert snap["n_positions"] == 6                  # 5 futures + collateral
@@ -204,7 +208,7 @@ def test_snapshot_builds_and_validates(fixture_html):
 
 def test_snapshot_rejects_a_parse_break(fixture_html):
     rows, m = imgp.parse(fixture_html)
-    snap = snapshot.build("dbmf", rows[:2], _meta(m))
+    snap = snapshot.build("dbmf", rows[:2], _meta(m), today=FIXTURE_DAY)
     assert not snapshot.is_ok(snap)
     assert "parse break" in snapshot.reason(snap)
 
@@ -212,7 +216,7 @@ def test_snapshot_rejects_a_parse_break(fixture_html):
 def test_snapshot_rejects_a_missing_total_row(fixture_html):
     rows, m = imgp.parse(fixture_html)
     trimmed = [r for r in rows if "TOTAL" not in r["security_name"].upper()]
-    snap = snapshot.build("dbmf", trimmed, _meta(m))
+    snap = snapshot.build("dbmf", trimmed, _meta(m), today=FIXTURE_DAY)
     assert not snapshot.is_ok(snap)
     assert "TOTAL NET ASSETS" in snapshot.reason(snap)
 
@@ -220,14 +224,14 @@ def test_snapshot_rejects_a_missing_total_row(fixture_html):
 def test_snapshot_rejects_an_implausible_nav_jump(fixture_html):
     rows, m = imgp.parse(fixture_html)
     prev = {"as_of": "2026-08-06", "nav": 1_000_000_000.0, "positions": []}
-    snap = snapshot.build("dbmf", rows, _meta(m), previous=prev)
+    snap = snapshot.build("dbmf", rows, _meta(m), previous=prev, today=FIXTURE_DAY)
     assert not snapshot.is_ok(snap)
     assert "NAV moved" in snapshot.reason(snap)
 
 
 def test_snapshot_rejects_a_partial_download(fixture_html):
     rows, m = imgp.parse(fixture_html)
-    snap = snapshot.build("dbmf", rows, _meta(m, html_bytes=4_000))
+    snap = snapshot.build("dbmf", rows, _meta(m, html_bytes=4_000), today=FIXTURE_DAY)
     assert not snapshot.is_ok(snap)
     assert "partial download" in snapshot.reason(snap)
 
@@ -235,14 +239,24 @@ def test_snapshot_rejects_a_partial_download(fixture_html):
 def test_snapshot_rejects_a_stale_live_fetch_but_allows_a_replay(fixture_html):
     rows, m = imgp.parse(fixture_html)
     old = _meta(m, value_date="01/02/2020")
-    assert not snapshot.is_ok(snapshot.build("dbmf", rows, old, live=True))
-    assert snapshot.is_ok(snapshot.build("dbmf", rows, old, live=False))
+    assert not snapshot.is_ok(snapshot.build("dbmf", rows, old, live=True, today=FIXTURE_DAY))
+    assert snapshot.is_ok(snapshot.build("dbmf", rows, old, live=False, today=FIXTURE_DAY))
+
+
+def test_snapshot_staleness_boundary(fixture_html):
+    """A live fetch is fine up to MAX_STALE_DAYS old and rejected one day later."""
+    from datetime import timedelta
+    rows, m = imgp.parse(fixture_html)
+    edge = FIXTURE_DAY + timedelta(days=snapshot.MAX_STALE_DAYS)
+    assert snapshot.is_ok(snapshot.build("dbmf", rows, _meta(m), today=edge))
+    late = snapshot.build("dbmf", rows, _meta(m), today=edge + timedelta(days=1))
+    assert not snapshot.is_ok(late) and "days old" in snapshot.reason(late)
 
 
 def test_snapshot_rejects_a_future_value_date(fixture_html):
     rows, m = imgp.parse(fixture_html)
     snap = snapshot.build("dbmf", rows, _meta(m, value_date="12/31/2099"),
-                          live=False)
+                          live=False, today=FIXTURE_DAY)
     assert not snapshot.is_ok(snap)
     assert "future" in snapshot.reason(snap)
 
