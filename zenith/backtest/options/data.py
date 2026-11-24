@@ -7,7 +7,7 @@ import pandas as pd
 
 from ...stratidx.fetch import cboe_csv
 from ..attrib.benchmarks import cash_index
-from ..data.providers import get_prices
+from ..data.providers import get_prices, get_raw_prices
 from .engine import TERM_COLS, dividend_yield
 
 # underlying → (option-settlement price ticker, total-return ticker, own Cboe vol index or None)
@@ -32,6 +32,16 @@ def load(underlying: str, start: int | str = 2007, end: str | None = None) -> di
     ``start`` is a year (int) or an ISO date; ``end`` None/'' = latest bar."""
     s_t, tr_t, own = UNDERLYINGS.get(underlying, (underlying, underlying, None))
     S, tr = _px(s_t), _px(tr_t)
+    # Options are struck and settle on the price AS TRADED. Yahoo's default ETF closes are
+    # dividend-adjusted (old prices scaled down by every later dividend), so ETFs use the raw close,
+    # and the dividends come back in as a yield q (raw vs total-return), exactly as for SPX.
+    raw = None if s_t.startswith("^") else get_raw_prices(s_t)
+    if raw is not None and not raw.empty and raw["close"].notna().sum() > 260:
+        S = raw["close"].dropna()
+        basis = "as traded (unadjusted)"
+    else:
+        raw = None
+        basis = "price index" if s_t.startswith("^") else "dividend-adjusted (raw closes unavailable)"
     term = pd.DataFrame({c: cboe_csv(c) for c in TERM_COLS})
     if term["VIX"].empty:
         raise ValueError("VIX history unavailable (Cboe download failed and no cache)")
@@ -52,16 +62,20 @@ def load(underlying: str, start: int | str = 2007, end: str | None = None) -> di
     S = S[S.index >= start]
     if stop is not None:
         S = S[S.index <= stop]
-    # ETFs come dividend-adjusted from Yahoo, so their own yield is already in the price path
-    q = dividend_yield(_px("^GSPC"), _px("^SP500TR")) if s_t == "^GSPC" else None
-    ohlc = get_prices(s_t, start=None)[["open", "high", "low", "close"]]
+    if s_t == "^GSPC":
+        q = dividend_yield(_px("^GSPC"), _px("^SP500TR"))
+    elif raw is not None:
+        q = dividend_yield(raw["close"].dropna(), tr)          # trailing-year yield from raw vs total return
+    else:
+        q = None                                                # adjusted path already carries the dividends
+    ohlc = (raw if raw is not None else get_prices(s_t, start=None))[["open", "high", "low", "close"]]
     ohlc = ohlc[ohlc.index >= start]
     if stop is not None:
         ohlc = ohlc[ohlc.index <= stop]
     iv1d, iv1d_src = one_day_vol(term)
     return {"S": S, "stock_tr": tr, "term": term, "skew": skew, "rf": rf, "vol_scale": scale, "q": q,
             "settle": s_t, "vol_source": own or ("VIX" if s_t in ("^GSPC", "SPY") else "VIX × realised-vol ratio"),
-            "ohlc": ohlc, "iv1d": iv1d, "iv1d_src": iv1d_src}
+            "ohlc": ohlc, "iv1d": iv1d, "iv1d_src": iv1d_src, "price_basis": basis}
 
 
 def one_day_vol(term: pd.DataFrame) -> tuple[pd.Series, pd.Series]:

@@ -313,3 +313,40 @@ def get_panel(
     panel.attrs["errors"] = errors
     panel.attrs["from_store"] = len(store.columns)
     return panel
+
+
+def _raw_path(ticker: str) -> Path:
+    DATA_CACHE.mkdir(parents=True, exist_ok=True)
+    path = (DATA_CACHE / f"{clean_ticker(ticker)}.raw.parquet").resolve()
+    if DATA_CACHE.resolve() not in path.parents:
+        raise ValueError(f"Unsafe cache path for ticker {ticker!r}")
+    return path
+
+
+def get_raw_prices(ticker: str, force_refresh: bool = False, download: bool = True) -> pd.DataFrame | None:
+    """OHLC as actually traded: split-adjusted but NOT dividend-adjusted (``auto_adjust=False``).
+
+    Listed option strikes and premiums live on this scale; ``get_prices`` (total-return adjusted)
+    understates old prices by the dividends paid since. Own parquet cache, same TTL; a stale file
+    beats nothing; None when unavailable (callers fall back to adjusted prices)."""
+    ticker = clean_ticker(ticker)
+    path = _raw_path(ticker)
+    if path.exists() and (not download or (_is_fresh(path) and not force_refresh)):
+        return pd.read_parquet(path)
+    if not download:
+        return None
+    try:
+        import yfinance as yf
+        raw = yf.download(ticker, period="max", auto_adjust=False, progress=False, threads=False)
+        if raw is None or raw.empty:
+            raise ValueError("empty")
+        if isinstance(raw.columns, pd.MultiIndex):
+            raw.columns = raw.columns.get_level_values(0)
+        raw = raw.rename(columns=str.lower)
+        out = raw[[c for c in ("open", "high", "low", "close") if c in raw.columns]].dropna(how="all").copy()
+        out.index = pd.to_datetime(out.index).tz_localize(None)
+        out.index.name = "date"
+        out.to_parquet(path)
+        return out
+    except Exception:  # noqa: BLE001
+        return pd.read_parquet(path) if path.exists() else None

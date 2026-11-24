@@ -258,7 +258,8 @@ def atm_vol(term_row: np.ndarray, T: float) -> float:
 def smile(atm: float, S: float, K, T: float, skew_idx: float) -> np.ndarray:
     kappa = float(np.clip(0.06 * (skew_idx - 100.0) / 10.0, 0.02, 0.35)) if np.isfinite(skew_idx) else 0.15
     z = np.log(np.asarray(K, float) / S) / (atm * np.sqrt(max(T, 1e-6)))
-    mult = np.clip(np.exp(-kappa * z), 0.6, 3.0)
+    with np.errstate(over="ignore"):                        # far wings at T→0: exp overflows, then clipped
+        mult = np.clip(np.exp(-kappa * z), 0.6, 3.0)
     return atm * mult
 
 
