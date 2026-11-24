@@ -91,3 +91,18 @@ def test_account_equity_sums(mkt):
     acct = E.account_equity(res.equity, {"SPY": S}, {"SPY": 25_000.0}, 1_000.0, mkt[3])
     assert np.allclose(acct["total"], acct["holdings"] + acct["options"] + acct["cash"])
     assert abs(acct["holdings"].iloc[0] - 25_000) < 1e-6 and acct["cash"].iloc[-1] > 1_000
+
+
+def test_topup_is_contribution_not_return(mkt):
+    base = replace(TAIL, entry="monthly", max_open=3)
+    a = run(base, mkt)
+    b = run(replace(base, topup_usd=300.0), mkt)
+    assert b.contrib.sum() > 0 and a.contrib.sum() == 0
+    # with no trading at all the top-up adds dollars but no return
+    idle = replace(base, sizing="contracts", size_contracts=0)
+    c = run(replace(idle, topup_usd=300.0), mkt)
+    assert c.trades.empty and c.equity.iloc[-1] > 5_000 + c.contrib.sum() * 0.99
+    assert (c.returns < 0.01).all()                                         # only T-bill interest
+    acct = E.account_equity(c.equity, {}, {}, 10_000.0, mkt[3], c.contrib)
+    assert abs(acct["total"].iloc[-1] - acct["options"].iloc[-1] - acct["cash"].iloc[-1]) < 1e-6
+    assert acct["cash"].iloc[-1] < 10_000                                   # top-ups came out of idle cash

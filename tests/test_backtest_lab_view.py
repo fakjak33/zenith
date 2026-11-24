@@ -112,6 +112,28 @@ def test_options_page_renders():
     assert not at.exception, [e.value for e in at.exception]
     t = _text(at)
     assert "MODELED" in t and "SHARPE" in t
+    assert "ACCOUNT NOW" in t                         # $ account is the default
+
+
+@pytest.mark.skipif(not _OPT_CACHE.exists(), reason="needs cached Cboe VIX history")
+@pytest.mark.parametrize("how,extra", [
+    ("simple", {"op_s_struct": "put spread", "op_s_act": "sell"}),
+    ("simple", {"op_s_struct": "iron condor"}),
+    ("template", {"op_tpl": "Long put hedge (90%)", "op_acct": "% of equity"}),
+    ("advanced legs", {"op_entry": "monthly", "op_maxopen_monthly": 3, "op_rolldte": 10}),
+    ("simple", {"op_entry": "weekly", "op_size_usd": "contracts", "op_ride": True}),
+])
+def test_options_builder_modes_render(how, extra):
+    at = AppTest.from_string("from zenith.backtest.views import options_view\noptions_view.render()\n",
+                             default_timeout=600)
+    at.session_state["op_how"] = how
+    at.session_state["op_start"] = __import__("datetime").date(2018, 1, 1)
+    for k, v in extra.items():
+        at.session_state[k] = v
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    t = _text(at)
+    assert "Expiry:" in t and "SHARPE" in t
 
 
 def test_learn_page_renders():

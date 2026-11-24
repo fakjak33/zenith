@@ -111,6 +111,7 @@ class OptionStrategy:
     size_usd: float = 0.0        # $ budget for the *_usd sizing modes
     size_contracts: int = 0      # "contracts" sizing: contracts per entry
     cash_check: bool = True      # with capital > 0: never spend more cash on debits than the sleeve has free
+    topup_usd: float = 0.0       # $ added to the sleeve on the first trading day of each month (not a return)
 
 
 FILTER_KEYS = {
@@ -161,7 +162,7 @@ CATALOG: dict[str, tuple[OptionStrategy, dict]] = {
     "Call credit spread (30Δ / 10Δ)": (_S("Call credit spread", [_L("call", -1, "delta", 0.30),
                                                                   _L("call", 1, "delta", 0.10)]),
                                        dict(flow="credit", vol="short", bias="bearish", risk="defined")),
-    "Jade lizard (20Δ put, 20Δ/5% call spread)": (
+    "Jade lizard (20Δ put, 20Δ/3% call spread)": (
         _S("Jade lizard", [_L("put", -1, "delta", 0.20), _L("call", -1, "delta", 0.20),
                            _L("call", 1, "wing", 0.03, ref=1)]),
         dict(flow="credit", vol="short", bias="bullish", risk="undefined")),
@@ -294,6 +295,7 @@ class OptionResult:
     positions: pd.Series | None = None    # positions open at each close
     contracts: pd.Series | None = None    # contracts open at each close (units / multiplier)
     skipped: dict = field(default_factory=dict)   # entries not taken, by reason
+    contrib: pd.Series | None = None      # $ added to the sleeve each day (monthly top-ups)
 
 
 # ------------------------------------------------------------- strikes ----
@@ -491,8 +493,10 @@ def simulate(strat: OptionStrategy, S: pd.Series, term: pd.DataFrame, skew: pd.S
     positions: list[dict] = []     # {"legs", "units", "entry_book", "prev", "opened", "trade"}
     stock_units = 0.0              # units the stock leg is sized on (the last positions', kept while flat)
     eq, rets, cost_s, net_delta, net_vega, trades = [], [], [], [], [], []
-    n_open, n_ctr = [], []
+    n_open, n_ctr, contrib = [], [], []
     skipped: dict[str, int] = {}
+    ym = idx.year * 100 + idx.month
+    month_start = np.r_[False, ym[1:] != ym[:-1]]
     tv = term.to_numpy(float)
     Sv, skv, rfv, qv, scv = (S.to_numpy(float), skew.to_numpy(float), rf.to_numpy(float), q.to_numpy(float),
                              scale.to_numpy(float))
@@ -553,6 +557,9 @@ def simulate(strat: OptionStrategy, S: pd.Series, term: pd.DataFrame, skew: pd.S
         pnl = 0.0
         s = Sv[i]
         rolls = 0
+        add = float(strat.topup_usd) if (strat.topup_usd > 0 and strat.capital > 0 and month_start[i]) else 0.0
+        V += add                                            # a contribution, so it is not counted as return
+        contrib.append(add)
         # 1) mark existing positions and manage each one
         keep = []
         for P in positions:
@@ -691,7 +698,7 @@ def simulate(strat: OptionStrategy, S: pd.Series, term: pd.DataFrame, skew: pd.S
                         exposure=pd.DataFrame({"delta": net_delta, "vega_per_volpt": net_vega}, index=idx),
                         costs=pd.Series(cost_s, index=idx), label=f"{strat.name} · MODELED", gate=gate,
                         positions=pd.Series(n_open, index=idx), contracts=pd.Series(n_ctr, index=idx),
-                        skipped=skipped)
+                        skipped=skipped, contrib=pd.Series(contrib, index=idx))
 
 
 # ------------------------------------------------------------------ 0DTE ----
@@ -867,7 +874,7 @@ def calibration_tier(cal: dict) -> tuple[str, str]:
 
 # --------------------------------------------------------------- account ----
 def account_equity(sleeve: pd.Series, holdings: dict, amounts: dict, cash: float,
-                   rf: pd.Series | None = None) -> pd.DataFrame:
+                   rf: pd.Series | None = None, contrib: pd.Series | None = None) -> pd.DataFrame:
     """Dollar account = buy-and-hold holdings + the options sleeve + idle cash earning the T-bill rate.
 
     ``sleeve``: the options sleeve's $ equity (``OptionResult.equity`` with ``capital`` set).
@@ -881,10 +888,88 @@ def account_equity(sleeve: pd.Series, holdings: dict, amounts: dict, cash: float
     hold = pd.DataFrame(cols, index=idx) if cols else pd.DataFrame(index=idx)
     daily = (rf.reindex(idx).ffill().fillna(0.0) / 252.0).shift(1).fillna(0.0) if rf is not None \
         else pd.Series(0.0, index=idx)
-    cash_s = float(cash) * (1 + daily).cumprod()
+    if contrib is not None and contrib.reindex(idx).fillna(0.0).abs().sum() > 0:
+        c = contrib.reindex(idx).fillna(0.0).to_numpy(float)       # top-ups move cash into the options sleeve
+        g = (1 + daily).to_numpy(float)
+        v, path = float(cash), []
+        for k in range(len(idx)):
+            v = v * g[k] - c[k]
+            path.append(v)
+        cash_s = pd.Series(path, index=idx)
+    else:
+        cash_s = float(cash) * (1 + daily).cumprod()
     out = pd.DataFrame({"holdings": hold.sum(axis=1) if cols else 0.0, "options": sleeve, "cash": cash_s},
                        index=idx)
     out["total"] = out[["holdings", "options", "cash"]].sum(axis=1)
     for t in hold:
         out[f"h:{t}"] = hold[t]
+    return out
+
+
+# -------------------------------------------------------------- describe ----
+def _leg_text(L: Leg, i: int) -> str:
+    act = "Buy" if L.side > 0 else "Sell"
+    q = f"{L.qty:g}× " if L.qty != 1 else ""
+    if L.rule == "delta":
+        k = f"{L.value * 100:g}-delta {L.kind} (≈{L.value * 100:.0f}% chance of expiring in the money)"
+    elif L.rule == "pct":
+        m = L.value * 100
+        where = "at the money" if abs(m - 100) < 1e-9 else (
+            f"{abs(100 - m):g}% {'out of' if (m < 100) == (L.kind == 'put') else 'in'} the money")
+        k = f"{L.kind} struck at {m:g}% of spot ({where})"
+    elif L.rule == "atm":
+        k = f"at-the-money {L.kind}"
+    elif L.rule == "wing":
+        k = f"{L.kind} {L.value * 100:g}% of spot further out than leg {L.ref + 1}"
+    else:
+        k = f"{L.kind} whose price is ≈{L.value * 100:g}% of spot"
+    exp = f", own expiry {L.dte} days out" if L.dte else ""
+    return f"{i + 1}. {act} {q}{k}{exp}"
+
+
+def describe(strat: OptionStrategy) -> list[str]:
+    """Plain-English lines describing exactly what the engine will do with ``strat``."""
+    out = [_leg_text(L, i) for i, L in enumerate(strat.legs)]
+    if strat.stock:
+        out.append(f"Also holds {strat.stock:g} unit(s) of the underlying per option unit (a stock leg), "
+                   "so gains and losses on the shares are part of this strategy.")
+    if strat.roll == "0dte":
+        out.append("Expiry: same day — opened at the open and settled at the close (0DTE).")
+    elif strat.roll == "monthly":
+        out.append(f"Expiry: the standard monthly 3rd-Friday contract about {strat.dte} days out.")
+    else:
+        out.append(f"Expiry: exactly {strat.dte} calendar days after entry.")
+    out.append(f"Entries: {ENTRY.get(strat.entry, strat.entry)}"
+               + (f" (weekday {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'][strat.entry_weekday]})" if strat.entry == "weekly" else "")
+               + (f" (trading day {strat.entry_day})" if strat.entry == "monthly" else "")
+               + (f" (N = {strat.entry_every})" if strat.entry == "every_n" else "")
+               + f"; at most {strat.max_open} open at once"
+               + ("; entry filters apply." if strat.filters else "."))
+    ex = []
+    if strat.take_profit > 0:
+        ex.append(f"take profit at +{strat.take_profit * 100:g}% of the premium")
+    if strat.stop_mult > 0:
+        ex.append(f"stop at a loss of {strat.stop_mult * 100:g}% of the premium")
+    if strat.roll_dte > 0:
+        ex.append(f"roll (close and reopen) at {strat.roll_dte} days to expiry")
+    if strat.exit_dte > 0:
+        ex.append(f"close at {strat.exit_dte} days to expiry")
+    if strat.max_hold > 0:
+        ex.append(f"close after {strat.max_hold} days")
+    if strat.delta_exit > 0:
+        ex.append(f"close if |net delta| exceeds {strat.delta_exit:g}")
+    out.append("Exits: " + (", ".join(ex) + "; otherwise held to expiry." if ex else "held to expiry."))
+    sz = {"contracts": f"{strat.size_contracts} contract(s) per entry",
+          "premium_usd": f"${strat.size_usd:,.0f} of premium per entry",
+          "risk_usd": f"${strat.size_usd:,.0f} maximum loss per entry",
+          "notional_usd": f"${strat.size_usd:,.0f} of underlying notional per entry",
+          "premium": f"{strat.size_pct * 100:g}% of equity in premium per entry",
+          "risk": f"{strat.size_pct * 100:g}% of equity maximum loss per entry",
+          "notional": f"{strat.size_pct * 100:g}% of equity in notional per entry",
+          "collateral": "fully collateralised: one unit of underlying notional per option unit"}
+    if strat.topup_usd > 0:
+        out.append(f"Options cash is topped up by ${strat.topup_usd:,.0f} on the first trading day of each month.")
+    out.append("Size: " + sz.get(strat.sizing, strat.sizing)
+               + (f", rounded down to whole contracts of {strat.multiplier:g}" if strat.contracts == "whole" else "")
+               + ".")
     return out
