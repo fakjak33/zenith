@@ -629,7 +629,9 @@ def render() -> None:
                 f"{cal['PPUT'].get('cagr_model', np.nan) * 100:.1f}% vs {cal['PPUT'].get('cagr_actual', np.nan) * 100:.1f}% "
                 f"(2007→). " + ("0DTE is priced from VIX1D (VIX9D-based before May 2022) — not calibrated to any "
                                 "published index. " if strat.roll == "0dte" else "")
-                + ("" if und == "SPX" else f"{und} is priced off {x['vol_source']}; only SPX is calibrated directly."))
+                + ("" if und == "SPX" else f"{und} is priced off {x['vol_source']}; only SPX is calibrated directly. "
+                   f"Strikes and premiums use {x.get('price_basis', 'adjusted')} prices"
+                   + (" with the dividend yield priced in." if x.get("q") is not None else ".")))
         st.markdown(evidence_rating(tier if und == "SPX" else "C", "MODELED — calibration vs Cboe", note),
                     unsafe_allow_html=True)
         chips = [C.uc.chip("MODELED CHAINS", T.amber), C.uc.chip("HALF-SPREAD ON", T.teal),
