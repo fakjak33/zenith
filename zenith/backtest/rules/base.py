@@ -33,6 +33,8 @@ class Strategy:
     params: dict = field(default_factory=dict)
     spectrum_param: str = ""
     cross_sectional: bool = False
+    param_help: dict = field(default_factory=dict)   # name -> hover text (falls back to glossary.PARAM_HELP)
+    needs: tuple = ()                                 # extra frame columns (ref_close, vix, vix3m)
 
     # --- plain-English explainers (see module docstring) -------------------
     plain: str = ""              # one sentence, no jargon

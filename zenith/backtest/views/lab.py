@@ -1,7 +1,7 @@
 """BACKTEST / LAB — build a strategy by clicking, then walk it through the
 research steps with the guard rails on.
 
-DEFINE → BUILD → SENSITIVITY → ROBUSTNESS → FILTERS → ATTRIBUTION → OUT-OF-SAMPLE
+DEFINE → EXPLORE → BUILD → SENSITIVITY → ROBUSTNESS → FILTERS → ATTRIBUTION → OUT-OF-SAMPLE
 
 Every step sees only the in-sample slice. The holdout is revealed once, at
 the end, and the reveal is logged; changing the strategy afterwards marks the
@@ -26,10 +26,12 @@ from ..engine import metrics
 from ..engine.trades import extract_trades
 from ..spec import StrategySpec, run_spec
 from . import common as C
-from . import attribution, steps
+from . import attribution, compose_panel, explorer, steps
+from . import regime_panel as RP
+from .. import glossary as G
 from .attribution import GOALS
 
-STEPS = ["DEFINE", "BUILD", "SENSITIVITY", "ROBUSTNESS", "FILTERS", "ATTRIBUTION", "OUT-OF-SAMPLE"]
+STEPS = ["DEFINE", "EXPLORE", "BUILD", "SENSITIVITY", "ROBUSTNESS", "FILTERS", "ATTRIBUTION", "OUT-OF-SAMPLE", "DECAY"]
 
 _FINDINGS = [
     {"stat": "Fit as little as possible; judge a rule by how it behaves across a whole range of "
@@ -98,6 +100,9 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
     if fut:
         C.banner(T.amber, "FUTURES DATA", "Yahoo's continuous front-month series is not roll-adjusted: each roll can "
                  "show up as a fake jump, and carry/roll yield is missing. Treat trend results as approximate.")
+    rb_on, rb_cfg = RP.ribbon_settings(spec)
+    rb_lab = RP.labels_for(spec, ins, *rb_cfg) if rb_on else None
+    rb_order = RP.DETECTORS[rb_cfg[0]].order
     lock_end = full.index[-1] if (full is not None and locked is not None and not revealed) else None
     wa, wb = C.window_pick(r.index if lock_end is None else r.index.append(pd.DatetimeIndex([lock_end])),
                            "bt_win")
@@ -106,28 +111,40 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
     if (wa, wb) != (r.index[0], r.index[-1] if lock_end is None else lock_end):
         C.window_kpis(rw, bw, p, "b&h")
     names = ["EQUITY", "PRICE & TRADES", "ROLLING", "MONTHLY", "DISTRIBUTION", "COSTS", "STATS", "TRADES",
-             "SIZING"] + (["SEEDS"] if spec.src == "Synthetic" else [])
-    tabs = st.tabs(names + (["CONTRACTS"] if fut else []))
+             "SIZING", "REGIMES"] + (["SEEDS"] if spec.src == "Synthetic" else [])
+    extra = ["BLEND"] if spec.mode == "blend" else []
+    tabs = st.tabs(names + extra + (["CONTRACTS"] if fut else []))
+    if extra:
+        with tabs[len(names)]:
+            compose_panel.blend_tab(spec, ins, C.load_aux(spec))
     with tabs[8]:
         C.sizing_panel(spec, ins, res)
+    with tabs[9]:
+        RP.section_header()
+        RP.regimes_tab(spec, ins, res, b, rb_cfg)
+        compose_panel.luck_test(spec, ins, C.load_aux(spec))
     if spec.src == "Synthetic":
-        with tabs[9]:
+        with tabs[10]:
             C.seeds_panel(spec)
     if fut:
         with tabs[-1]:
             _contracts_tab(spec, ins, res, fut)
     with tabs[0]:
-        up.show(C.equity_fig(rw, bw, gw, shade_from=locked if revealed else None,
-                             locked_to=min(lock_end, wb) if lock_end is not None and wb > r.index[-1] else None),
-                460, "growth of 1 · LIN/LOG top right", key="bt_eq")
+        fig = C.equity_fig(rw, bw, gw, shade_from=locked if revealed else None,
+                           locked_to=min(lock_end, wb) if lock_end is not None and wb > r.index[-1] else None)
+        if rb_lab is not None:
+            RP.ribbon(fig, rb_lab.reindex(rw.index), rb_order)
+        up.show(fig, 460, "growth of 1 · LIN/LOG top right" + (" · shaded by regime" if rb_on else ""), key="bt_eq")
     with tabs[1]:
         from types import SimpleNamespace
         tw = trades[(pd.to_datetime(trades["entry_date"]) >= wa) & (pd.to_datetime(trades["entry_date"]) <= wb)] \
             if not trades.empty else trades
         lpx = C.clip(full["close"][full.index >= locked], wa, wb) if lock_end is not None else None
-        up.show(C.price_fig(insw, SimpleNamespace(forecast=C.clip(res.forecast, wa, wb)), spec.strategy(), tw,
-                            locked_px=lpx), 480,
-                "price, overlays, entries, forecast", key="bt_px")
+        fig = C.price_fig(insw, SimpleNamespace(forecast=C.clip(res.forecast, wa, wb)), spec.strategy(), tw,
+                          locked_px=lpx)
+        if rb_lab is not None:
+            RP.ribbon(fig, rb_lab.reindex(insw.index), rb_order)
+        up.show(fig, 480, "price, overlays, entries, forecast", key="bt_px")
     with tabs[2]:
         up.show(C.rolling_sharpe_fig(rw, bw, p), 320, "rolling 1-year sharpe", key="bt_roll")
     with tabs[3]:
@@ -149,10 +166,12 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
                    "margin for real-world fills.")
     with tabs[6]:
         keys = list(s.keys())
-        tbl = pd.DataFrame({"strategy": [C.fmt(k, s[k]) for k in keys],
-                            "buy & hold (vol-matched)": [C.fmt(k, bstats[k]) if k in bstats else "—" for k in keys]},
-                           index=keys)
-        st.dataframe(tbl, use_container_width=True)
+        tbl = pd.DataFrame({"metric": [G.metric_label(k) for k in keys],
+                            "strategy": [C.fmt(k, s[k]) for k in keys],
+                            "buy & hold (vol-matched)": [C.fmt(k, bstats[k]) if k in bstats else "—" for k in keys],
+                            "what it means": [G.metric_help(k) for k in keys]})
+        st.dataframe(tbl, use_container_width=True, hide_index=True,
+                     column_config={"what it means": st.column_config.TextColumn(width="large")})
         st.caption("DSR deflates the Sharpe by the trial count shown in the rail above. PSR/DSR are the "
                    "probability that the true Sharpe beats the bar.")
         C.diversify_panel(r, ins["close"].pct_change().reindex(r.index), p, f"{spec.name} BUY & HOLD", "bt_div")
@@ -272,6 +291,10 @@ def render() -> None:
         if step == "DEFINE":
             step_define(spec)
             return
+        if step == "DECAY":
+            from . import decay_panel
+            decay_panel.render(spec, "bt_dc")
+            return
         try:
             full = C.load(spec)
         except Exception as exc:  # noqa: BLE001
@@ -298,12 +321,18 @@ def render() -> None:
             warn.append(f"{years:.1f} years in-sample is short (want ≥{C.MIN_YEARS:.0f}).")
         if locked is None:
             warn.append("No holdout: every number below has been seen, so none of it is out-of-sample.")
+        miss = C.missing_aux(spec, aux)
+        if miss:
+            warn.append(f"This rule needs {', '.join(miss)} ({'market data only' if spec.src != 'Market' else 'download failed'}) "
+                        "and is flat without it.")
         if any(f["key"] == "vix" for f in spec.filters) and aux.get("vix") is None:
             warn.append("VIX filter has no data here (synthetic or download failed) and is passing everything.")
-        if warn and step in ("BUILD", "SENSITIVITY"):
+        if warn and step in ("EXPLORE", "BUILD", "SENSITIVITY"):
             C.banner(T.amber, "CAUTION", " ".join(warn))
 
-        if step == "BUILD":
+        if step == "EXPLORE":
+            explorer.render(spec, ins, aux)
+        elif step == "BUILD":
             rev = lg.revealed(led, spec.family()) if locked is not None else None
             if rev and rev["hash"] == spec.hash():
                 # the one look has been taken for this exact spec: BUILD may show the whole history
