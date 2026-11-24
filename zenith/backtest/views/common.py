@@ -16,12 +16,14 @@ from ... import ui_charts as uc
 from ... import ui_plotly as up
 from ...config import THEME as T
 from ...ui_theme import section
+from .. import glossary as G
 from .. import ledger as lg
 from ..config import FUTURES, caps, is_local
 from ..data.providers import TIMEFRAMES, get_prices, resample_ohlcv
 from ..data.synthetic import KIND_HELP, TICKER_KINDS, from_ticker, generate
 from ..engine import diversify as dv
 from ..engine import metrics
+from ..indicators import CATALOG, FAMILIES
 from ..rules import REGISTRY
 from ..spec import FILTERS, SIZING_MODES, StrategySpec
 
@@ -60,12 +62,30 @@ def load(spec: StrategySpec, name: str | None = None, seed: int | None = None) -
 def load_aux(spec: StrategySpec) -> dict:
     """Side series that filters need (VIX), loaded only when a filter uses them."""
     aux = {}
-    if spec.src == "Market" and any(f["key"] == "vix" and f.get("on") for f in spec.filters):
+    needs = spec.needs()
+    if spec.src != "Market":
+        return aux
+    if any(f["key"] == "vix" and f.get("on") for f in spec.filters) or "vix" in needs:
         try:
             aux["vix"] = _market("^VIX")["close"]
         except Exception:  # noqa: BLE001
             aux["vix"] = None
+    if "vix3m" in needs:
+        try:
+            aux["vix3m"] = _market("^VIX3M")["close"]
+        except Exception:  # noqa: BLE001
+            aux["vix3m"] = None
+    if "ref_close" in needs:
+        try:
+            aux["ref_close"] = _market(spec.ref_ticker)["close"]
+        except Exception:  # noqa: BLE001
+            aux["ref_close"] = None
     return aux
+
+
+def missing_aux(spec: StrategySpec, aux: dict) -> list[str]:
+    """Aux columns the rule needs but could not get (synthetic data or a failed download)."""
+    return [c for c in spec.needs() if aux.get(c) is None]
 
 
 # ---------------------------------------------------------------- saved ----
@@ -149,6 +169,82 @@ def lock_input(prefix: str, default: float = 2.0) -> float:
              "0 = no holdout (nothing left to test on honestly)."))
 
 
+LIBS =["CLASSIC RULES", "INDICATOR LIBRARY"]
+
+# one-way (commission bps, slippage bps, note)
+COST_PRESETS = {
+    "custom": (1.0, 1.5, ""),
+    "liquid ETF · retail": (0.0, 2.0, "Zero commission, ~1-2 bp half-spread + impact on SPY/QQQ-class ETFs."),
+    "single stocks · retail": (0.0, 5.0, "Zero commission, wider spreads on mid caps."),
+    "futures · institutional": (0.5, 1.0, "Exchange + broker fees and one tick of slippage on liquid futures."),
+    "crypto · taker": (4.1, 2.0, "Hyperliquid-style taker fee 4.1 bp (MemLabs) plus slippage."),
+    "crypto · maker": (1.2, 0.0, "Maker fee 1.2 bp, no slippage — assumes your limit orders always fill."),
+    "small caps / illiquid": (5.0, 20.0, "Wide spreads and market impact."),
+}
+
+
+def classic_keys() -> list[str]:
+    return [k for k, c in REGISTRY.items() if not c.cross_sectional and not k.startswith("i_")]
+
+
+def rule_label(k: str) -> str:
+    c = REGISTRY[k]
+    ind = getattr(c, "indicator", None)
+    return f"{c.label}  ·  {FAMILIES[ind.family].split(' ')[0]}" if ind else c.label
+
+
+def signal_picker(prefix: str = "bt") -> tuple[str, str]:
+    """Library / family / rule pickers. Returns (rule key, reference ticker)."""
+    cur = st.session_state.get(f"{prefix}_rule", "ema")
+    if f"{prefix}_lib" not in st.session_state:
+        st.session_state[f"{prefix}_lib"] = LIBS[1] if str(cur).startswith("i_") else LIBS[0]
+    lib = st.radio("library", LIBS, horizontal=True, key=f"{prefix}_lib", label_visibility="collapsed")
+    if lib == LIBS[1]:
+        fams = ["all", *FAMILIES]
+        fam = st.selectbox("family", fams, key=f"{prefix}_fam", format_func=lambda f: "ALL FAMILIES" if f == "all"
+                           else FAMILIES[f], help="Indicator families. The rule box below is searchable: type to "
+                                                  "filter.")
+        keys = [f"i_{i.key}" for i in CATALOG.values() if fam == "all" or i.family == fam]
+    else:
+        keys = classic_keys()
+    if st.session_state.get(f"{prefix}_rule") not in keys:
+        st.session_state[f"{prefix}_rule"] = "ema" if "ema" in keys else keys[0]
+    rule = st.selectbox("rule", keys, format_func=rule_label, key=f"{prefix}_rule",
+                        help="Type to search. The GUIDE below explains the selected rule in plain words.")
+    cls = REGISTRY[rule]
+    if cls.plain:
+        st.caption(cls.plain)
+    ref = "SPY"
+    if "ref_close" in (cls.needs or ()):
+        ref = st.text_input("reference ticker", "SPY", key=f"{prefix}_ref",
+                            help="The other asset this cross-asset indicator compares against or lags "
+                                 "(market data only).").strip().upper() or "SPY"
+    if "vix" in (cls.needs or ()):
+        st.caption("Reads Cboe VIX (and VIX3M): market data only — flat on synthetic data.")
+    return rule, ref
+
+
+def guide(cls) -> None:
+    """Plain-English guide for the selected rule (all explainer fields)."""
+    e = cls.explain()
+    with st.expander(f"GUIDE · {e['label']}"):
+        if e.get("plain"):
+            st.markdown(f"**What it is.** {e['plain']}")
+        if e.get("analogy"):
+            st.markdown(f"**{'Signal' if e.get('signal') else 'Analogy'}.** {e['analogy']}")
+        steps = [x for x in e.get("how_it_works") or [] if x]
+        if steps:
+            st.markdown("**How it works.**\n" + "\n".join(f"{i}. {x}" for i, x in enumerate(steps, 1)))
+        if e.get("works_when") and not e.get("signal"):
+            st.markdown(f"**Works when.** {e['works_when']}")
+        if e.get("fails_when"):
+            st.markdown(f"**Fails when.** {e['fails_when']}")
+        if e.get("evidence"):
+            st.markdown(f"**Evidence.** {e['evidence']}")
+        if e.get("video"):
+            st.caption(f"Related video: {e['video']}")
+
+
 def builder() -> StrategySpec:
     """Left-hand block builder → StrategySpec."""
     st.markdown(section("01 · UNIVERSE", 0, help="What the rule trades. Market = real Yahoo prices; Synthetic = "
@@ -183,22 +279,27 @@ def builder() -> StrategySpec:
                       help="Bar size the rule runs on. Weekly/monthly bars are built from daily data.")
     start_date, end_date = date_range("bt", _dt.date(2005, 1, 1))
 
-    st.markdown(section("02 · SIGNAL", 1, help="The rule turns prices into a forecast between −20 and +20 "
-                        "(+10 = a normal long). Sizing below turns the forecast into a position."),
-                unsafe_allow_html=True)
-    keys = [k for k, c in REGISTRY.items() if not c.cross_sectional]
-    rule = st.selectbox("rule", keys, index=keys.index("ema") if "ema" in keys else 0,
-                        format_func=lambda k: REGISTRY[k].label, key="bt_rule",
-                        help="The trading rule. Its plain-English description appears below.")
-    cls = REGISTRY[rule]
-    if cls.plain:
-        st.caption(cls.plain)
-    params, cols = {}, st.columns(2)
-    for i, (pname, spec_t) in enumerate(cls.params.items()):
-        with cols[i % 2]:
-            params[pname] = _num(pname, spec_t, param_key(rule, pname),
-                                 help=f"Allowed {spec_t[1]:g}–{spec_t[2]:g}, default {spec_t[0]:g}. Lengths are in "
-                                      "trading days and are rescaled automatically for weekly / monthly bars.")
+    st.markdown(section("02 · SIGNAL", 1, help="Pick what decides long / short. CLASSIC RULES are the curated "
+                        "Carver-style strategies; the INDICATOR LIBRARY turns any of ~75 indicators into a rule. "
+                        "Hover the ? on every control for what it does."), unsafe_allow_html=True)
+    from . import builder_ui as BU
+    smode = st.segmented_control("mode", list(BU.MODES), format_func=lambda m: BU.MODES[m], key="bt_mode",
+                                 default="single", help=BU.MODE_HELP) or "single"
+    blend, conds, ref = [], {}, "SPY"
+    rule = st.session_state.get("bt_rule", "ema")
+    params = {}
+    if smode == "single":
+        rule, ref = signal_picker()
+        cls = REGISTRY[rule]
+        params = BU.rule_params_ui("bt", rule)
+        guide(cls)
+    elif smode == "blend":
+        blend = BU.blend_ui()
+    else:
+        conds = BU.conditions_ui()
+    if smode != "single" and any("ref_close" in (getattr(REGISTRY.get(p["rule"]), "needs", ()) or ())
+                                  for p in blend):
+        ref = st.text_input("reference ticker", "SPY", key="bt_ref").strip().upper() or "SPY"
 
     st.markdown(section("03 · FILTERS", 5, help="Gates that can only remove exposure. Each one you add is "
                         "another trial; the FILTERS step tests whether it earns its place."),
@@ -213,6 +314,10 @@ def builder() -> StrategySpec:
                 with fc[j]:
                     fp[pn] = _num(pn, pt, f"bt_fp_{fkey}_{pn}")
             filters.append({"key": fkey, "on": True, "params": fp})
+
+    st.markdown(section("03b · REGIME RULES", 3, help="Make the strategy regime-aware: filter, size or switch "
+                        "by market regime. Off by default."), unsafe_allow_html=True)
+    regime = BU.regime_rule_ui(src, rule if smode == "single" else None)
 
     st.markdown(section("04 · SIZING & EXITS", 2, help="How big each position is. Pick ONE mode: only its "
                         "own controls are used, and the sentence under it says exactly what you are building."),
@@ -289,9 +394,19 @@ def builder() -> StrategySpec:
                                      "fixed-risk sizing. 14 is Wilder's original.")) \
         if (stop or tp or mode == "fixed_risk") else 14
 
-    st.markdown(section("05 · COSTS & HOLDOUT", 4, help="Trading costs are charged on every change in position. "
-                        "The holdout keeps the most recent years unseen until the final, logged reveal."),
-                unsafe_allow_html=True)
+    st.markdown(section("05 · COSTS & HOLDOUT", 4, help="Costs are charged on every change in position: "
+                        "commission + slippage, in basis points (1 bp = 0.01%) of the notional traded, on the way in "
+                        "AND the way out. MemLabs shows a 52% win-rate edge surviving maker fees and dying at taker "
+                        "fees — always look at the COSTS tab."), unsafe_allow_html=True)
+    preset = st.selectbox("cost preset", list(COST_PRESETS), key="bt_costp",
+                          help="Typical one-way costs. Pick one to fill the boxes below, or edit them freely.")
+    if preset != "custom" and st.session_state.get("_bt_costp_last") != preset:
+        st.session_state["_bt_costp_last"] = preset
+        st.session_state["bt_cost"], st.session_state["bt_slip"] = COST_PRESETS[preset][:2]
+    elif preset == "custom":
+        st.session_state["_bt_costp_last"] = preset
+    if preset != "custom":
+        st.caption(COST_PRESETS[preset][2])
     c1, c2 = st.columns(2)
     cost = c1.number_input("commission bps", 0.0, 500.0, 1.0, 0.5, key="bt_cost",
                            help="Charged on traded notional. 1 bp = 0.01%: $1 per $10,000 traded.")
@@ -308,7 +423,8 @@ def builder() -> StrategySpec:
                         atr_period=atr_n,
                         cost_bps=cost, slippage_bps=slip, holdout=0, lock_years=float(lock),
                         start_date=_iso_start(start_date), end_date=_iso_end(end_date),
-                        capital=float(capital), buffer=float(buffer), contract_fee=float(fee),
+                        capital=float(capital), buffer=float(buffer), contract_fee=float(fee), ref_ticker=ref,
+                        mode=smode, blend=blend, conditions=conds, regime=regime,
                         notes=st.session_state.get("bt_notes", ""))
 
 
@@ -537,7 +653,8 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
          "bt_tp": spec.use_atr_tp, "bt_stopk": float(spec.atr_stop_mult), "bt_tpk": float(spec.atr_tp_mult),
          "bt_cost": float(spec.cost_bps), "bt_slip": float(spec.slippage_bps), "bt_fee": float(spec.contract_fee),
          "bt_lock": float(spec.lock_years if spec.lock_years > 0 else (2.0 if spec.holdout else 0.0)),
-         "bt_notes": spec.notes}
+         "bt_notes": spec.notes,
+         "bt_lib": LIBS[1] if spec.rule.startswith("i_") else LIBS[0], "bt_fam": "all", "bt_ref": spec.ref_ticker}
     if spec.src == "Market":
         if spec.name in QUICK:
             w["bt_quick"] = spec.name
@@ -547,6 +664,13 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
         w["bt_synth"] = spec.name
     for k, v in spec.params.items():
         w[param_key(spec.rule, k)] = v
+    from . import builder_ui as BU
+    w["bt_mode"] = spec.mode if spec.mode in ("single", "blend", "conditions") else "single"   # ML specs live in ML LAB
+    if spec.mode == "blend":
+        w.update(BU.blend_to_widgets(spec.blend))
+    if spec.mode == "conditions":
+        w.update(BU.conds_to_widgets(spec.conditions))
+    w.update(BU.regime_to_widgets(spec.regime, spec.rule))
     on = {f["key"]: f for f in spec.filters if f.get("on", True)}
     for fkey in FILTERS:
         w[f"bt_f_{fkey}"] = fkey in on

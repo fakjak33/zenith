@@ -1,24 +1,24 @@
 {
-  "as_of": "2026-11-21",
+  "as_of": "2026-11-23",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-11-30",
   "regime": "Goldilocks / Reflation",
   "raw_regime": "Stagflation",
   "transitioning": true,
   "streak_months": 1,
-  "confidence": 39.4,
+  "confidence": 30.3,
   "growth": {
     "rising": false,
-    "breadth": 0.2727272727272727,
-    "n_rising": 3,
+    "breadth": 0.36363636363636365,
+    "n_rising": 4,
     "n_total": 11,
-    "z": 0.259,
+    "z": 0.227,
     "indicators": [
       {
         "id": "CFNAI",
         "label": "Chicago Fed National Activity Index",
-        "raw_value": 0.07,
-        "z": 0.07,
+        "raw_value": -0.06,
+        "z": 0.004,
         "direction": 1,
         "rising": false,
         "lag_days": 35,
@@ -27,8 +27,8 @@
       {
         "id": "INDPRO",
         "label": "Industrial Production",
-        "raw_value": 2.8863,
-        "z": 0.604,
+        "raw_value": 2.3368,
+        "z": 0.47,
         "direction": 1,
         "rising": true,
         "lag_days": 15,
@@ -77,18 +77,18 @@
       {
         "id": "HOUST",
         "label": "Housing Starts",
-        "raw_value": -7.4299,
-        "z": -0.685,
+        "raw_value": -0.7582,
+        "z": -0.217,
         "direction": 1,
-        "rising": false,
+        "rising": true,
         "lag_days": 18,
         "freq": "M"
       },
       {
         "id": "PERMIT",
         "label": "Building Permits",
-        "raw_value": -1.1315,
-        "z": -0.296,
+        "raw_value": -8.4158,
+        "z": -0.913,
         "direction": 1,
         "rising": false,
         "lag_days": 18,
@@ -131,7 +131,7 @@
     "breadth": 0.6666666666666666,
     "n_rising": 8,
     "n_total": 12,
-    "z": 0.101,
+    "z": 0.108,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -226,8 +226,8 @@
       {
         "id": "MICH",
         "label": "U Mich 1y Inflation Expectation",
-        "raw_value": 4.6,
-        "z": 1.018,
+        "raw_value": 4.7,
+        "z": 1.112,
         "direction": 1,
         "rising": true,
         "lag_days": 15,
@@ -256,11 +256,11 @@
     ]
   },
   "momentum": {
-    "score": 0.0,
-    "growth_slope": 0.0023,
-    "growth_r2": 0.015,
-    "infl_slope": 0.0019,
-    "infl_r2": 0.001,
-    "narrative": "Growth signals have strengthened over the trailing 6 months (trend R²=0.01) while inflation signals have accelerated (trend R²=0.00)."
+    "score": -0.0,
+    "growth_slope": -0.0047,
+    "growth_r2": 0.056,
+    "infl_slope": 0.0037,
+    "infl_r2": 0.006,
+    "narrative": "Growth signals have weakened over the trailing 6 months (trend R²=0.06) while inflation signals have accelerated (trend R²=0.01)."
   }
 }
