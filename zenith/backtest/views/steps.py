@@ -27,6 +27,7 @@ from ..robust.shuffle import SYNTH_KINDS, noise_curve, permutation_test, synthet
 from ..robust.walkforward import walk_forward
 from ..spec import StrategySpec, run_spec
 from . import common as C
+from . import validate_panel as VP
 
 LOWER_BETTER = {"MaxDD": False, "Turnover": False}   # MaxDD is negative: higher (closer to 0) is better
 
@@ -113,6 +114,7 @@ def sensitivity(spec: StrategySpec, ins: pd.DataFrame, aux: dict) -> None:
     from .sensitivity_panel import render_results
     pl = render_results(df, df2, metric, knob_label(px), knob_label(py) if py else None, hib, cur_x, "bt_s",
                         log_x=not px.startswith("s:"), cur_y=cur_y)
+    VP.grid_extras(df, metric, knob_label(px), knob_label(py) if py else None)
     if not pl:
         return
     pick = pl["plateau"]
@@ -124,14 +126,16 @@ def sensitivity(spec: StrategySpec, ins: pd.DataFrame, aux: dict) -> None:
         C.queue(**upd)
 
 # =================================================================== ROBUSTNESS
-ROBUST = ["PERMUTATION", "NOISE", "SYNTHETIC", "WALK-FORWARD", "MONTE CARLO", "OTHER INSTRUMENTS"]
+ROBUST = ["PERMUTATION", "NOISE", "SYNTHETIC", "WALK-FORWARD", "MONTE CARLO", "OVERFITTING", "CHALLENGE", "STRESS",
+          "OTHER INSTRUMENTS"]
 
 
 def robustness(spec: StrategySpec, ins: pd.DataFrame, aux: dict, base) -> None:
     sub = st.segmented_control("test", ROBUST, default="PERMUTATION", key="bt_rsub",
                                label_visibility="collapsed") or "PERMUTATION"
     {"PERMUTATION": _perm, "NOISE": _noise, "SYNTHETIC": _synth, "WALK-FORWARD": _wf,
-     "MONTE CARLO": _mc, "OTHER INSTRUMENTS": _others}[sub](spec, ins, aux, base)
+     "MONTE CARLO": _mc, "OVERFITTING": VP.overfit, "CHALLENGE": VP.challenge, "STRESS": VP.stress,
+     "OTHER INSTRUMENTS": _others}[sub](spec, ins, aux, base)
 
 
 def _perm(spec, ins, aux, base):
@@ -144,8 +148,12 @@ def _perm(spec, ins, aux, base):
     grid = None
     if mode.startswith("re-opt"):
         params = _rule_params(spec)
-        p = st.selectbox("parameter tuned", params, key="bt_pp")
-        grid = (p, _values_editor(spec, p, "bt_ppv", 6))
+        if params:
+            p = st.selectbox("parameter tuned", params, key="bt_pp")
+            grid = (p, _values_editor(spec, p, "bt_ppv", 6))
+        else:
+            st.caption("BLEND / CONDITIONS strategies have no single rule parameter to re-tune: running with "
+                       "fixed parameters.")
     runs = n * (len(grid[1]) if grid else 1)
     key = f"perm|{spec.hash()}|{n}|{grid}"
     if st.button(f"RUN · {runs} backtests", type="primary", key="bt_prun"):
@@ -216,6 +224,10 @@ def _synth(spec, ins, aux, base):
 def _wf(spec, ins, aux, base):
     st.markdown(section("WALK-FORWARD — re-tune on the past, trade the next slice", 3), unsafe_allow_html=True)
     params = _rule_params(spec)
+    if not params:
+        C.banner(T.amber, "SINGLE RULE ONLY", "re-tuning works on one rule's parameters. BLEND and CONDITIONS "
+                 "strategies have none to tune here — use SENSITIVITY on their sizing/filter knobs instead.")
+        return
     c1, c2 = st.columns(2)
     p = c1.selectbox("parameter to re-tune", params, key="bt_wp")
     folds = c2.slider("folds", 3, 8, 5, key="bt_wf")
@@ -273,6 +285,7 @@ def _mc(spec, ins, aux, base):
         {"label": "MAX DD · WORST 5%", "value": f"{boot['MaxDD'].quantile(.05) * 100:.0f}%", "color": T.coral,
          "sub": f"actual {base.stats['MaxDD'] * 100:.0f}%"},
     ]), unsafe_allow_html=True)
+    VP.mc_extras(spec, ins, base)
 
 
 def _others(spec, ins, aux, base):

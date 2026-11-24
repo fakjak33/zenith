@@ -14,6 +14,7 @@ from ...ui_theme import key_findings, section
 from .. import library
 from ..engine import metrics
 from ..portfolio import combine
+from ..portfolio_opt import METHODS, bucket_of, combine_with, sharpe_diff_ci, sharpe_vs_n
 from ..spec import run_spec
 from . import common as C
 
@@ -52,8 +53,8 @@ def render() -> None:
 
     c1, c2, c3 = st.columns([3, 1, 1])
     pick = c1.multiselect("strategies", list(store), default=list(store)[: min(6, len(store))], key="pf_pick")
-    method = c2.radio("weights", ["equal", "inverse_vol"], key="pf_w", format_func=lambda m: m.replace("_", " "),
-                      help="Equal weights fit nothing. Inverse-vol uses each strategy's trailing year only.")
+    method = c2.selectbox("weights", list(METHODS), key="pf_w", format_func=lambda m: m.replace("_", " "),
+                          help=" ".join(METHODS.values()))
     window = c3.slider("lookback (bars)", 63, 756, 252, 21, key="pf_win")
     if len(pick) < 2:
         st.caption("Pick at least two.")
@@ -71,7 +72,9 @@ def render() -> None:
     df = pd.DataFrame(rets).dropna()
     if len(df) < 2 * window:
         C.banner(T.amber, "SHORT OVERLAP", f"only {len(df)} common in-sample bars — the strategies' dates barely overlap")
-    out = combine(df, method, window)
+    buckets = {nm: bucket_of(library.spec_of(store[nm])) for nm in df.columns}
+    out = _combine(df, method, window, buckets)
+    st.caption(METHODS[method])
     port = out["returns"]
     ps = metrics.summary(port, periods=periods)
     comp = {k: metrics.summary(v, periods=periods) for k, v in df.items()}
@@ -89,9 +92,14 @@ def render() -> None:
         {"label": "CAGR", "value": f"{ps['CAGR'] * 100:.1f}%"},
     ]), unsafe_allow_html=True)
 
-    tabs = st.tabs(["EQUITY", "CORRELATION", "RISK", "WEIGHTS & IDM", "STATS", "SENSITIVITY"])
+    tabs = st.tabs(["EQUITY", "CORRELATION", "RISK", "WEIGHTS & IDM", "STATS", "SENSITIVITY", "METHODS vs 1/N",
+                    "DIVERSIFICATION"])
     with tabs[5]:
         _sensitivity(df, method, window, periods)
+    with tabs[6]:
+        _methods_tab(df, window, periods, buckets)
+    with tabs[7]:
+        _diversification_tab(df, periods, buckets)
     with tabs[0]:
         wa, wb = C.window_pick(port.index, "pf_win", vm=False)
         if (wa, wb) != (port.index[0], port.index[-1]):
@@ -167,11 +175,11 @@ def vol_target_returns(r: pd.Series, target: float, lookback: int = 63, cap: flo
 def _sensitivity(df: pd.DataFrame, method: str, window: int, periods: int) -> None:
     from .sensitivity_panel import Knob, panel
     knobs = [Knob("window", "lookback (bars)", window, 21, 756, integer=True, log=True),
-             Knob("method", "weights", method, choices=["equal", "inverse_vol"]),
+             Knob("method", "weights", method, choices=list(METHODS)),
              Knob("vol_target", "portfolio vol target (0 = off)", 0.0, 0.0, 0.30)]
 
     def run(vals):
-        out = combine(df, vals.get("method", method), int(vals.get("window", window)))
+        out = _combine(df, vals.get("method", method), int(vals.get("window", window)), {})
         r = vol_target_returns(out["returns"], float(vals.get("vol_target", 0.0)))
         return metrics.summary(r, periods=periods)
 
@@ -179,3 +187,99 @@ def _sensitivity(df: pd.DataFrame, method: str, window: int, periods: int) -> No
           state=f"{list(df.columns)}|{len(df)}",
           note="Sweeps how the book is combined. The portfolio vol target scales the whole book to a target "
                "annual vol using the trailing 63-bar vol (capped at 3x).")
+
+
+def _combine(df: pd.DataFrame, method: str, window: int, buckets: dict) -> dict:
+    """``portfolio.combine`` for equal / inverse-vol, the Phase 5 optimisers otherwise (same output keys)."""
+    if method in ("equal", "inverse_vol"):
+        return combine(df, method, window)
+    out = combine_with(df, method, window, buckets=buckets)
+    rets = df.dropna(how="any")
+    cov = rets.cov().to_numpy()
+    wl = out["weights"].iloc[-1].to_numpy()
+    tot = float(wl @ cov @ wl)
+    rc = (wl * (cov @ wl)) / tot if tot > 0 else np.full(len(wl), np.nan)
+    out.update({"corr": rets.corr(), "risk_contrib": pd.Series(rc, index=rets.columns),
+                "div_ratio": float((wl * rets.std().to_numpy()).sum() / np.sqrt(tot)) if tot > 0 else np.nan,
+                "components": rets})
+    return out
+
+
+def _methods_tab(df: pd.DataFrame, window: int, periods: int, buckets: dict) -> None:
+    st.markdown(section("EVERY WEIGHTING METHOD vs PLAIN 1/N — walk-forward", 2,
+                        help="Each method sets its weights from past data only, rebalancing monthly. The question "
+                             "is not which looks best, but whether any beats equal weighting by more than "
+                             "luck (the bootstrap interval)."), unsafe_allow_html=True)
+    key = f"pfm|{list(df.columns)}|{len(df)}|{window}"
+    if st.button(f"COMPARE · {len(METHODS)} methods", key="pf_mrun", type="primary"):
+        res = {m: _combine(df, m, window, buckets)["returns"] for m in METHODS}
+        rows = []
+        for m, r in res.items():
+            d, lo, hi = sharpe_diff_ci(r, res["equal"], periods) if m != "equal" else (0.0, 0.0, 0.0)
+            s = metrics.summary(r, periods=periods)
+            rows.append({"method": m, "Sharpe": s["Sharpe"], "vs 1/N": d, "lo": lo, "hi": hi, "MaxDD": s["MaxDD"],
+                         "CAGR": s["CAGR"]})
+        C.memo()[key] = {"rets": res, "table": pd.DataFrame(rows)}
+    out = C.memo().get(key)
+    if out is None:
+        return
+    t = out["table"]
+    fig = go.Figure(go.Bar(x=t["method"], y=t["vs 1/N"],
+                           marker_color=[T.faint if m == "equal" else T.teal if lo > 0 else T.coral if hi < 0
+                                         else T.amber for m, lo, hi in zip(t["method"], t["lo"], t["hi"])],
+                           error_y=dict(type="data", symmetric=False, array=(t["hi"] - t["vs 1/N"]).clip(lower=0),
+                                        arrayminus=(t["vs 1/N"] - t["lo"]).clip(lower=0), color=T.muted)))
+    fig.add_hline(y=0, line=dict(color=T.line))
+    fig.update_layout(hovermode="closest")
+    fig.update_yaxes(title_text="Sharpe minus 1/N's (95% CI)")
+    up.show(fig, 320, "does any optimiser beat equal weight? · green = yes beyond luck", key="pf_m_bar")
+    fig = go.Figure()
+    for i, (m, r) in enumerate(out["rets"].items()):
+        eq = (1 + r).cumprod()
+        fig.add_trace(go.Scatter(x=eq.index, y=eq, name=m, line=dict(width=2.2 if m == "equal" else 1.1,
+                                                                    color=T.text if m == "equal" else
+                                                                    T.cat[i % len(T.cat)])))
+    fig.update_yaxes(type="log", title_text="growth of 1")
+    up.show(fig, 360, "every method's book, walk-forward", key="pf_m_eq")
+    show = t.copy()
+    show["Sharpe"] = show["Sharpe"].map(lambda v: f"{v:.2f}")
+    show["vs 1/N"] = [f"{d:+.2f} ({lo:+.2f} … {hi:+.2f})" if m != "equal" else "—"
+                      for m, d, lo, hi in zip(t["method"], t["vs 1/N"], t["lo"], t["hi"])]
+    show["MaxDD"] = show["MaxDD"].map(lambda v: f"{v * 100:.1f}%")
+    show["CAGR"] = show["CAGR"].map(lambda v: f"{v * 100:.1f}%")
+    st.dataframe(show.drop(columns=["lo", "hi"]), use_container_width=True, hide_index=True)
+    st.caption("Usually nothing beats 1/N reliably once estimation error is counted (DeMiguel, Garlappi & Uppal "
+               "2009) — risk-based methods (ERC, HRP) tend to cut drawdowns rather than raise Sharpe.")
+
+
+def _diversification_tab(df: pd.DataFrame, periods: int, buckets: dict) -> None:
+    sv = sharpe_vs_n(df, periods)
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=sv["N"], y=sv["theory"], name="theory: avg SR x sqrt(N / (1 + (N-1) avg corr))",
+                             line=dict(color=T.faint, dash="dot")))
+    fig.add_trace(go.Scatter(x=sv["N"], y=sv["actual"], name="your strategies (random subsets)",
+                             mode="lines+markers", line=dict(color=T.teal, width=2)))
+    fig.update_xaxes(title_text="number of strategies", dtick=1, showspikes=False)
+    fig.update_yaxes(title_text="equal-weight Sharpe")
+    up.show(fig, 320, "Sharpe vs number of strategies", key="pf_svn")
+    st.caption("Diversification gains flatten fast when strategies are correlated: SharpeEdge notes most of the "
+               "benefit comes from the first 10-15 genuinely different strategies.")
+    bt = pd.DataFrame({"strategy": list(buckets), "bucket": list(buckets.values())})
+    st.dataframe(bt, use_container_width=True, hide_index=True)
+    st.caption("Buckets are set before looking at results (trend / reversion / other) — SharpeEdge's defence "
+               "against overfitting the allocation. Pick 'buckets' in WEIGHTS to use them.")
+    n = df.shape[1]
+    if n >= 2:
+        rc = df.rolling(126, min_periods=63).corr()
+        avg = rc.groupby(level=0).apply(lambda m: (m.to_numpy().sum() - n) / (n * (n - 1)) if m.notna().all().all()
+                                        else np.nan)
+        book = df.mean(axis=1)
+        vol = book.rolling(63, min_periods=21).std()
+        stressed = vol > vol.expanding(min_periods=252).quantile(0.8)
+        fig = go.Figure(go.Scatter(x=avg.index, y=avg, line=dict(color=T.violet, width=1.4), name="avg correlation"))
+        from .regime_panel import ribbon
+        lab = stressed.map({True: "stressed", False: "normal"}).where(vol.notna() & vol.expanding().count().ge(252))
+        ribbon(fig, lab, ("normal", "stressed"), legend=False)
+        fig.update_yaxes(title_text="avg pairwise correlation (126 bars)")
+        up.show(fig, 300, "do your strategies move together when it matters? · shaded = book in its top-20% vol",
+                key="pf_rcorr")
