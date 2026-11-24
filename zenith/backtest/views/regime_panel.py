@@ -134,7 +134,7 @@ def regimes_tab(spec, ins: pd.DataFrame, res, b: pd.Series, cfg: tuple) -> None:
     eq = (1 + r).cumprod()
     fig = go.Figure(go.Scatter(x=eq.index, y=eq, name="strategy", line=dict(color=T.teal, width=1.6)))
     beq = (1 + b).cumprod()
-    fig.add_trace(go.Scatter(x=beq.index, y=beq, name="buy & hold (vol-matched)", line=dict(color=T.amber, width=1)))
+    fig.add_trace(go.Scatter(x=beq.index, y=beq, name=C.bench_label(), line=dict(color=T.amber, width=1)))
     ribbon(fig, lab.reindex(eq.index), d.order)
     fig.update_yaxes(type="log", title_text="growth of 1")
     up.show(fig, 380, f"equity shaded by regime · {d.label}", key="bt_rg_eq")

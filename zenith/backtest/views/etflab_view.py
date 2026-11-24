@@ -168,9 +168,10 @@ def render() -> None:
         r = res.returns
         bret = {b: panel[b].pct_change() for b in bench if b in panel}
         b0 = next(iter(bret.values()), mkt.pct_change())
-        bs = metrics.summary(b0.reindex(r.index).fillna(0), periods=252)
+        bn = C.bench_label(bench[0] if bench else "SPY")
+        bs = metrics.summary(C.match_vol(b0, r), periods=252)
         st.markdown(uk.kpis([
-            {"label": "CAGR", "value": f"{res.stats['CAGR'] * 100:.1f}%", "sub": f"{bench[0] if bench else 'SPY'} {bs['CAGR'] * 100:.1f}%"},
+            {"label": "CAGR", "value": f"{res.stats['CAGR'] * 100:.1f}%", "sub": f"{bn} {bs['CAGR'] * 100:.1f}%"},
             {"label": "SHARPE", "value": f"{res.stats['Sharpe']:.2f}", "sub": f"bench {bs['Sharpe']:.2f}",
              "color": T.teal if res.stats["Sharpe"] > bs["Sharpe"] else T.amber},
             {"label": "VOL", "value": f"{res.stats['AnnVol%']:.1f}%"},
@@ -187,17 +188,17 @@ def render() -> None:
             ks = ["CAGR", "Vol", "Sharpe", "Sortino", "MaxDD", "Calmar", "Skew", "HitRate"]
             full = metrics.summary(r, periods=252)
             st.dataframe(pd.DataFrame({spec.name: [C.fmt(k, full.get(k)) for k in ks],
-                                       (bench[0] if bench else "SPY"): [C.fmt(k, bs.get(k)) for k in ks]}, index=ks),
+                                       bn: [C.fmt(k, bs.get(k)) for k in ks]}, index=ks),
                          use_container_width=True)
             C.diversify_panel(r, b0.reindex(r.index), 252, bench[0] if bench else "SPY", "ef_div")
         with tabs[0]:
-            b = b0.reindex(r.index).fillna(0)
             wa, wb = C.window_pick(r.index, "ef_win")
-            rw, bw = C.clip(r, wa, wb), C.clip(b, wa, wb)
+            rw = C.clip(r, wa, wb)
+            bw = C.match_vol(C.clip(b0.reindex(r.index).fillna(0), wa, wb), rw)   # matched over the window shown
             if (wa, wb) != (r.index[0], r.index[-1]):
-                C.window_kpis(rw, bw, 252, bench[0] if bench else "SPY")
-            up.show(C.equity_fig(rw, bw * (rw.std() / bw.std()) if bw.std() > 0 else bw), 440,
-                    f"{spec.name} vs {bench[0] if bench else 'SPY'} (vol-matched)", key="ef_eq")
+                C.window_kpis(rw, bw, 252, C.bench_label(bench[0] if bench else "SPY"))
+            up.show(C.equity_fig(rw, bw, b_label=C.bench_label(bench[0] if bench else "SPY")), 440,
+                    f"{spec.name} vs {C.bench_label(bench[0] if bench else 'SPY')}", key="ef_eq")
             up.show(C.monthly_fig(rw), max(260, 22 * len(set(rw.index.year)) + 60), "monthly returns %", key="ef_mon")
         with tabs[1]:
             latest = ws.iloc[-1]

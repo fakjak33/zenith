@@ -327,13 +327,15 @@ def render() -> None:
         st.markdown("".join(chips), unsafe_allow_html=True)
 
         s = metrics.summary(r, periods=p, n_trials=n_trials)
-        bs = metrics.summary(tr, periods=p)
+        trv = C.match_vol(tr, r)                       # shared vol-matched toggle (EQUITY tab)
+        ul = und + (" vm" if C.vol_match_on() else "")
+        bs = metrics.summary(trv, periods=p)
         ab = A.alpha_beta(r, tr, p)
         st.markdown(uk.kpis([
-            {"label": "SHARPE", "value": f"{s['Sharpe']:.2f}", "sub": f"{und} {bs['Sharpe']:.2f}"},
-            {"label": "CAGR", "value": f"{s['CAGR'] * 100:.1f}%", "sub": f"{und} {bs['CAGR'] * 100:.1f}%"},
-            {"label": "VOL", "value": f"{s['Vol'] * 100:.1f}%", "sub": f"{und} {bs['Vol'] * 100:.1f}%"},
-            {"label": "MAX DD", "value": f"{s['MaxDD'] * 100:.1f}%", "color": T.coral, "sub": f"{und} {bs['MaxDD'] * 100:.1f}%"},
+            {"label": "SHARPE", "value": f"{s['Sharpe']:.2f}", "sub": f"{ul} {bs['Sharpe']:.2f}"},
+            {"label": "CAGR", "value": f"{s['CAGR'] * 100:.1f}%", "sub": f"{ul} {bs['CAGR'] * 100:.1f}%"},
+            {"label": "VOL", "value": f"{s['Vol'] * 100:.1f}%", "sub": f"{ul} {bs['Vol'] * 100:.1f}%"},
+            {"label": "MAX DD", "value": f"{s['MaxDD'] * 100:.1f}%", "color": T.coral, "sub": f"{ul} {bs['MaxDD'] * 100:.1f}%"},
             {"label": "SKEW", "value": f"{s['Skew']:.2f}", "color": T.coral if s["Skew"] < -0.5 else T.text,
              "sub": "daily returns"},
             {"label": "BETA", "value": f"{ab['beta']:.2f}", "sub": f"alpha {ab['alpha_ann'] * 100:+.1f}%/yr t {ab['alpha_t']:.1f}"},
@@ -350,20 +352,21 @@ def render() -> None:
         with tabs[8]:
             keys = [k for k in s if k in bs]
             st.dataframe(pd.DataFrame({"strategy": [C.fmt(k, s[k]) for k in keys],
-                                       f"{und} total return": [C.fmt(k, bs[k]) for k in keys]}, index=keys),
+                                       C.bench_label(f"{und} total return"): [C.fmt(k, bs[k]) for k in keys]},
+                                      index=keys),
                          use_container_width=True)
             _trade_stats(res.trades)
             C.diversify_panel(r, tr, p, und, "op_div")
         with tabs[0]:
-            b = tr * (r.std() / tr.std()) if tr.std() > 0 else tr
+            b = trv
             hidden = locked is not None and not show_all
             wa, wb = C.window_pick(idx if hidden else r.index, "op_win")
             rw, bw = C.clip(r, wa, wb), C.clip(b, wa, wb)
             if (wa, wb) != (idx[0] if hidden else r.index[0], idx[-1] if hidden else r.index[-1]):
-                C.window_kpis(rw, C.clip(tr, wa, wb), p, und)
+                C.window_kpis(rw, C.clip(b, wa, wb), p, ul)
             up.show(C.equity_fig(rw, bw, shade_from=locked if show_all and locked is not None and locked <= wb
                                  else None, locked_to=wb if hidden and len(rw) and wb > rw.index[-1] else None),
-                    440, f"strategy vs {und} (vol-matched)" + (" · grey = locked out-of-sample" if hidden else ""),
+                    440, f"strategy vs {C.bench_label(und)}" + (" · grey = locked out-of-sample" if hidden else ""),
                     key="op_eq")
         with tabs[1]:
             ex = res.exposure.iloc[:end]
@@ -377,7 +380,7 @@ def render() -> None:
         with tabs[2]:
             up.show(C.monthly_fig(r), max(260, 22 * len(set(r.index.year)) + 60), "monthly returns %", key="op_mon")
         with tabs[3]:
-            up.show(C.dist_fig(r, tr), 320, "daily return distribution", key="op_dist")
+            up.show(C.dist_fig(r, trv), 320, "daily return distribution", key="op_dist")
             worst = ((1 + r).resample("ME").prod() - 1).nsmallest(5)
             st.caption("Worst months: " + ", ".join(f"{d:%Y-%m} {v * 100:.1f}%" for d, v in worst.items()))
         with tabs[4]:

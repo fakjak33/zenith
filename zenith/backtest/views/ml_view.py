@@ -241,10 +241,10 @@ def _results(spec, cfg, run, ins, ins_aux, res, n_trials) -> None:
                     "META-LABEL", "DECOMPOSE", "SAVE"])
     with tabs[0]:
         net = sc["net"]
-        bh = np.log(ins_aux["close"]).diff().reindex(net.index).fillna(0)
-        bh = bh * (net.std() / bh.std()) if bh.std() > 0 else bh
+        C.vol_match_toggle("ml_eq")
+        bh = C.match_vol(np.log(ins_aux["close"]).diff(), net)
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=net.index, y=np.exp(bh.cumsum()), name="buy & hold (vol-matched)",
+        fig.add_trace(go.Scatter(x=net.index, y=np.exp(bh.cumsum()), name=C.bench_label(),
                                  line=dict(color=T.amber, width=1.2)))
         fig.add_trace(go.Scatter(x=net.index, y=np.exp(net.cumsum()), name="model, net of costs",
                                  line=dict(color=T.teal, width=1.8)))
