@@ -14,7 +14,7 @@ from ...ui_theme import key_findings, section
 from .. import library
 from ..engine import metrics
 from ..portfolio import combine
-from ..spec import run_spec, split_holdout
+from ..spec import run_spec
 from . import common as C
 
 _FINDINGS = [
@@ -32,7 +32,7 @@ DEMO = [("EWMAC 16/64 · SPY", "SPY", "ema"), ("EWMAC 16/64 · TLT", "TLT", "ema
 def _component(spec_json: str) -> tuple[pd.Series, float]:
     from ..spec import StrategySpec
     spec = StrategySpec.from_json(spec_json)
-    ins, _ = split_holdout(C.load(spec), spec.holdout)
+    ins, _ = spec.split(C.load(spec))
     res = run_spec(spec, ins, C.load_aux(spec))
     return res.returns, res.periods
 

@@ -24,7 +24,7 @@ from ...ui_theme import key_findings, section
 from .. import ledger as lg
 from ..engine import metrics
 from ..engine.trades import extract_trades
-from ..spec import StrategySpec, run_spec, split_holdout
+from ..spec import StrategySpec, run_spec
 from . import common as C
 from . import attribution, steps
 from .attribution import GOALS
@@ -63,7 +63,10 @@ def step_define(spec: StrategySpec) -> None:
                "ATTRIBUTION uses the goal to suggest the right benchmark.")
 
 
-def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades: pd.DataFrame) -> None:
+def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades: pd.DataFrame,
+               full: pd.DataFrame | None = None, locked=None, revealed: bool = False) -> None:
+    """``revealed``: the holdout has been shown for this exact spec, so ``ins`` is the full history and the
+    locked span is shaded violet; otherwise the locked span is a grey band the charts run up to."""
     r, p = res.returns, res.periods
     bstats = metrics.summary(b, periods=p)
     s = res.stats
@@ -84,18 +87,23 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
         {"label": "CALMAR", "value": f"{s['Calmar']:.2f}", "sub": f"b&h {bstats['Calmar']:.2f}"},
         {"label": "TRADES / YR", "value": f"{len(trades) / max(years, 1e-9):.1f}", "sub": f"{len(trades)} total"},
     ]), unsafe_allow_html=True)
-    st.caption(f"{C.esc(res.label)} · {spec.name} · {spec.tf.lower()} · {p} bars/yr · "
-               f"{ins.index[0].date()} → {ins.index[-1].date()} in-sample")
+    span = (f"{ins.index[0].date()} → {ins.index[-1].date()} "
+            + ("(incl. revealed out-of-sample)" if revealed else "in-sample"))
+    if locked is not None and full is not None and not revealed:
+        span += f" · locked {locked.date()} → {full.index[-1].date()} (grey band)"
+    st.caption(f"{C.esc(res.label)} · {spec.name} · {spec.tf.lower()} · {p} bars/yr · {span}")
 
     _save_box(spec)
     fut = spec.contract()
     if fut:
         C.banner(T.amber, "FUTURES DATA", "Yahoo's continuous front-month series is not roll-adjusted: each roll can "
                  "show up as a fake jump, and carry/roll yield is missing. Treat trend results as approximate.")
-    wa, wb = C.window_pick(r.index, "bt_win")
+    lock_end = full.index[-1] if (full is not None and locked is not None and not revealed) else None
+    wa, wb = C.window_pick(r.index if lock_end is None else r.index.append(pd.DatetimeIndex([lock_end])),
+                           "bt_win")
     rw, bw, insw = C.clip(r, wa, wb), C.clip(b, wa, wb), C.clip(ins, wa, wb)
     gw = C.clip(res.gross_returns, wa, wb) if res.gross_returns is not None else None
-    if (wa, wb) != (r.index[0], r.index[-1]):
+    if (wa, wb) != (r.index[0], r.index[-1] if lock_end is None else lock_end):
         C.window_kpis(rw, bw, p, "b&h")
     names = ["EQUITY", "PRICE & TRADES", "ROLLING", "MONTHLY", "DISTRIBUTION", "COSTS", "STATS", "TRADES",
              "SIZING"] + (["SEEDS"] if spec.src == "Synthetic" else [])
@@ -109,12 +117,16 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
         with tabs[-1]:
             _contracts_tab(spec, ins, res, fut)
     with tabs[0]:
-        up.show(C.equity_fig(rw, bw, gw), 460, "growth of 1 · LIN/LOG top right", key="bt_eq")
+        up.show(C.equity_fig(rw, bw, gw, shade_from=locked if revealed else None,
+                             locked_to=min(lock_end, wb) if lock_end is not None and wb > r.index[-1] else None),
+                460, "growth of 1 · LIN/LOG top right", key="bt_eq")
     with tabs[1]:
         from types import SimpleNamespace
         tw = trades[(pd.to_datetime(trades["entry_date"]) >= wa) & (pd.to_datetime(trades["entry_date"]) <= wb)] \
             if not trades.empty else trades
-        up.show(C.price_fig(insw, SimpleNamespace(forecast=C.clip(res.forecast, wa, wb)), spec.strategy(), tw), 480,
+        lpx = C.clip(full["close"][full.index >= locked], wa, wb) if lock_end is not None else None
+        up.show(C.price_fig(insw, SimpleNamespace(forecast=C.clip(res.forecast, wa, wb)), spec.strategy(), tw,
+                            locked_px=lpx), 480,
                 "price, overlays, entries, forecast", key="bt_px")
     with tabs[2]:
         up.show(C.rolling_sharpe_fig(rw, bw, p), 320, "rolling 1-year sharpe", key="bt_roll")
@@ -151,7 +163,7 @@ def step_build(spec: StrategySpec, ins: pd.DataFrame, res, b: pd.Series, trades:
 def step_oos(spec: StrategySpec, full: pd.DataFrame, locked, aux: dict, n_trials: int, facts: dict) -> None:
     st.markdown(section("OUT-OF-SAMPLE — one look, logged", 6), unsafe_allow_html=True)
     if locked is None:
-        C.banner(T.coral, "NO HOLDOUT", "set a locked out-of-sample % in 05 · COSTS & HOLDOUT — with 0% there is "
+        C.banner(T.coral, "NO HOLDOUT", "set 'lock last N years' in 05 · COSTS & HOLDOUT — with 0 there is "
                  "nothing unseen to test on")
         return
     led = C.ledger()
@@ -265,7 +277,7 @@ def render() -> None:
         except Exception as exc:  # noqa: BLE001
             C.banner(T.coral, "NO DATA", f"{spec.name}: {exc}")
             return
-        ins, locked = split_holdout(full, spec.holdout)
+        ins, locked = spec.split(full)
         if len(ins) < 120:
             C.banner(T.amber, "TOO SHORT", f"only {len(ins)} in-sample bars — widen the dates or lower the holdout")
             return
@@ -284,7 +296,7 @@ def render() -> None:
             warn.append(f"{len(trades)} trades is thin evidence (want ≥{C.MIN_TRADES}).")
         if years < C.MIN_YEARS:
             warn.append(f"{years:.1f} years in-sample is short (want ≥{C.MIN_YEARS:.0f}).")
-        if spec.holdout == 0:
+        if locked is None:
             warn.append("No holdout: every number below has been seen, so none of it is out-of-sample.")
         if any(f["key"] == "vix" for f in spec.filters) and aux.get("vix") is None:
             warn.append("VIX filter has no data here (synthetic or download failed) and is passing everything.")
@@ -292,7 +304,14 @@ def render() -> None:
             C.banner(T.amber, "CAUTION", " ".join(warn))
 
         if step == "BUILD":
-            step_build(spec, ins, res, b, trades)
+            rev = lg.revealed(led, spec.family()) if locked is not None else None
+            if rev and rev["hash"] == spec.hash():
+                # the one look has been taken for this exact spec: BUILD may show the whole history
+                fres = run_spec(spec, full, aux, n_trials=n_trials)
+                ftr = extract_trades(fres.position, full["close"])
+                step_build(spec, full, fres, C.bench(full["close"], fres.returns), ftr, full, locked, True)
+            else:
+                step_build(spec, ins, res, b, trades, full, locked)
         elif step == "SENSITIVITY":
             steps.sensitivity(spec, ins, aux)
         elif step == "ROBUSTNESS":

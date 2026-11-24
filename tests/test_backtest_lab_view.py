@@ -140,8 +140,8 @@ def test_spec_to_widgets_roundtrip():
     from zenith.backtest.spec import StrategySpec
     from zenith.backtest.views import common as Cm
     spec = StrategySpec(src="Synthetic", name="regime", rule="tsmom", params={"lookback": 120, "smooth": 3},
-                        filters=[{"key": "trend", "on": True, "params": {"length": 150}}], holdout=25,
-                        cost_bps=2.0, buffer=0.1)
+                        filters=[{"key": "trend", "on": True, "params": {"length": 150}}], holdout=0,
+                        lock_years=3.5, start_date="2008-06-02", cost_bps=2.0, buffer=0.1)
     at = AppTest.from_string(SRC, default_timeout=300)
     for k, v in Cm.spec_to_widgets(spec).items():
         at.session_state[k] = v
@@ -150,13 +150,15 @@ def test_spec_to_widgets_roundtrip():
     assert not at.exception, [e.value for e in at.exception]
     # read the spec LAB built back out of the ledger's trial family + recompute through the builder path
     rebuilt = StrategySpec(src=at.session_state["bt_src"], name=at.session_state["bt_synth"],
-                           tf=at.session_state["bt_tf"], start_year=at.session_state["bt_start"],
+                           tf=at.session_state["bt_tf"], start_year=at.session_state["bt_start"].year,
+                           start_date=at.session_state["bt_start"].isoformat(),
                            rule=at.session_state["bt_rule"],
                            params={k: at.session_state[f"bt_p_tsmom_{k}"] for k in ("lookback", "smooth")},
                            filters=[{"key": "trend", "on": True, "params": {"length": at.session_state["bt_fp_trend_length"]}}],
-                           holdout=at.session_state["bt_hold"], cost_bps=at.session_state["bt_cost"],
+                           holdout=0, lock_years=at.session_state["bt_lock"], cost_bps=at.session_state["bt_cost"],
                            buffer=at.session_state["bt_buf"] / 100)
-    assert rebuilt.params == spec.params and rebuilt.filters == spec.filters and rebuilt.holdout == 25
+    assert rebuilt.params == spec.params and rebuilt.filters == spec.filters and rebuilt.lock_years == 3.5
+    assert rebuilt.start_date == spec.start_date
 
 
 @pytest.mark.skipif(not (__import__("pathlib").Path(__file__).resolve().parents[1] / "data" / "backtest" / "cache"

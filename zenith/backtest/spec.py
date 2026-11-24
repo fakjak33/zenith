@@ -90,7 +90,7 @@ def apply_filters(fc: pd.Series, ohlcv: pd.DataFrame, filters: list[dict],
 TICKER_SYNTH = ("bootstrap", "shuffle", "gbm_fit", "regime_fit")
 # Fields added after specs were first saved; omitted from the hash at these values.
 _LATE_DEFAULTS = {"fixed_pct": 1.0, "risk_pct": 0.01, "scale_by_forecast": True, "max_leverage": 0.0,
-                  "seed": 42, "synth_base": "SPY"}
+                  "seed": 42, "synth_base": "SPY", "start_date": "", "end_date": "", "lock_years": 0.0}
 
 SIZING_MODES = {
     "fixed_pct": "fixed notional %",
@@ -127,6 +127,9 @@ class StrategySpec:
     max_leverage: float = 0.0           # |notional| / capital cap (0 = none)
     seed: int = 42                      # synthetic data seed
     synth_base: str = "SPY"             # ticker the bootstrap / fitted synthetic kinds learn from
+    start_date: str = ""                # ISO date; "" = 1 Jan of start_year
+    end_date: str = ""                  # ISO date; "" = latest bar
+    lock_years: float = 0.0             # lock the last N years (from the end date); overrides holdout %
     notes: str = ""                     # hypothesis / goal — not part of the hash
 
     # ---- serialisation
@@ -177,9 +180,27 @@ class StrategySpec:
     def family(self) -> str:
         """Same data + same holdout = same pool of trials and the same OOS."""
         base = f"{self.src}:{self.name}:{self.tf}:{self.start_year}:{self.holdout}"
+        if self.start_date or self.end_date or self.lock_years:
+            base += f":{self.start_date}:{self.end_date}:L{self.lock_years:g}"
         if self.src == "Synthetic" and (self.seed != 42 or self.name in TICKER_SYNTH):
             base += f":s{self.seed}" + (f":{self.synth_base}" if self.name in TICKER_SYNTH else "")
         return base
+
+    # ---- dates
+    def start_ts(self) -> pd.Timestamp:
+        return pd.Timestamp(self.start_date) if self.start_date else pd.Timestamp(f"{self.start_year}-01-01")
+
+    def end_ts(self) -> pd.Timestamp | None:
+        return pd.Timestamp(self.end_date) if self.end_date else None
+
+    def split(self, df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Timestamp | None]:
+        """In-sample frame and first locked date, using this spec's lock rule."""
+        return split_holdout(df, 0 if self.lock_years > 0 else self.holdout, self.lock_years)
+
+    def lock_label(self) -> str:
+        if self.lock_years > 0:
+            return f"last {self.lock_years:g}y"
+        return f"{self.holdout}%" if self.holdout else "none"
 
     def with_params(self, **kw) -> "StrategySpec":
         return replace(self, params={**self.params, **kw})
@@ -220,9 +241,25 @@ def run_spec(spec: StrategySpec, ohlcv: pd.DataFrame, aux: dict | None = None, n
                       label=strat.describe())
 
 
-def split_holdout(df: pd.DataFrame, pct: float) -> tuple[pd.DataFrame, pd.Timestamp | None]:
-    """In-sample frame and the first locked date (None when no holdout)."""
+def lock_date(index: pd.DatetimeIndex, pct: float = 0.0, lock_years: float = 0.0) -> pd.Timestamp | None:
+    """First locked bar. ``lock_years`` counts back from the LAST bar, so moving the start date never moves
+    the lock; the legacy ``pct`` is a share of the bars (it moves with the start)."""
+    if len(index) < 2:
+        return None
+    if lock_years and lock_years > 0:
+        months = int(round(lock_years * 12))
+        at = pd.Timestamp(index[-1]) - pd.DateOffset(months=months)
+        pos = int(index.searchsorted(at, side="right"))
+        return index[pos] if 0 < pos < len(index) else None
     if pct <= 0:
+        return None
+    cut = int(len(index) * (1 - pct / 100))
+    return index[cut] if 0 < cut < len(index) else None
+
+
+def split_holdout(df: pd.DataFrame, pct: float, lock_years: float = 0.0) -> tuple[pd.DataFrame, pd.Timestamp | None]:
+    """In-sample frame and the first locked date (None when no holdout)."""
+    at = lock_date(df.index, pct, lock_years)
+    if at is None:
         return df, None
-    cut = int(len(df) * (1 - pct / 100))
-    return df.iloc[:cut], df.index[cut]
+    return df[df.index < at], at

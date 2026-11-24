@@ -27,8 +27,9 @@ def _px(t: str) -> pd.Series:
     return get_prices(t, start=None)["close"]
 
 
-def load(underlying: str, start_year: int = 2007) -> dict:
-    """Everything ``engine.simulate`` needs for one underlying, trimmed to ``start_year``."""
+def load(underlying: str, start: int | str = 2007, end: str | None = None) -> dict:
+    """Everything ``engine.simulate`` needs for one underlying, trimmed to [start, end].
+    ``start`` is a year (int) or an ISO date; ``end`` None/'' = latest bar."""
     s_t, tr_t, own = UNDERLYINGS.get(underlying, (underlying, underlying, None))
     S, tr = _px(s_t), _px(tr_t)
     term = pd.DataFrame({c: cboe_csv(c) for c in TERM_COLS})
@@ -46,12 +47,17 @@ def load(underlying: str, start_year: int = 2007) -> dict:
     skew = cboe_csv("SKEW")
     cash = cash_index()
     rf = (cash.pct_change() * 252).clip(lower=0) if not cash.empty else pd.Series(0.0, index=S.index)
-    start = pd.Timestamp(f"{start_year}-01-01")
+    start = pd.Timestamp(f"{start}-01-01") if isinstance(start, int) or str(start).isdigit() else pd.Timestamp(start)
+    stop = pd.Timestamp(end) if end else None
     S = S[S.index >= start]
+    if stop is not None:
+        S = S[S.index <= stop]
     # ETFs come dividend-adjusted from Yahoo, so their own yield is already in the price path
     q = dividend_yield(_px("^GSPC"), _px("^SP500TR")) if s_t == "^GSPC" else None
     ohlc = get_prices(s_t, start=None)[["open", "high", "low", "close"]]
     ohlc = ohlc[ohlc.index >= start]
+    if stop is not None:
+        ohlc = ohlc[ohlc.index <= stop]
     iv1d, iv1d_src = one_day_vol(term)
     return {"S": S, "stock_tr": tr, "term": term, "skew": skew, "rf": rf, "vol_scale": scale, "q": q,
             "settle": s_t, "vol_source": own or ("VIX" if s_t in ("^GSPC", "SPY") else "VIX × realised-vol ratio"),

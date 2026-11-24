@@ -27,7 +27,7 @@ def render() -> None:
         for nm, rec in store.items():
             s = library.spec_of(rec)
             rows.append({"name": nm, "rule": s.strategy().describe(), "market": s.name, "bars": s.tf,
-                         "filters": ", ".join(f["key"] for f in s.filters) or "—", "holdout": f"{s.holdout}%",
+                         "filters": ", ".join(f["key"] for f in s.filters) or "—", "holdout": s.lock_label(),
                          "hash": rec["hash"], "saved": rec["saved_at"], "hypothesis": (rec.get("note") or "")[:80]})
         st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
 

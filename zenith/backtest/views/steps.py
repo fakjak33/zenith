@@ -25,7 +25,7 @@ from ..robust.sensitivity import (METRICS, default_values, knob_choices, knob_la
                                   to_grid)
 from ..robust.shuffle import SYNTH_KINDS, noise_curve, permutation_test, synthetic_suite
 from ..robust.walkforward import walk_forward
-from ..spec import StrategySpec, run_spec, split_holdout
+from ..spec import StrategySpec, run_spec
 from . import common as C
 
 LOWER_BETTER = {"MaxDD": False, "Turnover": False}   # MaxDD is negative: higher (closer to 0) is better
@@ -288,7 +288,7 @@ def _others(spec, ins, aux, base):
         rows, prog = [], C.progress_bar("loading")
         for i, t in enumerate(pick):
             try:
-                df, _ = split_holdout(C.load(spec, t), spec.holdout)      # their OOS stays locked too
+                df, _ = spec.split(C.load(spec, t))      # their OOS stays locked too
                 res = run_spec(spec, df, aux)
                 bh = C.bench(df["close"], res.returns)
                 rows.append({"instrument": t, "Sharpe": res.stats["Sharpe"],
@@ -298,7 +298,7 @@ def _others(spec, ins, aux, base):
                 rows.append({"instrument": t, "Sharpe": np.nan, "error": str(exc)[:60]})
             prog((i + 1) / len(pick))
         C.memo()[key] = pd.DataFrame(rows)
-    df = _stale_or(key, "Each instrument is cut at the same holdout share, so their recent data stays unseen too.")
+    df = _stale_or(key, "Each instrument is cut by the same lock rule, so their recent data stays unseen too.")
     if df is None or df.empty:
         return
     df = pd.concat([pd.DataFrame([{"instrument": f"{spec.name} (tuned)", "Sharpe": base.stats["Sharpe"]}]), df])

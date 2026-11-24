@@ -8,6 +8,8 @@ sits on.
 
 from __future__ import annotations
 
+import datetime as _dt
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -61,9 +63,10 @@ def _builder():
         seed = int(c1.number_input("seed", 1, 1000, 42, 1, key="ac_seed"))
         if name in C.TICKER_KINDS:
             base = c2.text_input("base ticker", "SPY", key="ac_base").strip().upper() or "SPY"
-    c1, c2 = st.columns(2)
-    start = c1.number_input("from", 1990, 2024, 2010, key="ac_start")
-    tf = c2.selectbox("bars", list(TIMEFRAMES), index=1, key="ac_tf")
+    a, b = C.date_range("ac", _dt.date(2010, 1, 1))
+    start = (a.isoformat(), b.isoformat())
+    tf = st.selectbox("bars", list(TIMEFRAMES), index=1, key="ac_tf",
+                      help="Bar size: contributions and buy signals are checked once per bar.")
 
     st.markdown(section("02 · CONTRIBUTIONS", 1), unsafe_allow_html=True)
     cfg = AccumConfig()
@@ -97,7 +100,7 @@ def _builder():
         st.caption(sc.desc)
         cfg.sell_fraction = st.slider("sell fraction per signal", 0.05, 1.0, 0.25, 0.05, key="ac_sfrac")
         sell = sc(**_params(sc, "sell"))
-    return src, name, int(start), tf, cfg, buy, sell, buy_cls, seed, base
+    return src, name, start, tf, cfg, buy, sell, buy_cls, seed, base
 
 
 def render() -> None:
@@ -111,7 +114,8 @@ def render() -> None:
         except Exception as exc:  # noqa: BLE001
             C.banner(T.coral, "NO DATA", f"{name}: {exc}")
             return
-        df = resample_ohlcv(df[df.index >= pd.Timestamp(f"{start}-01-01")], TIMEFRAMES[tf])
+        df = resample_ohlcv(df[(df.index >= pd.Timestamp(start[0])) & (df.index <= pd.Timestamp(start[1]))],
+                            TIMEFRAMES[tf])
         close = df["close"].dropna()
         ctx = {}
         if buy_cls.key == "vix":

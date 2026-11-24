@@ -3,6 +3,7 @@ result memo, guard-rail chips and the core result charts."""
 
 from __future__ import annotations
 
+import datetime as _dt
 import html
 
 import numpy as np
@@ -49,7 +50,10 @@ def load(spec: StrategySpec, name: str | None = None, seed: int | None = None) -
         df = _synthetic(name, int(spec.seed if seed is None else seed), spec.synth_base)
     else:
         df = _market(name)
-    df = df[df.index >= pd.Timestamp(f"{spec.start_year}-01-01")]
+    df = df[df.index >= spec.start_ts()]
+    end = spec.end_ts()
+    if end is not None:
+        df = df[df.index <= end]
     return resample_ohlcv(df, TIMEFRAMES[spec.tf]).dropna(subset=["close"])
 
 
@@ -108,6 +112,43 @@ def _num(label, spec_tuple, key, help=None):
                                  format="%.2f", help=help))
 
 
+def date_range(prefix: str, default_start: _dt.date, min_start: _dt.date = _dt.date(1970, 1, 1)
+               ) -> tuple[_dt.date, _dt.date]:
+    """Start / end date pickers shared by every lab. End defaults to today (= latest bar)."""
+    today = _dt.date.today()
+    c1, c2 = st.columns(2)
+    a = c1.date_input("from", default_start, min_value=min_start, max_value=today, key=f"{prefix}_start",
+                      format="YYYY-MM-DD",
+                      help="First day of data used. Earlier data simply isn't loaded. Rules with long lookbacks "
+                           "need a warm-up, so their first trades come later than this date.")
+    b = c2.date_input("to", today, min_value=min_start, max_value=today, key=f"{prefix}_end",
+                      format="YYYY-MM-DD",
+                      help="Last day of data used. Leave at today to run to the latest available bar.")
+    if b <= a:
+        st.caption(":orange[end date is before the start date — using the start date + 1 year]")
+        b = min(today, a + _dt.timedelta(days=365))
+    return a, b
+
+
+def _iso_start(d: _dt.date) -> str:
+    """'' when the start is 1 January (then ``start_year`` alone describes it — keeps old hashes)."""
+    return "" if (d.month, d.day) == (1, 1) else d.isoformat()
+
+
+def _iso_end(d: _dt.date) -> str:
+    """'' when the end is today, i.e. run to the latest bar."""
+    return "" if d >= _dt.date.today() else d.isoformat()
+
+
+def lock_input(prefix: str, default: float = 2.0) -> float:
+    return float(st.number_input(
+        "lock last N years (out-of-sample)", 0.0, 30.0, default, 0.5, key=f"{prefix}_lock",
+        help="The most recent N years before the end date are hidden from every statistic and tuning step until "
+             "you reveal them once, at the end. Charts still run to the end date, with the locked span shaded. "
+             "Because it is counted back from the END date, moving the start date doesn't move the lock. "
+             "0 = no holdout (nothing left to test on honestly)."))
+
+
 def builder() -> StrategySpec:
     """Left-hand block builder → StrategySpec."""
     st.markdown(section("01 · UNIVERSE", 0), unsafe_allow_html=True)
@@ -133,9 +174,9 @@ def builder() -> StrategySpec:
     if fut:
         st.caption(f"{fut[0]} · ${fut[1]:,.0f} per point · tick {fut[2]:g} · margin ≈ ${fut[3]:,.0f}/contract. "
                    "Sized in whole contracts.")
-    c1, c2 = st.columns(2)
-    tf = c1.selectbox("bars", list(TIMEFRAMES), key="bt_tf")
-    start_year = c2.number_input("from", 1990, 2024, 2005, key="bt_start")
+    tf = st.selectbox("bars", list(TIMEFRAMES), key="bt_tf",
+                      help="Bar size the rule runs on. Weekly/monthly bars are built from daily data.")
+    start_date, end_date = date_range("bt", _dt.date(2005, 1, 1))
 
     st.markdown(section("02 · SIGNAL", 1), unsafe_allow_html=True)
     keys = [k for k, c in REGISTRY.items() if not c.cross_sectional]
@@ -228,16 +269,15 @@ def builder() -> StrategySpec:
     cost = c1.number_input("commission bps", 0.0, 50.0, 1.0, 0.5, key="bt_cost")
     slip = c2.number_input("slippage bps", 0.0, 50.0, 1.5, 0.5, key="bt_slip")
     fee = st.number_input("$ per contract per side", 0.0, 20.0, 2.5, 0.25, key="bt_fee") if fut else 2.5
-    hold = st.slider("locked out-of-sample %", 0, 50, 30, 5, key="bt_hold",
-                     help="The most recent slice of history is hidden from every step until you reveal it "
-                          "once, at the end. Setting 0 removes your only honest test.")
-    return StrategySpec(src=src, name=name, tf=tf, start_year=int(start_year), rule=rule, params=params,
+    lock = lock_input("bt")
+    return StrategySpec(src=src, name=name, tf=tf, start_year=start_date.year, rule=rule, params=params,
                         filters=filters, sizing_mode=mode, target_vol=tvol, direction=direction,
                         fixed_pct=float(fpct), risk_pct=float(risk), scale_by_forecast=bool(scale),
                         max_leverage=lev, seed=seed, synth_base=base,
                         use_atr_stop=stop, use_atr_tp=tp, atr_stop_mult=stop_k, atr_tp_mult=tp_k,
-                        cost_bps=cost, slippage_bps=slip, holdout=int(hold), capital=float(capital),
-                        buffer=float(buffer), contract_fee=float(fee),
+                        cost_bps=cost, slippage_bps=slip, holdout=0, lock_years=float(lock),
+                        start_date=_iso_start(start_date), end_date=_iso_end(end_date),
+                        capital=float(capital), buffer=float(buffer), contract_fee=float(fee),
                         notes=st.session_state.get("bt_notes", ""))
 
 
@@ -295,14 +335,25 @@ def bench(close: pd.Series, strat: pd.Series) -> pd.Series:
     return bh * (sv / bv) if bv > 1e-12 and sv > 1e-12 else bh
 
 
+def lock_band(fig: go.Figure, a, b, rows: int = 1) -> None:
+    """Grey band over the locked out-of-sample span (no data drawn there until it is revealed)."""
+    if a is None or b is None or pd.Timestamp(b) <= pd.Timestamp(a):
+        return
+    fig.add_vrect(x0=a, x1=b, fillcolor=up.fill(T.faint, 0.16), line_width=0,
+                  annotation_text="LOCKED · not in stats · reveal in OUT-OF-SAMPLE", annotation_position="top left",
+                  annotation_font=dict(size=9, color=T.faint))
+    fig.update_xaxes(range=[None, pd.Timestamp(b)])
+
+
 def equity_fig(r: pd.Series, b: pd.Series, gross: pd.Series | None = None,
-               shade_from: pd.Timestamp | None = None) -> go.Figure:
+               shade_from: pd.Timestamp | None = None, locked_to: pd.Timestamp | None = None,
+               bench_label: str = "buy & hold (vol-matched)") -> go.Figure:
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.72, 0.28], vertical_spacing=0.03)
     eq, beq = (1 + r).cumprod(), (1 + b).cumprod()
     if gross is not None:
         geq = (1 + gross).cumprod()
         fig.add_trace(go.Scatter(x=geq.index, y=geq, name="gross of costs", line=dict(color=T.faint, width=1)), 1, 1)
-    fig.add_trace(go.Scatter(x=beq.index, y=beq, name="buy & hold (vol-matched)",
+    fig.add_trace(go.Scatter(x=beq.index, y=beq, name=bench_label,
                              line=dict(color=T.amber, width=1.2)), 1, 1)
     fig.add_trace(go.Scatter(x=eq.index, y=eq, name="strategy", line=dict(color=T.teal, width=1.8)), 1, 1)
     dd, bdd = metrics.drawdown_series(r), metrics.drawdown_series(b)
@@ -314,15 +365,23 @@ def equity_fig(r: pd.Series, b: pd.Series, gross: pd.Series | None = None,
         fig.add_vrect(x0=shade_from, x1=r.index[-1], fillcolor=up.fill(T.violet, 0.10), line_width=0,
                       annotation_text="OUT-OF-SAMPLE", annotation_position="top left",
                       annotation_font=dict(size=9, color=T.violet))
+    if locked_to is not None and len(r):
+        lock_band(fig, r.index[-1], locked_to)
     fig.update_yaxes(type="log", title_text="growth of 1", row=1, col=1)
     fig.update_yaxes(tickformat=".0%", title_text="drawdown", row=2, col=1)
     return fig
 
 
-def price_fig(ohlcv: pd.DataFrame, res, strat, trades: pd.DataFrame) -> go.Figure:
+def price_fig(ohlcv: pd.DataFrame, res, strat, trades: pd.DataFrame,
+              locked_px: pd.Series | None = None) -> go.Figure:
+    """``locked_px``: price over the locked span, drawn faint (price only — no signal or trades there)."""
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.7, 0.3], vertical_spacing=0.03)
     close = ohlcv["close"]
     fig.add_trace(go.Scatter(x=close.index, y=close, name="close", line=dict(color=T.text, width=1)), 1, 1)
+    if locked_px is not None and len(locked_px):
+        fig.add_trace(go.Scatter(x=locked_px.index, y=locked_px, name="close (locked span)",
+                                 line=dict(color=T.faint, width=1)), 1, 1)
+        lock_band(fig, locked_px.index[0], locked_px.index[-1])
     for i, (lbl, s) in enumerate(strat.indicator_lines(ohlcv).items()):
         fig.add_trace(go.Scatter(x=s.index, y=s, name=lbl, line=dict(color=T.cat[(i + 1) % len(T.cat)], width=1)),
                       1, 1)
@@ -395,7 +454,9 @@ def esc(x) -> str:
 
 def spec_to_widgets(spec: StrategySpec) -> dict:
     """LAB builder widget values that reproduce ``spec`` (used by LIBRARY › open in LAB)."""
-    w = {"bt_src": spec.src, "bt_tf": spec.tf, "bt_start": int(spec.start_year), "bt_rule": spec.rule,
+    end = spec.end_ts()
+    w = {"bt_src": spec.src, "bt_tf": spec.tf, "bt_start": spec.start_ts().date(),
+         "bt_end": end.date() if end is not None else _dt.date.today(), "bt_rule": spec.rule,
          "bt_size": spec.sizing_mode, "bt_tvol": int(round(spec.target_vol * 100)), "bt_dir": spec.direction,
          "bt_fpct": int(round(spec.fixed_pct * 100)), "bt_risk": float(round(spec.risk_pct * 100, 1)),
          "bt_scale": bool(spec.scale_by_forecast), "bt_lev": float(spec.max_leverage),
@@ -403,7 +464,8 @@ def spec_to_widgets(spec: StrategySpec) -> dict:
          "bt_cap": int(spec.capital), "bt_buf": int(round(spec.buffer * 100)), "bt_stop": spec.use_atr_stop,
          "bt_tp": spec.use_atr_tp, "bt_stopk": float(spec.atr_stop_mult), "bt_tpk": float(spec.atr_tp_mult),
          "bt_cost": float(spec.cost_bps), "bt_slip": float(spec.slippage_bps), "bt_fee": float(spec.contract_fee),
-         "bt_hold": int(spec.holdout), "bt_notes": spec.notes}
+         "bt_lock": float(spec.lock_years if spec.lock_years > 0 else (2.0 if spec.holdout else 0.0)),
+         "bt_notes": spec.notes}
     if spec.src == "Market":
         if spec.name in QUICK:
             w["bt_quick"] = spec.name
@@ -561,7 +623,7 @@ def sizing_panel(spec: StrategySpec, ins: pd.DataFrame, res) -> None:
 def seeds_panel(spec: StrategySpec, key: str = "bt_seeds") -> None:
     """Run the same strategy across many synthetic seeds: is the result robust or one lucky path?"""
     from ..robust.runner import pmap
-    from ..spec import run_spec, split_holdout
+    from ..spec import run_spec
     hi = 1000 if is_local() else 200
     c1, c2, c3 = st.columns([1, 1, 1])
     n = int(c1.number_input("seeds", 2, hi, min(50, hi), 1, key=f"{key}_n",
@@ -573,7 +635,7 @@ def seeds_panel(spec: StrategySpec, key: str = "bt_seeds") -> None:
         bar = progress_bar("running seeds")
 
         def one(sd):
-            df, _ = split_holdout(load(spec, seed=sd), spec.holdout)
+            df, _ = spec.split(load(spec, seed=sd))
             r = run_spec(spec, df)
             return sd, r.stats, (1 + r.returns).cumprod()
 
