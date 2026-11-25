@@ -1,18 +1,18 @@
 {
-  "as_of": "2026-11-24",
+  "as_of": "2026-11-25",
   "disclaimer": "REGIMES classifies growth/inflation and six secondary macro dimensions from free FRED data (no API key), plus empirical transition probabilities, regime-conditional asset/factor performance, historical analogs and calibration vs NBER's recession dating. This is a NOVEL composite with limited out-of-sample track record — see its evidence-strength badge and the Accuracy tab. A regime call is a probabilistic read of many indicators, never a certainty, and never investment advice.",
   "latest_month": "2026-11-30",
   "regime": "Goldilocks / Reflation",
   "raw_regime": "Stagflation",
   "transitioning": true,
   "streak_months": 1,
-  "confidence": 30.3,
+  "confidence": 21.2,
   "growth": {
     "rising": false,
-    "breadth": 0.36363636363636365,
-    "n_rising": 4,
+    "breadth": 0.45454545454545453,
+    "n_rising": 5,
     "n_total": 11,
-    "z": 0.227,
+    "z": 0.23,
     "indicators": [
       {
         "id": "CFNAI",
@@ -57,10 +57,10 @@
       {
         "id": "ICSA",
         "label": "Initial Jobless Claims",
-        "raw_value": 203000.0,
-        "z": 0.331,
+        "raw_value": 189000.0,
+        "z": 0.362,
         "direction": -1,
-        "rising": false,
+        "rising": true,
         "lag_days": 5,
         "freq": "W"
       },
@@ -131,7 +131,7 @@
     "breadth": 0.6666666666666666,
     "n_rising": 8,
     "n_total": 12,
-    "z": 0.1,
+    "z": 0.105,
     "indicators": [
       {
         "id": "CPIAUCSL",
@@ -196,8 +196,8 @@
       {
         "id": "T10YIE",
         "label": "10y Breakeven Inflation",
-        "raw_value": 2.13,
-        "z": 0.021,
+        "raw_value": 2.12,
+        "z": -0.008,
         "direction": 1,
         "rising": false,
         "lag_days": 0,
@@ -206,8 +206,8 @@
       {
         "id": "T5YIFR",
         "label": "5y5y Forward Inflation Expectation",
-        "raw_value": 2.11,
-        "z": -0.047,
+        "raw_value": 2.13,
+        "z": 0.039,
         "direction": 1,
         "rising": false,
         "lag_days": 0,
@@ -257,10 +257,10 @@
   },
   "momentum": {
     "score": -0.0,
-    "growth_slope": -0.0047,
-    "growth_r2": 0.056,
-    "infl_slope": 0.0025,
-    "infl_r2": 0.002,
-    "narrative": "Growth signals have weakened over the trailing 6 months (trend R²=0.06) while inflation signals have accelerated (trend R²=0.00)."
+    "growth_slope": -0.0043,
+    "growth_r2": 0.049,
+    "infl_slope": 0.0032,
+    "infl_r2": 0.004,
+    "narrative": "Growth signals have weakened over the trailing 6 months (trend R²=0.05) while inflation signals have accelerated (trend R²=0.00)."
   }
 }

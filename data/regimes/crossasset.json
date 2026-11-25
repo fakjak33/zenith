@@ -1,16 +1,16 @@
 {
-  "as_of": "2026-11-24",
+  "as_of": "2026-11-25",
   "trends": {
     "SPY": {
-      "trend_3m": -0.0698,
+      "trend_3m": -0.0901,
       "direction": "down"
     },
     "TLT": {
-      "trend_3m": -0.0045,
-      "direction": "down"
+      "trend_3m": 0.0075,
+      "direction": "up"
     },
     "GLD": {
-      "trend_3m": -0.2234,
+      "trend_3m": -0.2289,
       "direction": "down"
     },
     "DBC": {
@@ -18,20 +18,20 @@
       "direction": "down"
     },
     "UUP": {
-      "trend_3m": 0.0585,
+      "trend_3m": 0.0538,
       "direction": "up"
     },
     "IWM": {
-      "trend_3m": -0.1118,
+      "trend_3m": -0.1119,
       "direction": "down"
     }
   },
   "breadth": {
     "available": true,
-    "cyclicals_avg": 0.118,
-    "defensives_avg": 1.401,
+    "cyclicals_avg": 0.032,
+    "defensives_avg": 1.64,
     "cyclicals_leading": false,
-    "as_of": "2026-11-24"
+    "as_of": "2026-11-25"
   },
   "confirmation": {
     "checks": [
@@ -56,19 +56,25 @@
       {
         "check": "Long Treasuries (rate-expectation proxy)",
         "expects": "falling (yields up)",
-        "observed": "falling",
-        "confirms": true
+        "observed": "rising",
+        "confirms": false
       }
     ],
-    "n_confirming": 3,
+    "n_confirming": 2,
     "n_total": 4,
-    "confirmation_ratio": 0.75
+    "confirmation_ratio": 0.5
   },
   "divergences": [
     {
       "flag": "Gold trend (inflation-hedge proxy)",
       "classifier_expects": "rising",
       "market_shows": "falling",
+      "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
+    },
+    {
+      "flag": "Long Treasuries (rate-expectation proxy)",
+      "classifier_expects": "falling (yields up)",
+      "market_shows": "rising",
       "note": "Independent evidence disagrees with the classifier's read here — worth investigating why (market anticipation, a false signal, or a genuine transition the slower-moving macro data hasn't caught up to yet)."
     }
   ]
