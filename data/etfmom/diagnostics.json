@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-24",
+  "as_of": "2026-11-25",
   "disclaimer": "ETF MOMENTUM scores Zenith's curated ETF universe on the same six documented momentum dimensions as the Russell 1000 engine (time-series, breakout, cross-sectional, trend speed, momentum strength, multivariate trend), blended with the same weights into the same transparent -20..+20 composite, so the two tabs are directly comparable. Cross-sectional momentum is weaker evidence across mixed asset classes than within one, and overlapping funds make breadth readings softer than they look. Decision-support and a research monitor, not investment advice.",
   "benchmark": "equal-weight ETF universe index (not SPY) -- see compute.universe_benchmark for why",
   "correlation": {
@@ -7,50 +7,50 @@
     "matrix": {
       "ts": {
         "ts": 1.0,
-        "breakout": 0.748,
-        "xsec": 0.995,
-        "speed": 0.749,
-        "strength": 0.798,
-        "mvt": 0.328
+        "breakout": 0.782,
+        "xsec": 0.996,
+        "speed": 0.772,
+        "strength": 0.813,
+        "mvt": 0.297
       },
       "breakout": {
-        "ts": 0.748,
+        "ts": 0.782,
         "breakout": 1.0,
-        "xsec": 0.774,
-        "speed": 0.886,
-        "strength": 0.9,
-        "mvt": 0.207
+        "xsec": 0.795,
+        "speed": 0.897,
+        "strength": 0.919,
+        "mvt": 0.175
       },
       "xsec": {
-        "ts": 0.995,
-        "breakout": 0.774,
+        "ts": 0.996,
+        "breakout": 0.795,
         "xsec": 1.0,
-        "speed": 0.761,
-        "strength": 0.815,
-        "mvt": 0.322
+        "speed": 0.773,
+        "strength": 0.822,
+        "mvt": 0.287
       },
       "speed": {
-        "ts": 0.749,
-        "breakout": 0.886,
-        "xsec": 0.761,
+        "ts": 0.772,
+        "breakout": 0.897,
+        "xsec": 0.773,
         "speed": 1.0,
-        "strength": 0.881,
-        "mvt": 0.253
+        "strength": 0.894,
+        "mvt": 0.257
       },
       "strength": {
-        "ts": 0.798,
-        "breakout": 0.9,
-        "xsec": 0.815,
-        "speed": 0.881,
+        "ts": 0.813,
+        "breakout": 0.919,
+        "xsec": 0.822,
+        "speed": 0.894,
         "strength": 1.0,
-        "mvt": 0.12
+        "mvt": 0.125
       },
       "mvt": {
-        "ts": 0.328,
-        "breakout": 0.207,
-        "xsec": 0.322,
-        "speed": 0.253,
-        "strength": 0.12,
+        "ts": 0.297,
+        "breakout": 0.175,
+        "xsec": 0.287,
+        "speed": 0.257,
+        "strength": 0.125,
         "mvt": 1.0
       }
     },
@@ -58,37 +58,37 @@
       {
         "a": "ts",
         "b": "xsec",
-        "corr": 0.995
+        "corr": 0.996
       },
       {
         "a": "breakout",
         "b": "speed",
-        "corr": 0.886
+        "corr": 0.897
       },
       {
         "a": "breakout",
         "b": "strength",
-        "corr": 0.9
+        "corr": 0.919
       },
       {
         "a": "speed",
         "b": "strength",
-        "corr": 0.881
+        "corr": 0.894
       }
     ]
   },
   "distribution": {
     "n": 859,
-    "mean": -0.126,
-    "median": -0.073,
-    "std": 4.695,
-    "pct_bullish": 0.142,
-    "pct_bearish": 0.1385,
+    "mean": -0.203,
+    "median": -0.234,
+    "std": 4.801,
+    "pct_bullish": 0.1432,
+    "pct_bearish": 0.1513,
     "n_extreme_bullish": 0,
     "n_extreme_bearish": 0
   },
   "ic_by_horizon": {
-    "20": 0.1185,
+    "20": 0.1132,
     "60": null,
     "126": null
   },
@@ -121,19 +121,19 @@
   "hit_rate": {
     "20": {
       "long": {
-        "n": 1621,
-        "avg": 0.011109,
-        "win_rate": 0.6299
+        "n": 1707,
+        "avg": 0.010516,
+        "win_rate": 0.628
       },
       "short": {
-        "n": 1621,
-        "avg": 0.010235,
-        "win_rate": 0.5244
+        "n": 1707,
+        "avg": 0.010113,
+        "win_rate": 0.5214
       },
       "all": {
-        "n": 3242,
-        "avg": 0.010672,
-        "win_rate": 0.5771
+        "n": 3414,
+        "avg": 0.010315,
+        "win_rate": 0.5747
       }
     }
   }
