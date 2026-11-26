@@ -1,8 +1,8 @@
 {
-  "as_of": "2026-11-25",
+  "as_of": "2026-11-26",
   "dimensions": {
     "monetary": {
-      "composite_z": -0.4,
+      "composite_z": -0.414,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Neutral",
@@ -30,8 +30,8 @@
         {
           "id": "T10Y3M",
           "label": "10y-3m Curve",
-          "raw_value": 0.55,
-          "z": 0.196,
+          "raw_value": 0.51,
+          "z": 0.155,
           "direction": 1,
           "rising": false,
           "lag_days": 0,
@@ -48,7 +48,7 @@
         {
           "id": "NET_LIQ",
           "label": "Fed Net Liquidity (WALCL - RRP - TGA)",
-          "raw_value": 44.537,
+          "raw_value": 44.538,
           "z": -0.007,
           "direction": 1,
           "rising": true,
@@ -68,7 +68,7 @@
       ]
     },
     "credit": {
-      "composite_z": 0.679,
+      "composite_z": 0.661,
       "coverage_n": 5,
       "min_coverage": 3,
       "state": "Easy / Expansionary",
@@ -76,8 +76,8 @@
         {
           "id": "BAA10Y",
           "label": "Baa Corporate - 10y Treasury Spread",
-          "raw_value": 1.59,
-          "z": 1.02,
+          "raw_value": 1.61,
+          "z": 0.969,
           "direction": -1,
           "rising": false,
           "lag_days": 0,
@@ -86,8 +86,8 @@
         {
           "id": "AAA10Y",
           "label": "Aaa Corporate - 10y Treasury Spread",
-          "raw_value": 1.12,
-          "z": 0.136,
+          "raw_value": 1.13,
+          "z": 0.097,
           "direction": -1,
           "rising": true,
           "lag_days": 0,
@@ -126,7 +126,7 @@
       ]
     },
     "financial_conditions": {
-      "composite_z": -0.131,
+      "composite_z": -0.415,
       "coverage_n": 4,
       "min_coverage": 3,
       "state": "Neutral",
@@ -154,10 +154,10 @@
         {
           "id": "STLFSI4",
           "label": "St. Louis Fed Financial Stress Index",
-          "raw_value": -0.8655,
-          "z": 0.735,
+          "raw_value": -0.0697,
+          "z": -0.401,
           "direction": -1,
-          "rising": true,
+          "rising": false,
           "lag_days": 5,
           "freq": "W"
         },
@@ -222,7 +222,7 @@
       ]
     },
     "volatility": {
-      "composite_z": 1.003,
+      "composite_z": 0.984,
       "coverage_n": 3,
       "min_coverage": 3,
       "state": "Elevated / Expansion",
@@ -250,8 +250,8 @@
         {
           "id": "TLT_RVOL",
           "label": "TLT Realized Volatility (MOVE proxy)",
-          "raw_value": 11.704,
-          "z": -0.271,
+          "raw_value": 11.3502,
+          "z": -0.328,
           "direction": 1,
           "rising": true,
           "lag_days": 0,
