@@ -1,7 +1,7 @@
 {
-  "date": "2026-11-25",
-  "checked": "2026-11-26",
-  "is_trading_day": false,
+  "date": "2026-11-27",
+  "checked": "2026-11-27",
+  "is_trading_day": true,
   "action": "auto",
   "screened": false,
   "rebalanced": false,
@@ -10,9 +10,11 @@
     {
       "segment": "hedge_prices",
       "ok": true,
-      "n": 5,
+      "n": 4,
       "requested": 5,
-      "missing": [],
+      "missing": [
+        "^VIX"
+      ],
       "error": ""
     },
     {
@@ -31,9 +33,9 @@
     {
       "segment": "hedge",
       "ok": true,
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "trend": "PARTIAL",
-      "n_alerts": 4
+      "n_alerts": 2
     }
   ]
 }
